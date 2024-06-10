@@ -1,0 +1,246 @@
+{
+  "project_info": {
+    "project_number": "991574124918",
+    "project_id": "project-e33e5",
+    "storage_bucket": "project-e33e5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:991574124918:android:19e3a6f1cb0031b9467257",
+        "android_client_info": {
+          "package_name": "com.mycompany.aiproject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "991574124918-dbrkcr21hjre3hlivkklfssnmn2p16ll.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mycompany.aiproject",
+            "certificate_hash": "b67b0ca34709c61c372184c4ec3cf97ec17b13ac"
+          }
+        },
+        {
+          "client_id": "991574124918-o6tsnkg8m4lsrj39akr1afunil5jer8n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD7s4MbxzPSLvDvI5PEgNaaPtvbLCiWcjw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "991574124918-ghkl1dsg3115gpfi8qlkpmp05a9e3lu3.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "991574124918-7d7boplmmm6fl7mftbv5jiti97jnr0jl.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.mycompany.omnis"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:991574124918:android:da72111726d3b7d5467257",
+        "android_client_info": {
+          "package_name": "com.mycompany.neuroproject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "991574124918-9ko4rnulhunm30on4u1srot2a5rh9m2h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mycompany.neuroproject",
+            "certificate_hash": "9bbb3186b2189ef16d8f272bdab59362c395cbb4"
+          }
+        },
+        {
+          "client_id": "991574124918-jci56mfepdp8a5kis1d6lgggdopistbq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mycompany.neuroproject",
+            "certificate_hash": "b67b0ca34709c61c372184c4ec3cf97ec17b13ac"
+          }
+        },
+        {
+          "client_id": "991574124918-o6tsnkg8m4lsrj39akr1afunil5jer8n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD7s4MbxzPSLvDvI5PEgNaaPtvbLCiWcjw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "991574124918-ghkl1dsg3115gpfi8qlkpmp05a9e3lu3.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "991574124918-7d7boplmmm6fl7mftbv5jiti97jnr0jl.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.mycompany.omnis"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:991574124918:android:9daedea321955d1f467257",
+        "android_client_info": {
+          "package_name": "com.mycompany.omnis"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "991574124918-21eumgoobf4gnue94eq017kt5pldf36k.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mycompany.omnis",
+            "certificate_hash": "b67b0ca34709c61c372184c4ec3cf97ec17b13ac"
+          }
+        },
+        {
+          "client_id": "991574124918-grvahreceqvok95es792quauul9bm2vd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mycompany.omnis",
+            "certificate_hash": "9bbb3186b2189ef16d8f272bdab59362c395cbb4"
+          }
+        },
+        {
+          "client_id": "991574124918-o6tsnkg8m4lsrj39akr1afunil5jer8n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD7s4MbxzPSLvDvI5PEgNaaPtvbLCiWcjw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "991574124918-ghkl1dsg3115gpfi8qlkpmp05a9e3lu3.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "991574124918-7d7boplmmm6fl7mftbv5jiti97jnr0jl.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.mycompany.omnis"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:991574124918:android:ceca94c8e5c84d8b467257",
+        "android_client_info": {
+          "package_name": "com.mycompany.project"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "991574124918-tdd0mu5oghkkp586gpfd17ic5enddllg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mycompany.project",
+            "certificate_hash": "b67b0ca34709c61c372184c4ec3cf97ec17b13ac"
+          }
+        },
+        {
+          "client_id": "991574124918-o6tsnkg8m4lsrj39akr1afunil5jer8n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD7s4MbxzPSLvDvI5PEgNaaPtvbLCiWcjw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "991574124918-ghkl1dsg3115gpfi8qlkpmp05a9e3lu3.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "991574124918-7d7boplmmm6fl7mftbv5jiti97jnr0jl.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.mycompany.omnis"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:991574124918:android:8e5cb789c203cea2467257",
+        "android_client_info": {
+          "package_name": "com.mycompany.projectai"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "991574124918-ivi5vvag4hdh377hkvpne4fksp12ivoj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mycompany.projectai",
+            "certificate_hash": "b67b0ca34709c61c372184c4ec3cf97ec17b13ac"
+          }
+        },
+        {
+          "client_id": "991574124918-o6tsnkg8m4lsrj39akr1afunil5jer8n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD7s4MbxzPSLvDvI5PEgNaaPtvbLCiWcjw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "991574124918-ghkl1dsg3115gpfi8qlkpmp05a9e3lu3.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "991574124918-7d7boplmmm6fl7mftbv5jiti97jnr0jl.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.mycompany.omnis"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
