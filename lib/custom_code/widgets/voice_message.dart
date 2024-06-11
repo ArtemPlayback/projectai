@@ -1,6 +1,7 @@
 // Automatic FlutterFlow imports
 import '/backend/backend.dart';
 import '/backend/schema/structs/index.dart';
+import '/backend/schema/enums/enums.dart';
 import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -12,6 +13,7 @@ import 'package:flutter/material.dart';
 // DO NOT REMOVE OR MODIFY THE CODE ABOVE!
 
 import 'dart:async';
+import 'dart:io';
 import 'dart:math';
 
 import 'package:audio_waveforms/audio_waveforms.dart';
@@ -411,9 +413,11 @@ class _VoiceMessageController extends ChangeNotifier {
     final path = await _downloadAudio();
     await audioPlayer.setFilePath(path);
     isLoading = false;
-    waveformsData = await playerController.extractWaveformData(path: path);
-    // waveformsData = playerController.waveformData;
-    print(waveformsData);
+    if (Platform.isAndroid) {
+      waveformsData = fakeWaveformsData;
+    } else {
+      waveformsData = await playerController.extractWaveformData(path: path);
+    }
 
     _subs.add(audioPlayer.playingStream.listen((event) {
       notifyListeners();

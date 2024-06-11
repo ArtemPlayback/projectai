@@ -1,6 +1,7 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
 import '/backend/backend.dart';
+import '/backend/schema/structs/index.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -11,6 +12,7 @@ import 'dart:ui';
 import '/flutter_flow/random_data_util.dart' as random_data;
 import 'create_account_widget.dart' show CreateAccountWidget;
 import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:percent_indicator/percent_indicator.dart';
@@ -58,6 +60,8 @@ class CreateAccountModel extends FlutterFlowModel<CreateAccountWidget> {
       confirmPasswordTextControllerValidator;
   // Model for button_fixed_size component.
   late ButtonFixedSizeModel buttonFixedSizeModel;
+  // Stores action output result for [Backend Call - Create Document] action in button_fixed_size widget.
+  ChatsRecord? chat;
   // Model for button_infinity component.
   late ButtonInfinityModel buttonInfinityModel;
 

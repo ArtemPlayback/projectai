@@ -61,3 +61,5 @@ export '/create_group_chat_2/create_group_chat2_widget.dart'
     show CreateGroupChat2Widget;
 export '/new_project/group_chat_page/group_chat_page_widget.dart'
     show GroupChatPageWidget;
+export '/new_project/notifications/notifications_widget.dart'
+    show NotificationsWidget;

@@ -11,6 +11,7 @@ export 'event_struct.dart';
 export 'experience_struct.dart';
 export 'investments_struct.dart';
 export 'invites_struct.dart';
+export 'notifications_struct.dart';
 export 'participants_struct.dart';
 export 'pitchdeck_struct.dart';
 export 'post_struct.dart';

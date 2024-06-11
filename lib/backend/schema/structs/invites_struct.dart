@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '/backend/schema/util/firestore_util.dart';
 import '/backend/schema/util/schema_util.dart';
+import '/backend/schema/enums/enums.dart';
 
 import 'index.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -15,12 +16,14 @@ class InvitesStruct extends FFFirebaseStruct {
     String? role,
     DateTime? when,
     String? inviterName,
+    TeamMemberStatus? status,
     FirestoreUtilData firestoreUtilData = const FirestoreUtilData(),
   })  : _who = who,
         _where = where,
         _role = role,
         _when = when,
         _inviterName = inviterName,
+        _status = status,
         super(firestoreUtilData);
 
   // "who" field.
@@ -53,12 +56,19 @@ class InvitesStruct extends FFFirebaseStruct {
   set inviterName(String? val) => _inviterName = val;
   bool hasInviterName() => _inviterName != null;
 
+  // "status" field.
+  TeamMemberStatus? _status;
+  TeamMemberStatus get status => _status ?? TeamMemberStatus.isWaiting;
+  set status(TeamMemberStatus? val) => _status = val;
+  bool hasStatus() => _status != null;
+
   static InvitesStruct fromMap(Map<String, dynamic> data) => InvitesStruct(
         who: data['who'] as DocumentReference?,
         where: data['where'] as DocumentReference?,
         role: data['role'] as String?,
         when: data['when'] as DateTime?,
         inviterName: data['inviterName'] as String?,
+        status: deserializeEnum<TeamMemberStatus>(data['status']),
       );
 
   static InvitesStruct? maybeFromMap(dynamic data) =>
@@ -70,6 +80,7 @@ class InvitesStruct extends FFFirebaseStruct {
         'role': _role,
         'when': _when,
         'inviterName': _inviterName,
+        'status': _status?.serialize(),
       }.withoutNulls;
 
   @override
@@ -93,6 +104,10 @@ class InvitesStruct extends FFFirebaseStruct {
         'inviterName': serializeParam(
           _inviterName,
           ParamType.String,
+        ),
+        'status': serializeParam(
+          _status,
+          ParamType.Enum,
         ),
       }.withoutNulls;
 
@@ -125,6 +140,11 @@ class InvitesStruct extends FFFirebaseStruct {
           ParamType.String,
           false,
         ),
+        status: deserializeParam<TeamMemberStatus>(
+          data['status'],
+          ParamType.Enum,
+          false,
+        ),
       );
 
   @override
@@ -137,12 +157,13 @@ class InvitesStruct extends FFFirebaseStruct {
         where == other.where &&
         role == other.role &&
         when == other.when &&
-        inviterName == other.inviterName;
+        inviterName == other.inviterName &&
+        status == other.status;
   }
 
   @override
   int get hashCode =>
-      const ListEquality().hash([who, where, role, when, inviterName]);
+      const ListEquality().hash([who, where, role, when, inviterName, status]);
 }
 
 InvitesStruct createInvitesStruct({
@@ -151,6 +172,7 @@ InvitesStruct createInvitesStruct({
   String? role,
   DateTime? when,
   String? inviterName,
+  TeamMemberStatus? status,
   Map<String, dynamic> fieldValues = const {},
   bool clearUnsetFields = true,
   bool create = false,
@@ -162,6 +184,7 @@ InvitesStruct createInvitesStruct({
       role: role,
       when: when,
       inviterName: inviterName,
+      status: status,
       firestoreUtilData: FirestoreUtilData(
         clearUnsetFields: clearUnsetFields,
         create: create,

@@ -4,6 +4,7 @@ import 'package:collection/collection.dart';
 
 import '/backend/schema/util/firestore_util.dart';
 import '/backend/schema/util/schema_util.dart';
+import '/backend/schema/enums/enums.dart';
 
 import 'index.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -132,6 +133,16 @@ class UsersRecord extends FirestoreRecord {
   List<AichatStruct> get aIChats => _aIChats ?? const [];
   bool hasAIChats() => _aIChats != null;
 
+  // "notification_chat" field.
+  DocumentReference? _notificationChat;
+  DocumentReference? get notificationChat => _notificationChat;
+  bool hasNotificationChat() => _notificationChat != null;
+
+  // "mute_notifications" field.
+  bool? _muteNotifications;
+  bool get muteNotifications => _muteNotifications ?? false;
+  bool hasMuteNotifications() => _muteNotifications != null;
+
   void _initializeFields() {
     _email = snapshotData['email'] as String?;
     _displayName = snapshotData['display_name'] as String?;
@@ -175,6 +186,8 @@ class UsersRecord extends FirestoreRecord {
       snapshotData['AI_chats'],
       AichatStruct.fromMap,
     );
+    _notificationChat = snapshotData['notification_chat'] as DocumentReference?;
+    _muteNotifications = snapshotData['mute_notifications'] as bool?;
   }
 
   static CollectionReference get collection =>
@@ -222,6 +235,8 @@ Map<String, dynamic> createUsersRecordData({
   bool? pushNotifications,
   String? professionalInformation,
   SocialmediaStruct? socialmedia,
+  DocumentReference? notificationChat,
+  bool? muteNotifications,
 }) {
   final firestoreData = mapToFirestore(
     <String, dynamic>{
@@ -236,6 +251,8 @@ Map<String, dynamic> createUsersRecordData({
       'pushNotifications': pushNotifications,
       'professional_information': professionalInformation,
       'socialmedia': SocialmediaStruct().toMap(),
+      'notification_chat': notificationChat,
+      'mute_notifications': muteNotifications,
     }.withoutNulls,
   );
 
@@ -273,7 +290,9 @@ class UsersRecordDocumentEquality implements Equality<UsersRecord> {
         listEquality.equals(e1?.subscriptions, e2?.subscriptions) &&
         e1?.socialmedia == e2?.socialmedia &&
         listEquality.equals(e1?.subscribers, e2?.subscribers) &&
-        listEquality.equals(e1?.aIChats, e2?.aIChats);
+        listEquality.equals(e1?.aIChats, e2?.aIChats) &&
+        e1?.notificationChat == e2?.notificationChat &&
+        e1?.muteNotifications == e2?.muteNotifications;
   }
 
   @override
@@ -300,7 +319,9 @@ class UsersRecordDocumentEquality implements Equality<UsersRecord> {
         e?.subscriptions,
         e?.socialmedia,
         e?.subscribers,
-        e?.aIChats
+        e?.aIChats,
+        e?.notificationChat,
+        e?.muteNotifications
       ]);
 
   @override

@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '/backend/schema/util/firestore_util.dart';
 import '/backend/schema/util/schema_util.dart';
+import '/backend/schema/enums/enums.dart';
 
 import 'index.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -13,10 +14,12 @@ class TeamMemberStruct extends FFFirebaseStruct {
     DocumentReference? userReference,
     String? role,
     String? description,
+    TeamMemberStatus? teamMember,
     FirestoreUtilData firestoreUtilData = const FirestoreUtilData(),
   })  : _userReference = userReference,
         _role = role,
         _description = description,
+        _teamMember = teamMember,
         super(firestoreUtilData);
 
   // "user_reference" field.
@@ -37,11 +40,18 @@ class TeamMemberStruct extends FFFirebaseStruct {
   set description(String? val) => _description = val;
   bool hasDescription() => _description != null;
 
+  // "team_member" field.
+  TeamMemberStatus? _teamMember;
+  TeamMemberStatus get teamMember => _teamMember ?? TeamMemberStatus.isWaiting;
+  set teamMember(TeamMemberStatus? val) => _teamMember = val;
+  bool hasTeamMember() => _teamMember != null;
+
   static TeamMemberStruct fromMap(Map<String, dynamic> data) =>
       TeamMemberStruct(
         userReference: data['user_reference'] as DocumentReference?,
         role: data['role'] as String?,
         description: data['description'] as String?,
+        teamMember: deserializeEnum<TeamMemberStatus>(data['team_member']),
       );
 
   static TeamMemberStruct? maybeFromMap(dynamic data) => data is Map
@@ -52,6 +62,7 @@ class TeamMemberStruct extends FFFirebaseStruct {
         'user_reference': _userReference,
         'role': _role,
         'description': _description,
+        'team_member': _teamMember?.serialize(),
       }.withoutNulls;
 
   @override
@@ -67,6 +78,10 @@ class TeamMemberStruct extends FFFirebaseStruct {
         'description': serializeParam(
           _description,
           ParamType.String,
+        ),
+        'team_member': serializeParam(
+          _teamMember,
+          ParamType.Enum,
         ),
       }.withoutNulls;
 
@@ -88,6 +103,11 @@ class TeamMemberStruct extends FFFirebaseStruct {
           ParamType.String,
           false,
         ),
+        teamMember: deserializeParam<TeamMemberStatus>(
+          data['team_member'],
+          ParamType.Enum,
+          false,
+        ),
       );
 
   @override
@@ -98,18 +118,20 @@ class TeamMemberStruct extends FFFirebaseStruct {
     return other is TeamMemberStruct &&
         userReference == other.userReference &&
         role == other.role &&
-        description == other.description;
+        description == other.description &&
+        teamMember == other.teamMember;
   }
 
   @override
   int get hashCode =>
-      const ListEquality().hash([userReference, role, description]);
+      const ListEquality().hash([userReference, role, description, teamMember]);
 }
 
 TeamMemberStruct createTeamMemberStruct({
   DocumentReference? userReference,
   String? role,
   String? description,
+  TeamMemberStatus? teamMember,
   Map<String, dynamic> fieldValues = const {},
   bool clearUnsetFields = true,
   bool create = false,
@@ -119,6 +141,7 @@ TeamMemberStruct createTeamMemberStruct({
       userReference: userReference,
       role: role,
       description: description,
+      teamMember: teamMember,
       firestoreUtilData: FirestoreUtilData(
         clearUnsetFields: clearUnsetFields,
         create: create,
@@ -128,11 +151,11 @@ TeamMemberStruct createTeamMemberStruct({
     );
 
 TeamMemberStruct? updateTeamMemberStruct(
-  TeamMemberStruct? teamMember, {
+  TeamMemberStruct? teamMemberStruct, {
   bool clearUnsetFields = true,
   bool create = false,
 }) =>
-    teamMember
+    teamMemberStruct
       ?..firestoreUtilData = FirestoreUtilData(
         clearUnsetFields: clearUnsetFields,
         create: create,
@@ -140,48 +163,53 @@ TeamMemberStruct? updateTeamMemberStruct(
 
 void addTeamMemberStructData(
   Map<String, dynamic> firestoreData,
-  TeamMemberStruct? teamMember,
+  TeamMemberStruct? teamMemberStruct,
   String fieldName, [
   bool forFieldValue = false,
 ]) {
   firestoreData.remove(fieldName);
-  if (teamMember == null) {
+  if (teamMemberStruct == null) {
     return;
   }
-  if (teamMember.firestoreUtilData.delete) {
+  if (teamMemberStruct.firestoreUtilData.delete) {
     firestoreData[fieldName] = FieldValue.delete();
     return;
   }
   final clearFields =
-      !forFieldValue && teamMember.firestoreUtilData.clearUnsetFields;
+      !forFieldValue && teamMemberStruct.firestoreUtilData.clearUnsetFields;
   if (clearFields) {
     firestoreData[fieldName] = <String, dynamic>{};
   }
-  final teamMemberData = getTeamMemberFirestoreData(teamMember, forFieldValue);
-  final nestedData = teamMemberData.map((k, v) => MapEntry('$fieldName.$k', v));
+  final teamMemberStructData =
+      getTeamMemberFirestoreData(teamMemberStruct, forFieldValue);
+  final nestedData =
+      teamMemberStructData.map((k, v) => MapEntry('$fieldName.$k', v));
 
-  final mergeFields = teamMember.firestoreUtilData.create || clearFields;
+  final mergeFields = teamMemberStruct.firestoreUtilData.create || clearFields;
   firestoreData
       .addAll(mergeFields ? mergeNestedFields(nestedData) : nestedData);
 }
 
 Map<String, dynamic> getTeamMemberFirestoreData(
-  TeamMemberStruct? teamMember, [
+  TeamMemberStruct? teamMemberStruct, [
   bool forFieldValue = false,
 ]) {
-  if (teamMember == null) {
+  if (teamMemberStruct == null) {
     return {};
   }
-  final firestoreData = mapToFirestore(teamMember.toMap());
+  final firestoreData = mapToFirestore(teamMemberStruct.toMap());
 
   // Add any Firestore field values
-  teamMember.firestoreUtilData.fieldValues
+  teamMemberStruct.firestoreUtilData.fieldValues
       .forEach((k, v) => firestoreData[k] = v);
 
   return forFieldValue ? mergeNestedFields(firestoreData) : firestoreData;
 }
 
 List<Map<String, dynamic>> getTeamMemberListFirestoreData(
-  List<TeamMemberStruct>? teamMembers,
+  List<TeamMemberStruct>? teamMemberStructs,
 ) =>
-    teamMembers?.map((e) => getTeamMemberFirestoreData(e, true)).toList() ?? [];
+    teamMemberStructs
+        ?.map((e) => getTeamMemberFirestoreData(e, true))
+        .toList() ??
+    [];

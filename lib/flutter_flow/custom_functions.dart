@@ -11,6 +11,7 @@ import 'uploaded_file.dart';
 import '/backend/backend.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '/backend/schema/structs/index.dart';
+import '/backend/schema/enums/enums.dart';
 import '/backend/supabase/supabase.dart';
 import '/auth/firebase_auth/auth_util.dart';
 
@@ -285,4 +286,21 @@ List<dynamic> removeKeysFromJsonList(List<dynamic> jsonList) {
     newItem.remove('type');
     return newItem;
   }).toList();
+}
+
+int findInviteIndexInListOfInvites(
+  DocumentReference? user,
+  List<InvitesStruct>? invites,
+) {
+  if (user == null || invites == null) {
+    return -1; // Возвращаем -1, если входные параметры недействительны
+  }
+
+  for (int i = 0; i < invites.length; i++) {
+    if (invites[i].who == user) {
+      return i;
+    }
+  }
+
+  return -1; // Возвращаем -1, если элемент не найден
 }

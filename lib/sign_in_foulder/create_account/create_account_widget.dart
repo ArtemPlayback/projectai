@@ -1,6 +1,7 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
 import '/backend/backend.dart';
+import '/backend/schema/structs/index.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -10,6 +11,7 @@ import '/new_project/button_infinity/button_infinity_widget.dart';
 import 'dart:ui';
 import '/flutter_flow/random_data_util.dart' as random_data;
 import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:percent_indicator/percent_indicator.dart';
@@ -975,6 +977,83 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                                               true,
                                                         ));
 
+                                                    var chatsRecordReference =
+                                                        ChatsRecord.collection
+                                                            .doc();
+                                                    await chatsRecordReference
+                                                        .set({
+                                                      ...createChatsRecordData(
+                                                        chatType:
+                                                            'notifications',
+                                                      ),
+                                                      ...mapToFirestore(
+                                                        {
+                                                          'notifications': [
+                                                            getNotificationsFirestoreData(
+                                                              updateNotificationsStruct(
+                                                                NotificationsStruct(
+                                                                  text:
+                                                                      'This is where notifications will appear',
+                                                                  id: random_data
+                                                                      .randomString(
+                                                                    10,
+                                                                    12,
+                                                                    true,
+                                                                    false,
+                                                                    true,
+                                                                  ),
+                                                                ),
+                                                                clearUnsetFields:
+                                                                    false,
+                                                                create: true,
+                                                              ),
+                                                              true,
+                                                            )
+                                                          ],
+                                                        },
+                                                      ),
+                                                    });
+                                                    _model.chat = ChatsRecord
+                                                        .getDocumentFromData({
+                                                      ...createChatsRecordData(
+                                                        chatType:
+                                                            'notifications',
+                                                      ),
+                                                      ...mapToFirestore(
+                                                        {
+                                                          'notifications': [
+                                                            getNotificationsFirestoreData(
+                                                              updateNotificationsStruct(
+                                                                NotificationsStruct(
+                                                                  text:
+                                                                      'This is where notifications will appear',
+                                                                  id: random_data
+                                                                      .randomString(
+                                                                    10,
+                                                                    12,
+                                                                    true,
+                                                                    false,
+                                                                    true,
+                                                                  ),
+                                                                ),
+                                                                clearUnsetFields:
+                                                                    false,
+                                                                create: true,
+                                                              ),
+                                                              true,
+                                                            )
+                                                          ],
+                                                        },
+                                                      ),
+                                                    }, chatsRecordReference);
+
+                                                    await currentUserReference!
+                                                        .update(
+                                                            createUsersRecordData(
+                                                      notificationChat: _model
+                                                          .chat?.reference,
+                                                    ));
+
                                                     context.pushNamedAuth(
                                                         'smart_search_all',
                                                         context.mounted);
@@ -989,6 +1068,8 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                                       curve: Curves.ease,
                                                     );
                                                   }
+
+                                                  setState(() {});
                                                 },
                                               ),
                                             ),

@@ -294,6 +294,12 @@ final parametersBuilderMap =
               data, 'chat', ChatsRecord.fromSnapshot),
         },
       ),
+  'notifications': (data) async => ParameterData(
+        allParams: {
+          'chat': await getDocumentParameter<ChatsRecord>(
+              data, 'chat', ChatsRecord.fromSnapshot),
+        },
+      ),
 };
 
 Map<String, dynamic> getInitialParameterData(Map<String, dynamic> data) {

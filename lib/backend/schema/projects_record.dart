@@ -4,6 +4,7 @@ import 'package:collection/collection.dart';
 
 import '/backend/schema/util/firestore_util.dart';
 import '/backend/schema/util/schema_util.dart';
+import '/backend/schema/enums/enums.dart';
 
 import 'index.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -53,11 +54,6 @@ class ProjectsRecord extends FirestoreRecord {
   List<String> get images => _images ?? const [];
   bool hasImages() => _images != null;
 
-  // "invites" field.
-  List<DocumentReference>? _invites;
-  List<DocumentReference> get invites => _invites ?? const [];
-  bool hasInvites() => _invites != null;
-
   // "main_image" field.
   String? _mainImage;
   String get mainImage => _mainImage ?? '';
@@ -103,6 +99,11 @@ class ProjectsRecord extends FirestoreRecord {
   List<SectionStruct> get sections => _sections ?? const [];
   bool hasSections() => _sections != null;
 
+  // "invites" field.
+  List<InvitesStruct>? _invites;
+  List<InvitesStruct> get invites => _invites ?? const [];
+  bool hasInvites() => _invites != null;
+
   void _initializeFields() {
     _title = snapshotData['title'] as String?;
     _cover = snapshotData['cover'] as String?;
@@ -113,7 +114,6 @@ class ProjectsRecord extends FirestoreRecord {
         ProjectBusinessPlanStruct.maybeFromMap(snapshotData['businessPlan']);
     _pitchDeck = PitchdeckStruct.maybeFromMap(snapshotData['pitchDeck']);
     _images = getDataList(snapshotData['images']);
-    _invites = getDataList(snapshotData['invites']);
     _mainImage = snapshotData['main_image'] as String?;
     _products = getDataList(snapshotData['products']);
     _events = getDataList(snapshotData['events']);
@@ -134,6 +134,10 @@ class ProjectsRecord extends FirestoreRecord {
     _sections = getStructList(
       snapshotData['sections'],
       SectionStruct.fromMap,
+    );
+    _invites = getStructList(
+      snapshotData['invites'],
+      InvitesStruct.fromMap,
     );
   }
 
@@ -225,7 +229,6 @@ class ProjectsRecordDocumentEquality implements Equality<ProjectsRecord> {
         e1?.businessPlan == e2?.businessPlan &&
         e1?.pitchDeck == e2?.pitchDeck &&
         listEquality.equals(e1?.images, e2?.images) &&
-        listEquality.equals(e1?.invites, e2?.invites) &&
         e1?.mainImage == e2?.mainImage &&
         listEquality.equals(e1?.products, e2?.products) &&
         listEquality.equals(e1?.events, e2?.events) &&
@@ -234,7 +237,8 @@ class ProjectsRecordDocumentEquality implements Equality<ProjectsRecord> {
         listEquality.equals(e1?.subscriptions, e2?.subscriptions) &&
         listEquality.equals(e1?.subscribers, e2?.subscribers) &&
         e1?.socialmedia == e2?.socialmedia &&
-        listEquality.equals(e1?.sections, e2?.sections);
+        listEquality.equals(e1?.sections, e2?.sections) &&
+        listEquality.equals(e1?.invites, e2?.invites);
   }
 
   @override
@@ -246,7 +250,6 @@ class ProjectsRecordDocumentEquality implements Equality<ProjectsRecord> {
         e?.businessPlan,
         e?.pitchDeck,
         e?.images,
-        e?.invites,
         e?.mainImage,
         e?.products,
         e?.events,
@@ -255,7 +258,8 @@ class ProjectsRecordDocumentEquality implements Equality<ProjectsRecord> {
         e?.subscriptions,
         e?.subscribers,
         e?.socialmedia,
-        e?.sections
+        e?.sections,
+        e?.invites
       ]);
 
   @override

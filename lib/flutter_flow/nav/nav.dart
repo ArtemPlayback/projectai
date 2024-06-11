@@ -6,7 +6,7 @@ import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import '/backend/backend.dart';
 import '/backend/schema/structs/index.dart';
-
+import '/backend/schema/enums/enums.dart';
 import '/backend/supabase/supabase.dart';
 
 import '/auth/base_auth_user_provider.dart';
@@ -575,6 +575,19 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
             'chat': getDoc(['chats'], ChatsRecord.fromSnapshot),
           },
           builder: (context, params) => GroupChatPageWidget(
+            chat: params.getParam(
+              'chat',
+              ParamType.Document,
+            ),
+          ),
+        ),
+        FFRoute(
+          name: 'notifications',
+          path: '/notifications',
+          asyncParams: {
+            'chat': getDoc(['chats'], ChatsRecord.fromSnapshot),
+          },
+          builder: (context, params) => NotificationsWidget(
             chat: params.getParam(
               'chat',
               ParamType.Document,

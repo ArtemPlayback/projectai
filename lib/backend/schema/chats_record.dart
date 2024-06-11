@@ -4,6 +4,7 @@ import 'package:collection/collection.dart';
 
 import '/backend/schema/util/firestore_util.dart';
 import '/backend/schema/util/schema_util.dart';
+import '/backend/schema/enums/enums.dart';
 
 import 'index.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -71,6 +72,16 @@ class ChatsRecord extends FirestoreRecord {
   String get chatType => _chatType ?? '';
   bool hasChatType() => _chatType != null;
 
+  // "notifications" field.
+  List<NotificationsStruct>? _notifications;
+  List<NotificationsStruct> get notifications => _notifications ?? const [];
+  bool hasNotifications() => _notifications != null;
+
+  // "notification_owner" field.
+  DocumentReference? _notificationOwner;
+  DocumentReference? get notificationOwner => _notificationOwner;
+  bool hasNotificationOwner() => _notificationOwner != null;
+
   void _initializeFields() {
     _chatMessages = getStructList(
       snapshotData['chat_messages'],
@@ -86,6 +97,12 @@ class ChatsRecord extends FirestoreRecord {
     _title = snapshotData['title'] as String?;
     _image = snapshotData['image'] as String?;
     _chatType = snapshotData['chat_type'] as String?;
+    _notifications = getStructList(
+      snapshotData['notifications'],
+      NotificationsStruct.fromMap,
+    );
+    _notificationOwner =
+        snapshotData['notification_owner'] as DocumentReference?;
   }
 
   static CollectionReference get collection =>
@@ -130,6 +147,7 @@ Map<String, dynamic> createChatsRecordData({
   String? title,
   String? image,
   String? chatType,
+  DocumentReference? notificationOwner,
 }) {
   final firestoreData = mapToFirestore(
     <String, dynamic>{
@@ -141,6 +159,7 @@ Map<String, dynamic> createChatsRecordData({
       'title': title,
       'image': image,
       'chat_type': chatType,
+      'notification_owner': notificationOwner,
     }.withoutNulls,
   );
 
@@ -163,7 +182,9 @@ class ChatsRecordDocumentEquality implements Equality<ChatsRecord> {
         listEquality.equals(e1?.messages, e2?.messages) &&
         e1?.title == e2?.title &&
         e1?.image == e2?.image &&
-        e1?.chatType == e2?.chatType;
+        e1?.chatType == e2?.chatType &&
+        listEquality.equals(e1?.notifications, e2?.notifications) &&
+        e1?.notificationOwner == e2?.notificationOwner;
   }
 
   @override
@@ -178,7 +199,9 @@ class ChatsRecordDocumentEquality implements Equality<ChatsRecord> {
         e?.messages,
         e?.title,
         e?.image,
-        e?.chatType
+        e?.chatType,
+        e?.notifications,
+        e?.notificationOwner
       ]);
 
   @override
