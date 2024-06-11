@@ -19,11 +19,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'smart_search_all_copy_model.dart';
-export 'smart_search_all_copy_model.dart';
+import 'smart_search_all2_model.dart';
+export 'smart_search_all2_model.dart';
 
-class SmartSearchAllCopyWidget extends StatefulWidget {
-  const SmartSearchAllCopyWidget({
+class SmartSearchAll2Widget extends StatefulWidget {
+  const SmartSearchAll2Widget({
     super.key,
     String? chosen,
     this.firstSearch,
@@ -33,19 +33,18 @@ class SmartSearchAllCopyWidget extends StatefulWidget {
   final String? firstSearch;
 
   @override
-  State<SmartSearchAllCopyWidget> createState() =>
-      _SmartSearchAllCopyWidgetState();
+  State<SmartSearchAll2Widget> createState() => _SmartSearchAll2WidgetState();
 }
 
-class _SmartSearchAllCopyWidgetState extends State<SmartSearchAllCopyWidget> {
-  late SmartSearchAllCopyModel _model;
+class _SmartSearchAll2WidgetState extends State<SmartSearchAll2Widget> {
+  late SmartSearchAll2Model _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => SmartSearchAllCopyModel());
+    _model = createModel(context, () => SmartSearchAll2Model());
 
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {

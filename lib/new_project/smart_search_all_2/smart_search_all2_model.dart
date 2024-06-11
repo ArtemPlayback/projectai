@@ -16,15 +16,14 @@ import '/backend/schema/structs/index.dart';
 import '/flutter_flow/custom_functions.dart' as functions;
 import '/flutter_flow/request_manager.dart';
 
-import 'smart_search_all_copy_widget.dart' show SmartSearchAllCopyWidget;
+import 'smart_search_all2_widget.dart' show SmartSearchAll2Widget;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-class SmartSearchAllCopyModel
-    extends FlutterFlowModel<SmartSearchAllCopyWidget> {
+class SmartSearchAll2Model extends FlutterFlowModel<SmartSearchAll2Widget> {
   ///  Local state fields for this page.
 
   String chosenState = 'News';
@@ -50,7 +49,7 @@ class SmartSearchAllCopyModel
   ///  State fields for stateful widgets in this page.
 
   final unfocusNode = FocusNode();
-  // Stores action output result for [Backend Call - API (smart search neightn)] action in smart_search_allCopy widget.
+  // Stores action output result for [Backend Call - API (smart search neightn)] action in smart_search_all_2 widget.
   ApiCallResponse? smartsearch2;
   // State field(s) for TextField widget.
   FocusNode? textFieldFocusNode;

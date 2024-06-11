@@ -328,9 +328,9 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           builder: (context, params) => SignUpWidget(),
         ),
         FFRoute(
-          name: 'smart_search_allCopy',
-          path: '/smartSearchAllCopy',
-          builder: (context, params) => SmartSearchAllCopyWidget(
+          name: 'smart_search_all_2',
+          path: '/smartSearchAll2',
+          builder: (context, params) => SmartSearchAll2Widget(
             chosen: params.getParam(
               'chosen',
               ParamType.String,
@@ -591,6 +591,20 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
             chat: params.getParam(
               'chat',
               ParamType.Document,
+            ),
+          ),
+        ),
+        FFRoute(
+          name: 'wishlist',
+          path: '/wishlist',
+          builder: (context, params) => WishlistWidget(
+            chosen: params.getParam(
+              'chosen',
+              ParamType.String,
+            ),
+            firstSearch: params.getParam(
+              'firstSearch',
+              ParamType.String,
             ),
           ),
         )

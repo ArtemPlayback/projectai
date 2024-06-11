@@ -199,7 +199,7 @@ final parametersBuilderMap =
         },
       ),
   'sign_up': ParameterData.none(),
-  'smart_search_allCopy': (data) async => ParameterData(
+  'smart_search_all_2': (data) async => ParameterData(
         allParams: {
           'chosen': getParameter<String>(data, 'chosen'),
           'firstSearch': getParameter<String>(data, 'firstSearch'),
@@ -298,6 +298,12 @@ final parametersBuilderMap =
         allParams: {
           'chat': await getDocumentParameter<ChatsRecord>(
               data, 'chat', ChatsRecord.fromSnapshot),
+        },
+      ),
+  'wishlist': (data) async => ParameterData(
+        allParams: {
+          'chosen': getParameter<String>(data, 'chosen'),
+          'firstSearch': getParameter<String>(data, 'firstSearch'),
         },
       ),
 };

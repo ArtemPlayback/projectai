@@ -22,8 +22,8 @@ export '/new_project/create_event/create_event_widget.dart'
     show CreateEventWidget;
 export '/new_project/event_page/event_page_widget.dart' show EventPageWidget;
 export '/sign_in_foulder/sign_up/sign_up_widget.dart' show SignUpWidget;
-export '/new_project/smart_search_all_copy/smart_search_all_copy_widget.dart'
-    show SmartSearchAllCopyWidget;
+export '/new_project/smart_search_all_2/smart_search_all2_widget.dart'
+    show SmartSearchAll2Widget;
 export '/new_project/create_product/create_product_widget.dart'
     show CreateProductWidget;
 export '/new_project/product_page/product_page_widget.dart'
@@ -63,3 +63,4 @@ export '/new_project/group_chat_page/group_chat_page_widget.dart'
     show GroupChatPageWidget;
 export '/new_project/notifications/notifications_widget.dart'
     show NotificationsWidget;
+export '/new_project/wishlist/wishlist_widget.dart' show WishlistWidget;

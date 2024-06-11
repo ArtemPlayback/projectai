@@ -86,7 +86,7 @@ class _SmartSearchAllWidgetState extends State<SmartSearchAllWidget> {
                       children: [
                         Container(
                           width: double.infinity,
-                          height: 188.0,
+                          height: 108.0,
                           decoration: BoxDecoration(
                             color: FlutterFlowTheme.of(context)
                                 .secondaryBackground,
@@ -116,7 +116,7 @@ class _SmartSearchAllWidgetState extends State<SmartSearchAllWidget> {
                                             highlightColor: Colors.transparent,
                                             onTap: () async {
                                               context.pushNamed(
-                                                'smart_search_allCopy',
+                                                'smart_search_all_2',
                                                 extra: <String, dynamic>{
                                                   kTransitionInfoKey:
                                                       TransitionInfo(
@@ -212,300 +212,6 @@ class _SmartSearchAllWidgetState extends State<SmartSearchAllWidget> {
                                       ),
                                     ),
                                   ].divide(SizedBox(width: 10.0)),
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    24.0, 22.0, 24.0, 0.0),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    InkWell(
-                                      splashColor: Colors.transparent,
-                                      focusColor: Colors.transparent,
-                                      hoverColor: Colors.transparent,
-                                      highlightColor: Colors.transparent,
-                                      onTap: () async {
-                                        _model.chosenState = 'All';
-                                        setState(() {});
-                                      },
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.max,
-                                        children: [
-                                          Container(
-                                            width: 52.0,
-                                            height: 52.0,
-                                            decoration: BoxDecoration(
-                                              color: _model.chosenState == 'All'
-                                                  ? Color(0xFF00B071)
-                                                  : Color(0x1A00B071),
-                                              borderRadius:
-                                                  BorderRadius.circular(14.0),
-                                            ),
-                                            child: Icon(
-                                              FFIcons.knewsW,
-                                              color: _model.chosenState == 'All'
-                                                  ? Colors.white
-                                                  : Color(0xFF00B071),
-                                              size: 24.0,
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    0.0, 2.0, 0.0, 0.0),
-                                            child: Text(
-                                              'All',
-                                              style: FlutterFlowTheme.of(
-                                                      context)
-                                                  .bodyMedium
-                                                  .override(
-                                                    fontFamily: 'LTSuperior',
-                                                    color: _model.chosenState ==
-                                                            'News'
-                                                        ? Color(0xFF00B071)
-                                                        : Color(0xFFA3A3B3),
-                                                    fontSize: 11.0,
-                                                    letterSpacing: 0.0,
-                                                    fontWeight: FontWeight.w500,
-                                                    useGoogleFonts: false,
-                                                  ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    InkWell(
-                                      splashColor: Colors.transparent,
-                                      focusColor: Colors.transparent,
-                                      hoverColor: Colors.transparent,
-                                      highlightColor: Colors.transparent,
-                                      onTap: () async {
-                                        _model.chosenState = 'Events';
-                                        setState(() {});
-                                      },
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.max,
-                                        children: [
-                                          Container(
-                                            width: 52.0,
-                                            height: 52.0,
-                                            decoration: BoxDecoration(
-                                              color:
-                                                  _model.chosenState == 'Events'
-                                                      ? Color(0xFFFF3596)
-                                                      : Color(0x1AFF3596),
-                                              borderRadius:
-                                                  BorderRadius.circular(14.0),
-                                            ),
-                                            child: Icon(
-                                              FFIcons.keventsW,
-                                              color:
-                                                  _model.chosenState == 'Events'
-                                                      ? Colors.white
-                                                      : Color(0xFFFF3596),
-                                              size: 24.0,
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    0.0, 2.0, 0.0, 0.0),
-                                            child: Text(
-                                              'Events',
-                                              style: FlutterFlowTheme.of(
-                                                      context)
-                                                  .bodyMedium
-                                                  .override(
-                                                    fontFamily: 'LTSuperior',
-                                                    color: _model.chosenState ==
-                                                            'Events'
-                                                        ? Color(0xFFFF3596)
-                                                        : Color(0xFFA3A3B3),
-                                                    fontSize: 11.0,
-                                                    letterSpacing: 0.0,
-                                                    fontWeight: FontWeight.w500,
-                                                    useGoogleFonts: false,
-                                                  ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    InkWell(
-                                      splashColor: Colors.transparent,
-                                      focusColor: Colors.transparent,
-                                      hoverColor: Colors.transparent,
-                                      highlightColor: Colors.transparent,
-                                      onTap: () async {
-                                        _model.chosenState = 'Shop';
-                                        setState(() {});
-                                      },
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.max,
-                                        children: [
-                                          Container(
-                                            width: 52.0,
-                                            height: 52.0,
-                                            decoration: BoxDecoration(
-                                              color:
-                                                  _model.chosenState == 'Shop'
-                                                      ? Color(0xFFFFA620)
-                                                      : Color(0x1BFFC804),
-                                              borderRadius:
-                                                  BorderRadius.circular(14.0),
-                                            ),
-                                            child: Icon(
-                                              FFIcons.kshopW,
-                                              color:
-                                                  _model.chosenState == 'Shop'
-                                                      ? Colors.white
-                                                      : Color(0xFFFFA620),
-                                              size: 24.0,
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    0.0, 2.0, 0.0, 0.0),
-                                            child: Text(
-                                              'Shop',
-                                              style: FlutterFlowTheme.of(
-                                                      context)
-                                                  .bodyMedium
-                                                  .override(
-                                                    fontFamily: 'LTSuperior',
-                                                    color: _model.chosenState ==
-                                                            'Shop'
-                                                        ? Color(0xFFFFA620)
-                                                        : Color(0xFFA3A3B3),
-                                                    fontSize: 11.0,
-                                                    letterSpacing: 0.0,
-                                                    fontWeight: FontWeight.w500,
-                                                    useGoogleFonts: false,
-                                                  ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    InkWell(
-                                      splashColor: Colors.transparent,
-                                      focusColor: Colors.transparent,
-                                      hoverColor: Colors.transparent,
-                                      highlightColor: Colors.transparent,
-                                      onTap: () async {
-                                        _model.chosenState = 'People';
-                                        setState(() {});
-                                      },
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.max,
-                                        children: [
-                                          Container(
-                                            width: 52.0,
-                                            height: 52.0,
-                                            decoration: BoxDecoration(
-                                              color:
-                                                  _model.chosenState == 'People'
-                                                      ? Color(0xFFA129FF)
-                                                      : Color(0x1AA129FF),
-                                              borderRadius:
-                                                  BorderRadius.circular(14.0),
-                                            ),
-                                            child: Icon(
-                                              FFIcons.kpeopleW,
-                                              color:
-                                                  _model.chosenState == 'People'
-                                                      ? Colors.white
-                                                      : Color(0xFFA129FF),
-                                              size: 24.0,
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    0.0, 2.0, 0.0, 0.0),
-                                            child: Text(
-                                              'People',
-                                              style: FlutterFlowTheme.of(
-                                                      context)
-                                                  .bodyMedium
-                                                  .override(
-                                                    fontFamily: 'LTSuperior',
-                                                    color: _model.chosenState ==
-                                                            'People'
-                                                        ? Color(0xFFA129FF)
-                                                        : Color(0xFFA3A3B3),
-                                                    fontSize: 11.0,
-                                                    letterSpacing: 0.0,
-                                                    fontWeight: FontWeight.w500,
-                                                    useGoogleFonts: false,
-                                                  ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    InkWell(
-                                      splashColor: Colors.transparent,
-                                      focusColor: Colors.transparent,
-                                      hoverColor: Colors.transparent,
-                                      highlightColor: Colors.transparent,
-                                      onTap: () async {
-                                        _model.chosenState = 'Companies';
-                                        setState(() {});
-                                      },
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.max,
-                                        children: [
-                                          Container(
-                                            width: 52.0,
-                                            height: 52.0,
-                                            decoration: BoxDecoration(
-                                              color: _model.chosenState ==
-                                                      'Companies'
-                                                  ? Color(0xFF00C2FF)
-                                                  : Color(0x1A00C2FF),
-                                              borderRadius:
-                                                  BorderRadius.circular(14.0),
-                                            ),
-                                            child: Icon(
-                                              FFIcons.kprojectsW,
-                                              color: _model.chosenState ==
-                                                      'Companies'
-                                                  ? Colors.white
-                                                  : Color(0xFF00C2FF),
-                                              size: 24.0,
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    0.0, 2.0, 0.0, 0.0),
-                                            child: Text(
-                                              'Companies',
-                                              style: FlutterFlowTheme.of(
-                                                      context)
-                                                  .bodyMedium
-                                                  .override(
-                                                    fontFamily: 'LTSuperior',
-                                                    color: _model.chosenState ==
-                                                            'Companies'
-                                                        ? Color(0xFF00C2FF)
-                                                        : Color(0xFFA3A3B3),
-                                                    fontSize: 11.0,
-                                                    letterSpacing: 0.0,
-                                                    fontWeight: FontWeight.w500,
-                                                    useGoogleFonts: false,
-                                                  ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
                                 ),
                               ),
                             ],
@@ -2208,7 +1914,7 @@ class _SmartSearchAllWidgetState extends State<SmartSearchAllWidget> {
                           padding: EdgeInsetsDirectional.fromSTEB(
                               20.0, 55.0, 20.0, 0.0),
                           child: Text(
-                            'Smart Search2',
+                            'Smart Search',
                             style: FlutterFlowTheme.of(context)
                                 .bodyMedium
                                 .override(
@@ -2323,7 +2029,7 @@ class _SmartSearchAllWidgetState extends State<SmartSearchAllWidget> {
                               ),
                               action: () async {
                                 context.pushNamed(
-                                  'smart_search_allCopy',
+                                  'smart_search_all_2',
                                   queryParameters: {
                                     'firstSearch': serializeParam(
                                       _model.textController.text,

@@ -19,6 +19,7 @@ export 'product_info_a_i_struct.dart';
 export 'project_business_plan_struct.dart';
 export 'project_information_struct.dart';
 export 'questions_struct.dart';
+export 'saved_struct.dart';
 export 'search_item_struct.dart';
 export 'section_struct.dart';
 export 'smart_search_struct.dart';
