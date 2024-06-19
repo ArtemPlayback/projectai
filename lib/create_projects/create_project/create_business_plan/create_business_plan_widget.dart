@@ -1512,6 +1512,7 @@ class _CreateBusinessPlanWidgetState extends State<CreateBusinessPlanWidget> {
                                             text: functions.stringToAPI(
                                                 'firestore_id: ${_model.read23?.reference.id}, project_title: ${_model.read23?.title}, project\'s industry: ${_model.read23?.projectInformation?.businessArea}, project\'s description: ${_model.read23?.projectInformation?.description}, projects\' stage: ${_model.read?.projectInformation?.status}, business plan: ${(_model.read23?.businessPlan?.toMap())?.toString()}, pitch_deck: ${(_model.read23?.pitchDeck?.toMap())?.toString()}'),
                                           );
+
                                           await ProjectsSearchTable().update(
                                             data: {
                                               'firestore_id':
@@ -1640,6 +1641,7 @@ class _CreateBusinessPlanWidgetState extends State<CreateBusinessPlanWidget> {
                               text: functions.stringToAPI(
                                   'firestore_id: ${_model.read?.reference.id}, project_title: ${_model.read?.title}, project\'s industry: ${_model.read?.projectInformation?.businessArea}, project\'s description: ${_model.read?.projectInformation?.description}, projects\' stage: ${_model.read?.projectInformation?.status}, business plan: ${(_model.read?.businessPlan?.toMap())?.toString()}, pitch_deck: ${(_model.read?.pitchDeck?.toMap())?.toString()}'),
                             );
+
                             await ProjectsSearchTable().update(
                               data: {
                                 'firestore_id': widget.project?.reference.id,
@@ -1710,6 +1712,7 @@ class _CreateBusinessPlanWidgetState extends State<CreateBusinessPlanWidget> {
                               text: functions.stringToAPI(
                                   'firestore_id: ${_model.read25?.reference.id}, project_title: ${_model.read25?.title}, project\'s industry: ${_model.read25?.projectInformation?.businessArea}, project\'s description: ${_model.read25?.projectInformation?.description}, projects\' stage: ${_model.read?.projectInformation?.status}, business plan: ${(_model.read25?.businessPlan?.toMap())?.toString()}, pitch_deck: ${(_model.read25?.pitchDeck?.toMap())?.toString()}'),
                             );
+
                             await ProjectsSearchTable().update(
                               data: {
                                 'firestore_id': widget.project?.reference.id,

@@ -170,7 +170,7 @@ class _EventSettingsWidgetState extends State<EventSettingsWidget> {
                                                       fontSize: 16.0,
                                                       letterSpacing: 0.0,
                                                       fontWeight:
-                                                          FontWeight.bold,
+                                                          FontWeight.w600,
                                                       useGoogleFonts: false,
                                                     ),
                                               ),
@@ -216,7 +216,7 @@ class _EventSettingsWidgetState extends State<EventSettingsWidget> {
                             fontFamily: 'LTSuperior',
                             fontSize: 20.0,
                             letterSpacing: 0.0,
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w600,
                             useGoogleFonts: false,
                           ),
                     ),
@@ -400,7 +400,7 @@ class _EventSettingsWidgetState extends State<EventSettingsWidget> {
                             fontFamily: 'LTSuperior',
                             fontSize: 20.0,
                             letterSpacing: 0.0,
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w600,
                             useGoogleFonts: false,
                           ),
                     ),
@@ -579,18 +579,18 @@ class _EventSettingsWidgetState extends State<EventSettingsWidget> {
                     ),
                   ),
                 ]
-                    .addToStart(SizedBox(height: 75.0))
+                    .addToStart(SizedBox(height: 110.0))
                     .addToEnd(SizedBox(height: 70.0)),
               ),
             ),
             Container(
               width: double.infinity,
-              height: 75.0,
+              height: 110.0,
               decoration: BoxDecoration(
                 color: FlutterFlowTheme.of(context).secondaryBackground,
               ),
               child: Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 15.0),
+                padding: EdgeInsetsDirectional.fromSTEB(0.0, 55.0, 0.0, 15.0),
                 child: Row(
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -1,14 +1,18 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/backend/firebase_storage/storage.dart';
+import '/backend/schema/enums/enums.dart';
+import '/backend/schema/structs/index.dart';
 import '/components/delete_company_widget.dart';
 import '/components/list_events_or_products_widget.dart';
+import '/components/subscribers_list_widget.dart';
+import '/components/usercard_small_widget.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/flutter_flow/upload_data.dart';
-import '/new_project/button_infinity/button_infinity_widget.dart';
+import '/sign_in_foulder/new_project/button_infinity/button_infinity_widget.dart';
 import 'dart:async';
 import 'dart:ui';
 import 'company_settings_widget.dart' show CompanySettingsWidget;
@@ -30,6 +34,8 @@ class CompanySettingsModel extends FlutterFlowModel<CompanySettingsWidget> {
   String? cover;
 
   String? image;
+
+  String currentTeamState = 'Team';
 
   ///  State fields for stateful widgets in this page.
 

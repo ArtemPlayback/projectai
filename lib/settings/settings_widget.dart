@@ -8,7 +8,7 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/flutter_flow/upload_data.dart';
-import '/new_project/button_infinity/button_infinity_widget.dart';
+import '/sign_in_foulder/new_project/button_infinity/button_infinity_widget.dart';
 import 'dart:async';
 import 'dart:ui';
 import 'dart:math' as math;
@@ -42,6 +42,8 @@ class _SettingsWidgetState extends State<SettingsWidget> {
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       _model.cover = valueOrDefault(currentUserDocument?.cover, '');
       _model.image = currentUserPhoto;
+      _model.pushes =
+          valueOrDefault<bool>(currentUserDocument?.muteNotifications, false);
       setState(() {});
     });
 
@@ -706,7 +708,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                             fontFamily: 'LTSuperior',
                             fontSize: 20.0,
                             letterSpacing: 0.0,
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w600,
                             useGoogleFonts: false,
                           ),
                     ),
@@ -758,7 +760,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                                               .secondaryText,
                                           fontSize: 16.0,
                                           letterSpacing: 0.0,
-                                          fontWeight: FontWeight.w600,
+                                          fontWeight: FontWeight.w500,
                                           useGoogleFonts: false,
                                         ),
                                   ),
@@ -856,7 +858,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                                               .secondaryText,
                                           fontSize: 16.0,
                                           letterSpacing: 0.0,
-                                          fontWeight: FontWeight.w600,
+                                          fontWeight: FontWeight.w500,
                                           useGoogleFonts: false,
                                         ),
                                   ),
@@ -954,7 +956,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                                               .secondaryText,
                                           fontSize: 16.0,
                                           letterSpacing: 0.0,
-                                          fontWeight: FontWeight.w600,
+                                          fontWeight: FontWeight.w500,
                                           useGoogleFonts: false,
                                         ),
                                   ),
@@ -1052,7 +1054,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                                               .secondaryText,
                                           fontSize: 16.0,
                                           letterSpacing: 0.0,
-                                          fontWeight: FontWeight.w600,
+                                          fontWeight: FontWeight.w500,
                                           useGoogleFonts: false,
                                         ),
                                   ),
@@ -1088,7 +1090,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                             fontFamily: 'LTSuperior',
                             fontSize: 20.0,
                             letterSpacing: 0.0,
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w600,
                             useGoogleFonts: false,
                           ),
                     ),
@@ -1105,7 +1107,9 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                           style:
                               FlutterFlowTheme.of(context).bodyMedium.override(
                                     fontFamily: 'LTSuperior',
+                                    fontSize: 16.0,
                                     letterSpacing: 0.0,
+                                    fontWeight: FontWeight.w500,
                                     useGoogleFonts: false,
                                   ),
                         ),
@@ -1115,14 +1119,28 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                           hoverColor: Colors.transparent,
                           highlightColor: Colors.transparent,
                           onTap: () async {
-                            if (valueOrDefault<bool>(
-                                currentUserDocument?.pushNotifications,
-                                false)) {
+                            if (_model.pushes) {
                               _model.pushes = false;
                               setState(() {});
+                              unawaited(
+                                () async {
+                                  await currentUserReference!
+                                      .update(createUsersRecordData(
+                                    muteNotifications: false,
+                                  ));
+                                }(),
+                              );
                             } else {
                               _model.pushes = true;
                               setState(() {});
+                              unawaited(
+                                () async {
+                                  await currentUserReference!
+                                      .update(createUsersRecordData(
+                                    muteNotifications: true,
+                                  ));
+                                }(),
+                              );
                             }
                           },
                           child: Container(
@@ -1190,7 +1208,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                             fontFamily: 'LTSuperior',
                             fontSize: 20.0,
                             letterSpacing: 0.0,
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w600,
                             useGoogleFonts: false,
                           ),
                     ),
@@ -1206,7 +1224,6 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                         highlightColor: Colors.transparent,
                         onTap: () async {
                           await showDialog(
-                            barrierColor: Color(0x58000000),
                             context: context,
                             builder: (dialogContext) {
                               return Dialog(
@@ -1222,9 +1239,8 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                                               .requestFocus(_model.unfocusNode)
                                           : FocusScope.of(context).unfocus(),
                                   child: Container(
-                                    height: 201.0,
-                                    width:
-                                        MediaQuery.sizeOf(context).width * 0.9,
+                                    height: 328.0,
+                                    width: 328.0,
                                     child: DeleteAccountWidget(),
                                   ),
                                 ),
@@ -1348,18 +1364,18 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                     ),
                   ),
                 ]
-                    .addToStart(SizedBox(height: 75.0))
+                    .addToStart(SizedBox(height: 87.0))
                     .addToEnd(SizedBox(height: 70.0)),
               ),
             ),
             Container(
               width: double.infinity,
-              height: 75.0,
+              height: 100.0,
               decoration: BoxDecoration(
                 color: FlutterFlowTheme.of(context).secondaryBackground,
               ),
               child: Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 15.0),
+                padding: EdgeInsetsDirectional.fromSTEB(0.0, 50.0, 0.0, 15.0),
                 child: Row(
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,

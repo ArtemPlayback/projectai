@@ -4252,10 +4252,7 @@ class _PitchdeckWidgetState extends State<PitchdeckWidget> {
                             size: 15.0,
                           ),
                           onPressed: () async {
-                            if (widget.from == 'settings') {
-                            } else {
-                              context.safePop();
-                            }
+                            context.safePop();
                           },
                         ),
                       ),

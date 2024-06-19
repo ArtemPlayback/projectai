@@ -16,17 +16,25 @@ import '/backend/supabase/supabase.dart';
 import '/auth/firebase_auth/auth_util.dart';
 
 List<dynamic> cleanJson(String jsonString) {
-  jsonString = jsonString.replaceAll('\\n', '');
+  int startIndex = jsonString.indexOf('[');
+  int endIndex = jsonString.lastIndexOf(']');
 
-  // Удалить слеши
-  jsonString = jsonString.replaceAll('\\', '');
+  // Проверить, что оба индекса найдены и расположены корректно
+  if (startIndex != -1 && endIndex != -1 && startIndex < endIndex) {
+    // Извлечь подстроку между '[' и ']', включая сами скобки
+    String jsonArrayString = jsonString.substring(startIndex, endIndex + 1);
 
-  // Заменить одинарные кавычки на двойные кавычки для ключей и значений JSON
-  jsonString = jsonString.replaceAll(RegExp(r"'(.*?)':"), '"\$1":');
-  jsonString = jsonString.replaceAll(RegExp(r"':"), '":');
+    // Преобразовать извлеченную строку в JSON массив
+    try {
+      return jsonDecode(jsonArrayString) as List<dynamic>;
+    } catch (e) {
+      // Если не удалось декодировать, вернуть пустой список
+      return [];
+    }
+  }
 
-  // Преобразовать в JSON-массив
-  return jsonDecode(jsonString);
+  // Если '[' или ']' не найдены, вернуть пустой список
+  return [];
 }
 
 String? stringToAPI(String? text) {

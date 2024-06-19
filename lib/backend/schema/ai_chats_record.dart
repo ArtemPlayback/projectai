@@ -42,6 +42,11 @@ class AiChatsRecord extends FirestoreRecord {
   List<ChatMessagesStruct> get messages => _messages ?? const [];
   bool hasMessages() => _messages != null;
 
+  // "company" field.
+  DocumentReference? _company;
+  DocumentReference? get company => _company;
+  bool hasCompany() => _company != null;
+
   void _initializeFields() {
     _user = snapshotData['user'] as DocumentReference?;
     _event = snapshotData['event'] as DocumentReference?;
@@ -51,6 +56,7 @@ class AiChatsRecord extends FirestoreRecord {
       snapshotData['messages'],
       ChatMessagesStruct.fromMap,
     );
+    _company = snapshotData['company'] as DocumentReference?;
   }
 
   static CollectionReference get collection =>
@@ -92,6 +98,7 @@ Map<String, dynamic> createAiChatsRecordData({
   DocumentReference? event,
   DocumentReference? product,
   String? type,
+  DocumentReference? company,
 }) {
   final firestoreData = mapToFirestore(
     <String, dynamic>{
@@ -99,6 +106,7 @@ Map<String, dynamic> createAiChatsRecordData({
       'event': event,
       'product': product,
       'type': type,
+      'company': company,
     }.withoutNulls,
   );
 
@@ -115,12 +123,13 @@ class AiChatsRecordDocumentEquality implements Equality<AiChatsRecord> {
         e1?.event == e2?.event &&
         e1?.product == e2?.product &&
         e1?.type == e2?.type &&
-        listEquality.equals(e1?.messages, e2?.messages);
+        listEquality.equals(e1?.messages, e2?.messages) &&
+        e1?.company == e2?.company;
   }
 
   @override
   int hash(AiChatsRecord? e) => const ListEquality()
-      .hash([e?.user, e?.event, e?.product, e?.type, e?.messages]);
+      .hash([e?.user, e?.event, e?.product, e?.type, e?.messages, e?.company]);
 
   @override
   bool isValidKey(Object? o) => o is AiChatsRecord;

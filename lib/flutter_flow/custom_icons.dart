@@ -18,6 +18,7 @@ class FFIcons {
   static const String _newIcons34Family = 'NewIcons34';
   static const String _settingsIconsFamily = 'SettingsIcons';
   static const String _starsFamily = 'Stars';
+  static const String _aiFamily = 'Ai';
 
   // pitchdeck
   static const IconData kchartPie11 =
@@ -224,4 +225,6 @@ class FFIcons {
 
   // stars
   static const IconData kvector = IconData(0xe900, fontFamily: _starsFamily);
+
+  // AI
 }

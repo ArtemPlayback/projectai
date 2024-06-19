@@ -99,6 +99,7 @@ class _MarketSizeChatWidgetState extends State<MarketSizeChatWidget>
             question: functions.stringToAPI(
                 'Project\'s title: ${widget.project?.title}, project\'s description:${widget.project?.projectInformation?.description}, existing market size: ${widget.textField}'),
           );
+
           if ((_model.marketSizeOld?.succeeded ?? true)) {
             _model.addToChat(ChatStruct(
               who: 'AI',
@@ -157,6 +158,7 @@ class _MarketSizeChatWidgetState extends State<MarketSizeChatWidget>
             question: functions.stringToAPI(
                 'Project\'s title: ${widget.project?.title}, project\'s description:${widget.project?.projectInformation?.description}, existing monetization: ${widget.textField}'),
           );
+
           if ((_model.monetizationOld?.succeeded ?? true)) {
             _model.addToChat(ChatStruct(
               who: 'AI',
@@ -215,6 +217,7 @@ class _MarketSizeChatWidgetState extends State<MarketSizeChatWidget>
             question: functions.stringToAPI(
                 'Project\'s title: ${widget.project?.title}, project\'s description:${widget.project?.projectInformation?.description}, existing marketing plan: ${widget.textField}'),
           );
+
           if ((_model.marketingPlanOld?.succeeded ?? true)) {
             _model.addToChat(ChatStruct(
               who: 'AI',
@@ -273,6 +276,7 @@ class _MarketSizeChatWidgetState extends State<MarketSizeChatWidget>
             question: functions.stringToAPI(
                 'Project\'s title: ${widget.project?.title}, project\'s description:${widget.project?.projectInformation?.description}, existing financial plan:${widget.textField}'),
           );
+
           if ((_model.financialplanold?.succeeded ?? true)) {
             _model.addToChat(ChatStruct(
               who: 'AI',
@@ -331,6 +335,7 @@ class _MarketSizeChatWidgetState extends State<MarketSizeChatWidget>
             question: functions.stringToAPI(
                 'Project\'s title: ${widget.project?.title}, project\'s description:${widget.project?.projectInformation?.description}, existing production plan: ${widget.textField}'),
           );
+
           if ((_model.productionplanold?.succeeded ?? true)) {
             _model.addToChat(ChatStruct(
               who: 'AI',
@@ -667,6 +672,7 @@ class _MarketSizeChatWidgetState extends State<MarketSizeChatWidget>
                                             question: functions.stringToAPI(
                                                 'Project\'s title: ${widget.project?.title}, project\'s description:${widget.project?.projectInformation?.description}, existing market size: ${widget.textField}, user\'s thought about existing market size: ${_model.message}'),
                                           );
+
                                           if ((_model
                                                   .marketSizeOld35?.succeeded ??
                                               true)) {
@@ -694,6 +700,7 @@ class _MarketSizeChatWidgetState extends State<MarketSizeChatWidget>
                                             question: functions
                                                 .stringToAPI(_model.message),
                                           );
+
                                           if ((_model
                                                   .marketSizOld56?.succeeded ??
                                               true)) {
@@ -732,6 +739,7 @@ class _MarketSizeChatWidgetState extends State<MarketSizeChatWidget>
                                           question: functions
                                               .stringToAPI(_model.message),
                                         );
+
                                         if ((_model
                                                 .marketSiszeOld68?.succeeded ??
                                             true)) {
@@ -794,6 +802,7 @@ class _MarketSizeChatWidgetState extends State<MarketSizeChatWidget>
                                             question: functions.stringToAPI(
                                                 'Project\'s title: ${widget.project?.title}, project\'s description:${widget.project?.projectInformation?.description}, existing market size: ${widget.textField}, user\'s thought about existing market size: ${_model.message}'),
                                           );
+
                                           if ((_model.monetizationChat
                                                   ?.succeeded ??
                                               true)) {
@@ -821,6 +830,7 @@ class _MarketSizeChatWidgetState extends State<MarketSizeChatWidget>
                                             question: functions
                                                 .stringToAPI(_model.message),
                                           );
+
                                           if ((_model.monetizationChat4
                                                   ?.succeeded ??
                                               true)) {
@@ -859,6 +869,7 @@ class _MarketSizeChatWidgetState extends State<MarketSizeChatWidget>
                                           question: functions
                                               .stringToAPI(_model.message),
                                         );
+
                                         if ((_model
                                                 .monetizationChat5?.succeeded ??
                                             true)) {
@@ -921,6 +932,7 @@ class _MarketSizeChatWidgetState extends State<MarketSizeChatWidget>
                                             question: functions
                                                 .stringToAPI(_model.message),
                                           );
+
                                           if ((_model
                                                   .marketingplan4?.succeeded ??
                                               true)) {
@@ -948,6 +960,7 @@ class _MarketSizeChatWidgetState extends State<MarketSizeChatWidget>
                                             question: functions
                                                 .stringToAPI(_model.message),
                                           );
+
                                           if ((_model
                                                   .marketingplan5?.succeeded ??
                                               true)) {
@@ -986,6 +999,7 @@ class _MarketSizeChatWidgetState extends State<MarketSizeChatWidget>
                                           question: functions
                                               .stringToAPI(_model.message),
                                         );
+
                                         if ((_model.marketingplan6?.succeeded ??
                                             true)) {
                                           _model.addToChat(ChatStruct(
@@ -1047,6 +1061,7 @@ class _MarketSizeChatWidgetState extends State<MarketSizeChatWidget>
                                             question: functions
                                                 .stringToAPI(_model.message),
                                           );
+
                                           if ((_model
                                                   .financialplan3?.succeeded ??
                                               true)) {
@@ -1074,6 +1089,7 @@ class _MarketSizeChatWidgetState extends State<MarketSizeChatWidget>
                                             question: functions
                                                 .stringToAPI(_model.message),
                                           );
+
                                           if ((_model
                                                   .financialplan4?.succeeded ??
                                               true)) {
@@ -1112,6 +1128,7 @@ class _MarketSizeChatWidgetState extends State<MarketSizeChatWidget>
                                           question: functions
                                               .stringToAPI(_model.message),
                                         );
+
                                         if ((_model.financialplan5?.succeeded ??
                                             true)) {
                                           _model.addToChat(ChatStruct(
@@ -1172,6 +1189,7 @@ class _MarketSizeChatWidgetState extends State<MarketSizeChatWidget>
                                             question: functions
                                                 .stringToAPI(_model.message),
                                           );
+
                                           if ((_model
                                                   .productionPlan3?.succeeded ??
                                               true)) {
@@ -1199,6 +1217,7 @@ class _MarketSizeChatWidgetState extends State<MarketSizeChatWidget>
                                             question: functions
                                                 .stringToAPI(_model.message),
                                           );
+
                                           if ((_model
                                                   .productionPlan4?.succeeded ??
                                               true)) {
@@ -1237,6 +1256,7 @@ class _MarketSizeChatWidgetState extends State<MarketSizeChatWidget>
                                           question: functions
                                               .stringToAPI(_model.message),
                                         );
+
                                         if ((_model
                                                 .productionPlan5?.succeeded ??
                                             true)) {

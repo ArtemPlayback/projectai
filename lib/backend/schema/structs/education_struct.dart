@@ -22,12 +22,14 @@ class EducationStruct extends FFFirebaseStruct {
   String? _title;
   String get title => _title ?? '';
   set title(String? val) => _title = val;
+
   bool hasTitle() => _title != null;
 
   // "details" field.
   String? _details;
   String get details => _details ?? '';
   set details(String? val) => _details = val;
+
   bool hasDetails() => _details != null;
 
   static EducationStruct fromMap(Map<String, dynamic> data) => EducationStruct(

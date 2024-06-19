@@ -1,6 +1,11 @@
+import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
+import '/backend/schema/structs/index.dart';
+import '/components/toggle_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
+import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -50,33 +55,112 @@ class _EventCardSmallWidgetState extends State<EventCardSmallWidget> {
       mainAxisSize: MainAxisSize.max,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Builder(
-          builder: (context) {
-            final images = widget.event?.eventInfo?.images?.toList() ?? [];
-            return Container(
-              width: 300.0,
-              height: 215.0,
-              child: PageView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                controller: _model.pageViewController ??= PageController(
-                    initialPage: max(0, min(0, images.length - 1))),
-                scrollDirection: Axis.horizontal,
-                itemCount: images.length,
-                itemBuilder: (context, imagesIndex) {
-                  final imagesItem = images[imagesIndex];
-                  return ClipRRect(
-                    borderRadius: BorderRadius.circular(8.0),
-                    child: Image.network(
-                      imagesItem,
-                      width: 300.0,
-                      height: 200.0,
-                      fit: BoxFit.cover,
+        Align(
+          alignment: AlignmentDirectional(1.0, -1.0),
+          child: Stack(
+            alignment: AlignmentDirectional(1.0, -1.0),
+            children: [
+              Builder(
+                builder: (context) {
+                  final images =
+                      widget.event?.eventInfo?.images?.toList() ?? [];
+                  return Container(
+                    width: 300.0,
+                    height: 215.0,
+                    child: PageView.builder(
+                      physics: const NeverScrollableScrollPhysics(),
+                      controller: _model.pageViewController ??= PageController(
+                          initialPage: max(0, min(0, images.length - 1))),
+                      scrollDirection: Axis.horizontal,
+                      itemCount: images.length,
+                      itemBuilder: (context, imagesIndex) {
+                        final imagesItem = images[imagesIndex];
+                        return ClipRRect(
+                          borderRadius: BorderRadius.circular(8.0),
+                          child: Image.network(
+                            valueOrDefault<String>(
+                              imagesItem,
+                              'https://as1.ftcdn.net/v2/jpg/05/85/45/22/1000_F_585452272_Ci6U9qLUPiqiLF15Zk5e4x8a0slzhHgV.jpg',
+                            ),
+                            width: 300.0,
+                            height: 200.0,
+                            fit: BoxFit.cover,
+                          ),
+                        );
+                      },
                     ),
                   );
                 },
               ),
-            );
-          },
+              Align(
+                alignment: AlignmentDirectional(1.0, -1.0),
+                child: Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 10.0, 0.0),
+                  child: AuthUserStreamWidget(
+                    builder: (context) => wrapWithModel(
+                      model: _model.toggleModel,
+                      updateCallback: () => setState(() {}),
+                      updateOnChange: true,
+                      child: ToggleWidget(
+                        boolean: (currentUserDocument?.saved?.toList() ?? [])
+                                .where(
+                                    (e) => e.events == widget.event?.reference)
+                                .toList()
+                                .length >
+                            0,
+                        toggleOn: () async {
+                          unawaited(
+                            () async {
+                              await currentUserReference!.update({
+                                ...mapToFirestore(
+                                  {
+                                    'saved': FieldValue.arrayUnion([
+                                      getSavedFirestoreData(
+                                        updateSavedStruct(
+                                          SavedStruct(
+                                            events: widget.event?.reference,
+                                          ),
+                                          clearUnsetFields: false,
+                                        ),
+                                        true,
+                                      )
+                                    ]),
+                                  },
+                                ),
+                              });
+                            }(),
+                          );
+                        },
+                        toggleOff: () async {
+                          unawaited(
+                            () async {
+                              await currentUserReference!.update({
+                                ...mapToFirestore(
+                                  {
+                                    'saved': FieldValue.arrayUnion([
+                                      getSavedFirestoreData(
+                                        updateSavedStruct(
+                                          SavedStruct(
+                                            events: widget.event?.reference,
+                                          ),
+                                          clearUnsetFields: false,
+                                        ),
+                                        true,
+                                      )
+                                    ]),
+                                  },
+                                ),
+                              });
+                            }(),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
         Padding(
           padding: EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 0.0),
@@ -89,7 +173,7 @@ class _EventCardSmallWidgetState extends State<EventCardSmallWidget> {
                   fontFamily: 'LTSuperior',
                   fontSize: 18.0,
                   letterSpacing: 0.0,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w600,
                   useGoogleFonts: false,
                 ),
           ),
@@ -128,7 +212,7 @@ class _EventCardSmallWidgetState extends State<EventCardSmallWidget> {
           ),
         ),
         Padding(
-          padding: EdgeInsetsDirectional.fromSTEB(0.0, 6.0, 0.0, 0.0),
+          padding: EdgeInsetsDirectional.fromSTEB(0.0, 3.0, 0.0, 0.0),
           child: Row(
             mainAxisSize: MainAxisSize.max,
             children: [

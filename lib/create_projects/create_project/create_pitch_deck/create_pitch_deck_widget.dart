@@ -7082,37 +7082,213 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                             ),
                             FFButtonWidget(
                               onPressed: () async {
-                                if (_model.pageViewCurrentIndex == 7) {
-                                  _model.ref12 =
-                                      await ProjectsRecord.getDocumentOnce(
-                                          widget.project!.reference);
-                                  FFAppState().solutions = [];
-                                  FFAppState().cashFlows = [];
-                                  FFAppState().yearsPlan = [];
-                                  FFAppState().teamMembers = [];
-                                  FFAppState().competitors = [];
-                                  FFAppState().comparisonOptions = [];
-                                  FFAppState().myOptions = [];
-                                  FFAppState().projectOptions = [];
-                                  FFAppState().testCompetitors = [];
-                                  setState(() {});
+                                final firestoreBatch =
+                                    FirebaseFirestore.instance.batch();
+                                try {
+                                  if (_model.pageViewCurrentIndex == 7) {
+                                    firestoreBatch
+                                        .update(widget.project!.reference, {
+                                      ...createProjectsRecordData(
+                                        pitchDeck: updatePitchdeckStruct(
+                                          PitchdeckStruct(
+                                            color: _model.chosenColor,
+                                            firstImageType:
+                                                _model.firstImagesType,
+                                            firstImages:
+                                                _model.firstImagesLinks,
+                                            firstImage: _model.firstImageLink,
+                                            neededInvestment: int.tryParse(
+                                                _model.textController6.text),
+                                            problemImage: _model.problemImage,
+                                            solutions: FFAppState().solutions,
+                                            businessModelChart:
+                                                _model.businessModelChart,
+                                            businessModelName:
+                                                _model.textController8.text,
+                                            cashFlows: FFAppState().cashFlows,
+                                            financeChart: _model.financeChart,
+                                            fiveYearsPlan:
+                                                FFAppState().yearsPlan,
+                                            email: _model.textController17.text,
+                                            potentialMarket:
+                                                _model.textController3.text,
+                                            operatingIndustry:
+                                                _model.textController2.text,
+                                            problemDefinintion:
+                                                _model.textController7.text,
+                                            businessModelDescription:
+                                                _model.textController9.text,
+                                            financialGrowth:
+                                                _model.textController10.text,
+                                            marketName:
+                                                _model.textController11.text,
+                                            marketDescription:
+                                                _model.textController12.text,
+                                            marketChartDescription:
+                                                _model.textController13.text,
+                                            marketChart: _model.marketChart,
+                                            linkToPrototype:
+                                                _model.textController16.text,
+                                            phoneNumber:
+                                                _model.textController18.text,
+                                            messageToInvestor:
+                                                _model.textController15.text,
+                                            shortDescription:
+                                                _model.textController1.text,
+                                            statusAndPlans:
+                                                _model.currentStatusImages,
+                                            competitors:
+                                                FFAppState().competitors,
+                                            statusDescription:
+                                                _model.textController14.text,
+                                            investorShare:
+                                                '${_model.textController5.text}%',
+                                            fiveYearProfit: int.tryParse(
+                                                _model.textController4.text),
+                                          ),
+                                          clearUnsetFields: false,
+                                        ),
+                                        completed: true,
+                                        title: '',
+                                      ),
+                                      ...mapToFirestore(
+                                        {
+                                          'team_members':
+                                              getTeamMemberListFirestoreData(
+                                            FFAppState().teamMembers,
+                                          ),
+                                          'testCompetitors':
+                                              getTestCompetitorsListFirestoreData(
+                                            FFAppState().testCompetitors,
+                                          ),
+                                        },
+                                      ),
+                                    });
+                                    if (true) {
+                                      _model.project =
+                                          await ProjectsRecord.getDocumentOnce(
+                                              widget.project!.reference);
+                                    } else {
+                                      context.safePop();
+                                    }
+                                  } else {
+                                    await _model.pageViewController?.nextPage(
+                                      duration: Duration(milliseconds: 300),
+                                      curve: Curves.ease,
+                                    );
 
-                                  context.pushNamed(
-                                    'pitchdeck',
-                                    queryParameters: {
-                                      'project': serializeParam(
-                                        _model.ref12,
-                                        ParamType.Document,
+                                    firestoreBatch
+                                        .update(widget.project!.reference, {
+                                      ...createProjectsRecordData(
+                                        pitchDeck: updatePitchdeckStruct(
+                                          PitchdeckStruct(
+                                            color: _model.chosenColor,
+                                            firstImageType:
+                                                _model.firstImagesType,
+                                            firstImages:
+                                                _model.firstImagesLinks,
+                                            firstImage: _model.firstImageLink,
+                                            neededInvestment: int.tryParse(
+                                                _model.textController6.text),
+                                            problemImage: _model.problemImage,
+                                            solutions: FFAppState().solutions,
+                                            businessModelChart:
+                                                _model.businessModelChart,
+                                            businessModelName:
+                                                _model.textController8.text,
+                                            cashFlows: FFAppState().cashFlows,
+                                            financeChart: _model.financeChart,
+                                            fiveYearsPlan:
+                                                FFAppState().yearsPlan,
+                                            email: _model.textController17.text,
+                                            potentialMarket:
+                                                _model.textController3.text,
+                                            operatingIndustry:
+                                                _model.textController2.text,
+                                            problemDefinintion:
+                                                _model.textController7.text,
+                                            businessModelDescription:
+                                                _model.textController9.text,
+                                            financialGrowth:
+                                                _model.textController10.text,
+                                            marketName:
+                                                _model.textController11.text,
+                                            marketDescription:
+                                                _model.textController12.text,
+                                            marketChartDescription:
+                                                _model.textController13.text,
+                                            marketChart: _model.marketChart,
+                                            linkToPrototype:
+                                                _model.textController16.text,
+                                            phoneNumber:
+                                                _model.textController18.text,
+                                            messageToInvestor:
+                                                _model.textController15.text,
+                                            shortDescription:
+                                                _model.textController1.text,
+                                            statusAndPlans:
+                                                _model.currentStatusImages,
+                                            competitors:
+                                                FFAppState().competitors,
+                                            statusDescription:
+                                                _model.textController14.text,
+                                            investorShare:
+                                                '${_model.textController5.text}%',
+                                            fiveYearProfit: int.tryParse(
+                                                _model.textController4.text),
+                                          ),
+                                          clearUnsetFields: false,
+                                        ),
                                       ),
-                                      'from': serializeParam(
-                                        'settings',
-                                        ParamType.String,
+                                      ...mapToFirestore(
+                                        {
+                                          'team_members':
+                                              getTeamMemberListFirestoreData(
+                                            FFAppState().teamMembers,
+                                          ),
+                                          'testCompetitors':
+                                              getTestCompetitorsListFirestoreData(
+                                            FFAppState().testCompetitors,
+                                          ),
+                                        },
                                       ),
-                                    }.withoutNulls,
-                                    extra: <String, dynamic>{
-                                      'project': _model.ref12,
-                                    },
-                                  );
+                                    });
+                                  }
+
+                                  if (_model.pageViewCurrentIndex == 7) {
+                                    _model.ref12 =
+                                        await ProjectsRecord.getDocumentOnce(
+                                            widget.project!.reference);
+                                    FFAppState().solutions = [];
+                                    FFAppState().cashFlows = [];
+                                    FFAppState().yearsPlan = [];
+                                    FFAppState().teamMembers = [];
+                                    FFAppState().competitors = [];
+                                    FFAppState().comparisonOptions = [];
+                                    FFAppState().myOptions = [];
+                                    FFAppState().projectOptions = [];
+                                    FFAppState().testCompetitors = [];
+                                    setState(() {});
+
+                                    context.pushNamed(
+                                      'pitchdeck',
+                                      queryParameters: {
+                                        'project': serializeParam(
+                                          _model.ref12,
+                                          ParamType.Document,
+                                        ),
+                                        'from': serializeParam(
+                                          'settings',
+                                          ParamType.String,
+                                        ),
+                                      }.withoutNulls,
+                                      extra: <String, dynamic>{
+                                        'project': _model.ref12,
+                                      },
+                                    );
+                                  }
+                                } finally {
+                                  await firestoreBatch.commit();
                                 }
 
                                 setState(() {});
@@ -7176,12 +7352,17 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                 question: functions.stringToAPI(widget
                                     .project?.projectInformation?.description),
                               );
+
                               if ((_model.shortDescr?.succeeded ?? true)) {
                                 setState(() {
                                   _model.textController1?.text = getJsonField(
                                     (_model.shortDescr?.jsonBody ?? ''),
                                     r'''$.text''',
                                   ).toString();
+                                  _model.textController1?.selection =
+                                      TextSelection.collapsed(
+                                          offset: _model
+                                              .textController1!.text.length);
                                 });
                               }
                               _model.operatingIndustry =
@@ -7189,22 +7370,32 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                 question: functions.stringToAPI(widget
                                     .project?.projectInformation?.description),
                               );
+
                               setState(() {
                                 _model.textController2?.text = getJsonField(
                                   (_model.operatingIndustry?.jsonBody ?? ''),
                                   r'''$.text''',
                                 ).toString();
+                                _model.textController2?.selection =
+                                    TextSelection.collapsed(
+                                        offset: _model
+                                            .textController2!.text.length);
                               });
                               _model.marketize =
                                   await PotentialMarketSizeCall.call(
                                 question: functions.stringToAPI(
                                     widget.project?.businessPlan?.marketSize),
                               );
+
                               setState(() {
                                 _model.textController3?.text = getJsonField(
                                   (_model.marketize?.jsonBody ?? ''),
                                   r'''$.text''',
                                 ).toString();
+                                _model.textController3?.selection =
+                                    TextSelection.collapsed(
+                                        offset: _model
+                                            .textController3!.text.length);
                               });
                             } else if (_model.pageViewCurrentIndex == 2) {
                               _model.apiResulta1j =
@@ -7212,12 +7403,17 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                 question: functions.stringToAPI(widget
                                     .project?.projectInformation?.description),
                               );
+
                               if ((_model.apiResulta1j?.succeeded ?? true)) {
                                 setState(() {
                                   _model.textController7?.text = getJsonField(
                                     (_model.apiResulta1j?.jsonBody ?? ''),
                                     r'''$.text''',
                                   ).toString();
+                                  _model.textController7?.selection =
+                                      TextSelection.collapsed(
+                                          offset: _model
+                                              .textController7!.text.length);
                                 });
                               }
                             } else if (_model.pageViewCurrentIndex == 3) {
@@ -7226,45 +7422,65 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                 question: functions.stringToAPI(
                                     widget.project?.businessPlan?.monetization),
                               );
+
                               setState(() {
                                 _model.textController8?.text = getJsonField(
                                   (_model.businessModelName?.jsonBody ?? ''),
                                   r'''$.text''',
                                 ).toString();
+                                _model.textController8?.selection =
+                                    TextSelection.collapsed(
+                                        offset: _model
+                                            .textController8!.text.length);
                               });
                               _model.businessModeDescription =
                                   await BusinessModelDescriptionCall.call(
                                 question: functions.stringToAPI(
                                     widget.project?.businessPlan?.monetization),
                               );
+
                               setState(() {
                                 _model.textController9?.text = getJsonField(
                                   (_model.businessModeDescription?.jsonBody ??
                                       ''),
                                   r'''$.text''',
                                 ).toString();
+                                _model.textController9?.selection =
+                                    TextSelection.collapsed(
+                                        offset: _model
+                                            .textController9!.text.length);
                               });
                             } else if (_model.pageViewCurrentIndex == 4) {
                               _model.marketName = await MarketNameCall.call(
                                 question: functions.stringToAPI(widget
                                     .project?.businessPlan?.marketingPlan),
                               );
+
                               setState(() {
                                 _model.textController11?.text = getJsonField(
                                   (_model.marketName?.jsonBody ?? ''),
                                   r'''$.text''',
                                 ).toString();
+                                _model.textController11?.selection =
+                                    TextSelection.collapsed(
+                                        offset: _model
+                                            .textController11!.text.length);
                               });
                               _model.marketDescription =
                                   await MarketDescriptionCall.call(
                                 question: functions.stringToAPI(widget
                                     .project?.businessPlan?.marketingPlan),
                               );
+
                               setState(() {
                                 _model.textController14?.text = getJsonField(
                                   (_model.marketDescription?.jsonBody ?? ''),
                                   r'''$.text''',
                                 ).toString();
+                                _model.textController14?.selection =
+                                    TextSelection.collapsed(
+                                        offset: _model
+                                            .textController14!.text.length);
                               });
                             }
 

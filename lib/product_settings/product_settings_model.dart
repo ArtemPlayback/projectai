@@ -46,6 +46,9 @@ class ProductSettingsModel extends FlutterFlowModel<ProductSettingsWidget> {
   List<FFUploadedFile> uploadedLocalFiles = [];
   List<String> uploadedFileUrls = [];
 
+  // Stores action output result for [Backend Call - Read Document] action in IconButton widget.
+  ProductsRecord? read;
+
   @override
   void initState(BuildContext context) {}
 

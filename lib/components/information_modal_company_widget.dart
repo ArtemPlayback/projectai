@@ -52,89 +52,138 @@ class _InformationModalCompanyWidgetState
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.only(
-        bottomLeft: Radius.circular(0.0),
-        bottomRight: Radius.circular(0.0),
-        topLeft: Radius.circular(30.0),
-        topRight: Radius.circular(30.0),
-      ),
-      child: Container(
-        width: double.infinity,
-        height: double.infinity,
-        decoration: BoxDecoration(
-          color: FlutterFlowTheme.of(context).secondaryBackground,
-          borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(0.0),
-            bottomRight: Radius.circular(0.0),
-            topLeft: Radius.circular(30.0),
-            topRight: Radius.circular(30.0),
-          ),
+    return Align(
+      alignment: AlignmentDirectional(0.0, 1.0),
+      child: ClipRRect(
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(0.0),
+          bottomRight: Radius.circular(0.0),
+          topLeft: Radius.circular(30.0),
+          topRight: Radius.circular(30.0),
         ),
-        child: Stack(
-          children: [
-            Align(
-              alignment: AlignmentDirectional(0.0, 0.0),
-              child: SingleChildScrollView(
+        child: Container(
+          width: double.infinity,
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.sizeOf(context).height * 0.8,
+          ),
+          decoration: BoxDecoration(
+            color: FlutterFlowTheme.of(context).secondaryBackground,
+            borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(0.0),
+              bottomRight: Radius.circular(0.0),
+              topLeft: Radius.circular(30.0),
+              topRight: Radius.circular(30.0),
+            ),
+          ),
+          child: Stack(
+            children: [
+              Container(
+                width: double.infinity,
+                height: 70.0,
+                decoration: BoxDecoration(
+                  color: FlutterFlowTheme.of(context).secondaryBackground,
+                ),
+                child: Padding(
+                  padding:
+                      EdgeInsetsDirectional.fromSTEB(20.0, 15.0, 20.0, 0.0),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        '${widget.company?.title}',
+                        style: FlutterFlowTheme.of(context).bodyMedium.override(
+                              fontFamily: 'LTSuperior',
+                              fontSize: 16.0,
+                              letterSpacing: 0.0,
+                              fontWeight: FontWeight.w500,
+                              useGoogleFonts: false,
+                            ),
+                      ),
+                      FlutterFlowIconButton(
+                        borderColor: FlutterFlowTheme.of(context).textAndStroke,
+                        borderRadius: 10.0,
+                        borderWidth: 1.0,
+                        buttonSize: 40.0,
+                        icon: Icon(
+                          Icons.close_rounded,
+                          color: FlutterFlowTheme.of(context).primaryText,
+                          size: 24.0,
+                        ),
+                        onPressed: () async {
+                          Navigator.pop(context);
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              SingleChildScrollView(
                 primary: false,
                 child: Column(
-                  mainAxisSize: MainAxisSize.max,
+                  mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(20.0, 0.0, 20.0, 0.0),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Container(
-                            width: 40.0,
-                            height: 40.0,
-                            decoration: BoxDecoration(
-                              color: FlutterFlowTheme.of(context).primaryText,
-                              borderRadius: BorderRadius.circular(10.0),
-                            ),
-                            child: Icon(
-                              Icons.short_text_rounded,
-                              color: Colors.white,
-                              size: 24.0,
-                            ),
-                          ),
-                          Flexible(
-                            child: Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  15.0, 0.0, 0.0, 0.0),
-                              child: Text(
-                                valueOrDefault<String>(
-                                  widget.company?.projectInformation
-                                      ?.shortDescription,
-                                  'zxc',
-                                ),
-                                style: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .override(
-                                      fontFamily: 'LTSuperior',
-                                      letterSpacing: 0.0,
-                                      fontWeight: FontWeight.w500,
-                                      useGoogleFonts: false,
-                                    ),
+                    if (widget.company?.projectInformation?.description !=
+                            null &&
+                        widget.company?.projectInformation?.description != '')
+                      Padding(
+                        padding: EdgeInsetsDirectional.fromSTEB(
+                            20.0, 0.0, 20.0, 0.0),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            Container(
+                              width: 40.0,
+                              height: 40.0,
+                              decoration: BoxDecoration(
+                                color: FlutterFlowTheme.of(context).primaryText,
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              child: Icon(
+                                Icons.short_text_rounded,
+                                color: Colors.white,
+                                size: 24.0,
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(20.0, 30.0, 20.0, 0.0),
-                      child: Container(
-                        width: double.infinity,
-                        height: 1.0,
-                        decoration: BoxDecoration(
-                          color: Color(0xFFECECEC),
+                            Flexible(
+                              child: Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    15.0, 0.0, 0.0, 0.0),
+                                child: Text(
+                                  valueOrDefault<String>(
+                                    widget.company?.projectInformation
+                                        ?.shortDescription,
+                                    'zxc',
+                                  ),
+                                  style: FlutterFlowTheme.of(context)
+                                      .bodyMedium
+                                      .override(
+                                        fontFamily: 'LTSuperior',
+                                        letterSpacing: 0.0,
+                                        fontWeight: FontWeight.w500,
+                                        useGoogleFonts: false,
+                                      ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    ),
+                    if (widget.company?.projectInformation?.description !=
+                            null &&
+                        widget.company?.projectInformation?.description != '')
+                      Padding(
+                        padding: EdgeInsetsDirectional.fromSTEB(
+                            20.0, 30.0, 20.0, 0.0),
+                        child: Container(
+                          width: double.infinity,
+                          height: 1.0,
+                          decoration: BoxDecoration(
+                            color: Color(0xFFECECEC),
+                          ),
+                        ),
+                      ),
                     StreamBuilder<List<UsersRecord>>(
                       stream: queryUsersRecord(
                         queryBuilder: (usersRecord) => usersRecord.where(
@@ -213,45 +262,6 @@ class _InformationModalCompanyWidgetState
                           ),
                         );
                       },
-                    ),
-                    Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(20.0, 8.0, 20.0, 0.0),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Container(
-                            width: 40.0,
-                            height: 40.0,
-                            decoration: BoxDecoration(
-                              color: Color(0xFF5218B0),
-                              borderRadius: BorderRadius.circular(10.0),
-                            ),
-                            child: Icon(
-                              Icons.person_add_rounded,
-                              color: Colors.white,
-                              size: 20.0,
-                            ),
-                          ),
-                          Flexible(
-                            child: Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  15.0, 0.0, 0.0, 0.0),
-                              child: Text(
-                                '${widget.company?.subscribers?.length?.toString()} subscriptions',
-                                style: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .override(
-                                      fontFamily: 'LTSuperior',
-                                      letterSpacing: 0.0,
-                                      fontWeight: FontWeight.w500,
-                                      useGoogleFonts: false,
-                                    ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
                     ),
                     Padding(
                       padding: EdgeInsetsDirectional.fromSTEB(
@@ -361,6 +371,7 @@ class _InformationModalCompanyWidgetState
                                                   'Keygrh_${teamIndex}_of_${team.length}'),
                                               user: usercardSmallUsersRecord,
                                               secondText: teamItem.role,
+                                              actionEdit: () async {},
                                             ),
                                           );
                                         },
@@ -384,7 +395,12 @@ class _InformationModalCompanyWidgetState
                         ),
                       ),
                     ),
-                    if (widget.company?.socialmedia != null)
+                    if ((widget.company?.socialmedia?.instagram != null &&
+                            widget.company?.socialmedia?.instagram != '') &&
+                        (widget.company?.socialmedia?.telegram != null &&
+                            widget.company?.socialmedia?.telegram != '') &&
+                        (widget.company?.socialmedia?.email != null &&
+                            widget.company?.socialmedia?.email != ''))
                       Padding(
                         padding:
                             EdgeInsetsDirectional.fromSTEB(20.0, 0.0, 0.0, 8.0),
@@ -548,7 +564,12 @@ class _InformationModalCompanyWidgetState
                           ],
                         ),
                       ),
-                    if (widget.company?.socialmedia != null)
+                    if ((widget.company?.socialmedia?.instagram != null &&
+                            widget.company?.socialmedia?.instagram != '') &&
+                        (widget.company?.socialmedia?.telegram != null &&
+                            widget.company?.socialmedia?.telegram != '') &&
+                        (widget.company?.socialmedia?.email != null &&
+                            widget.company?.socialmedia?.email != ''))
                       Padding(
                         padding: EdgeInsetsDirectional.fromSTEB(
                             0.0, 30.0, 0.0, 30.0),
@@ -560,117 +581,81 @@ class _InformationModalCompanyWidgetState
                           ),
                         ),
                       ),
-                    Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(20.0, 0.0, 20.0, 0.0),
-                      child: Builder(
-                        builder: (context) {
-                          final sections =
-                              widget.company?.sections?.toList() ?? [];
-                          return ListView.builder(
-                            padding: EdgeInsets.zero,
-                            shrinkWrap: true,
-                            scrollDirection: Axis.vertical,
-                            itemCount: sections.length,
-                            itemBuilder: (context, sectionsIndex) {
-                              final sectionsItem = sections[sectionsIndex];
-                              return Column(
-                                mainAxisSize: MainAxisSize.max,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    sectionsItem.title,
-                                    style: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .override(
-                                          fontFamily: 'LTSuperior',
-                                          fontSize: 18.0,
-                                          letterSpacing: 0.0,
-                                          fontWeight: FontWeight.w600,
-                                          useGoogleFonts: false,
-                                        ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        0.0, 5.0, 0.0, 0.0),
-                                    child: Text(
-                                      sectionsItem.text,
+                    if ((widget.company?.sections != null &&
+                            (widget.company?.sections)!.isNotEmpty) ==
+                        true)
+                      Padding(
+                        padding: EdgeInsetsDirectional.fromSTEB(
+                            20.0, 0.0, 20.0, 0.0),
+                        child: Builder(
+                          builder: (context) {
+                            final sections =
+                                widget.company?.sections?.toList() ?? [];
+                            return ListView.builder(
+                              padding: EdgeInsets.zero,
+                              shrinkWrap: true,
+                              scrollDirection: Axis.vertical,
+                              itemCount: sections.length,
+                              itemBuilder: (context, sectionsIndex) {
+                                final sectionsItem = sections[sectionsIndex];
+                                return Column(
+                                  mainAxisSize: MainAxisSize.max,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      sectionsItem.title,
                                       style: FlutterFlowTheme.of(context)
                                           .bodyMedium
                                           .override(
                                             fontFamily: 'LTSuperior',
-                                            color: FlutterFlowTheme.of(context)
-                                                .secondaryText,
-                                            fontSize: 14.0,
+                                            fontSize: 18.0,
                                             letterSpacing: 0.0,
-                                            fontWeight: FontWeight.normal,
+                                            fontWeight: FontWeight.w600,
                                             useGoogleFonts: false,
                                           ),
                                     ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        0.0, 30.0, 0.0, 30.0),
-                                    child: Container(
-                                      width: double.infinity,
-                                      height: 1.0,
-                                      decoration: BoxDecoration(
-                                        color: Color(0xFFECECEC),
+                                    Padding(
+                                      padding: EdgeInsetsDirectional.fromSTEB(
+                                          0.0, 5.0, 0.0, 0.0),
+                                      child: Text(
+                                        sectionsItem.text,
+                                        style: FlutterFlowTheme.of(context)
+                                            .bodyMedium
+                                            .override(
+                                              fontFamily: 'LTSuperior',
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .secondaryText,
+                                              fontSize: 14.0,
+                                              letterSpacing: 0.0,
+                                              fontWeight: FontWeight.normal,
+                                              useGoogleFonts: false,
+                                            ),
                                       ),
                                     ),
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        },
+                                    Padding(
+                                      padding: EdgeInsetsDirectional.fromSTEB(
+                                          0.0, 30.0, 0.0, 30.0),
+                                      child: Container(
+                                        width: double.infinity,
+                                        height: 1.0,
+                                        decoration: BoxDecoration(
+                                          color: Color(0xFFECECEC),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          },
+                        ),
                       ),
-                    ),
                   ].addToStart(SizedBox(height: 85.0)),
                 ),
               ),
-            ),
-            Container(
-              width: double.infinity,
-              height: 70.0,
-              decoration: BoxDecoration(
-                color: FlutterFlowTheme.of(context).secondaryBackground,
-              ),
-              child: Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(20.0, 15.0, 20.0, 0.0),
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      '${widget.company?.title}',
-                      style: FlutterFlowTheme.of(context).bodyMedium.override(
-                            fontFamily: 'LTSuperior',
-                            fontSize: 16.0,
-                            letterSpacing: 0.0,
-                            fontWeight: FontWeight.w500,
-                            useGoogleFonts: false,
-                          ),
-                    ),
-                    FlutterFlowIconButton(
-                      borderColor: FlutterFlowTheme.of(context).textAndStroke,
-                      borderRadius: 10.0,
-                      borderWidth: 1.0,
-                      buttonSize: 40.0,
-                      icon: Icon(
-                        Icons.close_rounded,
-                        color: FlutterFlowTheme.of(context).primaryText,
-                        size: 24.0,
-                      ),
-                      onPressed: () async {
-                        Navigator.pop(context);
-                      },
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

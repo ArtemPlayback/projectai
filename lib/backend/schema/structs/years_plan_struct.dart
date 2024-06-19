@@ -24,19 +24,23 @@ class YearsPlanStruct extends FFFirebaseStruct {
   int? _year;
   int get year => _year ?? 0;
   set year(int? val) => _year = val;
-  void incrementYear(int amount) => _year = year + amount;
+
+  void incrementYear(int amount) => year = year + amount;
+
   bool hasYear() => _year != null;
 
   // "taskTitle" field.
   String? _taskTitle;
   String get taskTitle => _taskTitle ?? '';
   set taskTitle(String? val) => _taskTitle = val;
+
   bool hasTaskTitle() => _taskTitle != null;
 
   // "done" field.
   bool? _done;
   bool get done => _done ?? false;
   set done(bool? val) => _done = val;
+
   bool hasDone() => _done != null;
 
   static YearsPlanStruct fromMap(Map<String, dynamic> data) => YearsPlanStruct(

@@ -17,6 +17,7 @@ import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutterflow_colorpicker/flutterflow_colorpicker.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'product_information_model.dart';
@@ -52,6 +53,8 @@ class _ProductInformationWidgetState extends State<ProductInformationWidget>
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       FFAppState().productInfo =
           widget.product!.productInfo.toList().cast<ProductInfoAIStruct>();
+      FFAppState().update(() {});
+      _model.colors3 = widget.product!.colors.toList().cast<Color>();
       setState(() {});
     });
 
@@ -135,7 +138,7 @@ class _ProductInformationWidgetState extends State<ProductInformationWidget>
                                   fontFamily: 'LTSuperior',
                                   fontSize: 20.0,
                                   letterSpacing: 0.0,
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight: FontWeight.w600,
                                   useGoogleFonts: false,
                                 ),
                           ),
@@ -244,7 +247,7 @@ class _ProductInformationWidgetState extends State<ProductInformationWidget>
                                   fontFamily: 'LTSuperior',
                                   fontSize: 20.0,
                                   letterSpacing: 0.0,
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight: FontWeight.w600,
                                   useGoogleFonts: false,
                                 ),
                           ),
@@ -363,7 +366,7 @@ class _ProductInformationWidgetState extends State<ProductInformationWidget>
                                   fontFamily: 'LTSuperior',
                                   fontSize: 20.0,
                                   letterSpacing: 0.0,
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight: FontWeight.w600,
                                   useGoogleFonts: false,
                                 ),
                           ),
@@ -391,6 +394,10 @@ class _ProductInformationWidgetState extends State<ProductInformationWidget>
                                     _model.textController3?.text =
                                         functions.newCustomFunction(
                                             _model.textController3.text);
+                                    _model.textController3?.selection =
+                                        TextSelection.collapsed(
+                                            offset: _model
+                                                .textController3!.text.length);
                                   });
                                 },
                               ),
@@ -484,6 +491,192 @@ class _ProductInformationWidgetState extends State<ProductInformationWidget>
                     ),
                     Padding(
                       padding:
+                          EdgeInsetsDirectional.fromSTEB(20.0, 0.0, 20.0, 35.0),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Colors',
+                            style: FlutterFlowTheme.of(context)
+                                .bodyMedium
+                                .override(
+                                  fontFamily: 'LTSuperior',
+                                  fontSize: 20.0,
+                                  letterSpacing: 0.0,
+                                  fontWeight: FontWeight.w600,
+                                  useGoogleFonts: false,
+                                ),
+                          ),
+                          Text(
+                            'Choose colors of your product',
+                            style: FlutterFlowTheme.of(context)
+                                .bodyMedium
+                                .override(
+                                  fontFamily: 'LTSuperior',
+                                  letterSpacing: 0.0,
+                                  useGoogleFonts: false,
+                                ),
+                          ),
+                          Padding(
+                            padding: EdgeInsetsDirectional.fromSTEB(
+                                0.0, 20.0, 0.0, 0.0),
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                mainAxisSize: MainAxisSize.max,
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  InkWell(
+                                    splashColor: Colors.transparent,
+                                    focusColor: Colors.transparent,
+                                    hoverColor: Colors.transparent,
+                                    highlightColor: Colors.transparent,
+                                    onTap: () async {
+                                      final _colorPickedColor =
+                                          await showFFColorPicker(
+                                        context,
+                                        currentColor: _model.colorPicked ??=
+                                            Colors.black,
+                                        showRecentColors: true,
+                                        allowOpacity: true,
+                                        textColor: FlutterFlowTheme.of(context)
+                                            .primaryText,
+                                        secondaryTextColor:
+                                            FlutterFlowTheme.of(context)
+                                                .secondaryText,
+                                        backgroundColor:
+                                            FlutterFlowTheme.of(context)
+                                                .primaryBackground,
+                                        primaryButtonBackgroundColor:
+                                            FlutterFlowTheme.of(context)
+                                                .primary,
+                                        primaryButtonTextColor: Colors.white,
+                                        primaryButtonBorderColor:
+                                            Colors.transparent,
+                                        displayAsBottomSheet:
+                                            isMobileWidth(context),
+                                      );
+
+                                      if (_colorPickedColor != null) {
+                                        safeSetState(() => _model.colorPicked =
+                                            _colorPickedColor);
+                                      }
+
+                                      _model.addToColors3(_model.colorPicked!);
+                                      setState(() {});
+                                    },
+                                    child: Container(
+                                      width: 50.0,
+                                      height: 50.0,
+                                      decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(360.0),
+                                        border: Border.all(
+                                          color: FlutterFlowTheme.of(context)
+                                              .textAndStroke,
+                                        ),
+                                      ),
+                                      child: Icon(
+                                        FFIcons.kadd,
+                                        color: FlutterFlowTheme.of(context)
+                                            .primary,
+                                        size: 16.0,
+                                      ),
+                                    ),
+                                  ),
+                                  Builder(
+                                    builder: (context) {
+                                      final colors = _model.colors3.toList();
+                                      return Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: List.generate(colors.length,
+                                            (colorsIndex) {
+                                          final colorsItem =
+                                              colors[colorsIndex];
+                                          return Container(
+                                            width: 58.0,
+                                            height: 58.0,
+                                            child: Stack(
+                                              alignment: AlignmentDirectional(
+                                                  1.0, -1.0),
+                                              children: [
+                                                Align(
+                                                  alignment:
+                                                      AlignmentDirectional(
+                                                          0.0, 1.0),
+                                                  child: Container(
+                                                    width: 50.0,
+                                                    height: 50.0,
+                                                    decoration: BoxDecoration(
+                                                      color:
+                                                          valueOrDefault<Color>(
+                                                        colorsItem,
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .primary,
+                                                      ),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              360.0),
+                                                      border: Border.all(
+                                                        color: colorsItem ==
+                                                                Colors.white
+                                                            ? FlutterFlowTheme
+                                                                    .of(context)
+                                                                .primaryText
+                                                            : Color(0x00000000),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                Align(
+                                                  alignment:
+                                                      AlignmentDirectional(
+                                                          1.0, -1.0),
+                                                  child: Padding(
+                                                    padding:
+                                                        EdgeInsetsDirectional
+                                                            .fromSTEB(22.0, 0.0,
+                                                                0.0, 0.0),
+                                                    child:
+                                                        FlutterFlowIconButton(
+                                                      borderColor: colorsItem,
+                                                      borderRadius: 20.0,
+                                                      borderWidth: 3.0,
+                                                      buttonSize: 28.0,
+                                                      fillColor:
+                                                          Color(0x9C000000),
+                                                      icon: Icon(
+                                                        Icons.close_outlined,
+                                                        color: Colors.white,
+                                                        size: 11.0,
+                                                      ),
+                                                      onPressed: () async {
+                                                        _model
+                                                            .removeFromColors3(
+                                                                colorsItem);
+                                                        setState(() {});
+                                                      },
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                                        }).divide(SizedBox(width: 0.0)),
+                                      );
+                                    },
+                                  ),
+                                ].divide(SizedBox(width: 8.0)),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding:
                           EdgeInsetsDirectional.fromSTEB(20.0, 0.0, 20.0, 0.0),
                       child: Column(
                         mainAxisSize: MainAxisSize.max,
@@ -497,7 +690,7 @@ class _ProductInformationWidgetState extends State<ProductInformationWidget>
                                   fontFamily: 'LTSuperior',
                                   fontSize: 20.0,
                                   letterSpacing: 0.0,
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight: FontWeight.w600,
                                   useGoogleFonts: false,
                                 ),
                           ),
@@ -536,11 +729,19 @@ class _ProductInformationWidgetState extends State<ProductInformationWidget>
                           itemBuilder: (context, productinfoIndex) {
                             final productinfoItem =
                                 productinfo[productinfoIndex];
-                            return ProductBlockWidget(
-                              key: Key(
-                                  'Keykus_${productinfoIndex}_of_${productinfo.length}'),
-                              index: productinfoIndex,
-                              productinfo: productinfoItem,
+                            return wrapWithModel(
+                              model: _model.productBlockModels.getModel(
+                                productinfoIndex.toString(),
+                                productinfoIndex,
+                              ),
+                              updateCallback: () => setState(() {}),
+                              child: ProductBlockWidget(
+                                key: Key(
+                                  'Keykus_${productinfoIndex.toString()}',
+                                ),
+                                index: productinfoIndex,
+                                productinfo: productinfoItem,
+                              ),
                             );
                           },
                         );
@@ -711,6 +912,7 @@ class _ProductInformationWidgetState extends State<ProductInformationWidget>
                             'product_info': getProductInfoAIListFirestoreData(
                               FFAppState().productInfo,
                             ),
+                            'Colors': _model.colors3,
                           },
                         ),
                       });
@@ -738,6 +940,7 @@ class _ProductInformationWidgetState extends State<ProductInformationWidget>
                         ),
                         documentId: widget.product?.customId,
                       );
+
                       await Future.delayed(const Duration(milliseconds: 1000));
                       unawaited(
                         () async {

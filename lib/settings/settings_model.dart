@@ -8,7 +8,7 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/flutter_flow/upload_data.dart';
-import '/new_project/button_infinity/button_infinity_widget.dart';
+import '/sign_in_foulder/new_project/button_infinity/button_infinity_widget.dart';
 import 'dart:async';
 import 'dart:ui';
 import 'dart:math' as math;

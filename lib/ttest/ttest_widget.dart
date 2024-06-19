@@ -40,6 +40,8 @@ class _TtestWidgetState extends State<TtestWidget> {
 
   @override
   Widget build(BuildContext context) {
+    context.watch<FFAppState>();
+
     return GestureDetector(
       onTap: () => _model.unfocusNode.canRequestFocus
           ? FocusScope.of(context).requestFocus(_model.unfocusNode)
@@ -74,7 +76,10 @@ class _TtestWidgetState extends State<TtestWidget> {
                 ),
                 FlutterFlowAudioPlayer(
                   audio: Audio.network(
-                    'https://filesamples.com/samples/audio/mp3/sample3.mp3',
+                    valueOrDefault<String>(
+                      FFAppState().voiceMessageUrl,
+                      'https://filesamples.com/samples/audio/mp3/sample3.mp3',
+                    ),
                     metas: Metas(
                       id: 'sample3.mp3-09ea6869',
                     ),
@@ -106,8 +111,10 @@ class _TtestWidgetState extends State<TtestWidget> {
                     child: custom_widgets.VoiceMessage(
                       width: MediaQuery.sizeOf(context).width * 0.8,
                       height: 71.0,
-                      audio:
-                          'https://filesamples.com/samples/audio/mp3/sample3.mp3',
+                      audio: valueOrDefault<String>(
+                        FFAppState().voiceMessageUrl,
+                        'https://filesamples.com/samples/audio/mp3/sample3.mp3',
+                      ),
                       playIcon: FaIcon(
                         FontAwesomeIcons.play,
                         color: Colors.white,
@@ -134,8 +141,94 @@ class _TtestWidgetState extends State<TtestWidget> {
                       voiceMessageContainerColor: Color(0xFFF6F6F6),
                       audioWavesColor: FlutterFlowTheme.of(context).primary,
                       sentTime: getCurrentTimestamp,
+                      messageId: 'werbfdt',
                     ),
                   ),
+                ),
+                Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 0.0),
+                  child: Container(
+                    width: MediaQuery.sizeOf(context).width * 0.8,
+                    height: 71.0,
+                    child: custom_widgets.VoiceMessage(
+                      width: MediaQuery.sizeOf(context).width * 0.8,
+                      height: 71.0,
+                      audio: valueOrDefault<String>(
+                        FFAppState().voiceMessageUrl,
+                        'https://filesamples.com/samples/audio/mp3/sample3.mp3',
+                      ),
+                      playIcon: FaIcon(
+                        FontAwesomeIcons.play,
+                        color: Colors.white,
+                        size: 18.0,
+                      ),
+                      stopIcon: Icon(
+                        Icons.pause_rounded,
+                        color: Colors.white,
+                        size: 18.0,
+                      ),
+                      containerColor: FlutterFlowTheme.of(context).primary,
+                      isRead: true,
+                      readIcon1st: Icon(
+                        Icons.check,
+                        color: FlutterFlowTheme.of(context).secondary,
+                        size: 15.0,
+                      ),
+                      readIcon2nd: Icon(
+                        Icons.done_all,
+                        color: FlutterFlowTheme.of(context).primary,
+                        size: 15.0,
+                      ),
+                      isLeft: true,
+                      voiceMessageContainerColor: Color(0xFFF6F6F6),
+                      audioWavesColor: FlutterFlowTheme.of(context).primary,
+                      sentTime: getCurrentTimestamp,
+                      messageId: 'werbfdt234',
+                    ),
+                  ),
+                ),
+                if (_model.isSeen)
+                  Padding(
+                    padding:
+                        EdgeInsetsDirectional.fromSTEB(0.0, 50.0, 0.0, 0.0),
+                    child: custom_widgets.VoiceMessageRecorderWidget(
+                      width: 50.0,
+                      height: 50.0,
+                      recordingIcon: Icon(
+                        Icons.mic_outlined,
+                        color: FlutterFlowTheme.of(context).primaryText,
+                        size: 20.0,
+                      ),
+                      setTextField: () async {
+                        _model.isSeen = false;
+                        setState(() {});
+                      },
+                    ),
+                  ),
+                InkWell(
+                  splashColor: Colors.transparent,
+                  focusColor: Colors.transparent,
+                  hoverColor: Colors.transparent,
+                  highlightColor: Colors.transparent,
+                  onTap: () async {
+                    _model.isSeen = true;
+                    setState(() {});
+                  },
+                  child: Container(
+                    width: 100.0,
+                    height: 100.0,
+                    decoration: BoxDecoration(
+                      color: FlutterFlowTheme.of(context).secondaryBackground,
+                    ),
+                  ),
+                ),
+                Text(
+                  'Hello World',
+                  style: FlutterFlowTheme.of(context).bodyMedium.override(
+                        fontFamily: 'LTSuperior',
+                        letterSpacing: 0.0,
+                        useGoogleFonts: false,
+                      ),
                 ),
               ],
             ),

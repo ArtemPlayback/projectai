@@ -38,8 +38,9 @@ class AddPostModel extends FlutterFlowModel<AddPostWidget> {
   String? id = '';
 
   PostStruct? post;
-  void updatePostStruct(Function(PostStruct) updateFn) =>
-      updateFn(post ??= PostStruct());
+  void updatePostStruct(Function(PostStruct) updateFn) {
+    updateFn(post ??= PostStruct());
+  }
 
   List<PostStruct> posts = [];
   void addToPosts(PostStruct item) => posts.add(item);

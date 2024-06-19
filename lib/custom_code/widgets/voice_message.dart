@@ -39,6 +39,7 @@ class VoiceMessage extends StatefulWidget {
     required this.voiceMessageContainerColor,
     required this.audioWavesColor,
     required this.sentTime,
+    required this.messageId,
   });
 
   final double? width;
@@ -54,6 +55,7 @@ class VoiceMessage extends StatefulWidget {
   final Color voiceMessageContainerColor;
   final Color audioWavesColor;
   final DateTime sentTime;
+  final String messageId;
 
   @override
   State<VoiceMessage> createState() => _VoiceMessageState();
@@ -63,162 +65,191 @@ class _VoiceMessageState extends State<VoiceMessage> {
   late final _VoiceMessageController controller;
 
   double? sliderValue;
+  String? prevStateMessageId;
 
   @override
   void initState() {
-    controller = _VoiceMessageController(audioLink: widget.audio);
+    controller = _VoiceMessageController(
+      audioLink: widget.audio,
+      messageId: widget.messageId,
+    );
     controller.init();
     controller.addListener(() {
       setState(() {});
     });
+    prevStateMessageId = FFAppState().currentMessageID;
+    FFAppState().addListener(stateListener);
     super.initState();
   }
 
   @override
   void dispose() {
     controller.dispose();
+    FFAppState().removeListener(stateListener);
     super.dispose();
+  }
+
+  void stateListener() {
+    final newStateMessageId = FFAppState().currentMessageID;
+    if (prevStateMessageId == newStateMessageId) return;
+    if (newStateMessageId == widget.messageId) return;
+    controller.pause();
   }
 
   @override
   Widget build(BuildContext context) {
     return AbsorbPointer(
       absorbing: controller.isLoading,
-      child: Container(
-        height: 71,
-        width: widget.width,
-        decoration: BoxDecoration(
-            color: widget.voiceMessageContainerColor,
-            borderRadius: BorderRadius.circular(10)
-                .copyWith(bottomLeft: Radius.circular(widget.isLeft ? 2 : 10))
-                .copyWith(
-                    bottomRight: Radius.circular(widget.isLeft ? 10 : 2))),
-        child: Stack(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-              child: Row(
-                children: [
-                  LayoutBuilder(
-                    builder: (context, c) {
-                      return GestureDetector(
-                        onTap: controller.togglePlay,
-                        child: Container(
-                          height: c.maxHeight,
-                          width: c.maxHeight,
-                          decoration: BoxDecoration(
-                            color: widget.containerColor,
-                            borderRadius: BorderRadius.circular(40),
-                          ),
-                          alignment: Alignment.center,
-                          child: controller.isPlaying
-                              ? widget.stopIcon
-                              : widget.playIcon,
-                        ),
-                      );
-                    },
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: LayoutBuilder(builder: (context, c) {
-                      final maxWidth = c.maxWidth;
-                      return GestureDetector(
-                        onHorizontalDragDown: (details) {
-                          controller.audioPlayer.pause();
-                          setState(() {
-                            sliderValue = (details.localPosition.dx / maxWidth)
-                                .clamp(0, 1);
-                          });
-                        },
-                        onHorizontalDragUpdate: (details) {
-                          setState(() {
-                            sliderValue = (details.localPosition.dx / maxWidth)
-                                .clamp(0, 1);
-                          });
-                        },
-                        onHorizontalDragEnd: (_) {
-                          controller.seekToPercent(sliderValue!);
-                          setState(() {
-                            sliderValue = null;
-                          });
-                          controller.audioPlayer.play();
-                        },
-                        child: Container(
-                          color: widget.voiceMessageContainerColor
-                              .withOpacity(0.0001),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const SizedBox(height: 5),
-                              Expanded(
-                                child: _Waveforms(
-                                  data: controller.waveformsData,
-                                  fakeData: controller.fakeWaveformsData,
-                                  showPercentages: sliderValue != null ||
-                                      controller.isPlaying ||
-                                      controller.showPercentages,
-                                  percentage: sliderValue != null
-                                      ? sliderValue!
-                                      : controller.playedPercentage,
-                                  color: widget.audioWavesColor,
-                                ),
-                              ),
-                              const SizedBox(height: 2),
-                              Text(
-                                controller.formattedDuration,
-                                style: const TextStyle(
-                                  color: Color(0xFFC6C6D5),
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ),
-                              const SizedBox(height: 3),
-                            ],
-                          ),
-                        ),
-                      );
-                    }),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-              child: LayoutBuilder(
-                builder: (context, c) {
-                  if (!controller.isLoading) return const SizedBox();
-                  return SizedBox(
-                    height: c.maxHeight,
-                    width: c.maxHeight,
-                    child: _ProgressCircle(
-                      percentage: controller.loadingProgress,
-                    ),
-                  );
-                },
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-              child: Align(
-                alignment: Alignment.bottomRight,
+      child: GestureDetector(
+        onTap: controller.isPlayedOnce
+            ? null
+            : () {
+                controller.play();
+              },
+        child: Container(
+          height: 71,
+          width: widget.width,
+          decoration: BoxDecoration(
+              color: widget.voiceMessageContainerColor,
+              borderRadius: BorderRadius.circular(10)
+                  .copyWith(bottomLeft: Radius.circular(widget.isLeft ? 2 : 10))
+                  .copyWith(
+                      bottomRight: Radius.circular(widget.isLeft ? 10 : 2))),
+          child: Stack(
+            children: [
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                 child: Row(
-                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(
-                      _formattedSentTime(),
-                      style: const TextStyle(
-                        color: Color(0xFFC6C6D5),
-                        fontSize: 12,
-                        fontWeight: FontWeight.w400,
+                    LayoutBuilder(
+                      builder: (context, c) {
+                        return GestureDetector(
+                          onTap: controller.togglePlay,
+                          child: Container(
+                            height: c.maxHeight,
+                            width: c.maxHeight,
+                            decoration: BoxDecoration(
+                              color: widget.containerColor,
+                              borderRadius: BorderRadius.circular(40),
+                            ),
+                            alignment: Alignment.center,
+                            child: controller.isPlaying
+                                ? widget.stopIcon
+                                : widget.playIcon,
+                          ),
+                        );
+                      },
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: IgnorePointer(
+                        ignoring: !controller.isPlayedOnce,
+                        child: LayoutBuilder(builder: (context, c) {
+                          final maxWidth = c.maxWidth;
+                          return GestureDetector(
+                            onHorizontalDragDown: (details) {
+                              controller.pause();
+                              setState(() {
+                                sliderValue =
+                                    (details.localPosition.dx / maxWidth)
+                                        .clamp(0, 1);
+                              });
+                            },
+                            onHorizontalDragUpdate: (details) {
+                              setState(() {
+                                sliderValue =
+                                    (details.localPosition.dx / maxWidth)
+                                        .clamp(0, 1);
+                              });
+                            },
+                            onHorizontalDragEnd: (_) {
+                              controller.seekToPercent(sliderValue!);
+                              setState(() {
+                                sliderValue = null;
+                              });
+                              controller.play();
+                            },
+                            child: Container(
+                              color: widget.voiceMessageContainerColor
+                                  .withOpacity(0.0001),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const SizedBox(height: 5),
+                                  Expanded(
+                                    child: _Waveforms(
+                                      data: controller.waveformsData,
+                                      fakeData: controller.fakeWaveformsData,
+                                      showPercentages: sliderValue != null ||
+                                          !controller.isPlaying ||
+                                          controller.showPercentages,
+                                      percentage: sliderValue != null
+                                          ? sliderValue!
+                                          : controller.playedPercentage,
+                                      color: widget.audioWavesColor,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 2),
+                                  Text(
+                                    controller.formattedDuration,
+                                    style: const TextStyle(
+                                      color: Color(0xFFC6C6D5),
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 3),
+                                ],
+                              ),
+                            ),
+                          );
+                        }),
                       ),
                     ),
-                    const SizedBox(width: 4),
-                    widget.isRead ? widget.readIcon1st : widget.readIcon2nd,
                   ],
                 ),
               ),
-            ),
-          ],
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                child: LayoutBuilder(
+                  builder: (context, c) {
+                    if (!controller.isLoading) return const SizedBox();
+                    return SizedBox(
+                      height: c.maxHeight,
+                      width: c.maxHeight,
+                      child: _ProgressCircle(
+                        percentage: controller.loadingProgress,
+                      ),
+                    );
+                  },
+                ),
+              ),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                child: Align(
+                  alignment: Alignment.bottomRight,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        _formattedSentTime(),
+                        style: const TextStyle(
+                          color: Color(0xFFC6C6D5),
+                          fontSize: 12,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                      widget.isRead ? widget.readIcon1st : widget.readIcon2nd,
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -366,16 +397,22 @@ class _ProgressCirclePainter extends CustomPainter {
 }
 
 class _VoiceMessageController extends ChangeNotifier {
-  _VoiceMessageController({required this.audioLink});
+  _VoiceMessageController({
+    required this.audioLink,
+    required this.messageId,
+  });
 
   final _subs = <StreamSubscription>[];
 
   final String audioLink;
+  final String messageId;
 
   var loadingProgress = 0.0;
 
   final fakeWaveformsData =
       List.generate(200, (index) => Random().nextDouble());
+
+  bool isPlayedOnce = false;
 
   bool isLoading = true;
   bool showPercentages = false;
@@ -433,13 +470,32 @@ class _VoiceMessageController extends ChangeNotifier {
     notifyListeners();
   }
 
+  void play() {
+    isPlayedOnce = true;
+    FFAppState().update(() {
+      FFAppState().currentMessageID = messageId;
+    });
+    audioPlayer.play();
+    notifyListeners();
+  }
+
+  void pause() {
+    if (FFAppState().currentMessageID == messageId) {
+      FFAppState().update(() {
+        FFAppState().currentMessageID = "";
+      });
+    }
+    audioPlayer.pause();
+  }
+
   void togglePlay() {
     showPercentages = true;
     if (audioPlayer.playing) {
-      audioPlayer.pause();
+      pause();
     } else {
-      audioPlayer.play();
+      play();
     }
+    notifyListeners();
   }
 
   void seekToPercent(double percent) {

@@ -9,3 +9,4 @@ export 'open_a_i_images.dart' show openAIImages;
 export 'send_email_webhook.dart' show sendEmailWebhook;
 export 'machine_effect.dart' show machineEffect;
 export 'query_users.dart' show queryUsers;
+export 'hide_keyboard.dart' show hideKeyboard;

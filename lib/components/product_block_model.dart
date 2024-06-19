@@ -36,7 +36,7 @@ class ProductBlockModel extends FlutterFlowModel<ProductBlockWidget> {
   TextEditingController? textController2;
   String? Function(BuildContext, String?)? textController2Validator;
   // State field(s) for PlacePicker widget.
-  var placePickerValue = FFPlace();
+  FFPlace placePickerValue = FFPlace();
   // State field(s) for GoogleMap widget.
   LatLng? googleMapsCenter;
   final googleMapsController = Completer<GoogleMapController>();

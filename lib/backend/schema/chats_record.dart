@@ -82,6 +82,11 @@ class ChatsRecord extends FirestoreRecord {
   DocumentReference? get notificationOwner => _notificationOwner;
   bool hasNotificationOwner() => _notificationOwner != null;
 
+  // "ai_chat" field.
+  AichatStruct? _aiChat;
+  AichatStruct get aiChat => _aiChat ?? AichatStruct();
+  bool hasAiChat() => _aiChat != null;
+
   void _initializeFields() {
     _chatMessages = getStructList(
       snapshotData['chat_messages'],
@@ -103,6 +108,7 @@ class ChatsRecord extends FirestoreRecord {
     );
     _notificationOwner =
         snapshotData['notification_owner'] as DocumentReference?;
+    _aiChat = AichatStruct.maybeFromMap(snapshotData['ai_chat']);
   }
 
   static CollectionReference get collection =>
@@ -148,6 +154,7 @@ Map<String, dynamic> createChatsRecordData({
   String? image,
   String? chatType,
   DocumentReference? notificationOwner,
+  AichatStruct? aiChat,
 }) {
   final firestoreData = mapToFirestore(
     <String, dynamic>{
@@ -160,8 +167,12 @@ Map<String, dynamic> createChatsRecordData({
       'image': image,
       'chat_type': chatType,
       'notification_owner': notificationOwner,
+      'ai_chat': AichatStruct().toMap(),
     }.withoutNulls,
   );
+
+  // Handle nested data for "ai_chat" field.
+  addAichatStructData(firestoreData, aiChat, 'ai_chat');
 
   return firestoreData;
 }
@@ -184,7 +195,8 @@ class ChatsRecordDocumentEquality implements Equality<ChatsRecord> {
         e1?.image == e2?.image &&
         e1?.chatType == e2?.chatType &&
         listEquality.equals(e1?.notifications, e2?.notifications) &&
-        e1?.notificationOwner == e2?.notificationOwner;
+        e1?.notificationOwner == e2?.notificationOwner &&
+        e1?.aiChat == e2?.aiChat;
   }
 
   @override
@@ -201,7 +213,8 @@ class ChatsRecordDocumentEquality implements Equality<ChatsRecord> {
         e?.image,
         e?.chatType,
         e?.notifications,
-        e?.notificationOwner
+        e?.notificationOwner,
+        e?.aiChat
       ]);
 
   @override

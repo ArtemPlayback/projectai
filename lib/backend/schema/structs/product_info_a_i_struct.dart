@@ -34,52 +34,68 @@ class ProductInfoAIStruct extends FFFirebaseStruct {
   String? _title;
   String get title => _title ?? '';
   set title(String? val) => _title = val;
+
   bool hasTitle() => _title != null;
 
   // "type" field.
   String? _type;
   String get type => _type ?? '';
   set type(String? val) => _type = val;
+
   bool hasType() => _type != null;
 
   // "text" field.
   String? _text;
   String get text => _text ?? '';
   set text(String? val) => _text = val;
+
   bool hasText() => _text != null;
 
   // "location" field.
   LatLng? _location;
   LatLng? get location => _location;
   set location(LatLng? val) => _location = val;
+
   bool hasLocation() => _location != null;
 
   // "options" field.
   List<String>? _options;
   List<String> get options => _options ?? const [];
   set options(List<String>? val) => _options = val;
-  void updateOptions(Function(List<String>) updateFn) =>
-      updateFn(_options ??= []);
+
+  void updateOptions(Function(List<String>) updateFn) {
+    updateFn(options ??= []);
+  }
+
   bool hasOptions() => _options != null;
 
   // "list" field.
   List<String>? _list;
   List<String> get list => _list ?? const [];
   set list(List<String>? val) => _list = val;
-  void updateList(Function(List<String>) updateFn) => updateFn(_list ??= []);
+
+  void updateList(Function(List<String>) updateFn) {
+    updateFn(list ??= []);
+  }
+
   bool hasList() => _list != null;
 
   // "address" field.
   String? _address;
   String get address => _address ?? '';
   set address(String? val) => _address = val;
+
   bool hasAddress() => _address != null;
 
   // "colors" field.
   List<Color>? _colors;
   List<Color> get colors => _colors ?? const [];
   set colors(List<Color>? val) => _colors = val;
-  void updateColors(Function(List<Color>) updateFn) => updateFn(_colors ??= []);
+
+  void updateColors(Function(List<Color>) updateFn) {
+    updateFn(colors ??= []);
+  }
+
   bool hasColors() => _colors != null;
 
   static ProductInfoAIStruct fromMap(Map<String, dynamic> data) =>
@@ -130,12 +146,12 @@ class ProductInfoAIStruct extends FFFirebaseStruct {
         'options': serializeParam(
           _options,
           ParamType.String,
-          true,
+          isList: true,
         ),
         'list': serializeParam(
           _list,
           ParamType.String,
-          true,
+          isList: true,
         ),
         'address': serializeParam(
           _address,
@@ -144,7 +160,7 @@ class ProductInfoAIStruct extends FFFirebaseStruct {
         'colors': serializeParam(
           _colors,
           ParamType.Color,
-          true,
+          isList: true,
         ),
       }.withoutNulls;
 

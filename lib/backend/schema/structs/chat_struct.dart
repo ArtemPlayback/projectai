@@ -22,12 +22,14 @@ class ChatStruct extends FFFirebaseStruct {
   String? _who;
   String get who => _who ?? '';
   set who(String? val) => _who = val;
+
   bool hasWho() => _who != null;
 
   // "text" field.
   String? _text;
   String get text => _text ?? '';
   set text(String? val) => _text = val;
+
   bool hasText() => _text != null;
 
   static ChatStruct fromMap(Map<String, dynamic> data) => ChatStruct(

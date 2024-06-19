@@ -713,18 +713,18 @@ class _ProductSettingsWidgetState extends State<ProductSettingsWidget>
                     ),
                   ),
                 ]
-                    .addToStart(SizedBox(height: 75.0))
+                    .addToStart(SizedBox(height: 85.0))
                     .addToEnd(SizedBox(height: 70.0)),
               ),
             ),
             Container(
               width: double.infinity,
-              height: 90.0,
+              height: 100.0,
               decoration: BoxDecoration(
                 color: FlutterFlowTheme.of(context).secondaryBackground,
               ),
               child: Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(0.0, 35.0, 0.0, 15.0),
+                padding: EdgeInsetsDirectional.fromSTEB(0.0, 50.0, 0.0, 15.0),
                 child: Row(
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -743,7 +743,27 @@ class _ProductSettingsWidgetState extends State<ProductSettingsWidget>
                           size: 13.0,
                         ),
                         onPressed: () async {
-                          context.safePop();
+                          _model.read = await ProductsRecord.getDocumentOnce(
+                              widget.product!.reference);
+
+                          context.pushNamed(
+                            'product_page',
+                            queryParameters: {
+                              'product': serializeParam(
+                                _model.read,
+                                ParamType.Document,
+                              ),
+                              'isFrom': serializeParam(
+                                'Settings',
+                                ParamType.String,
+                              ),
+                            }.withoutNulls,
+                            extra: <String, dynamic>{
+                              'product': _model.read,
+                            },
+                          );
+
+                          setState(() {});
                         },
                       ),
                     ),

@@ -3,7 +3,7 @@ import '/backend/backend.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
-import '/new_project/button_infinity/button_infinity_widget.dart';
+import '/sign_in_foulder/new_project/button_infinity/button_infinity_widget.dart';
 import '/custom_code/actions/index.dart' as actions;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart';
@@ -48,6 +48,8 @@ class _CreateGroupChatWidgetState extends State<CreateGroupChatWidget> {
         queryBuilder: (usersRecord) => usersRecord.whereIn(
             'uid', _model.usersAction?.map((e) => e.id).toList()),
       );
+      _model.query = _model.querried!.toList().cast<UsersRecord>();
+      setState(() {});
     });
 
     _model.textController ??= TextEditingController();
@@ -212,6 +214,7 @@ class _CreateGroupChatWidgetState extends State<CreateGroupChatWidget> {
                                       _model.simpleSearchResults.toList();
                                   return ListView.separated(
                                     padding: EdgeInsets.zero,
+                                    primary: false,
                                     shrinkWrap: true,
                                     scrollDirection: Axis.vertical,
                                     itemCount: users.length,
@@ -353,7 +356,7 @@ class _CreateGroupChatWidgetState extends State<CreateGroupChatWidget> {
                                                                         0.0,
                                                                     fontWeight:
                                                                         FontWeight
-                                                                            .w600,
+                                                                            .w500,
                                                                   ),
                                                             ),
                                                           ],
@@ -386,7 +389,7 @@ class _CreateGroupChatWidgetState extends State<CreateGroupChatWidget> {
                             } else {
                               return Builder(
                                 builder: (context) {
-                                  final users = _model.querried?.toList() ?? [];
+                                  final users = _model.query.toList();
                                   return ListView.separated(
                                     padding: EdgeInsets.zero,
                                     shrinkWrap: true,
@@ -571,7 +574,7 @@ class _CreateGroupChatWidgetState extends State<CreateGroupChatWidget> {
             ),
             Container(
               width: double.infinity,
-              height: 94.0,
+              height: 104.0,
               decoration: BoxDecoration(
                 color: FlutterFlowTheme.of(context).secondaryBackground,
                 borderRadius: BorderRadius.only(
@@ -586,7 +589,7 @@ class _CreateGroupChatWidgetState extends State<CreateGroupChatWidget> {
                 children: [
                   Padding(
                     padding:
-                        EdgeInsetsDirectional.fromSTEB(20.0, 40.0, 20.0, 0.0),
+                        EdgeInsetsDirectional.fromSTEB(20.0, 50.0, 20.0, 0.0),
                     child: Row(
                       mainAxisSize: MainAxisSize.max,
                       children: [
@@ -684,7 +687,7 @@ class _CreateGroupChatWidgetState extends State<CreateGroupChatWidget> {
                                 'users': serializeParam(
                                   _model.usersList2,
                                   ParamType.DocumentReference,
-                                  true,
+                                  isList: true,
                                 ),
                               }.withoutNulls,
                             );

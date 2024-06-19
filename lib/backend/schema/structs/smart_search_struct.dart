@@ -15,36 +15,53 @@ class SmartSearchStruct extends FFFirebaseStruct {
     DateTime? when,
     String? result,
     String? queryStr,
+    List<SearchItemStruct>? searchResults,
     FirestoreUtilData firestoreUtilData = const FirestoreUtilData(),
   })  : _type = type,
         _when = when,
         _result = result,
         _queryStr = queryStr,
+        _searchResults = searchResults,
         super(firestoreUtilData);
 
   // "type" field.
   String? _type;
   String get type => _type ?? '';
   set type(String? val) => _type = val;
+
   bool hasType() => _type != null;
 
   // "when" field.
   DateTime? _when;
   DateTime? get when => _when;
   set when(DateTime? val) => _when = val;
+
   bool hasWhen() => _when != null;
 
   // "result" field.
   String? _result;
   String get result => _result ?? '';
   set result(String? val) => _result = val;
+
   bool hasResult() => _result != null;
 
   // "query_str" field.
   String? _queryStr;
   String get queryStr => _queryStr ?? '';
   set queryStr(String? val) => _queryStr = val;
+
   bool hasQueryStr() => _queryStr != null;
+
+  // "searchResults" field.
+  List<SearchItemStruct>? _searchResults;
+  List<SearchItemStruct> get searchResults => _searchResults ?? const [];
+  set searchResults(List<SearchItemStruct>? val) => _searchResults = val;
+
+  void updateSearchResults(Function(List<SearchItemStruct>) updateFn) {
+    updateFn(searchResults ??= []);
+  }
+
+  bool hasSearchResults() => _searchResults != null;
 
   static SmartSearchStruct fromMap(Map<String, dynamic> data) =>
       SmartSearchStruct(
@@ -52,6 +69,10 @@ class SmartSearchStruct extends FFFirebaseStruct {
         when: data['when'] as DateTime?,
         result: data['result'] as String?,
         queryStr: data['query_str'] as String?,
+        searchResults: getStructList(
+          data['searchResults'],
+          SearchItemStruct.fromMap,
+        ),
       );
 
   static SmartSearchStruct? maybeFromMap(dynamic data) => data is Map
@@ -63,6 +84,7 @@ class SmartSearchStruct extends FFFirebaseStruct {
         'when': _when,
         'result': _result,
         'query_str': _queryStr,
+        'searchResults': _searchResults?.map((e) => e.toMap()).toList(),
       }.withoutNulls;
 
   @override
@@ -82,6 +104,11 @@ class SmartSearchStruct extends FFFirebaseStruct {
         'query_str': serializeParam(
           _queryStr,
           ParamType.String,
+        ),
+        'searchResults': serializeParam(
+          _searchResults,
+          ParamType.DataStruct,
+          isList: true,
         ),
       }.withoutNulls;
 
@@ -107,6 +134,12 @@ class SmartSearchStruct extends FFFirebaseStruct {
           ParamType.String,
           false,
         ),
+        searchResults: deserializeStructParam<SearchItemStruct>(
+          data['searchResults'],
+          ParamType.DataStruct,
+          true,
+          structBuilder: SearchItemStruct.fromSerializableMap,
+        ),
       );
 
   @override
@@ -114,15 +147,18 @@ class SmartSearchStruct extends FFFirebaseStruct {
 
   @override
   bool operator ==(Object other) {
+    const listEquality = ListEquality();
     return other is SmartSearchStruct &&
         type == other.type &&
         when == other.when &&
         result == other.result &&
-        queryStr == other.queryStr;
+        queryStr == other.queryStr &&
+        listEquality.equals(searchResults, other.searchResults);
   }
 
   @override
-  int get hashCode => const ListEquality().hash([type, when, result, queryStr]);
+  int get hashCode =>
+      const ListEquality().hash([type, when, result, queryStr, searchResults]);
 }
 
 SmartSearchStruct createSmartSearchStruct({

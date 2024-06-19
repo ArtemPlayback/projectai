@@ -3,7 +3,7 @@ import '/backend/backend.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
-import '/new_project/button_infinity/button_infinity_widget.dart';
+import '/sign_in_foulder/new_project/button_infinity/button_infinity_widget.dart';
 import '/custom_code/actions/index.dart' as actions;
 import 'create_group_chat_widget.dart' show CreateGroupChatWidget;
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -29,6 +29,15 @@ class CreateGroupChatModel extends FlutterFlowModel<CreateGroupChatWidget> {
       usersList2[index] = updateFn(usersList2[index]);
 
   bool set = false;
+
+  List<UsersRecord> query = [];
+  void addToQuery(UsersRecord item) => query.add(item);
+  void removeFromQuery(UsersRecord item) => query.remove(item);
+  void removeAtIndexFromQuery(int index) => query.removeAt(index);
+  void insertAtIndexInQuery(int index, UsersRecord item) =>
+      query.insert(index, item);
+  void updateQueryAtIndex(int index, Function(UsersRecord) updateFn) =>
+      query[index] = updateFn(query[index]);
 
   ///  State fields for stateful widgets in this page.
 

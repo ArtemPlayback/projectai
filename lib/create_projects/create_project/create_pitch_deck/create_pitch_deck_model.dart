@@ -203,6 +203,8 @@ class CreatePitchDeckModel extends FlutterFlowModel<CreatePitchDeckWidget> {
   TextEditingController? textController18;
   String? Function(BuildContext, String?)? textController18Validator;
   // Stores action output result for [Backend Call - Read Document] action in Button widget.
+  ProjectsRecord? project;
+  // Stores action output result for [Backend Call - Read Document] action in Button widget.
   ProjectsRecord? ref12;
   // Stores action output result for [Backend Call - API (short description)] action in Button widget.
   ApiCallResponse? shortDescr;

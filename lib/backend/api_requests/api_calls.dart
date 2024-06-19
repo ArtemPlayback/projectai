@@ -47,6 +47,7 @@ class CreateQuestionsCall {
       encodeBodyUtf8: false,
       decodeUtf8: false,
       cache: false,
+      isStreamingApi: false,
       alwaysAllowBody: false,
     );
   }
@@ -76,6 +77,7 @@ class CreateBlocksCall {
       encodeBodyUtf8: false,
       decodeUtf8: false,
       cache: false,
+      isStreamingApi: false,
       alwaysAllowBody: false,
     );
   }
@@ -104,6 +106,7 @@ class ShortDescriptionCall {
       encodeBodyUtf8: false,
       decodeUtf8: false,
       cache: false,
+      isStreamingApi: false,
       alwaysAllowBody: false,
     );
   }
@@ -130,6 +133,7 @@ class SynonimsCall {
       encodeBodyUtf8: false,
       decodeUtf8: false,
       cache: false,
+      isStreamingApi: false,
       alwaysAllowBody: false,
     );
   }
@@ -156,6 +160,7 @@ class ShortDescriptionCopyCall {
       encodeBodyUtf8: false,
       decodeUtf8: false,
       cache: false,
+      isStreamingApi: false,
       alwaysAllowBody: false,
     );
   }
@@ -186,6 +191,7 @@ class AskCurrentProjCall {
       encodeBodyUtf8: false,
       decodeUtf8: false,
       cache: false,
+      isStreamingApi: false,
       alwaysAllowBody: false,
     );
   }
@@ -217,6 +223,7 @@ class SmartSearchUpsertProjectCall {
       encodeBodyUtf8: false,
       decodeUtf8: false,
       cache: false,
+      isStreamingApi: false,
       alwaysAllowBody: false,
     );
   }
@@ -248,6 +255,7 @@ class SmartSearchUpsertNewsCall {
       encodeBodyUtf8: false,
       decodeUtf8: false,
       cache: false,
+      isStreamingApi: false,
       alwaysAllowBody: false,
     );
   }
@@ -280,6 +288,7 @@ class SmartSearchUpsertCall {
       encodeBodyUtf8: false,
       decodeUtf8: false,
       cache: false,
+      isStreamingApi: false,
       alwaysAllowBody: false,
     );
   }
@@ -312,6 +321,7 @@ class SmartSearchCall {
       encodeBodyUtf8: false,
       decodeUtf8: false,
       cache: false,
+      isStreamingApi: false,
       alwaysAllowBody: false,
     );
   }
@@ -338,6 +348,7 @@ class SmartSearchPeopleCall {
       encodeBodyUtf8: false,
       decodeUtf8: false,
       cache: false,
+      isStreamingApi: false,
       alwaysAllowBody: false,
     );
   }
@@ -364,6 +375,7 @@ class SmartSearchNewsCall {
       encodeBodyUtf8: false,
       decodeUtf8: false,
       cache: false,
+      isStreamingApi: false,
       alwaysAllowBody: false,
     );
   }
@@ -390,6 +402,7 @@ class ProblemDefinitionCall {
       encodeBodyUtf8: false,
       decodeUtf8: false,
       cache: false,
+      isStreamingApi: false,
       alwaysAllowBody: false,
     );
   }
@@ -416,6 +429,7 @@ class BusinessModelNameCall {
       encodeBodyUtf8: false,
       decodeUtf8: false,
       cache: false,
+      isStreamingApi: false,
       alwaysAllowBody: false,
     );
   }
@@ -442,6 +456,7 @@ class BusinessModelDescriptionCall {
       encodeBodyUtf8: false,
       decodeUtf8: false,
       cache: false,
+      isStreamingApi: false,
       alwaysAllowBody: false,
     );
   }
@@ -468,6 +483,7 @@ class MessageToInvestorsCall {
       encodeBodyUtf8: false,
       decodeUtf8: false,
       cache: false,
+      isStreamingApi: false,
       alwaysAllowBody: false,
     );
   }
@@ -494,6 +510,7 @@ class MarketNameCall {
       encodeBodyUtf8: false,
       decodeUtf8: false,
       cache: false,
+      isStreamingApi: false,
       alwaysAllowBody: false,
     );
   }
@@ -520,6 +537,7 @@ class MarketDescriptionCall {
       encodeBodyUtf8: false,
       decodeUtf8: false,
       cache: false,
+      isStreamingApi: false,
       alwaysAllowBody: false,
     );
   }
@@ -546,6 +564,7 @@ class OperatingIndustryCall {
       encodeBodyUtf8: false,
       decodeUtf8: false,
       cache: false,
+      isStreamingApi: false,
       alwaysAllowBody: false,
     );
   }
@@ -572,6 +591,7 @@ class PotentialMarketSizeCall {
       encodeBodyUtf8: false,
       decodeUtf8: false,
       cache: false,
+      isStreamingApi: false,
       alwaysAllowBody: false,
     );
   }
@@ -598,6 +618,7 @@ class MonetizationCall {
       encodeBodyUtf8: false,
       decodeUtf8: false,
       cache: false,
+      isStreamingApi: false,
       alwaysAllowBody: false,
     );
   }
@@ -624,6 +645,7 @@ class ProductionPlanCall {
       encodeBodyUtf8: false,
       decodeUtf8: false,
       cache: false,
+      isStreamingApi: false,
       alwaysAllowBody: false,
     );
   }
@@ -650,6 +672,7 @@ class MarketSizeCall {
       encodeBodyUtf8: false,
       decodeUtf8: false,
       cache: false,
+      isStreamingApi: false,
       alwaysAllowBody: false,
     );
   }
@@ -676,6 +699,7 @@ class FinancialPlanCall {
       encodeBodyUtf8: false,
       decodeUtf8: false,
       cache: false,
+      isStreamingApi: false,
       alwaysAllowBody: false,
     );
   }
@@ -702,6 +726,7 @@ class MarketingPlanCall {
       encodeBodyUtf8: false,
       decodeUtf8: false,
       cache: false,
+      isStreamingApi: false,
       alwaysAllowBody: false,
     );
   }
@@ -736,6 +761,7 @@ class GeminiTestCall {
       encodeBodyUtf8: false,
       decodeUtf8: false,
       cache: false,
+      isStreamingApi: false,
       alwaysAllowBody: false,
     );
   }
@@ -766,6 +792,7 @@ class LlamaTestCall {
       encodeBodyUtf8: false,
       decodeUtf8: false,
       cache: false,
+      isStreamingApi: false,
       alwaysAllowBody: false,
     );
   }
@@ -793,6 +820,7 @@ class MakeHookCall {
       encodeBodyUtf8: false,
       decodeUtf8: false,
       cache: false,
+      isStreamingApi: false,
       alwaysAllowBody: false,
     );
   }
@@ -825,6 +853,38 @@ class UpsertVectorsNeightnCall {
       encodeBodyUtf8: false,
       decodeUtf8: false,
       cache: false,
+      isStreamingApi: false,
+      alwaysAllowBody: false,
+    );
+  }
+}
+
+class UpsertVectorsMessagesCall {
+  static Future<ApiCallResponse> call({
+    String? chatId = '',
+    String? text = '',
+  }) async {
+    final ffApiRequestBody = '''
+{
+  "upsert_text": "<upsert_text>",
+  "owner_type": "<owner_type>",
+  "document_id": "<document_id>",
+  "owner": "<owner>"
+}''';
+    return ApiManager.instance.makeApiCall(
+      callName: 'upsert vectors messages',
+      apiUrl:
+          'https://primary-production-c4b7.up.railway.app/webhook-test/ff067384-5035-45d2-a535-b94283e69c1d',
+      callType: ApiCallType.POST,
+      headers: {},
+      params: {},
+      body: ffApiRequestBody,
+      bodyType: BodyType.JSON,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+      isStreamingApi: false,
       alwaysAllowBody: false,
     );
   }
@@ -843,7 +903,7 @@ class SmartSearchNeightnCall {
     return ApiManager.instance.makeApiCall(
       callName: 'smart search neightn',
       apiUrl:
-          'https://primary-production-c4b7.up.railway.app/webhook-test/a9d58931-b35b-4ee5-a538-da7d171ce782',
+          'https://primary-production-c4b7.up.railway.app/webhook/4f914872-79fc-4d3a-afc0-02b39729ccdc',
       callType: ApiCallType.POST,
       headers: {},
       params: {},
@@ -853,6 +913,41 @@ class SmartSearchNeightnCall {
       encodeBodyUtf8: false,
       decodeUtf8: false,
       cache: false,
+      isStreamingApi: false,
+      alwaysAllowBody: false,
+    );
+  }
+}
+
+class SmartSearchMessagesCall {
+  static Future<ApiCallResponse> call({
+    String? text = '',
+    String? chatId = '',
+    String? userId = '',
+    String? chatMessages = '',
+    String? userInformation = '',
+  }) async {
+    final ffApiRequestBody = '''
+{
+  "question": "${text}",
+  "overrideConfig": {
+    "user_id": "${userId}"
+  }
+}''';
+    return ApiManager.instance.makeApiCall(
+      callName: 'smart search messages',
+      apiUrl:
+          'https://flowiseai-railway-production-ef1c.up.railway.app/api/v1/prediction/a14b14ac-ac51-4202-ab86-08d4372391b9',
+      callType: ApiCallType.POST,
+      headers: {},
+      params: {},
+      body: ffApiRequestBody,
+      bodyType: BodyType.JSON,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+      isStreamingApi: false,
       alwaysAllowBody: false,
     );
   }
@@ -884,6 +979,7 @@ class QABotCall {
       encodeBodyUtf8: false,
       decodeUtf8: false,
       cache: false,
+      isStreamingApi: false,
       alwaysAllowBody: false,
     );
   }

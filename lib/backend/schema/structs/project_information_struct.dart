@@ -36,54 +36,63 @@ class ProjectInformationStruct extends FFFirebaseStruct {
   String? _description;
   String get description => _description ?? '';
   set description(String? val) => _description = val;
+
   bool hasDescription() => _description != null;
 
   // "short_description" field.
   String? _shortDescription;
   String get shortDescription => _shortDescription ?? '';
   set shortDescription(String? val) => _shortDescription = val;
+
   bool hasShortDescription() => _shortDescription != null;
 
   // "problemSolvation" field.
   String? _problemSolvation;
   String get problemSolvation => _problemSolvation ?? '';
   set problemSolvation(String? val) => _problemSolvation = val;
+
   bool hasProblemSolvation() => _problemSolvation != null;
 
   // "consumers" field.
   String? _consumers;
   String get consumers => _consumers ?? '';
   set consumers(String? val) => _consumers = val;
+
   bool hasConsumers() => _consumers != null;
 
   // "ITproductFormat" field.
   String? _iTproductFormat;
   String get iTproductFormat => _iTproductFormat ?? '';
   set iTproductFormat(String? val) => _iTproductFormat = val;
+
   bool hasITproductFormat() => _iTproductFormat != null;
 
   // "potentialDevelopment" field.
   String? _potentialDevelopment;
   String get potentialDevelopment => _potentialDevelopment ?? '';
   set potentialDevelopment(String? val) => _potentialDevelopment = val;
+
   bool hasPotentialDevelopment() => _potentialDevelopment != null;
 
   // "promotion" field.
   String? _promotion;
   String get promotion => _promotion ?? '';
   set promotion(String? val) => _promotion = val;
+
   bool hasPromotion() => _promotion != null;
 
   // "status" field.
   String? _status;
   String get status => _status ?? '';
   set status(String? val) => _status = val;
+
   bool hasStatus() => _status != null;
 
   // "businessArea" field.
   String? _businessArea;
   String get businessArea => _businessArea ?? '';
   set businessArea(String? val) => _businessArea = val;
+
   bool hasBusinessArea() => _businessArea != null;
 
   static ProjectInformationStruct fromMap(Map<String, dynamic> data) =>

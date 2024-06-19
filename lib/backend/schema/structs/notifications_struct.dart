@@ -36,56 +36,67 @@ class NotificationsStruct extends FFFirebaseStruct {
   DocumentReference? _user;
   DocumentReference? get user => _user;
   set user(DocumentReference? val) => _user = val;
+
   bool hasUser() => _user != null;
 
   // "event" field.
   DocumentReference? _event;
   DocumentReference? get event => _event;
   set event(DocumentReference? val) => _event = val;
+
   bool hasEvent() => _event != null;
 
   // "company" field.
   DocumentReference? _company;
   DocumentReference? get company => _company;
   set company(DocumentReference? val) => _company = val;
+
   bool hasCompany() => _company != null;
 
   // "when" field.
   DateTime? _when;
   DateTime? get when => _when;
   set when(DateTime? val) => _when = val;
+
   bool hasWhen() => _when != null;
 
   // "type" field.
   NotificationTypes? _type;
   NotificationTypes get type => _type ?? NotificationTypes.team_invite;
   set type(NotificationTypes? val) => _type = val;
+
   bool hasType() => _type != null;
 
   // "invite" field.
   InvitesStruct? _invite;
   InvitesStruct get invite => _invite ?? InvitesStruct();
   set invite(InvitesStruct? val) => _invite = val;
-  void updateInvite(Function(InvitesStruct) updateFn) =>
-      updateFn(_invite ??= InvitesStruct());
+
+  void updateInvite(Function(InvitesStruct) updateFn) {
+    updateFn(invite ??= InvitesStruct());
+  }
+
   bool hasInvite() => _invite != null;
 
   // "isSeen" field.
   bool? _isSeen;
   bool get isSeen => _isSeen ?? false;
   set isSeen(bool? val) => _isSeen = val;
+
   bool hasIsSeen() => _isSeen != null;
 
   // "id" field.
   String? _id;
   String get id => _id ?? '';
   set id(String? val) => _id = val;
+
   bool hasId() => _id != null;
 
   // "text" field.
   String? _text;
   String get text => _text ?? '';
   set text(String? val) => _text = val;
+
   bool hasText() => _text != null;
 
   static NotificationsStruct fromMap(Map<String, dynamic> data) =>

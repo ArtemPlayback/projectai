@@ -386,7 +386,7 @@ class _AddPostWidgetState extends State<AddPostWidget> {
                     ),
                   ),
                 ),
-              ].addToStart(SizedBox(height: 80.0)),
+              ].addToStart(SizedBox(height: 100.0)),
             ),
             Align(
               alignment: AlignmentDirectional(0.0, 1.0),
@@ -413,12 +413,14 @@ class _AddPostWidgetState extends State<AddPostWidget> {
                       Stack(
                         children: [
                           FlutterFlowIconButton(
-                            borderRadius: 20.0,
+                            borderColor:
+                                FlutterFlowTheme.of(context).textAndStroke,
+                            borderRadius: 10.0,
                             borderWidth: 1.0,
                             buttonSize: 50.0,
                             icon: FaIcon(
                               FontAwesomeIcons.solidImage,
-                              color: FlutterFlowTheme.of(context).primaryText,
+                              color: FlutterFlowTheme.of(context).secondaryText,
                               size: 23.0,
                             ),
                             onPressed: () async {
@@ -558,7 +560,7 @@ class _AddPostWidgetState extends State<AddPostWidget> {
                           text: 'Publish',
                           options: FFButtonOptions(
                             width: 100.0,
-                            height: 35.0,
+                            height: 40.0,
                             padding: EdgeInsetsDirectional.fromSTEB(
                                 24.0, 0.0, 24.0, 0.0),
                             iconPadding: EdgeInsetsDirectional.fromSTEB(
@@ -646,6 +648,7 @@ class _AddPostWidgetState extends State<AddPostWidget> {
                                       .bodyMedium
                                       .override(
                                         fontFamily: 'LTSuperior',
+                                        fontSize: 16.0,
                                         letterSpacing: 0.0,
                                         fontWeight: FontWeight.w500,
                                         useGoogleFonts: false,
@@ -655,18 +658,23 @@ class _AddPostWidgetState extends State<AddPostWidget> {
                             ),
                           ],
                         ),
-                        FlutterFlowIconButton(
-                          borderRadius: 20.0,
-                          borderWidth: 1.0,
-                          buttonSize: 50.0,
-                          icon: Icon(
-                            Icons.close,
-                            color: FlutterFlowTheme.of(context).primaryText,
-                            size: 25.0,
+                        Align(
+                          alignment: AlignmentDirectional(1.0, 0.0),
+                          child: FlutterFlowIconButton(
+                            borderColor:
+                                FlutterFlowTheme.of(context).textAndStroke,
+                            borderRadius: 10.0,
+                            borderWidth: 1.0,
+                            buttonSize: 40.0,
+                            icon: Icon(
+                              Icons.close,
+                              color: FlutterFlowTheme.of(context).primaryText,
+                              size: 20.0,
+                            ),
+                            onPressed: () async {
+                              context.safePop();
+                            },
                           ),
-                          onPressed: () async {
-                            context.safePop();
-                          },
                         ),
                       ],
                     ),

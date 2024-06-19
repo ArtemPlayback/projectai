@@ -55,7 +55,7 @@ class _NavigationbarWidgetState extends State<NavigationbarWidget> {
         ),
         child: Container(
           width: double.infinity,
-          height: isiOS ? 90.0 : 70.0,
+          height: isiOS ? 82.0 : 70.0,
           decoration: BoxDecoration(
             color: Color(0xF2FFFFFF),
           ),
@@ -89,36 +89,49 @@ class _NavigationbarWidgetState extends State<NavigationbarWidget> {
                       child: Column(
                         mainAxisSize: MainAxisSize.max,
                         children: [
-                          FlutterFlowIconButton(
-                            borderRadius: 20.0,
-                            borderWidth: 1.0,
-                            buttonSize: 40.0,
-                            icon: Icon(
-                              FFIcons.kprojectsW,
-                              color: widget.chosen != 'Smart Search'
-                                  ? Color(0x80A3A3B3)
-                                  : FlutterFlowTheme.of(context).primary,
-                              size: 22.0,
-                            ),
-                            onPressed: true
-                                ? null
-                                : () {
-                                    print('IconButton pressed ...');
-                                  },
-                          ),
-                          Text(
-                            'Smart Search',
-                            style: FlutterFlowTheme.of(context)
-                                .bodyMedium
-                                .override(
-                                  fontFamily: 'LTSuperior',
-                                  color: widget.chosen != 'Smart Search'
-                                      ? Color(0x80A3A3B3)
-                                      : FlutterFlowTheme.of(context).primary,
-                                  fontSize: 12.0,
-                                  letterSpacing: 0.0,
-                                  useGoogleFonts: false,
+                          Stack(
+                            alignment: AlignmentDirectional(0.0, -1.0),
+                            children: [
+                              Align(
+                                alignment: AlignmentDirectional(0.0, -1.0),
+                                child: FlutterFlowIconButton(
+                                  borderRadius: 20.0,
+                                  borderWidth: 1.0,
+                                  buttonSize: 40.0,
+                                  icon: Icon(
+                                    FFIcons.kprojectsW,
+                                    color: widget.chosen != 'Smart Search'
+                                        ? Color(0x80A3A3B3)
+                                        : FlutterFlowTheme.of(context).primary,
+                                    size: 22.0,
+                                  ),
+                                  onPressed: true
+                                      ? null
+                                      : () {
+                                          print('IconButton pressed ...');
+                                        },
                                 ),
+                              ),
+                              Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    0.0, 39.0, 0.0, 0.0),
+                                child: Text(
+                                  'Smart Search',
+                                  style: FlutterFlowTheme.of(context)
+                                      .bodyMedium
+                                      .override(
+                                        fontFamily: 'LTSuperior',
+                                        color: widget.chosen != 'Smart Search'
+                                            ? Color(0x80A3A3B3)
+                                            : FlutterFlowTheme.of(context)
+                                                .primary,
+                                        fontSize: 12.0,
+                                        letterSpacing: 0.0,
+                                        useGoogleFonts: false,
+                                      ),
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
@@ -148,37 +161,53 @@ class _NavigationbarWidgetState extends State<NavigationbarWidget> {
                       child: Column(
                         mainAxisSize: MainAxisSize.max,
                         children: [
-                          FlutterFlowIconButton(
-                            borderColor: Colors.transparent,
-                            borderRadius: 20.0,
-                            borderWidth: 1.0,
-                            buttonSize: 40.0,
-                            icon: Icon(
-                              FFIcons.kmessages,
-                              color: widget.chosen != 'Messages'
-                                  ? Color(0x80A3A3B3)
-                                  : FlutterFlowTheme.of(context).primary,
-                              size: 20.0,
-                            ),
-                            onPressed: true
-                                ? null
-                                : () {
-                                    print('IconButton pressed ...');
-                                  },
-                          ),
-                          Text(
-                            'Messages',
-                            style: FlutterFlowTheme.of(context)
-                                .bodyMedium
-                                .override(
-                                  fontFamily: 'LTSuperior',
-                                  color: widget.chosen != 'Messages'
-                                      ? Color(0x80A3A3B3)
-                                      : FlutterFlowTheme.of(context).primary,
-                                  fontSize: 12.0,
-                                  letterSpacing: 0.0,
-                                  useGoogleFonts: false,
+                          Stack(
+                            alignment: AlignmentDirectional(0.0, -1.0),
+                            children: [
+                              Align(
+                                alignment: AlignmentDirectional(0.0, -1.0),
+                                child: FlutterFlowIconButton(
+                                  borderColor: Colors.transparent,
+                                  borderRadius: 20.0,
+                                  borderWidth: 1.0,
+                                  buttonSize: 40.0,
+                                  icon: Icon(
+                                    FFIcons.kmessages,
+                                    color: widget.chosen != 'Messages'
+                                        ? Color(0x80A3A3B3)
+                                        : FlutterFlowTheme.of(context).primary,
+                                    size: 20.0,
+                                  ),
+                                  onPressed: true
+                                      ? null
+                                      : () {
+                                          print('IconButton pressed ...');
+                                        },
                                 ),
+                              ),
+                              Align(
+                                alignment: AlignmentDirectional(0.0, 1.0),
+                                child: Padding(
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      0.0, 38.0, 0.0, 0.0),
+                                  child: Text(
+                                    'Messages',
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .override(
+                                          fontFamily: 'LTSuperior',
+                                          color: widget.chosen != 'Messages'
+                                              ? Color(0x80A3A3B3)
+                                              : FlutterFlowTheme.of(context)
+                                                  .primary,
+                                          fontSize: 12.0,
+                                          letterSpacing: 0.0,
+                                          useGoogleFonts: false,
+                                        ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
@@ -208,37 +237,47 @@ class _NavigationbarWidgetState extends State<NavigationbarWidget> {
                       child: Column(
                         mainAxisSize: MainAxisSize.max,
                         children: [
-                          FlutterFlowIconButton(
-                            borderColor: Colors.transparent,
-                            borderRadius: 20.0,
-                            borderWidth: 1.0,
-                            buttonSize: 40.0,
-                            icon: Icon(
-                              FFIcons.kuser,
-                              color: widget.chosen != 'Profile'
-                                  ? Color(0x80A3A3B3)
-                                  : FlutterFlowTheme.of(context).primary,
-                              size: 22.0,
-                            ),
-                            onPressed: true
-                                ? null
-                                : () {
-                                    print('IconButton pressed ...');
-                                  },
-                          ),
-                          Text(
-                            'Profile',
-                            style: FlutterFlowTheme.of(context)
-                                .bodyMedium
-                                .override(
-                                  fontFamily: 'LTSuperior',
+                          Stack(
+                            alignment: AlignmentDirectional(0.0, -1.0),
+                            children: [
+                              FlutterFlowIconButton(
+                                borderColor: Colors.transparent,
+                                borderRadius: 20.0,
+                                borderWidth: 1.0,
+                                buttonSize: 40.0,
+                                icon: Icon(
+                                  FFIcons.kuser,
                                   color: widget.chosen != 'Profile'
                                       ? Color(0x80A3A3B3)
                                       : FlutterFlowTheme.of(context).primary,
-                                  fontSize: 12.0,
-                                  letterSpacing: 0.0,
-                                  useGoogleFonts: false,
+                                  size: 22.0,
                                 ),
+                                onPressed: true
+                                    ? null
+                                    : () {
+                                        print('IconButton pressed ...');
+                                      },
+                              ),
+                              Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    0.0, 38.0, 0.0, 0.0),
+                                child: Text(
+                                  'Profile',
+                                  style: FlutterFlowTheme.of(context)
+                                      .bodyMedium
+                                      .override(
+                                        fontFamily: 'LTSuperior',
+                                        color: widget.chosen != 'Profile'
+                                            ? Color(0x80A3A3B3)
+                                            : FlutterFlowTheme.of(context)
+                                                .primary,
+                                        fontSize: 12.0,
+                                        letterSpacing: 0.0,
+                                        useGoogleFonts: false,
+                                      ),
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),

@@ -26,26 +26,32 @@ class AichatStruct extends FFFirebaseStruct {
   List<ChatMessagesStruct>? _messages;
   List<ChatMessagesStruct> get messages => _messages ?? const [];
   set messages(List<ChatMessagesStruct>? val) => _messages = val;
-  void updateMessages(Function(List<ChatMessagesStruct>) updateFn) =>
-      updateFn(_messages ??= []);
+
+  void updateMessages(Function(List<ChatMessagesStruct>) updateFn) {
+    updateFn(messages ??= []);
+  }
+
   bool hasMessages() => _messages != null;
 
   // "type" field.
   String? _type;
   String get type => _type ?? '';
   set type(String? val) => _type = val;
+
   bool hasType() => _type != null;
 
   // "event" field.
   DocumentReference? _event;
   DocumentReference? get event => _event;
   set event(DocumentReference? val) => _event = val;
+
   bool hasEvent() => _event != null;
 
   // "product" field.
   DocumentReference? _product;
   DocumentReference? get product => _product;
   set product(DocumentReference? val) => _product = val;
+
   bool hasProduct() => _product != null;
 
   static AichatStruct fromMap(Map<String, dynamic> data) => AichatStruct(
@@ -73,7 +79,7 @@ class AichatStruct extends FFFirebaseStruct {
         'messages': serializeParam(
           _messages,
           ParamType.DataStruct,
-          true,
+          isList: true,
         ),
         'type': serializeParam(
           _type,

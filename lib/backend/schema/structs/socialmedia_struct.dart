@@ -24,18 +24,21 @@ class SocialmediaStruct extends FFFirebaseStruct {
   String? _instagram;
   String get instagram => _instagram ?? '';
   set instagram(String? val) => _instagram = val;
+
   bool hasInstagram() => _instagram != null;
 
   // "telegram" field.
   String? _telegram;
   String get telegram => _telegram ?? '';
   set telegram(String? val) => _telegram = val;
+
   bool hasTelegram() => _telegram != null;
 
   // "email" field.
   String? _email;
   String get email => _email ?? '';
   set email(String? val) => _email = val;
+
   bool hasEmail() => _email != null;
 
   static SocialmediaStruct fromMap(Map<String, dynamic> data) =>

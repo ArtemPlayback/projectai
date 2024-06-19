@@ -80,202 +80,247 @@ class PitchdeckStruct extends FFFirebaseStruct {
   String? _color;
   String get color => _color ?? '';
   set color(String? val) => _color = val;
+
   bool hasColor() => _color != null;
 
   // "shortDescription" field.
   String? _shortDescription;
   String get shortDescription => _shortDescription ?? '';
   set shortDescription(String? val) => _shortDescription = val;
+
   bool hasShortDescription() => _shortDescription != null;
 
   // "firstImageType" field.
   String? _firstImageType;
   String get firstImageType => _firstImageType ?? '';
   set firstImageType(String? val) => _firstImageType = val;
+
   bool hasFirstImageType() => _firstImageType != null;
 
   // "firstImages" field.
   List<String>? _firstImages;
   List<String> get firstImages => _firstImages ?? const [];
   set firstImages(List<String>? val) => _firstImages = val;
-  void updateFirstImages(Function(List<String>) updateFn) =>
-      updateFn(_firstImages ??= []);
+
+  void updateFirstImages(Function(List<String>) updateFn) {
+    updateFn(firstImages ??= []);
+  }
+
   bool hasFirstImages() => _firstImages != null;
 
   // "firstImage" field.
   String? _firstImage;
   String get firstImage => _firstImage ?? '';
   set firstImage(String? val) => _firstImage = val;
+
   bool hasFirstImage() => _firstImage != null;
 
   // "potentialMarket" field.
   String? _potentialMarket;
   String get potentialMarket => _potentialMarket ?? '';
   set potentialMarket(String? val) => _potentialMarket = val;
+
   bool hasPotentialMarket() => _potentialMarket != null;
 
   // "operatingIndustry" field.
   String? _operatingIndustry;
   String get operatingIndustry => _operatingIndustry ?? '';
   set operatingIndustry(String? val) => _operatingIndustry = val;
+
   bool hasOperatingIndustry() => _operatingIndustry != null;
 
   // "neededInvestment" field.
   int? _neededInvestment;
   int get neededInvestment => _neededInvestment ?? 0;
   set neededInvestment(int? val) => _neededInvestment = val;
+
   void incrementNeededInvestment(int amount) =>
-      _neededInvestment = neededInvestment + amount;
+      neededInvestment = neededInvestment + amount;
+
   bool hasNeededInvestment() => _neededInvestment != null;
 
   // "problemImage" field.
   String? _problemImage;
   String get problemImage => _problemImage ?? '';
   set problemImage(String? val) => _problemImage = val;
+
   bool hasProblemImage() => _problemImage != null;
 
   // "problemDefinintion" field.
   String? _problemDefinintion;
   String get problemDefinintion => _problemDefinintion ?? '';
   set problemDefinintion(String? val) => _problemDefinintion = val;
+
   bool hasProblemDefinintion() => _problemDefinintion != null;
 
   // "solutions" field.
   List<SolutionsStruct>? _solutions;
   List<SolutionsStruct> get solutions => _solutions ?? const [];
   set solutions(List<SolutionsStruct>? val) => _solutions = val;
-  void updateSolutions(Function(List<SolutionsStruct>) updateFn) =>
-      updateFn(_solutions ??= []);
+
+  void updateSolutions(Function(List<SolutionsStruct>) updateFn) {
+    updateFn(solutions ??= []);
+  }
+
   bool hasSolutions() => _solutions != null;
 
   // "businessModelChart" field.
   String? _businessModelChart;
   String get businessModelChart => _businessModelChart ?? '';
   set businessModelChart(String? val) => _businessModelChart = val;
+
   bool hasBusinessModelChart() => _businessModelChart != null;
 
   // "businessModelName" field.
   String? _businessModelName;
   String get businessModelName => _businessModelName ?? '';
   set businessModelName(String? val) => _businessModelName = val;
+
   bool hasBusinessModelName() => _businessModelName != null;
 
   // "businessModelDescription" field.
   String? _businessModelDescription;
   String get businessModelDescription => _businessModelDescription ?? '';
   set businessModelDescription(String? val) => _businessModelDescription = val;
+
   bool hasBusinessModelDescription() => _businessModelDescription != null;
 
   // "cashFlows" field.
   List<CashFlowStruct>? _cashFlows;
   List<CashFlowStruct> get cashFlows => _cashFlows ?? const [];
   set cashFlows(List<CashFlowStruct>? val) => _cashFlows = val;
-  void updateCashFlows(Function(List<CashFlowStruct>) updateFn) =>
-      updateFn(_cashFlows ??= []);
+
+  void updateCashFlows(Function(List<CashFlowStruct>) updateFn) {
+    updateFn(cashFlows ??= []);
+  }
+
   bool hasCashFlows() => _cashFlows != null;
 
   // "financeChart" field.
   String? _financeChart;
   String get financeChart => _financeChart ?? '';
   set financeChart(String? val) => _financeChart = val;
+
   bool hasFinanceChart() => _financeChart != null;
 
   // "financialGrowth" field.
   String? _financialGrowth;
   String get financialGrowth => _financialGrowth ?? '';
   set financialGrowth(String? val) => _financialGrowth = val;
+
   bool hasFinancialGrowth() => _financialGrowth != null;
 
   // "marketName" field.
   String? _marketName;
   String get marketName => _marketName ?? '';
   set marketName(String? val) => _marketName = val;
+
   bool hasMarketName() => _marketName != null;
 
   // "marketDescription" field.
   String? _marketDescription;
   String get marketDescription => _marketDescription ?? '';
   set marketDescription(String? val) => _marketDescription = val;
+
   bool hasMarketDescription() => _marketDescription != null;
 
   // "marketChartDescription" field.
   String? _marketChartDescription;
   String get marketChartDescription => _marketChartDescription ?? '';
   set marketChartDescription(String? val) => _marketChartDescription = val;
+
   bool hasMarketChartDescription() => _marketChartDescription != null;
 
   // "marketChart" field.
   String? _marketChart;
   String get marketChart => _marketChart ?? '';
   set marketChart(String? val) => _marketChart = val;
+
   bool hasMarketChart() => _marketChart != null;
 
   // "competitors" field.
   List<CompetitorsStruct>? _competitors;
   List<CompetitorsStruct> get competitors => _competitors ?? const [];
   set competitors(List<CompetitorsStruct>? val) => _competitors = val;
-  void updateCompetitors(Function(List<CompetitorsStruct>) updateFn) =>
-      updateFn(_competitors ??= []);
+
+  void updateCompetitors(Function(List<CompetitorsStruct>) updateFn) {
+    updateFn(competitors ??= []);
+  }
+
   bool hasCompetitors() => _competitors != null;
 
   // "fiveYearsPlan" field.
   List<YearsPlanStruct>? _fiveYearsPlan;
   List<YearsPlanStruct> get fiveYearsPlan => _fiveYearsPlan ?? const [];
   set fiveYearsPlan(List<YearsPlanStruct>? val) => _fiveYearsPlan = val;
-  void updateFiveYearsPlan(Function(List<YearsPlanStruct>) updateFn) =>
-      updateFn(_fiveYearsPlan ??= []);
+
+  void updateFiveYearsPlan(Function(List<YearsPlanStruct>) updateFn) {
+    updateFn(fiveYearsPlan ??= []);
+  }
+
   bool hasFiveYearsPlan() => _fiveYearsPlan != null;
 
   // "email" field.
   String? _email;
   String get email => _email ?? '';
   set email(String? val) => _email = val;
+
   bool hasEmail() => _email != null;
 
   // "linkToPrototype" field.
   String? _linkToPrototype;
   String get linkToPrototype => _linkToPrototype ?? '';
   set linkToPrototype(String? val) => _linkToPrototype = val;
+
   bool hasLinkToPrototype() => _linkToPrototype != null;
 
   // "phoneNumber" field.
   String? _phoneNumber;
   String get phoneNumber => _phoneNumber ?? '';
   set phoneNumber(String? val) => _phoneNumber = val;
+
   bool hasPhoneNumber() => _phoneNumber != null;
 
   // "messageToInvestor" field.
   String? _messageToInvestor;
   String get messageToInvestor => _messageToInvestor ?? '';
   set messageToInvestor(String? val) => _messageToInvestor = val;
+
   bool hasMessageToInvestor() => _messageToInvestor != null;
 
   // "statusAndPlans" field.
   List<String>? _statusAndPlans;
   List<String> get statusAndPlans => _statusAndPlans ?? const [];
   set statusAndPlans(List<String>? val) => _statusAndPlans = val;
-  void updateStatusAndPlans(Function(List<String>) updateFn) =>
-      updateFn(_statusAndPlans ??= []);
+
+  void updateStatusAndPlans(Function(List<String>) updateFn) {
+    updateFn(statusAndPlans ??= []);
+  }
+
   bool hasStatusAndPlans() => _statusAndPlans != null;
 
   // "statusDescription" field.
   String? _statusDescription;
   String get statusDescription => _statusDescription ?? '';
   set statusDescription(String? val) => _statusDescription = val;
+
   bool hasStatusDescription() => _statusDescription != null;
 
   // "InvestorShare" field.
   String? _investorShare;
   String get investorShare => _investorShare ?? '';
   set investorShare(String? val) => _investorShare = val;
+
   bool hasInvestorShare() => _investorShare != null;
 
   // "fiveYearProfit" field.
   int? _fiveYearProfit;
   int get fiveYearProfit => _fiveYearProfit ?? 0;
   set fiveYearProfit(int? val) => _fiveYearProfit = val;
+
   void incrementFiveYearProfit(int amount) =>
-      _fiveYearProfit = fiveYearProfit + amount;
+      fiveYearProfit = fiveYearProfit + amount;
+
   bool hasFiveYearProfit() => _fiveYearProfit != null;
 
   static PitchdeckStruct fromMap(Map<String, dynamic> data) => PitchdeckStruct(
@@ -379,7 +424,7 @@ class PitchdeckStruct extends FFFirebaseStruct {
         'firstImages': serializeParam(
           _firstImages,
           ParamType.String,
-          true,
+          isList: true,
         ),
         'firstImage': serializeParam(
           _firstImage,
@@ -408,7 +453,7 @@ class PitchdeckStruct extends FFFirebaseStruct {
         'solutions': serializeParam(
           _solutions,
           ParamType.DataStruct,
-          true,
+          isList: true,
         ),
         'businessModelChart': serializeParam(
           _businessModelChart,
@@ -425,7 +470,7 @@ class PitchdeckStruct extends FFFirebaseStruct {
         'cashFlows': serializeParam(
           _cashFlows,
           ParamType.DataStruct,
-          true,
+          isList: true,
         ),
         'financeChart': serializeParam(
           _financeChart,
@@ -454,12 +499,12 @@ class PitchdeckStruct extends FFFirebaseStruct {
         'competitors': serializeParam(
           _competitors,
           ParamType.DataStruct,
-          true,
+          isList: true,
         ),
         'fiveYearsPlan': serializeParam(
           _fiveYearsPlan,
           ParamType.DataStruct,
-          true,
+          isList: true,
         ),
         'email': serializeParam(
           _email,
@@ -480,7 +525,7 @@ class PitchdeckStruct extends FFFirebaseStruct {
         'statusAndPlans': serializeParam(
           _statusAndPlans,
           ParamType.String,
-          true,
+          isList: true,
         ),
         'statusDescription': serializeParam(
           _statusDescription,

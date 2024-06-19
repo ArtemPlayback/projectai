@@ -30,36 +30,42 @@ class ProjectBusinessPlanStruct extends FFFirebaseStruct {
   String? _monetization;
   String get monetization => _monetization ?? '';
   set monetization(String? val) => _monetization = val;
+
   bool hasMonetization() => _monetization != null;
 
   // "marketingPlan" field.
   String? _marketingPlan;
   String get marketingPlan => _marketingPlan ?? '';
   set marketingPlan(String? val) => _marketingPlan = val;
+
   bool hasMarketingPlan() => _marketingPlan != null;
 
   // "goal" field.
   String? _goal;
   String get goal => _goal ?? '';
   set goal(String? val) => _goal = val;
+
   bool hasGoal() => _goal != null;
 
   // "financialPlan" field.
   String? _financialPlan;
   String get financialPlan => _financialPlan ?? '';
   set financialPlan(String? val) => _financialPlan = val;
+
   bool hasFinancialPlan() => _financialPlan != null;
 
   // "marketSize" field.
   String? _marketSize;
   String get marketSize => _marketSize ?? '';
   set marketSize(String? val) => _marketSize = val;
+
   bool hasMarketSize() => _marketSize != null;
 
   // "productionPlan" field.
   String? _productionPlan;
   String get productionPlan => _productionPlan ?? '';
   set productionPlan(String? val) => _productionPlan = val;
+
   bool hasProductionPlan() => _productionPlan != null;
 
   static ProjectBusinessPlanStruct fromMap(Map<String, dynamic> data) =>

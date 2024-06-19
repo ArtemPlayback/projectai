@@ -37,512 +37,515 @@ class FFAppState extends ChangeNotifier {
 
   List<SolutionsStruct> _solutions = [];
   List<SolutionsStruct> get solutions => _solutions;
-  set solutions(List<SolutionsStruct> _value) {
-    _solutions = _value;
+  set solutions(List<SolutionsStruct> value) {
+    _solutions = value;
   }
 
-  void addToSolutions(SolutionsStruct _value) {
-    _solutions.add(_value);
+  void addToSolutions(SolutionsStruct value) {
+    solutions.add(value);
   }
 
-  void removeFromSolutions(SolutionsStruct _value) {
-    _solutions.remove(_value);
+  void removeFromSolutions(SolutionsStruct value) {
+    solutions.remove(value);
   }
 
-  void removeAtIndexFromSolutions(int _index) {
-    _solutions.removeAt(_index);
+  void removeAtIndexFromSolutions(int index) {
+    solutions.removeAt(index);
   }
 
   void updateSolutionsAtIndex(
-    int _index,
+    int index,
     SolutionsStruct Function(SolutionsStruct) updateFn,
   ) {
-    _solutions[_index] = updateFn(_solutions[_index]);
+    solutions[index] = updateFn(_solutions[index]);
   }
 
-  void insertAtIndexInSolutions(int _index, SolutionsStruct _value) {
-    _solutions.insert(_index, _value);
+  void insertAtIndexInSolutions(int index, SolutionsStruct value) {
+    solutions.insert(index, value);
   }
 
   List<CashFlowStruct> _cashFlows = [];
   List<CashFlowStruct> get cashFlows => _cashFlows;
-  set cashFlows(List<CashFlowStruct> _value) {
-    _cashFlows = _value;
+  set cashFlows(List<CashFlowStruct> value) {
+    _cashFlows = value;
   }
 
-  void addToCashFlows(CashFlowStruct _value) {
-    _cashFlows.add(_value);
+  void addToCashFlows(CashFlowStruct value) {
+    cashFlows.add(value);
   }
 
-  void removeFromCashFlows(CashFlowStruct _value) {
-    _cashFlows.remove(_value);
+  void removeFromCashFlows(CashFlowStruct value) {
+    cashFlows.remove(value);
   }
 
-  void removeAtIndexFromCashFlows(int _index) {
-    _cashFlows.removeAt(_index);
+  void removeAtIndexFromCashFlows(int index) {
+    cashFlows.removeAt(index);
   }
 
   void updateCashFlowsAtIndex(
-    int _index,
+    int index,
     CashFlowStruct Function(CashFlowStruct) updateFn,
   ) {
-    _cashFlows[_index] = updateFn(_cashFlows[_index]);
+    cashFlows[index] = updateFn(_cashFlows[index]);
   }
 
-  void insertAtIndexInCashFlows(int _index, CashFlowStruct _value) {
-    _cashFlows.insert(_index, _value);
+  void insertAtIndexInCashFlows(int index, CashFlowStruct value) {
+    cashFlows.insert(index, value);
   }
 
   List<YearsPlanStruct> _yearsPlan = [];
   List<YearsPlanStruct> get yearsPlan => _yearsPlan;
-  set yearsPlan(List<YearsPlanStruct> _value) {
-    _yearsPlan = _value;
+  set yearsPlan(List<YearsPlanStruct> value) {
+    _yearsPlan = value;
   }
 
-  void addToYearsPlan(YearsPlanStruct _value) {
-    _yearsPlan.add(_value);
+  void addToYearsPlan(YearsPlanStruct value) {
+    yearsPlan.add(value);
   }
 
-  void removeFromYearsPlan(YearsPlanStruct _value) {
-    _yearsPlan.remove(_value);
+  void removeFromYearsPlan(YearsPlanStruct value) {
+    yearsPlan.remove(value);
   }
 
-  void removeAtIndexFromYearsPlan(int _index) {
-    _yearsPlan.removeAt(_index);
+  void removeAtIndexFromYearsPlan(int index) {
+    yearsPlan.removeAt(index);
   }
 
   void updateYearsPlanAtIndex(
-    int _index,
+    int index,
     YearsPlanStruct Function(YearsPlanStruct) updateFn,
   ) {
-    _yearsPlan[_index] = updateFn(_yearsPlan[_index]);
+    yearsPlan[index] = updateFn(_yearsPlan[index]);
   }
 
-  void insertAtIndexInYearsPlan(int _index, YearsPlanStruct _value) {
-    _yearsPlan.insert(_index, _value);
+  void insertAtIndexInYearsPlan(int index, YearsPlanStruct value) {
+    yearsPlan.insert(index, value);
   }
 
   List<TeamMemberStruct> _teamMembers = [];
   List<TeamMemberStruct> get teamMembers => _teamMembers;
-  set teamMembers(List<TeamMemberStruct> _value) {
-    _teamMembers = _value;
+  set teamMembers(List<TeamMemberStruct> value) {
+    _teamMembers = value;
   }
 
-  void addToTeamMembers(TeamMemberStruct _value) {
-    _teamMembers.add(_value);
+  void addToTeamMembers(TeamMemberStruct value) {
+    teamMembers.add(value);
   }
 
-  void removeFromTeamMembers(TeamMemberStruct _value) {
-    _teamMembers.remove(_value);
+  void removeFromTeamMembers(TeamMemberStruct value) {
+    teamMembers.remove(value);
   }
 
-  void removeAtIndexFromTeamMembers(int _index) {
-    _teamMembers.removeAt(_index);
+  void removeAtIndexFromTeamMembers(int index) {
+    teamMembers.removeAt(index);
   }
 
   void updateTeamMembersAtIndex(
-    int _index,
+    int index,
     TeamMemberStruct Function(TeamMemberStruct) updateFn,
   ) {
-    _teamMembers[_index] = updateFn(_teamMembers[_index]);
+    teamMembers[index] = updateFn(_teamMembers[index]);
   }
 
-  void insertAtIndexInTeamMembers(int _index, TeamMemberStruct _value) {
-    _teamMembers.insert(_index, _value);
+  void insertAtIndexInTeamMembers(int index, TeamMemberStruct value) {
+    teamMembers.insert(index, value);
   }
 
   List<CompetitorsStruct> _competitors = [];
   List<CompetitorsStruct> get competitors => _competitors;
-  set competitors(List<CompetitorsStruct> _value) {
-    _competitors = _value;
+  set competitors(List<CompetitorsStruct> value) {
+    _competitors = value;
   }
 
-  void addToCompetitors(CompetitorsStruct _value) {
-    _competitors.add(_value);
+  void addToCompetitors(CompetitorsStruct value) {
+    competitors.add(value);
   }
 
-  void removeFromCompetitors(CompetitorsStruct _value) {
-    _competitors.remove(_value);
+  void removeFromCompetitors(CompetitorsStruct value) {
+    competitors.remove(value);
   }
 
-  void removeAtIndexFromCompetitors(int _index) {
-    _competitors.removeAt(_index);
+  void removeAtIndexFromCompetitors(int index) {
+    competitors.removeAt(index);
   }
 
   void updateCompetitorsAtIndex(
-    int _index,
+    int index,
     CompetitorsStruct Function(CompetitorsStruct) updateFn,
   ) {
-    _competitors[_index] = updateFn(_competitors[_index]);
+    competitors[index] = updateFn(_competitors[index]);
   }
 
-  void insertAtIndexInCompetitors(int _index, CompetitorsStruct _value) {
-    _competitors.insert(_index, _value);
+  void insertAtIndexInCompetitors(int index, CompetitorsStruct value) {
+    competitors.insert(index, value);
   }
 
   List<String> _comparisonOptions = [];
   List<String> get comparisonOptions => _comparisonOptions;
-  set comparisonOptions(List<String> _value) {
-    _comparisonOptions = _value;
+  set comparisonOptions(List<String> value) {
+    _comparisonOptions = value;
   }
 
-  void addToComparisonOptions(String _value) {
-    _comparisonOptions.add(_value);
+  void addToComparisonOptions(String value) {
+    comparisonOptions.add(value);
   }
 
-  void removeFromComparisonOptions(String _value) {
-    _comparisonOptions.remove(_value);
+  void removeFromComparisonOptions(String value) {
+    comparisonOptions.remove(value);
   }
 
-  void removeAtIndexFromComparisonOptions(int _index) {
-    _comparisonOptions.removeAt(_index);
+  void removeAtIndexFromComparisonOptions(int index) {
+    comparisonOptions.removeAt(index);
   }
 
   void updateComparisonOptionsAtIndex(
-    int _index,
+    int index,
     String Function(String) updateFn,
   ) {
-    _comparisonOptions[_index] = updateFn(_comparisonOptions[_index]);
+    comparisonOptions[index] = updateFn(_comparisonOptions[index]);
   }
 
-  void insertAtIndexInComparisonOptions(int _index, String _value) {
-    _comparisonOptions.insert(_index, _value);
+  void insertAtIndexInComparisonOptions(int index, String value) {
+    comparisonOptions.insert(index, value);
   }
 
   List<CompetitorOptionsStruct> _myOptions = [];
   List<CompetitorOptionsStruct> get myOptions => _myOptions;
-  set myOptions(List<CompetitorOptionsStruct> _value) {
-    _myOptions = _value;
+  set myOptions(List<CompetitorOptionsStruct> value) {
+    _myOptions = value;
   }
 
-  void addToMyOptions(CompetitorOptionsStruct _value) {
-    _myOptions.add(_value);
+  void addToMyOptions(CompetitorOptionsStruct value) {
+    myOptions.add(value);
   }
 
-  void removeFromMyOptions(CompetitorOptionsStruct _value) {
-    _myOptions.remove(_value);
+  void removeFromMyOptions(CompetitorOptionsStruct value) {
+    myOptions.remove(value);
   }
 
-  void removeAtIndexFromMyOptions(int _index) {
-    _myOptions.removeAt(_index);
+  void removeAtIndexFromMyOptions(int index) {
+    myOptions.removeAt(index);
   }
 
   void updateMyOptionsAtIndex(
-    int _index,
+    int index,
     CompetitorOptionsStruct Function(CompetitorOptionsStruct) updateFn,
   ) {
-    _myOptions[_index] = updateFn(_myOptions[_index]);
+    myOptions[index] = updateFn(_myOptions[index]);
   }
 
-  void insertAtIndexInMyOptions(int _index, CompetitorOptionsStruct _value) {
-    _myOptions.insert(_index, _value);
+  void insertAtIndexInMyOptions(int index, CompetitorOptionsStruct value) {
+    myOptions.insert(index, value);
   }
 
   List<CompetitorOptionsStruct> _projectOptions = [];
   List<CompetitorOptionsStruct> get projectOptions => _projectOptions;
-  set projectOptions(List<CompetitorOptionsStruct> _value) {
-    _projectOptions = _value;
+  set projectOptions(List<CompetitorOptionsStruct> value) {
+    _projectOptions = value;
   }
 
-  void addToProjectOptions(CompetitorOptionsStruct _value) {
-    _projectOptions.add(_value);
+  void addToProjectOptions(CompetitorOptionsStruct value) {
+    projectOptions.add(value);
   }
 
-  void removeFromProjectOptions(CompetitorOptionsStruct _value) {
-    _projectOptions.remove(_value);
+  void removeFromProjectOptions(CompetitorOptionsStruct value) {
+    projectOptions.remove(value);
   }
 
-  void removeAtIndexFromProjectOptions(int _index) {
-    _projectOptions.removeAt(_index);
+  void removeAtIndexFromProjectOptions(int index) {
+    projectOptions.removeAt(index);
   }
 
   void updateProjectOptionsAtIndex(
-    int _index,
+    int index,
     CompetitorOptionsStruct Function(CompetitorOptionsStruct) updateFn,
   ) {
-    _projectOptions[_index] = updateFn(_projectOptions[_index]);
+    projectOptions[index] = updateFn(_projectOptions[index]);
   }
 
-  void insertAtIndexInProjectOptions(
-      int _index, CompetitorOptionsStruct _value) {
-    _projectOptions.insert(_index, _value);
+  void insertAtIndexInProjectOptions(int index, CompetitorOptionsStruct value) {
+    projectOptions.insert(index, value);
   }
 
   List<CompetitorOptionsStruct> _commonOptions = [];
   List<CompetitorOptionsStruct> get commonOptions => _commonOptions;
-  set commonOptions(List<CompetitorOptionsStruct> _value) {
-    _commonOptions = _value;
+  set commonOptions(List<CompetitorOptionsStruct> value) {
+    _commonOptions = value;
   }
 
-  void addToCommonOptions(CompetitorOptionsStruct _value) {
-    _commonOptions.add(_value);
+  void addToCommonOptions(CompetitorOptionsStruct value) {
+    commonOptions.add(value);
   }
 
-  void removeFromCommonOptions(CompetitorOptionsStruct _value) {
-    _commonOptions.remove(_value);
+  void removeFromCommonOptions(CompetitorOptionsStruct value) {
+    commonOptions.remove(value);
   }
 
-  void removeAtIndexFromCommonOptions(int _index) {
-    _commonOptions.removeAt(_index);
+  void removeAtIndexFromCommonOptions(int index) {
+    commonOptions.removeAt(index);
   }
 
   void updateCommonOptionsAtIndex(
-    int _index,
+    int index,
     CompetitorOptionsStruct Function(CompetitorOptionsStruct) updateFn,
   ) {
-    _commonOptions[_index] = updateFn(_commonOptions[_index]);
+    commonOptions[index] = updateFn(_commonOptions[index]);
   }
 
-  void insertAtIndexInCommonOptions(
-      int _index, CompetitorOptionsStruct _value) {
-    _commonOptions.insert(_index, _value);
+  void insertAtIndexInCommonOptions(int index, CompetitorOptionsStruct value) {
+    commonOptions.insert(index, value);
   }
 
   List<TestCompetitorsStruct> _testCompetitors = [];
   List<TestCompetitorsStruct> get testCompetitors => _testCompetitors;
-  set testCompetitors(List<TestCompetitorsStruct> _value) {
-    _testCompetitors = _value;
+  set testCompetitors(List<TestCompetitorsStruct> value) {
+    _testCompetitors = value;
   }
 
-  void addToTestCompetitors(TestCompetitorsStruct _value) {
-    _testCompetitors.add(_value);
+  void addToTestCompetitors(TestCompetitorsStruct value) {
+    testCompetitors.add(value);
   }
 
-  void removeFromTestCompetitors(TestCompetitorsStruct _value) {
-    _testCompetitors.remove(_value);
+  void removeFromTestCompetitors(TestCompetitorsStruct value) {
+    testCompetitors.remove(value);
   }
 
-  void removeAtIndexFromTestCompetitors(int _index) {
-    _testCompetitors.removeAt(_index);
+  void removeAtIndexFromTestCompetitors(int index) {
+    testCompetitors.removeAt(index);
   }
 
   void updateTestCompetitorsAtIndex(
-    int _index,
+    int index,
     TestCompetitorsStruct Function(TestCompetitorsStruct) updateFn,
   ) {
-    _testCompetitors[_index] = updateFn(_testCompetitors[_index]);
+    testCompetitors[index] = updateFn(_testCompetitors[index]);
   }
 
-  void insertAtIndexInTestCompetitors(
-      int _index, TestCompetitorsStruct _value) {
-    _testCompetitors.insert(_index, _value);
+  void insertAtIndexInTestCompetitors(int index, TestCompetitorsStruct value) {
+    testCompetitors.insert(index, value);
   }
 
   String _jsonList = '';
   String get jsonList => _jsonList;
-  set jsonList(String _value) {
-    _jsonList = _value;
+  set jsonList(String value) {
+    _jsonList = value;
   }
 
   String _test = '';
   String get test => _test;
-  set test(String _value) {
-    _test = _value;
+  set test(String value) {
+    _test = value;
   }
 
   String _smartNetworking = '';
   String get smartNetworking => _smartNetworking;
-  set smartNetworking(String _value) {
-    _smartNetworking = _value;
+  set smartNetworking(String value) {
+    _smartNetworking = value;
   }
 
   bool _onBoarding = false;
   bool get onBoarding => _onBoarding;
-  set onBoarding(bool _value) {
-    _onBoarding = _value;
-    prefs.setBool('ff_onBoarding', _value);
+  set onBoarding(bool value) {
+    _onBoarding = value;
+    prefs.setBool('ff_onBoarding', value);
   }
 
   List<EducationStruct> _education = [];
   List<EducationStruct> get education => _education;
-  set education(List<EducationStruct> _value) {
-    _education = _value;
+  set education(List<EducationStruct> value) {
+    _education = value;
   }
 
-  void addToEducation(EducationStruct _value) {
-    _education.add(_value);
+  void addToEducation(EducationStruct value) {
+    education.add(value);
   }
 
-  void removeFromEducation(EducationStruct _value) {
-    _education.remove(_value);
+  void removeFromEducation(EducationStruct value) {
+    education.remove(value);
   }
 
-  void removeAtIndexFromEducation(int _index) {
-    _education.removeAt(_index);
+  void removeAtIndexFromEducation(int index) {
+    education.removeAt(index);
   }
 
   void updateEducationAtIndex(
-    int _index,
+    int index,
     EducationStruct Function(EducationStruct) updateFn,
   ) {
-    _education[_index] = updateFn(_education[_index]);
+    education[index] = updateFn(_education[index]);
   }
 
-  void insertAtIndexInEducation(int _index, EducationStruct _value) {
-    _education.insert(_index, _value);
+  void insertAtIndexInEducation(int index, EducationStruct value) {
+    education.insert(index, value);
   }
 
   List<ExperienceStruct> _experience = [];
   List<ExperienceStruct> get experience => _experience;
-  set experience(List<ExperienceStruct> _value) {
-    _experience = _value;
+  set experience(List<ExperienceStruct> value) {
+    _experience = value;
   }
 
-  void addToExperience(ExperienceStruct _value) {
-    _experience.add(_value);
+  void addToExperience(ExperienceStruct value) {
+    experience.add(value);
   }
 
-  void removeFromExperience(ExperienceStruct _value) {
-    _experience.remove(_value);
+  void removeFromExperience(ExperienceStruct value) {
+    experience.remove(value);
   }
 
-  void removeAtIndexFromExperience(int _index) {
-    _experience.removeAt(_index);
+  void removeAtIndexFromExperience(int index) {
+    experience.removeAt(index);
   }
 
   void updateExperienceAtIndex(
-    int _index,
+    int index,
     ExperienceStruct Function(ExperienceStruct) updateFn,
   ) {
-    _experience[_index] = updateFn(_experience[_index]);
+    experience[index] = updateFn(_experience[index]);
   }
 
-  void insertAtIndexInExperience(int _index, ExperienceStruct _value) {
-    _experience.insert(_index, _value);
+  void insertAtIndexInExperience(int index, ExperienceStruct value) {
+    experience.insert(index, value);
   }
 
   List<QuestionsStruct> _questions = [];
   List<QuestionsStruct> get questions => _questions;
-  set questions(List<QuestionsStruct> _value) {
-    _questions = _value;
+  set questions(List<QuestionsStruct> value) {
+    _questions = value;
   }
 
-  void addToQuestions(QuestionsStruct _value) {
-    _questions.add(_value);
+  void addToQuestions(QuestionsStruct value) {
+    questions.add(value);
   }
 
-  void removeFromQuestions(QuestionsStruct _value) {
-    _questions.remove(_value);
+  void removeFromQuestions(QuestionsStruct value) {
+    questions.remove(value);
   }
 
-  void removeAtIndexFromQuestions(int _index) {
-    _questions.removeAt(_index);
+  void removeAtIndexFromQuestions(int index) {
+    questions.removeAt(index);
   }
 
   void updateQuestionsAtIndex(
-    int _index,
+    int index,
     QuestionsStruct Function(QuestionsStruct) updateFn,
   ) {
-    _questions[_index] = updateFn(_questions[_index]);
+    questions[index] = updateFn(_questions[index]);
   }
 
-  void insertAtIndexInQuestions(int _index, QuestionsStruct _value) {
-    _questions.insert(_index, _value);
+  void insertAtIndexInQuestions(int index, QuestionsStruct value) {
+    questions.insert(index, value);
   }
 
   List<SectionStruct> _sections = [];
   List<SectionStruct> get sections => _sections;
-  set sections(List<SectionStruct> _value) {
-    _sections = _value;
+  set sections(List<SectionStruct> value) {
+    _sections = value;
   }
 
-  void addToSections(SectionStruct _value) {
-    _sections.add(_value);
+  void addToSections(SectionStruct value) {
+    sections.add(value);
   }
 
-  void removeFromSections(SectionStruct _value) {
-    _sections.remove(_value);
+  void removeFromSections(SectionStruct value) {
+    sections.remove(value);
   }
 
-  void removeAtIndexFromSections(int _index) {
-    _sections.removeAt(_index);
+  void removeAtIndexFromSections(int index) {
+    sections.removeAt(index);
   }
 
   void updateSectionsAtIndex(
-    int _index,
+    int index,
     SectionStruct Function(SectionStruct) updateFn,
   ) {
-    _sections[_index] = updateFn(_sections[_index]);
+    sections[index] = updateFn(_sections[index]);
   }
 
-  void insertAtIndexInSections(int _index, SectionStruct _value) {
-    _sections.insert(_index, _value);
+  void insertAtIndexInSections(int index, SectionStruct value) {
+    sections.insert(index, value);
   }
 
   String _hintText = '';
   String get hintText => _hintText;
-  set hintText(String _value) {
-    _hintText = _value;
+  set hintText(String value) {
+    _hintText = value;
   }
 
   List<Color> _colors = [];
   List<Color> get colors => _colors;
-  set colors(List<Color> _value) {
-    _colors = _value;
+  set colors(List<Color> value) {
+    _colors = value;
   }
 
-  void addToColors(Color _value) {
-    _colors.add(_value);
+  void addToColors(Color value) {
+    colors.add(value);
   }
 
-  void removeFromColors(Color _value) {
-    _colors.remove(_value);
+  void removeFromColors(Color value) {
+    colors.remove(value);
   }
 
-  void removeAtIndexFromColors(int _index) {
-    _colors.removeAt(_index);
+  void removeAtIndexFromColors(int index) {
+    colors.removeAt(index);
   }
 
   void updateColorsAtIndex(
-    int _index,
+    int index,
     Color Function(Color) updateFn,
   ) {
-    _colors[_index] = updateFn(_colors[_index]);
+    colors[index] = updateFn(_colors[index]);
   }
 
-  void insertAtIndexInColors(int _index, Color _value) {
-    _colors.insert(_index, _value);
+  void insertAtIndexInColors(int index, Color value) {
+    colors.insert(index, value);
   }
 
   List<ProductInfoAIStruct> _productInfo = [];
   List<ProductInfoAIStruct> get productInfo => _productInfo;
-  set productInfo(List<ProductInfoAIStruct> _value) {
-    _productInfo = _value;
+  set productInfo(List<ProductInfoAIStruct> value) {
+    _productInfo = value;
   }
 
-  void addToProductInfo(ProductInfoAIStruct _value) {
-    _productInfo.add(_value);
+  void addToProductInfo(ProductInfoAIStruct value) {
+    productInfo.add(value);
   }
 
-  void removeFromProductInfo(ProductInfoAIStruct _value) {
-    _productInfo.remove(_value);
+  void removeFromProductInfo(ProductInfoAIStruct value) {
+    productInfo.remove(value);
   }
 
-  void removeAtIndexFromProductInfo(int _index) {
-    _productInfo.removeAt(_index);
+  void removeAtIndexFromProductInfo(int index) {
+    productInfo.removeAt(index);
   }
 
   void updateProductInfoAtIndex(
-    int _index,
+    int index,
     ProductInfoAIStruct Function(ProductInfoAIStruct) updateFn,
   ) {
-    _productInfo[_index] = updateFn(_productInfo[_index]);
+    productInfo[index] = updateFn(_productInfo[index]);
   }
 
-  void insertAtIndexInProductInfo(int _index, ProductInfoAIStruct _value) {
-    _productInfo.insert(_index, _value);
+  void insertAtIndexInProductInfo(int index, ProductInfoAIStruct value) {
+    productInfo.insert(index, value);
   }
 
   int _test23 = 0;
   int get test23 => _test23;
-  set test23(int _value) {
-    _test23 = _value;
+  set test23(int value) {
+    _test23 = value;
   }
 
   String _voiceMessageUrl = '';
   String get voiceMessageUrl => _voiceMessageUrl;
-  set voiceMessageUrl(String _value) {
-    _voiceMessageUrl = _value;
+  set voiceMessageUrl(String value) {
+    _voiceMessageUrl = value;
+  }
+
+  String _currentMessageID = '';
+  String get currentMessageID => _currentMessageID;
+  set currentMessageID(String value) {
+    _currentMessageID = value;
   }
 
   final _projectsProfileManager = FutureRequestManager<List<ProjectsRecord>>();

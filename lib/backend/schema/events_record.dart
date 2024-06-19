@@ -59,6 +59,11 @@ class EventsRecord extends FirestoreRecord {
       _usersAppliedToJoin ?? const [];
   bool hasUsersAppliedToJoin() => _usersAppliedToJoin != null;
 
+  // "title" field.
+  String? _title;
+  String get title => _title ?? '';
+  bool hasTitle() => _title != null;
+
   void _initializeFields() {
     _eventInfo = EventStruct.maybeFromMap(snapshotData['event_info']);
     _user = snapshotData['user'] as DocumentReference?;
@@ -74,6 +79,7 @@ class EventsRecord extends FirestoreRecord {
       snapshotData['users_applied_to_join'],
       ParticipantsStruct.fromMap,
     );
+    _title = snapshotData['title'] as String?;
   }
 
   static CollectionReference get collection =>
@@ -115,6 +121,7 @@ Map<String, dynamic> createEventsRecordData({
   DocumentReference? project,
   bool? isFinished,
   String? customId,
+  String? title,
 }) {
   final firestoreData = mapToFirestore(
     <String, dynamic>{
@@ -123,6 +130,7 @@ Map<String, dynamic> createEventsRecordData({
       'project': project,
       'isFinished': isFinished,
       'custom_id': customId,
+      'title': title,
     }.withoutNulls,
   );
 
@@ -145,7 +153,8 @@ class EventsRecordDocumentEquality implements Equality<EventsRecord> {
         e1?.isFinished == e2?.isFinished &&
         e1?.customId == e2?.customId &&
         listEquality.equals(e1?.participantUsers, e2?.participantUsers) &&
-        listEquality.equals(e1?.usersAppliedToJoin, e2?.usersAppliedToJoin);
+        listEquality.equals(e1?.usersAppliedToJoin, e2?.usersAppliedToJoin) &&
+        e1?.title == e2?.title;
   }
 
   @override
@@ -157,7 +166,8 @@ class EventsRecordDocumentEquality implements Equality<EventsRecord> {
         e?.isFinished,
         e?.customId,
         e?.participantUsers,
-        e?.usersAppliedToJoin
+        e?.usersAppliedToJoin,
+        e?.title
       ]);
 
   @override

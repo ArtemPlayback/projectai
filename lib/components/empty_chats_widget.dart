@@ -66,7 +66,7 @@ class _EmptyChatsWidgetState extends State<EmptyChatsWidget> {
             ),
           ),
           Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(30.0, 20.0, 30.0, 0.0),
+            padding: EdgeInsetsDirectional.fromSTEB(80.0, 20.0, 80.0, 0.0),
             child: FFButtonWidget(
               onPressed: () async {
                 context.pushNamed('smart_search_all');

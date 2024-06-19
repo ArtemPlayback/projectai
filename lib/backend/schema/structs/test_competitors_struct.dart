@@ -24,18 +24,21 @@ class TestCompetitorsStruct extends FFFirebaseStruct {
   String? _title;
   String get title => _title ?? '';
   set title(String? val) => _title = val;
+
   bool hasTitle() => _title != null;
 
   // "advantages" field.
   String? _advantages;
   String get advantages => _advantages ?? '';
   set advantages(String? val) => _advantages = val;
+
   bool hasAdvantages() => _advantages != null;
 
   // "disadvantages" field.
   String? _disadvantages;
   String get disadvantages => _disadvantages ?? '';
   set disadvantages(String? val) => _disadvantages = val;
+
   bool hasDisadvantages() => _disadvantages != null;
 
   static TestCompetitorsStruct fromMap(Map<String, dynamic> data) =>

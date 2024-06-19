@@ -19,6 +19,7 @@ class ChatMessagesStruct extends FFFirebaseStruct {
     String? type,
     List<String>? images,
     String? audio,
+    String? aIChatType,
     FirestoreUtilData firestoreUtilData = const FirestoreUtilData(),
   })  : _text = text,
         _from = from,
@@ -28,57 +29,75 @@ class ChatMessagesStruct extends FFFirebaseStruct {
         _type = type,
         _images = images,
         _audio = audio,
+        _aIChatType = aIChatType,
         super(firestoreUtilData);
 
   // "text" field.
   String? _text;
   String get text => _text ?? '';
   set text(String? val) => _text = val;
+
   bool hasText() => _text != null;
 
   // "from" field.
   DocumentReference? _from;
   DocumentReference? get from => _from;
   set from(DocumentReference? val) => _from = val;
+
   bool hasFrom() => _from != null;
 
   // "when" field.
   DateTime? _when;
   DateTime? get when => _when;
   set when(DateTime? val) => _when = val;
+
   bool hasWhen() => _when != null;
 
   // "isRead" field.
   bool? _isRead;
   bool get isRead => _isRead ?? false;
   set isRead(bool? val) => _isRead = val;
+
   bool hasIsRead() => _isRead != null;
 
   // "id" field.
   String? _id;
   String get id => _id ?? '';
   set id(String? val) => _id = val;
+
   bool hasId() => _id != null;
 
   // "type" field.
   String? _type;
   String get type => _type ?? '';
   set type(String? val) => _type = val;
+
   bool hasType() => _type != null;
 
   // "images" field.
   List<String>? _images;
   List<String> get images => _images ?? const [];
   set images(List<String>? val) => _images = val;
-  void updateImages(Function(List<String>) updateFn) =>
-      updateFn(_images ??= []);
+
+  void updateImages(Function(List<String>) updateFn) {
+    updateFn(images ??= []);
+  }
+
   bool hasImages() => _images != null;
 
   // "audio" field.
   String? _audio;
   String get audio => _audio ?? '';
   set audio(String? val) => _audio = val;
+
   bool hasAudio() => _audio != null;
+
+  // "AI_chat_type" field.
+  String? _aIChatType;
+  String get aIChatType => _aIChatType ?? '';
+  set aIChatType(String? val) => _aIChatType = val;
+
+  bool hasAIChatType() => _aIChatType != null;
 
   static ChatMessagesStruct fromMap(Map<String, dynamic> data) =>
       ChatMessagesStruct(
@@ -90,6 +109,7 @@ class ChatMessagesStruct extends FFFirebaseStruct {
         type: data['type'] as String?,
         images: getDataList(data['images']),
         audio: data['audio'] as String?,
+        aIChatType: data['AI_chat_type'] as String?,
       );
 
   static ChatMessagesStruct? maybeFromMap(dynamic data) => data is Map
@@ -105,6 +125,7 @@ class ChatMessagesStruct extends FFFirebaseStruct {
         'type': _type,
         'images': _images,
         'audio': _audio,
+        'AI_chat_type': _aIChatType,
       }.withoutNulls;
 
   @override
@@ -136,10 +157,14 @@ class ChatMessagesStruct extends FFFirebaseStruct {
         'images': serializeParam(
           _images,
           ParamType.String,
-          true,
+          isList: true,
         ),
         'audio': serializeParam(
           _audio,
+          ParamType.String,
+        ),
+        'AI_chat_type': serializeParam(
+          _aIChatType,
           ParamType.String,
         ),
       }.withoutNulls;
@@ -187,6 +212,11 @@ class ChatMessagesStruct extends FFFirebaseStruct {
           ParamType.String,
           false,
         ),
+        aIChatType: deserializeParam(
+          data['AI_chat_type'],
+          ParamType.String,
+          false,
+        ),
       );
 
   @override
@@ -203,12 +233,13 @@ class ChatMessagesStruct extends FFFirebaseStruct {
         id == other.id &&
         type == other.type &&
         listEquality.equals(images, other.images) &&
-        audio == other.audio;
+        audio == other.audio &&
+        aIChatType == other.aIChatType;
   }
 
   @override
   int get hashCode => const ListEquality()
-      .hash([text, from, when, isRead, id, type, images, audio]);
+      .hash([text, from, when, isRead, id, type, images, audio, aIChatType]);
 }
 
 ChatMessagesStruct createChatMessagesStruct({
@@ -219,6 +250,7 @@ ChatMessagesStruct createChatMessagesStruct({
   String? id,
   String? type,
   String? audio,
+  String? aIChatType,
   Map<String, dynamic> fieldValues = const {},
   bool clearUnsetFields = true,
   bool create = false,
@@ -232,6 +264,7 @@ ChatMessagesStruct createChatMessagesStruct({
       id: id,
       type: type,
       audio: audio,
+      aIChatType: aIChatType,
       firestoreUtilData: FirestoreUtilData(
         clearUnsetFields: clearUnsetFields,
         create: create,

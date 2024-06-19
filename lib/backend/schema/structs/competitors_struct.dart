@@ -22,14 +22,18 @@ class CompetitorsStruct extends FFFirebaseStruct {
   String? _competitorName;
   String get competitorName => _competitorName ?? '';
   set competitorName(String? val) => _competitorName = val;
+
   bool hasCompetitorName() => _competitorName != null;
 
   // "options" field.
   List<CompetitorOptionsStruct>? _options;
   List<CompetitorOptionsStruct> get options => _options ?? const [];
   set options(List<CompetitorOptionsStruct>? val) => _options = val;
-  void updateOptions(Function(List<CompetitorOptionsStruct>) updateFn) =>
-      updateFn(_options ??= []);
+
+  void updateOptions(Function(List<CompetitorOptionsStruct>) updateFn) {
+    updateFn(options ??= []);
+  }
+
   bool hasOptions() => _options != null;
 
   static CompetitorsStruct fromMap(Map<String, dynamic> data) =>
@@ -59,7 +63,7 @@ class CompetitorsStruct extends FFFirebaseStruct {
         'options': serializeParam(
           _options,
           ParamType.DataStruct,
-          true,
+          isList: true,
         ),
       }.withoutNulls;
 

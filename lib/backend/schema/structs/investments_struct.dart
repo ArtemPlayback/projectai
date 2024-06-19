@@ -22,12 +22,14 @@ class InvestmentsStruct extends FFFirebaseStruct {
   String? _investmentFrom;
   String get investmentFrom => _investmentFrom ?? '';
   set investmentFrom(String? val) => _investmentFrom = val;
+
   bool hasInvestmentFrom() => _investmentFrom != null;
 
   // "invstmentsUpTo" field.
   String? _invstmentsUpTo;
   String get invstmentsUpTo => _invstmentsUpTo ?? '';
   set invstmentsUpTo(String? val) => _invstmentsUpTo = val;
+
   bool hasInvstmentsUpTo() => _invstmentsUpTo != null;
 
   static InvestmentsStruct fromMap(Map<String, dynamic> data) =>

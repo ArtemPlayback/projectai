@@ -104,6 +104,22 @@ class ProjectsRecord extends FirestoreRecord {
   List<InvitesStruct> get invites => _invites ?? const [];
   bool hasInvites() => _invites != null;
 
+  // "team_members" field.
+  List<TeamMemberStruct>? _teamMembers;
+  List<TeamMemberStruct> get teamMembers => _teamMembers ?? const [];
+  bool hasTeamMembers() => _teamMembers != null;
+
+  // "testCompetitors" field.
+  List<TestCompetitorsStruct>? _testCompetitors;
+  List<TestCompetitorsStruct> get testCompetitors =>
+      _testCompetitors ?? const [];
+  bool hasTestCompetitors() => _testCompetitors != null;
+
+  // "completed" field.
+  bool? _completed;
+  bool get completed => _completed ?? false;
+  bool hasCompleted() => _completed != null;
+
   void _initializeFields() {
     _title = snapshotData['title'] as String?;
     _cover = snapshotData['cover'] as String?;
@@ -139,6 +155,15 @@ class ProjectsRecord extends FirestoreRecord {
       snapshotData['invites'],
       InvitesStruct.fromMap,
     );
+    _teamMembers = getStructList(
+      snapshotData['team_members'],
+      TeamMemberStruct.fromMap,
+    );
+    _testCompetitors = getStructList(
+      snapshotData['testCompetitors'],
+      TestCompetitorsStruct.fromMap,
+    );
+    _completed = snapshotData['completed'] as bool?;
   }
 
   static CollectionReference get collection =>
@@ -185,6 +210,7 @@ Map<String, dynamic> createProjectsRecordData({
   String? mainImage,
   String? customId,
   SocialmediaStruct? socialmedia,
+  bool? completed,
 }) {
   final firestoreData = mapToFirestore(
     <String, dynamic>{
@@ -197,6 +223,7 @@ Map<String, dynamic> createProjectsRecordData({
       'main_image': mainImage,
       'custom_id': customId,
       'socialmedia': SocialmediaStruct().toMap(),
+      'completed': completed,
     }.withoutNulls,
   );
 
@@ -238,7 +265,10 @@ class ProjectsRecordDocumentEquality implements Equality<ProjectsRecord> {
         listEquality.equals(e1?.subscribers, e2?.subscribers) &&
         e1?.socialmedia == e2?.socialmedia &&
         listEquality.equals(e1?.sections, e2?.sections) &&
-        listEquality.equals(e1?.invites, e2?.invites);
+        listEquality.equals(e1?.invites, e2?.invites) &&
+        listEquality.equals(e1?.teamMembers, e2?.teamMembers) &&
+        listEquality.equals(e1?.testCompetitors, e2?.testCompetitors) &&
+        e1?.completed == e2?.completed;
   }
 
   @override
@@ -259,7 +289,10 @@ class ProjectsRecordDocumentEquality implements Equality<ProjectsRecord> {
         e?.subscribers,
         e?.socialmedia,
         e?.sections,
-        e?.invites
+        e?.invites,
+        e?.teamMembers,
+        e?.testCompetitors,
+        e?.completed
       ]);
 
   @override

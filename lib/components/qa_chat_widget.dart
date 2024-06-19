@@ -660,6 +660,7 @@ class _QaChatWidgetState extends State<QaChatWidget>
                                               text: functions
                                                   .stringToAPI(_model.message),
                                             );
+
                                             if ((_model.qa?.succeeded ??
                                                 true)) {
                                               _model.addToChatmessages(

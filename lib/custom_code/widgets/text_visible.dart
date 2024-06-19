@@ -106,7 +106,6 @@ class _TextVisibleState extends State<TextVisible> {
 
     return RichText(
       text: TextSpan(children: spans),
-      maxLines: 4,
     );
   }
 

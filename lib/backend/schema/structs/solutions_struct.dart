@@ -22,12 +22,14 @@ class SolutionsStruct extends FFFirebaseStruct {
   String? _title;
   String get title => _title ?? '';
   set title(String? val) => _title = val;
+
   bool hasTitle() => _title != null;
 
   // "description" field.
   String? _description;
   String get description => _description ?? '';
   set description(String? val) => _description = val;
+
   bool hasDescription() => _description != null;
 
   static SolutionsStruct fromMap(Map<String, dynamic> data) => SolutionsStruct(

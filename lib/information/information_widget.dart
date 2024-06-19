@@ -136,9 +136,9 @@ class _InformationWidgetState extends State<InformationWidget>
                                 .bodyMedium
                                 .override(
                                   fontFamily: 'LTSuperior',
-                                  fontSize: 20.0,
+                                  fontSize: 18.0,
                                   letterSpacing: 0.0,
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight: FontWeight.w600,
                                   useGoogleFonts: false,
                                 ),
                           ),
@@ -250,9 +250,9 @@ class _InformationWidgetState extends State<InformationWidget>
                                 .bodyMedium
                                 .override(
                                   fontFamily: 'LTSuperior',
-                                  fontSize: 20.0,
+                                  fontSize: 18.0,
                                   letterSpacing: 0.0,
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight: FontWeight.w600,
                                   useGoogleFonts: false,
                                 ),
                           ),
@@ -379,9 +379,9 @@ class _InformationWidgetState extends State<InformationWidget>
                         'Social media and email',
                         style: FlutterFlowTheme.of(context).bodyMedium.override(
                               fontFamily: 'LTSuperior',
-                              fontSize: 20.0,
+                              fontSize: 18.0,
                               letterSpacing: 0.0,
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.w600,
                               useGoogleFonts: false,
                             ),
                       ),
@@ -717,9 +717,9 @@ class _InformationWidgetState extends State<InformationWidget>
                                 .bodyMedium
                                 .override(
                                   fontFamily: 'LTSuperior',
-                                  fontSize: 20.0,
+                                  fontSize: 18.0,
                                   letterSpacing: 0.0,
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight: FontWeight.w600,
                                   useGoogleFonts: false,
                                 ),
                           ),
@@ -829,9 +829,9 @@ class _InformationWidgetState extends State<InformationWidget>
                                 .bodyMedium
                                 .override(
                                   fontFamily: 'LTSuperior',
-                                  fontSize: 20.0,
+                                  fontSize: 18.0,
                                   letterSpacing: 0.0,
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight: FontWeight.w600,
                                   useGoogleFonts: false,
                                 ),
                           ),
@@ -966,12 +966,12 @@ class _InformationWidgetState extends State<InformationWidget>
             ),
             Container(
               width: double.infinity,
-              height: 75.0,
+              height: 100.0,
               decoration: BoxDecoration(
                 color: FlutterFlowTheme.of(context).secondaryBackground,
               ),
               child: Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 15.0),
+                padding: EdgeInsetsDirectional.fromSTEB(0.0, 50.0, 0.0, 15.0),
                 child: Row(
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1028,8 +1028,14 @@ class _InformationWidgetState extends State<InformationWidget>
                   color: FlutterFlowTheme.of(context).secondaryBackground,
                 ),
                 child: Padding(
-                  padding:
-                      EdgeInsetsDirectional.fromSTEB(20.0, 13.0, 20.0, 20.0),
+                  padding: EdgeInsetsDirectional.fromSTEB(
+                      20.0,
+                      13.0,
+                      20.0,
+                      valueOrDefault<double>(
+                        isiOS ? 40.0 : 20.0,
+                        0.0,
+                      )),
                   child: FFButtonWidget(
                     onPressed: () async {
                       await currentUserReference!.update({
@@ -1070,6 +1076,7 @@ class _InformationWidgetState extends State<InformationWidget>
                                 fontFamily: 'LTSuperior',
                                 color: Colors.white,
                                 letterSpacing: 0.0,
+                                fontWeight: FontWeight.w600,
                                 useGoogleFonts: false,
                               ),
                       elevation: 0.0,

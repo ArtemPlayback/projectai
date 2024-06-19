@@ -29,8 +29,9 @@ class QaChatModel extends FlutterFlowModel<QaChatWidget> {
   EventsRecord? event;
 
   AichatStruct? aichat;
-  void updateAichatStruct(Function(AichatStruct) updateFn) =>
-      updateFn(aichat ??= AichatStruct());
+  void updateAichatStruct(Function(AichatStruct) updateFn) {
+    updateFn(aichat ??= AichatStruct());
+  }
 
   List<ChatMessagesStruct> chatmessages = [];
   void addToChatmessages(ChatMessagesStruct item) => chatmessages.add(item);

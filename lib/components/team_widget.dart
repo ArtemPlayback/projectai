@@ -4,7 +4,7 @@ import '/backend/schema/structs/index.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
-import '/new_project/button_infinity/button_infinity_widget.dart';
+import '/sign_in_foulder/new_project/button_infinity/button_infinity_widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
@@ -103,208 +103,219 @@ class _TeamWidgetState extends State<TeamWidget> {
                                   SizedBox(height: 15.0),
                               itemBuilder: (context, teamIndex) {
                                 final teamItem = team[teamIndex];
-                                return Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      15.0, 0.0, 15.0, 0.0),
-                                  child: FutureBuilder<UsersRecord>(
-                                    future: UsersRecord.getDocumentOnce(
-                                        teamItem.userReference!),
-                                    builder: (context, snapshot) {
-                                      // Customize what your widget looks like when it's loading.
-                                      if (!snapshot.hasData) {
-                                        return Center(
-                                          child: SizedBox(
-                                            width: 50.0,
-                                            height: 50.0,
-                                            child: CircularProgressIndicator(
-                                              valueColor:
-                                                  AlwaysStoppedAnimation<Color>(
-                                                FlutterFlowTheme.of(context)
-                                                    .primary,
+                                return Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                  child: Padding(
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        15.0, 0.0, 15.0, 0.0),
+                                    child: FutureBuilder<UsersRecord>(
+                                      future: UsersRecord.getDocumentOnce(
+                                          teamItem.userReference!),
+                                      builder: (context, snapshot) {
+                                        // Customize what your widget looks like when it's loading.
+                                        if (!snapshot.hasData) {
+                                          return Center(
+                                            child: SizedBox(
+                                              width: 50.0,
+                                              height: 50.0,
+                                              child: CircularProgressIndicator(
+                                                valueColor:
+                                                    AlwaysStoppedAnimation<
+                                                        Color>(
+                                                  FlutterFlowTheme.of(context)
+                                                      .primary,
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                        );
-                                      }
-                                      final rowUsersRecord = snapshot.data!;
-                                      return Row(
-                                        mainAxisSize: MainAxisSize.max,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          InkWell(
-                                            splashColor: Colors.transparent,
-                                            focusColor: Colors.transparent,
-                                            hoverColor: Colors.transparent,
-                                            highlightColor: Colors.transparent,
-                                            onTap: () async {
-                                              context.pushNamed(
-                                                'user_page',
-                                                queryParameters: {
-                                                  'user': serializeParam(
-                                                    rowUsersRecord,
-                                                    ParamType.Document,
+                                          );
+                                        }
+                                        final rowUsersRecord = snapshot.data!;
+                                        return Row(
+                                          mainAxisSize: MainAxisSize.max,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            InkWell(
+                                              splashColor: Colors.transparent,
+                                              focusColor: Colors.transparent,
+                                              hoverColor: Colors.transparent,
+                                              highlightColor:
+                                                  Colors.transparent,
+                                              onTap: () async {
+                                                context.pushNamed(
+                                                  'user_page',
+                                                  queryParameters: {
+                                                    'user': serializeParam(
+                                                      rowUsersRecord,
+                                                      ParamType.Document,
+                                                    ),
+                                                  }.withoutNulls,
+                                                  extra: <String, dynamic>{
+                                                    'user': rowUsersRecord,
+                                                  },
+                                                );
+                                              },
+                                              child: Row(
+                                                mainAxisSize: MainAxisSize.max,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: [
+                                                  ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            360.0),
+                                                    child: Image.network(
+                                                      rowUsersRecord.photoUrl,
+                                                      width: 60.0,
+                                                      height: 60.0,
+                                                      fit: BoxFit.cover,
+                                                    ),
                                                   ),
-                                                }.withoutNulls,
-                                                extra: <String, dynamic>{
-                                                  'user': rowUsersRecord,
-                                                },
-                                              );
-                                            },
-                                            child: Row(
-                                              mainAxisSize: MainAxisSize.max,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              children: [
-                                                ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          360.0),
-                                                  child: Image.network(
-                                                    rowUsersRecord.photoUrl,
-                                                    width: 60.0,
-                                                    height: 60.0,
-                                                    fit: BoxFit.cover,
-                                                  ),
-                                                ),
-                                                Padding(
-                                                  padding: EdgeInsetsDirectional
-                                                      .fromSTEB(
-                                                          15.0, 0.0, 0.0, 0.0),
-                                                  child: Column(
-                                                    mainAxisSize:
-                                                        MainAxisSize.max,
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Text(
-                                                        rowUsersRecord
-                                                            .displayName,
-                                                        style: FlutterFlowTheme
-                                                                .of(context)
-                                                            .bodyMedium
-                                                            .override(
-                                                              fontFamily:
-                                                                  'LTSuperior',
-                                                              fontSize: 16.0,
-                                                              letterSpacing:
-                                                                  0.0,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
-                                                              useGoogleFonts:
-                                                                  false,
-                                                            ),
-                                                      ),
-                                                      Padding(
-                                                        padding:
-                                                            EdgeInsetsDirectional
-                                                                .fromSTEB(
-                                                                    0.0,
-                                                                    4.0,
-                                                                    0.0,
-                                                                    0.0),
-                                                        child: Text(
-                                                          teamItem.role == ''
-                                                              ? 'no role'
-                                                              : teamItem.role,
+                                                  Padding(
+                                                    padding:
+                                                        EdgeInsetsDirectional
+                                                            .fromSTEB(15.0, 0.0,
+                                                                0.0, 0.0),
+                                                    child: Column(
+                                                      mainAxisSize:
+                                                          MainAxisSize.max,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text(
+                                                          rowUsersRecord
+                                                              .displayName,
                                                           style: FlutterFlowTheme
                                                                   .of(context)
                                                               .bodyMedium
                                                               .override(
                                                                 fontFamily:
                                                                     'LTSuperior',
-                                                                color: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .secondaryText,
+                                                                fontSize: 16.0,
                                                                 letterSpacing:
                                                                     0.0,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600,
                                                                 useGoogleFonts:
                                                                     false,
                                                               ),
                                                         ),
-                                                      ),
-                                                    ],
+                                                        Padding(
+                                                          padding:
+                                                              EdgeInsetsDirectional
+                                                                  .fromSTEB(
+                                                                      0.0,
+                                                                      4.0,
+                                                                      0.0,
+                                                                      0.0),
+                                                          child: Text(
+                                                            teamItem.role == ''
+                                                                ? 'no role'
+                                                                : teamItem.role,
+                                                            style: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .bodyMedium
+                                                                .override(
+                                                                  fontFamily:
+                                                                      'LTSuperior',
+                                                                  color: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .secondaryText,
+                                                                  letterSpacing:
+                                                                      0.0,
+                                                                  useGoogleFonts:
+                                                                      false,
+                                                                ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            Row(
+                                              mainAxisSize: MainAxisSize.max,
+                                              children: [
+                                                Padding(
+                                                  padding: EdgeInsetsDirectional
+                                                      .fromSTEB(
+                                                          0.0, 0.0, 6.0, 0.0),
+                                                  child: FlutterFlowIconButton(
+                                                    borderColor:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .textAndStroke,
+                                                    borderRadius: 20.0,
+                                                    borderWidth: 1.0,
+                                                    buttonSize: 40.0,
+                                                    icon: Icon(
+                                                      FFIcons.keditPencil01,
+                                                      color:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .primary,
+                                                      size: 15.0,
+                                                    ),
+                                                    onPressed: () async {
+                                                      _model.chosenUser =
+                                                          rowUsersRecord;
+                                                      _model.teamIndex =
+                                                          teamIndex;
+                                                      setState(() {});
+                                                      await _model
+                                                          .pageViewController
+                                                          ?.nextPage(
+                                                        duration: Duration(
+                                                            milliseconds: 300),
+                                                        curve: Curves.ease,
+                                                      );
+                                                    },
                                                   ),
                                                 ),
-                                              ],
-                                            ),
-                                          ),
-                                          Row(
-                                            mainAxisSize: MainAxisSize.max,
-                                            children: [
-                                              Padding(
-                                                padding: EdgeInsetsDirectional
-                                                    .fromSTEB(
-                                                        0.0, 0.0, 6.0, 0.0),
-                                                child: FlutterFlowIconButton(
+                                                FlutterFlowIconButton(
                                                   borderColor:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .textAndStroke,
+                                                      Color(0x72FF5963),
                                                   borderRadius: 20.0,
                                                   borderWidth: 1.0,
                                                   buttonSize: 40.0,
                                                   icon: Icon(
-                                                    FFIcons.keditPencil01,
+                                                    FFIcons.kdelete2,
                                                     color: FlutterFlowTheme.of(
                                                             context)
-                                                        .primary,
+                                                        .error,
                                                     size: 15.0,
                                                   ),
                                                   onPressed: () async {
-                                                    _model.chosenUser =
-                                                        rowUsersRecord;
-                                                    _model.teamIndex =
-                                                        teamIndex;
+                                                    _model
+                                                        .removeAtIndexFromTeam2(
+                                                            teamIndex);
                                                     setState(() {});
-                                                    await _model
-                                                        .pageViewController
-                                                        ?.nextPage(
-                                                      duration: Duration(
-                                                          milliseconds: 300),
-                                                      curve: Curves.ease,
-                                                    );
+
+                                                    await widget
+                                                        .company!.reference
+                                                        .update({
+                                                      ...mapToFirestore(
+                                                        {
+                                                          'team':
+                                                              getTeamMemberListFirestoreData(
+                                                            _model.team2,
+                                                          ),
+                                                        },
+                                                      ),
+                                                    });
                                                   },
                                                 ),
-                                              ),
-                                              FlutterFlowIconButton(
-                                                borderColor: Color(0x72FF5963),
-                                                borderRadius: 20.0,
-                                                borderWidth: 1.0,
-                                                buttonSize: 40.0,
-                                                icon: Icon(
-                                                  FFIcons.kdelete2,
-                                                  color: FlutterFlowTheme.of(
-                                                          context)
-                                                      .error,
-                                                  size: 15.0,
-                                                ),
-                                                onPressed: () async {
-                                                  _model.removeAtIndexFromTeam2(
-                                                      teamIndex);
-                                                  setState(() {});
-
-                                                  await widget
-                                                      .company!.reference
-                                                      .update({
-                                                    ...mapToFirestore(
-                                                      {
-                                                        'team':
-                                                            getTeamMemberListFirestoreData(
-                                                          _model.team2,
-                                                        ),
-                                                      },
-                                                    ),
-                                                  });
-                                                },
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      );
-                                    },
+                                              ],
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    ),
                                   ),
                                 );
                               },

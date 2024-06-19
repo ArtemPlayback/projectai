@@ -59,8 +59,11 @@ class _SectionWidgetState extends State<SectionWidget> {
 
     return Container(
       decoration: BoxDecoration(
-        color: Color(0xFFF9F9F9),
+        color: Color(0xFFFBF6F6),
         borderRadius: BorderRadius.circular(10.0),
+        border: Border.all(
+          color: Color(0x1AC6C6D5),
+        ),
       ),
       child: Padding(
         padding: EdgeInsetsDirectional.fromSTEB(20.0, 0.0, 20.0, 15.0),

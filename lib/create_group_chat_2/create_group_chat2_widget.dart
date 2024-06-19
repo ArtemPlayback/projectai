@@ -7,7 +7,7 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/flutter_flow/upload_data.dart';
-import '/new_project/button_infinity/button_infinity_widget.dart';
+import '/sign_in_foulder/new_project/button_infinity/button_infinity_widget.dart';
 import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -574,7 +574,7 @@ class _CreateGroupChat2WidgetState extends State<CreateGroupChat2Widget> {
                           snapshot.data!;
                       return Container(
                         width: double.infinity,
-                        height: MediaQuery.sizeOf(context).height * 1.0,
+                        height: MediaQuery.sizeOf(context).height * 0.6,
                         decoration: BoxDecoration(
                           color:
                               FlutterFlowTheme.of(context).secondaryBackground,
@@ -586,7 +586,7 @@ class _CreateGroupChat2WidgetState extends State<CreateGroupChat2Widget> {
                           ),
                         ),
                         child: Column(
-                          mainAxisSize: MainAxisSize.max,
+                          mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Padding(
@@ -611,6 +611,7 @@ class _CreateGroupChat2WidgetState extends State<CreateGroupChat2Widget> {
                                 final users = containerUsersRecordList.toList();
                                 return ListView.separated(
                                   padding: EdgeInsets.zero,
+                                  primary: false,
                                   shrinkWrap: true,
                                   scrollDirection: Axis.vertical,
                                   itemCount: users.length,
@@ -693,7 +694,7 @@ class _CreateGroupChat2WidgetState extends State<CreateGroupChat2Widget> {
                                                                     0.0,
                                                                 fontWeight:
                                                                     FontWeight
-                                                                        .w600,
+                                                                        .w500,
                                                               ),
                                                         ),
                                                       ],

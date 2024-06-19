@@ -26,25 +26,30 @@ class SearchItemStruct extends FFFirebaseStruct {
   String? _type;
   String get type => _type ?? '';
   set type(String? val) => _type = val;
+
   bool hasType() => _type != null;
 
   // "explanation" field.
   String? _explanation;
   String get explanation => _explanation ?? '';
   set explanation(String? val) => _explanation = val;
+
   bool hasExplanation() => _explanation != null;
 
   // "firebase_id" field.
   String? _firebaseId;
   String get firebaseId => _firebaseId ?? '';
   set firebaseId(String? val) => _firebaseId = val;
+
   bool hasFirebaseId() => _firebaseId != null;
 
   // "percent" field.
   int? _percent;
   int get percent => _percent ?? 0;
   set percent(int? val) => _percent = val;
-  void incrementPercent(int amount) => _percent = percent + amount;
+
+  void incrementPercent(int amount) => percent = percent + amount;
+
   bool hasPercent() => _percent != null;
 
   static SearchItemStruct fromMap(Map<String, dynamic> data) =>

@@ -42,75 +42,90 @@ class EventStruct extends FFFirebaseStruct {
   bool? _isOpen;
   bool get isOpen => _isOpen ?? false;
   set isOpen(bool? val) => _isOpen = val;
+
   bool hasIsOpen() => _isOpen != null;
 
   // "title" field.
   String? _title;
   String get title => _title ?? '';
   set title(String? val) => _title = val;
+
   bool hasTitle() => _title != null;
 
   // "description" field.
   String? _description;
   String get description => _description ?? '';
   set description(String? val) => _description = val;
+
   bool hasDescription() => _description != null;
 
   // "images" field.
   List<String>? _images;
   List<String> get images => _images ?? const [];
   set images(List<String>? val) => _images = val;
-  void updateImages(Function(List<String>) updateFn) =>
-      updateFn(_images ??= []);
+
+  void updateImages(Function(List<String>) updateFn) {
+    updateFn(images ??= []);
+  }
+
   bool hasImages() => _images != null;
 
   // "isOnline" field.
   bool? _isOnline;
   bool get isOnline => _isOnline ?? false;
   set isOnline(bool? val) => _isOnline = val;
+
   bool hasIsOnline() => _isOnline != null;
 
   // "location" field.
   LatLng? _location;
   LatLng? get location => _location;
   set location(LatLng? val) => _location = val;
+
   bool hasLocation() => _location != null;
 
   // "location_title" field.
   String? _locationTitle;
   String get locationTitle => _locationTitle ?? '';
   set locationTitle(String? val) => _locationTitle = val;
+
   bool hasLocationTitle() => _locationTitle != null;
 
   // "additional_info_location" field.
   String? _additionalInfoLocation;
   String get additionalInfoLocation => _additionalInfoLocation ?? '';
   set additionalInfoLocation(String? val) => _additionalInfoLocation = val;
+
   bool hasAdditionalInfoLocation() => _additionalInfoLocation != null;
 
   // "start_date" field.
   DateTime? _startDate;
   DateTime? get startDate => _startDate;
   set startDate(DateTime? val) => _startDate = val;
+
   bool hasStartDate() => _startDate != null;
 
   // "start_time" field.
   DateTime? _startTime;
   DateTime? get startTime => _startTime;
   set startTime(DateTime? val) => _startTime = val;
+
   bool hasStartTime() => _startTime != null;
 
   // "price" field.
   int? _price;
   int get price => _price ?? 0;
   set price(int? val) => _price = val;
-  void incrementPrice(int amount) => _price = price + amount;
+
+  void incrementPrice(int amount) => price = price + amount;
+
   bool hasPrice() => _price != null;
 
   // "isFree" field.
   bool? _isFree;
   bool get isFree => _isFree ?? false;
   set isFree(bool? val) => _isFree = val;
+
   bool hasIsFree() => _isFree != null;
 
   static EventStruct fromMap(Map<String, dynamic> data) => EventStruct(
@@ -163,7 +178,7 @@ class EventStruct extends FFFirebaseStruct {
         'images': serializeParam(
           _images,
           ParamType.String,
-          true,
+          isList: true,
         ),
         'isOnline': serializeParam(
           _isOnline,

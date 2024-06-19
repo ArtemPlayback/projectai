@@ -22,12 +22,14 @@ class CompetitorOptionsStruct extends FFFirebaseStruct {
   String? _option;
   String get option => _option ?? '';
   set option(String? val) => _option = val;
+
   bool hasOption() => _option != null;
 
   // "presence" field.
   bool? _presence;
   bool get presence => _presence ?? false;
   set presence(bool? val) => _presence = val;
+
   bool hasPresence() => _presence != null;
 
   static CompetitorOptionsStruct fromMap(Map<String, dynamic> data) =>

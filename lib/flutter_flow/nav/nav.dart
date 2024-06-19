@@ -320,6 +320,14 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
               'isFrom',
               ParamType.String,
             ),
+            explanation: params.getParam(
+              'explanation',
+              ParamType.String,
+            ),
+            percent: params.getParam(
+              'percent',
+              ParamType.int,
+            ),
           ),
         ),
         FFRoute(
@@ -602,9 +610,34 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
               'chosen',
               ParamType.String,
             ),
-            firstSearch: params.getParam(
-              'firstSearch',
+          ),
+        ),
+        FFRoute(
+          name: 'test',
+          path: '/test',
+          builder: (context, params) => TestWidget(),
+        ),
+        FFRoute(
+          name: 'history',
+          path: '/history',
+          builder: (context, params) => HistoryWidget(
+            chosen: params.getParam(
+              'chosen',
               ParamType.String,
+            ),
+          ),
+        ),
+        FFRoute(
+          name: 'history_item',
+          path: '/historyItem',
+          builder: (context, params) => HistoryItemWidget(
+            chosen: params.getParam(
+              'chosen',
+              ParamType.String,
+            ),
+            indexItem: params.getParam(
+              'indexItem',
+              ParamType.int,
             ),
           ),
         )

@@ -18,11 +18,23 @@ import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutterflow_colorpicker/flutterflow_colorpicker.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 class ProductInformationModel
     extends FlutterFlowModel<ProductInformationWidget> {
+  ///  Local state fields for this page.
+
+  List<Color> colors3 = [];
+  void addToColors3(Color item) => colors3.add(item);
+  void removeFromColors3(Color item) => colors3.remove(item);
+  void removeAtIndexFromColors3(int index) => colors3.removeAt(index);
+  void insertAtIndexInColors3(int index, Color item) =>
+      colors3.insert(index, item);
+  void updateColors3AtIndex(int index, Function(Color) updateFn) =>
+      colors3[index] = updateFn(colors3[index]);
+
   ///  State fields for stateful widgets in this page.
 
   final unfocusNode = FocusNode();
@@ -38,11 +50,16 @@ class ProductInformationModel
   FocusNode? textFieldFocusNode3;
   TextEditingController? textController3;
   String? Function(BuildContext, String?)? textController3Validator;
+  Color? colorPicked;
+  // Models for product_block dynamic component.
+  late FlutterFlowDynamicModels<ProductBlockModel> productBlockModels;
   // Stores action output result for [Backend Call - API (upsert vectors neightn)] action in Button widget.
   ApiCallResponse? upsert;
 
   @override
-  void initState(BuildContext context) {}
+  void initState(BuildContext context) {
+    productBlockModels = FlutterFlowDynamicModels(() => ProductBlockModel());
+  }
 
   @override
   void dispose() {
@@ -55,5 +72,7 @@ class ProductInformationModel
 
     textFieldFocusNode3?.dispose();
     textController3?.dispose();
+
+    productBlockModels.dispose();
   }
 }

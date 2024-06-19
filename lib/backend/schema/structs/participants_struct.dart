@@ -26,24 +26,28 @@ class ParticipantsStruct extends FFFirebaseStruct {
   DocumentReference? _user;
   DocumentReference? get user => _user;
   set user(DocumentReference? val) => _user = val;
+
   bool hasUser() => _user != null;
 
   // "when" field.
   DateTime? _when;
   DateTime? get when => _when;
   set when(DateTime? val) => _when = val;
+
   bool hasWhen() => _when != null;
 
   // "applied" field.
   bool? _applied;
   bool get applied => _applied ?? false;
   set applied(bool? val) => _applied = val;
+
   bool hasApplied() => _applied != null;
 
   // "joined" field.
   bool? _joined;
   bool get joined => _joined ?? false;
   set joined(bool? val) => _joined = val;
+
   bool hasJoined() => _joined != null;
 
   static ParticipantsStruct fromMap(Map<String, dynamic> data) =>

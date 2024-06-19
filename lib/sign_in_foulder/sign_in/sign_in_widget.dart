@@ -666,7 +666,7 @@ class _SignInWidgetState extends State<SignInWidget>
                           ),
                         ),
                       ),
-                    ].divide(SizedBox(width: 8.0)),
+                    ].divide(SizedBox(width: 10.0)),
                   ),
                 ),
                 Padding(
@@ -689,7 +689,7 @@ class _SignInWidgetState extends State<SignInWidget>
                               FlutterFlowTheme.of(context).bodyMedium.override(
                                     fontFamily: 'LTSuperior',
                                     color: Colors.white,
-                                    fontSize: 15.0,
+                                    fontSize: 18.0,
                                     letterSpacing: 0.0,
                                     useGoogleFonts: false,
                                   ),
@@ -700,7 +700,7 @@ class _SignInWidgetState extends State<SignInWidget>
                               FlutterFlowTheme.of(context).bodyMedium.override(
                                     fontFamily: 'LTSuperior',
                                     color: Colors.white,
-                                    fontSize: 15.0,
+                                    fontSize: 18.0,
                                     letterSpacing: 0.0,
                                     fontWeight: FontWeight.bold,
                                     useGoogleFonts: false,

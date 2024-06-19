@@ -36,59 +36,75 @@ class QuestionsStruct extends FFFirebaseStruct {
   String? _question;
   String get question => _question ?? '';
   set question(String? val) => _question = val;
+
   bool hasQuestion() => _question != null;
 
   // "description" field.
   String? _description;
   String get description => _description ?? '';
   set description(String? val) => _description = val;
+
   bool hasDescription() => _description != null;
 
   // "type" field.
   String? _type;
   String get type => _type ?? '';
   set type(String? val) => _type = val;
+
   bool hasType() => _type != null;
 
   // "options" field.
   List<String>? _options;
   List<String> get options => _options ?? const [];
   set options(List<String>? val) => _options = val;
-  void updateOptions(Function(List<String>) updateFn) =>
-      updateFn(_options ??= []);
+
+  void updateOptions(Function(List<String>) updateFn) {
+    updateFn(options ??= []);
+  }
+
   bool hasOptions() => _options != null;
 
   // "answer" field.
   String? _answer;
   String get answer => _answer ?? '';
   set answer(String? val) => _answer = val;
+
   bool hasAnswer() => _answer != null;
 
   // "multiple_answer" field.
   List<String>? _multipleAnswer;
   List<String> get multipleAnswer => _multipleAnswer ?? const [];
   set multipleAnswer(List<String>? val) => _multipleAnswer = val;
-  void updateMultipleAnswer(Function(List<String>) updateFn) =>
-      updateFn(_multipleAnswer ??= []);
+
+  void updateMultipleAnswer(Function(List<String>) updateFn) {
+    updateFn(multipleAnswer ??= []);
+  }
+
   bool hasMultipleAnswer() => _multipleAnswer != null;
 
   // "isMultiselect" field.
   bool? _isMultiselect;
   bool get isMultiselect => _isMultiselect ?? false;
   set isMultiselect(bool? val) => _isMultiselect = val;
+
   bool hasIsMultiselect() => _isMultiselect != null;
 
   // "colors" field.
   List<Color>? _colors;
   List<Color> get colors => _colors ?? const [];
   set colors(List<Color>? val) => _colors = val;
-  void updateColors(Function(List<Color>) updateFn) => updateFn(_colors ??= []);
+
+  void updateColors(Function(List<Color>) updateFn) {
+    updateFn(colors ??= []);
+  }
+
   bool hasColors() => _colors != null;
 
   // "location" field.
   LatLng? _location;
   LatLng? get location => _location;
   set location(LatLng? val) => _location = val;
+
   bool hasLocation() => _location != null;
 
   static QuestionsStruct fromMap(Map<String, dynamic> data) => QuestionsStruct(
@@ -136,7 +152,7 @@ class QuestionsStruct extends FFFirebaseStruct {
         'options': serializeParam(
           _options,
           ParamType.String,
-          true,
+          isList: true,
         ),
         'answer': serializeParam(
           _answer,
@@ -145,7 +161,7 @@ class QuestionsStruct extends FFFirebaseStruct {
         'multiple_answer': serializeParam(
           _multipleAnswer,
           ParamType.String,
-          true,
+          isList: true,
         ),
         'isMultiselect': serializeParam(
           _isMultiselect,
@@ -154,7 +170,7 @@ class QuestionsStruct extends FFFirebaseStruct {
         'colors': serializeParam(
           _colors,
           ParamType.Color,
-          true,
+          isList: true,
         ),
         'location': serializeParam(
           _location,

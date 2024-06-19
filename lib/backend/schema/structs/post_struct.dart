@@ -28,32 +28,39 @@ class PostStruct extends FFFirebaseStruct {
   String? _text;
   String get text => _text ?? '';
   set text(String? val) => _text = val;
+
   bool hasText() => _text != null;
 
   // "header" field.
   String? _header;
   String get header => _header ?? '';
   set header(String? val) => _header = val;
+
   bool hasHeader() => _header != null;
 
   // "images" field.
   List<String>? _images;
   List<String> get images => _images ?? const [];
   set images(List<String>? val) => _images = val;
-  void updateImages(Function(List<String>) updateFn) =>
-      updateFn(_images ??= []);
+
+  void updateImages(Function(List<String>) updateFn) {
+    updateFn(images ??= []);
+  }
+
   bool hasImages() => _images != null;
 
   // "timestamp" field.
   DateTime? _timestamp;
   DateTime? get timestamp => _timestamp;
   set timestamp(DateTime? val) => _timestamp = val;
+
   bool hasTimestamp() => _timestamp != null;
 
   // "id" field.
   String? _id;
   String get id => _id ?? '';
   set id(String? val) => _id = val;
+
   bool hasId() => _id != null;
 
   static PostStruct fromMap(Map<String, dynamic> data) => PostStruct(
@@ -88,7 +95,7 @@ class PostStruct extends FFFirebaseStruct {
         'images': serializeParam(
           _images,
           ParamType.String,
-          true,
+          isList: true,
         ),
         'timestamp': serializeParam(
           _timestamp,

@@ -53,7 +53,7 @@ class _DeleteAccountWidgetState extends State<DeleteAccountWidget> {
           width: double.infinity,
           height: double.infinity,
           decoration: BoxDecoration(
-            color: Color(0xE8FFFFFF),
+            color: Colors.white,
             borderRadius: BorderRadius.circular(24.0),
           ),
           child: Padding(
@@ -61,13 +61,26 @@ class _DeleteAccountWidgetState extends State<DeleteAccountWidget> {
             child: Column(
               mainAxisSize: MainAxisSize.max,
               children: [
+                Container(
+                  width: 90.0,
+                  height: 90.0,
+                  decoration: BoxDecoration(
+                    color: Color(0x8BECECEE),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    Icons.warning_rounded,
+                    color: Color(0xFFFF3B30),
+                    size: 40.0,
+                  ),
+                ),
                 Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 6.0),
+                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 17.0, 0.0, 6.0),
                   child: Text(
                     'Delete account?',
                     style: FlutterFlowTheme.of(context).bodyMedium.override(
                           fontFamily: 'LTSuperior',
-                          fontSize: 18.0,
+                          fontSize: 20.0,
                           letterSpacing: 0.0,
                           fontWeight: FontWeight.w600,
                           useGoogleFonts: false,

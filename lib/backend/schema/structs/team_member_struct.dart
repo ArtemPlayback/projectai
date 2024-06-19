@@ -26,24 +26,28 @@ class TeamMemberStruct extends FFFirebaseStruct {
   DocumentReference? _userReference;
   DocumentReference? get userReference => _userReference;
   set userReference(DocumentReference? val) => _userReference = val;
+
   bool hasUserReference() => _userReference != null;
 
   // "role" field.
   String? _role;
   String get role => _role ?? '';
   set role(String? val) => _role = val;
+
   bool hasRole() => _role != null;
 
   // "description" field.
   String? _description;
   String get description => _description ?? '';
   set description(String? val) => _description = val;
+
   bool hasDescription() => _description != null;
 
   // "team_member" field.
   TeamMemberStatus? _teamMember;
   TeamMemberStatus get teamMember => _teamMember ?? TeamMemberStatus.isWaiting;
   set teamMember(TeamMemberStatus? val) => _teamMember = val;
+
   bool hasTeamMember() => _teamMember != null;
 
   static TeamMemberStruct fromMap(Map<String, dynamic> data) =>

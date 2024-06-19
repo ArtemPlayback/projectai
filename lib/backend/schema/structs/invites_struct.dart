@@ -30,36 +30,42 @@ class InvitesStruct extends FFFirebaseStruct {
   DocumentReference? _who;
   DocumentReference? get who => _who;
   set who(DocumentReference? val) => _who = val;
+
   bool hasWho() => _who != null;
 
   // "where" field.
   DocumentReference? _where;
   DocumentReference? get where => _where;
   set where(DocumentReference? val) => _where = val;
+
   bool hasWhere() => _where != null;
 
   // "role" field.
   String? _role;
   String get role => _role ?? '';
   set role(String? val) => _role = val;
+
   bool hasRole() => _role != null;
 
   // "when" field.
   DateTime? _when;
   DateTime? get when => _when;
   set when(DateTime? val) => _when = val;
+
   bool hasWhen() => _when != null;
 
   // "inviterName" field.
   String? _inviterName;
   String get inviterName => _inviterName ?? '';
   set inviterName(String? val) => _inviterName = val;
+
   bool hasInviterName() => _inviterName != null;
 
   // "status" field.
   TeamMemberStatus? _status;
   TeamMemberStatus get status => _status ?? TeamMemberStatus.isWaiting;
   set status(TeamMemberStatus? val) => _status = val;
+
   bool hasStatus() => _status != null;
 
   static InvitesStruct fromMap(Map<String, dynamic> data) => InvitesStruct(

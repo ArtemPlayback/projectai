@@ -24,18 +24,21 @@ class SubscriptionsStruct extends FFFirebaseStruct {
   String? _type;
   String get type => _type ?? '';
   set type(String? val) => _type = val;
+
   bool hasType() => _type != null;
 
   // "user" field.
   DocumentReference? _user;
   DocumentReference? get user => _user;
   set user(DocumentReference? val) => _user = val;
+
   bool hasUser() => _user != null;
 
   // "company" field.
   DocumentReference? _company;
   DocumentReference? get company => _company;
   set company(DocumentReference? val) => _company = val;
+
   bool hasCompany() => _company != null;
 
   static SubscriptionsStruct fromMap(Map<String, dynamic> data) =>

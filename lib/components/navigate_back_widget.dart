@@ -58,11 +58,11 @@ class _NavigateBackWidgetState extends State<NavigateBackWidget> {
           borderRadius: 10.0,
           borderWidth: 1.0,
           buttonSize: 40.0,
-          fillColor: Color(0x34000000),
+          fillColor: Color(0x67000000),
           icon: Icon(
             Icons.chevron_left,
             color: Colors.white,
-            size: 20.0,
+            size: 23.0,
           ),
           onPressed: () async {
             if (widget.parameter1 == 'smartsearch') {

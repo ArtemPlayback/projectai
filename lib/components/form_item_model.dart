@@ -36,7 +36,7 @@ class FormItemModel extends FlutterFlowModel<FormItemWidget> {
   set choiceChipsValue2(String? val) =>
       choiceChipsValueController2?.value = val != null ? [val] : [];
   // State field(s) for PlacePicker widget.
-  var placePickerValue = FFPlace();
+  FFPlace placePickerValue = FFPlace();
   // State field(s) for GoogleMap widget.
   LatLng? googleMapsCenter;
   final googleMapsController = Completer<GoogleMapController>();

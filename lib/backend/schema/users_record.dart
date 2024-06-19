@@ -143,6 +143,17 @@ class UsersRecord extends FirestoreRecord {
   bool get muteNotifications => _muteNotifications ?? false;
   bool hasMuteNotifications() => _muteNotifications != null;
 
+  // "saved" field.
+  List<SavedStruct>? _saved;
+  List<SavedStruct> get saved => _saved ?? const [];
+  bool hasSaved() => _saved != null;
+
+  // "projectOptions" field.
+  List<CompetitorOptionsStruct>? _projectOptions;
+  List<CompetitorOptionsStruct> get projectOptions =>
+      _projectOptions ?? const [];
+  bool hasProjectOptions() => _projectOptions != null;
+
   void _initializeFields() {
     _email = snapshotData['email'] as String?;
     _displayName = snapshotData['display_name'] as String?;
@@ -188,6 +199,14 @@ class UsersRecord extends FirestoreRecord {
     );
     _notificationChat = snapshotData['notification_chat'] as DocumentReference?;
     _muteNotifications = snapshotData['mute_notifications'] as bool?;
+    _saved = getStructList(
+      snapshotData['saved'],
+      SavedStruct.fromMap,
+    );
+    _projectOptions = getStructList(
+      snapshotData['projectOptions'],
+      CompetitorOptionsStruct.fromMap,
+    );
   }
 
   static CollectionReference get collection =>
@@ -292,7 +311,9 @@ class UsersRecordDocumentEquality implements Equality<UsersRecord> {
         listEquality.equals(e1?.subscribers, e2?.subscribers) &&
         listEquality.equals(e1?.aIChats, e2?.aIChats) &&
         e1?.notificationChat == e2?.notificationChat &&
-        e1?.muteNotifications == e2?.muteNotifications;
+        e1?.muteNotifications == e2?.muteNotifications &&
+        listEquality.equals(e1?.saved, e2?.saved) &&
+        listEquality.equals(e1?.projectOptions, e2?.projectOptions);
   }
 
   @override
@@ -321,7 +342,9 @@ class UsersRecordDocumentEquality implements Equality<UsersRecord> {
         e?.subscribers,
         e?.aIChats,
         e?.notificationChat,
-        e?.muteNotifications
+        e?.muteNotifications,
+        e?.saved,
+        e?.projectOptions
       ]);
 
   @override

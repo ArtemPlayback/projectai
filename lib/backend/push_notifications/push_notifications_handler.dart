@@ -196,6 +196,8 @@ final parametersBuilderMap =
           'events': await getDocumentParameter<EventsRecord>(
               data, 'events', EventsRecord.fromSnapshot),
           'isFrom': getParameter<String>(data, 'isFrom'),
+          'explanation': getParameter<String>(data, 'explanation'),
+          'percent': getParameter<int>(data, 'percent'),
         },
       ),
   'sign_up': ParameterData.none(),
@@ -303,7 +305,18 @@ final parametersBuilderMap =
   'wishlist': (data) async => ParameterData(
         allParams: {
           'chosen': getParameter<String>(data, 'chosen'),
-          'firstSearch': getParameter<String>(data, 'firstSearch'),
+        },
+      ),
+  'test': ParameterData.none(),
+  'history': (data) async => ParameterData(
+        allParams: {
+          'chosen': getParameter<String>(data, 'chosen'),
+        },
+      ),
+  'history_item': (data) async => ParameterData(
+        allParams: {
+          'chosen': getParameter<String>(data, 'chosen'),
+          'indexItem': getParameter<int>(data, 'indexItem'),
         },
       ),
 };
