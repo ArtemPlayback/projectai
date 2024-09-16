@@ -1,13 +1,13 @@
-import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
+import '/sign_in_foulder/new_project/company_card/company_card_widget.dart';
 import '/sign_in_foulder/new_project/event_card/event_card_widget.dart';
-import '/sign_in_foulder/new_project/post_card/post_card_widget.dart';
 import '/sign_in_foulder/new_project/product_card/product_card_widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'list_events_or_products_model.dart';
@@ -45,7 +45,7 @@ class _ListEventsOrProductsWidgetState
     super.initState();
     _model = createModel(context, () => ListEventsOrProductsModel());
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -84,30 +84,18 @@ class _ListEventsOrProductsWidgetState
                 mainAxisSize: MainAxisSize.max,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Padding(
-                    padding:
-                        EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 0.0),
-                    child: Text(
-                      'Events ',
-                      style: FlutterFlowTheme.of(context).bodyMedium.override(
-                            fontFamily: 'LTSuperior',
-                            letterSpacing: 0.0,
-                            useGoogleFonts: false,
-                          ),
-                    ),
-                  ),
                   Builder(
                     builder: (context) {
-                      if (widget.type == 'Events') {
+                      if (widget!.type == 'Events') {
                         return Builder(
                           builder: (context) {
-                            if (widget.user != null) {
+                            if (widget!.user != null) {
                               return FutureBuilder<List<EventsRecord>>(
                                 future: queryEventsRecordOnce(
                                   queryBuilder: (eventsRecord) =>
                                       eventsRecord.where(
                                     'user',
-                                    isEqualTo: widget.user,
+                                    isEqualTo: widget!.user,
                                   ),
                                 ),
                                 builder: (context, snapshot) {
@@ -129,6 +117,7 @@ class _ListEventsOrProductsWidgetState
                                   }
                                   List<EventsRecord> listViewEventsRecordList =
                                       snapshot.data!;
+
                                   return ListView.separated(
                                     padding: EdgeInsets.zero,
                                     primary: false,
@@ -161,7 +150,7 @@ class _ListEventsOrProductsWidgetState
                                   queryBuilder: (eventsRecord) =>
                                       eventsRecord.where(
                                     'project',
-                                    isEqualTo: widget.company?.reference,
+                                    isEqualTo: widget!.company?.reference,
                                   ),
                                 ),
                                 builder: (context, snapshot) {
@@ -183,6 +172,7 @@ class _ListEventsOrProductsWidgetState
                                   }
                                   List<EventsRecord> listViewEventsRecordList =
                                       snapshot.data!;
+
                                   return ListView.separated(
                                     padding: EdgeInsets.zero,
                                     primary: false,
@@ -212,16 +202,16 @@ class _ListEventsOrProductsWidgetState
                             }
                           },
                         );
-                      } else if (widget.type == 'Products') {
+                      } else if (widget!.type == 'Products') {
                         return Builder(
                           builder: (context) {
-                            if (widget.user != null) {
+                            if (widget!.user != null) {
                               return FutureBuilder<List<ProductsRecord>>(
                                 future: queryProductsRecordOnce(
                                   queryBuilder: (productsRecord) =>
                                       productsRecord.where(
                                     'owner_person',
-                                    isEqualTo: widget.user,
+                                    isEqualTo: widget!.user,
                                   ),
                                 ),
                                 builder: (context, snapshot) {
@@ -244,6 +234,7 @@ class _ListEventsOrProductsWidgetState
                                   List<ProductsRecord>
                                       listViewProductsRecordList =
                                       snapshot.data!;
+
                                   return ListView.separated(
                                     padding: EdgeInsets.zero,
                                     primary: false,
@@ -273,7 +264,7 @@ class _ListEventsOrProductsWidgetState
                                   queryBuilder: (productsRecord) =>
                                       productsRecord.where(
                                     'owner_company',
-                                    isEqualTo: widget.company?.reference,
+                                    isEqualTo: widget!.company?.reference,
                                   ),
                                 ),
                                 builder: (context, snapshot) {
@@ -296,6 +287,7 @@ class _ListEventsOrProductsWidgetState
                                   List<ProductsRecord>
                                       listViewProductsRecordList =
                                       snapshot.data!;
+
                                   return ListView.separated(
                                     padding: EdgeInsets.zero,
                                     primary: false,
@@ -323,8 +315,14 @@ class _ListEventsOrProductsWidgetState
                           },
                         );
                       } else {
-                        return FutureBuilder<UsersRecord>(
-                          future: UsersRecord.getDocumentOnce(widget.user!),
+                        return StreamBuilder<List<ProjectsRecord>>(
+                          stream: queryProjectsRecord(
+                            queryBuilder: (projectsRecord) =>
+                                projectsRecord.where(
+                              'user',
+                              isEqualTo: widget!.user,
+                            ),
+                          ),
                           builder: (context, snapshot) {
                             // Customize what your widget looks like when it's loading.
                             if (!snapshot.hasData) {
@@ -340,67 +338,35 @@ class _ListEventsOrProductsWidgetState
                                 ),
                               );
                             }
-                            final containerUsersRecord = snapshot.data!;
-                            return Container(
-                              decoration: BoxDecoration(),
-                              child: FutureBuilder<List<PostsRecord>>(
-                                future: queryPostsRecordOnce(
-                                  queryBuilder: (postsRecord) =>
-                                      postsRecord.where(
-                                    'user',
-                                    isEqualTo: widget.user,
-                                  ),
-                                ),
-                                builder: (context, snapshot) {
-                                  // Customize what your widget looks like when it's loading.
-                                  if (!snapshot.hasData) {
-                                    return Center(
-                                      child: SizedBox(
-                                        width: 50.0,
-                                        height: 50.0,
-                                        child: CircularProgressIndicator(
-                                          valueColor:
-                                              AlwaysStoppedAnimation<Color>(
-                                            FlutterFlowTheme.of(context)
-                                                .primary,
-                                          ),
-                                        ),
-                                      ),
-                                    );
-                                  }
-                                  List<PostsRecord> listViewPostsRecordList =
-                                      snapshot.data!;
-                                  return ListView.separated(
-                                    padding: EdgeInsets.zero,
-                                    primary: false,
-                                    shrinkWrap: true,
-                                    scrollDirection: Axis.vertical,
-                                    itemCount: listViewPostsRecordList.length,
-                                    separatorBuilder: (_, __) =>
-                                        SizedBox(height: 8.0),
-                                    itemBuilder: (context, listViewIndex) {
-                                      final listViewPostsRecord =
-                                          listViewPostsRecordList[
-                                              listViewIndex];
-                                      return PostCardWidget(
-                                        key: Key(
-                                            'Key0ov_${listViewIndex}_of_${listViewPostsRecordList.length}'),
-                                        isAuthUser:
-                                            widget.user == currentUserReference,
-                                        post: listViewPostsRecord,
-                                        user: containerUsersRecord,
-                                      );
-                                    },
-                                  );
-                                },
-                              ),
+                            List<ProjectsRecord> listViewProjectsRecordList =
+                                snapshot.data!;
+
+                            return ListView.separated(
+                              padding: EdgeInsets.zero,
+                              primary: false,
+                              shrinkWrap: true,
+                              scrollDirection: Axis.vertical,
+                              itemCount: listViewProjectsRecordList.length,
+                              separatorBuilder: (_, __) =>
+                                  SizedBox(height: 8.0),
+                              itemBuilder: (context, listViewIndex) {
+                                final listViewProjectsRecord =
+                                    listViewProjectsRecordList[listViewIndex];
+                                return CompanyCardWidget(
+                                  key: Key(
+                                      'Keyaux_${listViewIndex}_of_${listViewProjectsRecordList.length}'),
+                                  company: listViewProjectsRecord,
+                                );
+                              },
                             );
                           },
                         );
                       }
                     },
                   ),
-                ].divide(SizedBox(height: 40.0)),
+                ]
+                    .divide(SizedBox(height: 40.0))
+                    .addToStart(SizedBox(height: 70.0)),
               ),
             ),
             Container(
@@ -417,7 +383,7 @@ class _ListEventsOrProductsWidgetState
                   children: [
                     Text(
                       valueOrDefault<String>(
-                        widget.type,
+                        widget!.type,
                         'Events',
                       ),
                       style: FlutterFlowTheme.of(context).bodyMedium.override(

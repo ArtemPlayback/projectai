@@ -17,6 +17,7 @@ import 'dart:async';
 import 'dart:ui';
 import 'dart:math' as math;
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -49,12 +50,12 @@ class _CompanySettingsWidgetState extends State<CompanySettingsWidget> {
 
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
-      _model.cover = valueOrDefault(currentUserDocument?.cover, '');
-      _model.image = currentUserPhoto;
-      setState(() {});
+      _model.cover = widget!.company?.cover;
+      _model.image = widget!.company?.mainImage;
+      safeSetState(() {});
     });
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -67,9 +68,7 @@ class _CompanySettingsWidgetState extends State<CompanySettingsWidget> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => _model.unfocusNode.canRequestFocus
-          ? FocusScope.of(context).requestFocus(_model.unfocusNode)
-          : FocusScope.of(context).unfocus(),
+      onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
@@ -88,20 +87,24 @@ class _CompanySettingsWidgetState extends State<CompanySettingsWidget> {
                         height: 330.0,
                         child: Stack(
                           children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(0.0),
-                              child: Image.network(
-                                _model.cover!,
-                                width: double.infinity,
-                                height: 330.0,
-                                fit: BoxFit.cover,
+                            if (_model.cover != null && _model.cover != '')
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(0.0),
+                                child: Image.network(
+                                  _model.cover!,
+                                  width: double.infinity,
+                                  height: 330.0,
+                                  fit: BoxFit.cover,
+                                ),
                               ),
-                            ),
                             Container(
                               width: double.infinity,
                               height: 330.0,
                               decoration: BoxDecoration(
-                                color: Color(0x80000000),
+                                color:
+                                    _model.cover != null && _model.cover != ''
+                                        ? Color(0x6D000000)
+                                        : Color(0xFFF4F4F4),
                               ),
                               child: Column(
                                 mainAxisSize: MainAxisSize.min,
@@ -127,13 +130,23 @@ class _CompanySettingsWidgetState extends State<CompanySettingsWidget> {
                                             child: wrapWithModel(
                                               model: _model.buttonInfinityModel,
                                               updateCallback: () =>
-                                                  setState(() {}),
+                                                  safeSetState(() {}),
                                               child: ButtonInfinityWidget(
                                                 width: 160.0,
                                                 height: 38.0,
                                                 buttonColor:
-                                                    FlutterFlowTheme.of(context)
-                                                        .whiteBlur,
+                                                    valueOrDefault<Color>(
+                                                  _model.cover != null &&
+                                                          _model.cover != ''
+                                                      ? FlutterFlowTheme.of(
+                                                              context)
+                                                          .whiteBlur
+                                                      : FlutterFlowTheme.of(
+                                                              context)
+                                                          .secondaryText,
+                                                  FlutterFlowTheme.of(context)
+                                                      .whiteBlur,
+                                                ),
                                                 text: 'Change cover',
                                                 borderColor: Color(0x35FFFFFF),
                                                 fontsize: 12,
@@ -154,7 +167,7 @@ class _CompanySettingsWidgetState extends State<CompanySettingsWidget> {
                                                           validateFileFormat(
                                                               m.storagePath,
                                                               context))) {
-                                                    setState(() => _model
+                                                    safeSetState(() => _model
                                                             .isDataUploading1 =
                                                         true);
                                                     var selectedUploadedFiles =
@@ -209,7 +222,7 @@ class _CompanySettingsWidgetState extends State<CompanySettingsWidget> {
                                                         downloadUrls.length ==
                                                             selectedMedia
                                                                 .length) {
-                                                      setState(() {
+                                                      safeSetState(() {
                                                         _model.uploadedLocalFile1 =
                                                             selectedUploadedFiles
                                                                 .first;
@@ -217,17 +230,17 @@ class _CompanySettingsWidgetState extends State<CompanySettingsWidget> {
                                                             downloadUrls.first;
                                                       });
                                                     } else {
-                                                      setState(() {});
+                                                      safeSetState(() {});
                                                       return;
                                                     }
                                                   }
 
                                                   _model.cover =
                                                       _model.uploadedFileUrl1;
-                                                  setState(() {});
+                                                  safeSetState(() {});
                                                   unawaited(
                                                     () async {
-                                                      await widget
+                                                      await widget!
                                                           .company!.reference
                                                           .update(
                                                               createProjectsRecordData(
@@ -247,7 +260,7 @@ class _CompanySettingsWidgetState extends State<CompanySettingsWidget> {
                                           highlightColor: Colors.transparent,
                                           onTap: () async {
                                             _model.cover = null;
-                                            setState(() {});
+                                            safeSetState(() {});
                                             unawaited(
                                               () async {
                                                 await currentUserReference!
@@ -272,8 +285,18 @@ class _CompanySettingsWidgetState extends State<CompanySettingsWidget> {
                                                 borderWidth: 1.0,
                                                 buttonSize: 38.0,
                                                 fillColor:
-                                                    FlutterFlowTheme.of(context)
-                                                        .whiteBlur,
+                                                    valueOrDefault<Color>(
+                                                  _model.cover != null &&
+                                                          _model.cover != ''
+                                                      ? FlutterFlowTheme.of(
+                                                              context)
+                                                          .whiteBlur
+                                                      : FlutterFlowTheme.of(
+                                                              context)
+                                                          .secondaryText,
+                                                  FlutterFlowTheme.of(context)
+                                                      .whiteBlur,
+                                                ),
                                                 icon: Icon(
                                                   FFIcons.kdelete2,
                                                   color: FlutterFlowTheme.of(
@@ -281,9 +304,21 @@ class _CompanySettingsWidgetState extends State<CompanySettingsWidget> {
                                                       .secondaryBackground,
                                                   size: 15.0,
                                                 ),
-                                                onPressed: () {
-                                                  print(
-                                                      'IconButton pressed ...');
+                                                onPressed: () async {
+                                                  await FirebaseStorage.instance
+                                                      .refFromURL(_model.cover!)
+                                                      .delete();
+                                                  _model.cover = null;
+                                                  safeSetState(() {});
+                                                  unawaited(
+                                                    () async {
+                                                      await currentUserReference!
+                                                          .update(
+                                                              createUsersRecordData(
+                                                        cover: '',
+                                                      ));
+                                                    }(),
+                                                  );
                                                 },
                                               ),
                                             ),
@@ -316,7 +351,7 @@ class _CompanySettingsWidgetState extends State<CompanySettingsWidget> {
                                                       validateFileFormat(
                                                           m.storagePath,
                                                           context))) {
-                                                setState(() => _model
+                                                safeSetState(() => _model
                                                     .isDataUploading2 = true);
                                                 var selectedUploadedFiles =
                                                     <FFUploadedFile>[];
@@ -365,7 +400,7 @@ class _CompanySettingsWidgetState extends State<CompanySettingsWidget> {
                                                         selectedMedia.length &&
                                                     downloadUrls.length ==
                                                         selectedMedia.length) {
-                                                  setState(() {
+                                                  safeSetState(() {
                                                     _model.uploadedLocalFile2 =
                                                         selectedUploadedFiles
                                                             .first;
@@ -373,16 +408,16 @@ class _CompanySettingsWidgetState extends State<CompanySettingsWidget> {
                                                         downloadUrls.first;
                                                   });
                                                 } else {
-                                                  setState(() {});
+                                                  safeSetState(() {});
                                                   return;
                                                 }
                                               }
 
                                               _model.image =
                                                   _model.uploadedFileUrl2;
-                                              setState(() {});
+                                              safeSetState(() {});
 
-                                              await widget.company!.reference
+                                              await widget!.company!.reference
                                                   .update(
                                                       createProjectsRecordData(
                                                 mainImage: _model.image,
@@ -410,7 +445,10 @@ class _CompanySettingsWidgetState extends State<CompanySettingsWidget> {
                                                           BorderRadius.circular(
                                                               360.0),
                                                       child: Image.network(
-                                                        _model.image!,
+                                                        valueOrDefault<String>(
+                                                          _model.image,
+                                                          'https://firebasestorage.googleapis.com/v0/b/project-e33e5.appspot.com/o/placeholder%20company.png?alt=media&token=2808caf2-01cb-4434-9d4c-3f16d9ebfab5',
+                                                        ),
                                                         width: 73.0,
                                                         height: 73.0,
                                                         fit: BoxFit.cover,
@@ -452,7 +490,7 @@ class _CompanySettingsWidgetState extends State<CompanySettingsWidget> {
                                                               .transparent,
                                                           onTap: () async {
                                                             _model.cover = null;
-                                                            setState(() {});
+                                                            safeSetState(() {});
                                                             unawaited(
                                                               () async {
                                                                 await currentUserReference!
@@ -486,9 +524,22 @@ class _CompanySettingsWidgetState extends State<CompanySettingsWidget> {
                                                                     1.0,
                                                                 buttonSize:
                                                                     30.0,
-                                                                fillColor: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .whiteBlur,
+                                                                fillColor:
+                                                                    valueOrDefault<
+                                                                        Color>(
+                                                                  _model.cover !=
+                                                                              null &&
+                                                                          _model.cover !=
+                                                                              ''
+                                                                      ? FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .whiteBlur
+                                                                      : Color(
+                                                                          0x9C121212),
+                                                                  FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .whiteBlur,
+                                                                ),
                                                                 icon: Icon(
                                                                   Icons
                                                                       .photo_camera_back_outlined,
@@ -511,7 +562,7 @@ class _CompanySettingsWidgetState extends State<CompanySettingsWidget> {
                                                                       selectedMedia.every((m) => validateFileFormat(
                                                                           m.storagePath,
                                                                           context))) {
-                                                                    setState(() =>
+                                                                    safeSetState(() =>
                                                                         _model.isDataUploading3 =
                                                                             true);
                                                                     var selectedUploadedFiles =
@@ -554,7 +605,7 @@ class _CompanySettingsWidgetState extends State<CompanySettingsWidget> {
                                                                                 .length &&
                                                                         downloadUrls.length ==
                                                                             selectedMedia.length) {
-                                                                      setState(
+                                                                      safeSetState(
                                                                           () {
                                                                         _model.uploadedLocalFile3 =
                                                                             selectedUploadedFiles.first;
@@ -562,7 +613,7 @@ class _CompanySettingsWidgetState extends State<CompanySettingsWidget> {
                                                                             downloadUrls.first;
                                                                       });
                                                                     } else {
-                                                                      setState(
+                                                                      safeSetState(
                                                                           () {});
                                                                       return;
                                                                     }
@@ -571,10 +622,10 @@ class _CompanySettingsWidgetState extends State<CompanySettingsWidget> {
                                                                   _model.image =
                                                                       _model
                                                                           .uploadedFileUrl3;
-                                                                  setState(
+                                                                  safeSetState(
                                                                       () {});
 
-                                                                  await widget
+                                                                  await widget!
                                                                       .company!
                                                                       .reference
                                                                       .update(
@@ -616,29 +667,35 @@ class _CompanySettingsWidgetState extends State<CompanySettingsWidget> {
                                                                   12.0,
                                                                   0.0,
                                                                   4.0),
-                                                      child:
-                                                          AuthUserStreamWidget(
-                                                        builder: (context) =>
-                                                            Text(
-                                                          currentUserDisplayName,
-                                                          style: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .bodyMedium
-                                                              .override(
-                                                                fontFamily:
-                                                                    'LTSuperior',
-                                                                color: Colors
-                                                                    .white,
-                                                                fontSize: 16.0,
-                                                                letterSpacing:
-                                                                    0.0,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                                useGoogleFonts:
-                                                                    false,
-                                                              ),
+                                                      child: Text(
+                                                        valueOrDefault<String>(
+                                                          widget!
+                                                              .company?.title,
+                                                          'l',
                                                         ),
+                                                        style: FlutterFlowTheme
+                                                                .of(context)
+                                                            .bodyMedium
+                                                            .override(
+                                                              fontFamily:
+                                                                  'LTSuperior',
+                                                              color: _model.cover !=
+                                                                          null &&
+                                                                      _model.cover !=
+                                                                          ''
+                                                                  ? Colors.white
+                                                                  : FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .primaryText,
+                                                              fontSize: 16.0,
+                                                              letterSpacing:
+                                                                  0.0,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              useGoogleFonts:
+                                                                  false,
+                                                            ),
                                                       ),
                                                     ),
                                                   ],
@@ -656,8 +713,14 @@ class _CompanySettingsWidgetState extends State<CompanySettingsWidget> {
                                                         .override(
                                                           fontFamily:
                                                               'LTSuperior',
-                                                          color:
-                                                              Color(0xC2FFFFFF),
+                                                          color: _model.cover !=
+                                                                      null &&
+                                                                  _model.cover !=
+                                                                      ''
+                                                              ? Colors.white
+                                                              : FlutterFlowTheme
+                                                                      .of(context)
+                                                                  .secondaryText,
                                                           letterSpacing: 0.0,
                                                           useGoogleFonts: false,
                                                         ),
@@ -678,8 +741,8 @@ class _CompanySettingsWidgetState extends State<CompanySettingsWidget> {
                       ),
                     ],
                   ),
-                  if ((widget.company?.team != null &&
-                          (widget.company?.team)!.isNotEmpty) ==
+                  if ((widget!.company?.team != null &&
+                          (widget!.company?.team)!.isNotEmpty) ==
                       true)
                     Padding(
                       padding:
@@ -700,7 +763,7 @@ class _CompanySettingsWidgetState extends State<CompanySettingsWidget> {
                                   highlightColor: Colors.transparent,
                                   onTap: () async {
                                     _model.currentTeamState = 'Team';
-                                    setState(() {});
+                                    safeSetState(() {});
                                   },
                                   child: Container(
                                     height: 33.0,
@@ -752,23 +815,23 @@ class _CompanySettingsWidgetState extends State<CompanySettingsWidget> {
                                   highlightColor: Colors.transparent,
                                   onTap: () async {
                                     _model.currentTeamState = 'Invites';
-                                    setState(() {});
+                                    safeSetState(() {});
                                   },
                                   child: Container(
                                     height: 33.0,
                                     decoration: BoxDecoration(
                                       color: _model.currentTeamState ==
-                                              'Companies'
+                                              'Invites'
                                           ? FlutterFlowTheme.of(context).primary
                                           : FlutterFlowTheme.of(context)
                                               .secondaryBackground,
                                       borderRadius: BorderRadius.circular(10.0),
                                       border: Border.all(
-                                        color: _model.currentTeamState ==
-                                                'Companies'
-                                            ? Color(0x01007AFF)
-                                            : FlutterFlowTheme.of(context)
-                                                .textAndStroke,
+                                        color:
+                                            _model.currentTeamState == 'Invites'
+                                                ? Color(0x01007AFF)
+                                                : FlutterFlowTheme.of(context)
+                                                    .textAndStroke,
                                       ),
                                     ),
                                     child: Align(
@@ -784,7 +847,7 @@ class _CompanySettingsWidgetState extends State<CompanySettingsWidget> {
                                                 fontFamily: 'LTSuperior',
                                                 color:
                                                     _model.currentTeamState ==
-                                                            'Companies'
+                                                            'Invites'
                                                         ? FlutterFlowTheme.of(
                                                                 context)
                                                             .secondaryBackground
@@ -808,120 +871,121 @@ class _CompanySettingsWidgetState extends State<CompanySettingsWidget> {
                           Padding(
                             padding: EdgeInsetsDirectional.fromSTEB(
                                 0.0, 15.0, 0.0, 0.0),
-                            child: Container(
-                              height: 310.0,
-                              decoration: BoxDecoration(),
-                              child: Builder(
-                                builder: (context) {
-                                  if (_model.currentTeamState == 'Team') {
-                                    return SingleChildScrollView(
-                                      scrollDirection: Axis.horizontal,
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.max,
-                                        children: [
-                                          Column(
+                            child: StreamBuilder<ProjectsRecord>(
+                              stream: ProjectsRecord.getDocument(
+                                  widget!.company!.reference),
+                              builder: (context, snapshot) {
+                                // Customize what your widget looks like when it's loading.
+                                if (!snapshot.hasData) {
+                                  return Center(
+                                    child: SizedBox(
+                                      width: 50.0,
+                                      height: 50.0,
+                                      child: CircularProgressIndicator(
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                          FlutterFlowTheme.of(context).primary,
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                }
+
+                                final containerProjectsRecord = snapshot.data!;
+
+                                return Container(
+                                  height: 310.0,
+                                  decoration: BoxDecoration(),
+                                  child: Builder(
+                                    builder: (context) {
+                                      if (_model.currentTeamState == 'Team') {
+                                        return SingleChildScrollView(
+                                          scrollDirection: Axis.horizontal,
+                                          child: Row(
                                             mainAxisSize: MainAxisSize.max,
                                             children: [
-                                              Expanded(
-                                                child: InkWell(
-                                                  splashColor:
-                                                      Colors.transparent,
-                                                  focusColor:
-                                                      Colors.transparent,
-                                                  hoverColor:
-                                                      Colors.transparent,
-                                                  highlightColor:
-                                                      Colors.transparent,
-                                                  onTap: () async {
-                                                    await showModalBottomSheet(
-                                                      isScrollControlled: true,
-                                                      backgroundColor:
-                                                          Colors.transparent,
-                                                      barrierColor:
-                                                          Color(0x66000000),
-                                                      context: context,
-                                                      builder: (context) {
-                                                        return GestureDetector(
-                                                          onTap: () => _model
-                                                                  .unfocusNode
-                                                                  .canRequestFocus
-                                                              ? FocusScope.of(
-                                                                      context)
-                                                                  .requestFocus(
-                                                                      _model
-                                                                          .unfocusNode)
-                                                              : FocusScope.of(
-                                                                      context)
-                                                                  .unfocus(),
-                                                          child: Padding(
-                                                            padding: MediaQuery
-                                                                .viewInsetsOf(
-                                                                    context),
-                                                            child: Container(
-                                                              height: MediaQuery
-                                                                          .sizeOf(
+                                              Column(
+                                                mainAxisSize: MainAxisSize.max,
+                                                children: [
+                                                  if (containerProjectsRecord
+                                                      .subscribers.isNotEmpty)
+                                                    Expanded(
+                                                      child: Padding(
+                                                        padding:
+                                                            EdgeInsetsDirectional
+                                                                .fromSTEB(
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0,
+                                                                    5.0),
+                                                        child: InkWell(
+                                                          splashColor: Colors
+                                                              .transparent,
+                                                          focusColor: Colors
+                                                              .transparent,
+                                                          hoverColor: Colors
+                                                              .transparent,
+                                                          highlightColor: Colors
+                                                              .transparent,
+                                                          onTap: () async {
+                                                            await showModalBottomSheet(
+                                                              isScrollControlled:
+                                                                  true,
+                                                              backgroundColor:
+                                                                  Colors
+                                                                      .transparent,
+                                                              barrierColor: Color(
+                                                                  0x66000000),
+                                                              context: context,
+                                                              builder:
+                                                                  (context) {
+                                                                return GestureDetector(
+                                                                  onTap: () =>
+                                                                      FocusScope.of(
                                                                               context)
-                                                                      .height *
-                                                                  0.8,
-                                                              child:
-                                                                  SubscribersListWidget(
-                                                                users: widget
-                                                                    .company!
-                                                                    .subscribers
-                                                                    .map((e) =>
-                                                                        e.user)
-                                                                    .withoutNulls
-                                                                    .toList(),
-                                                                company: widget
-                                                                    .company!,
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        );
-                                                      },
-                                                    ).then((value) =>
-                                                        safeSetState(() {}));
-                                                  },
-                                                  child: Container(
-                                                    width: 200.0,
-                                                    height: 100.0,
-                                                    decoration: BoxDecoration(
-                                                      color:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .secondary,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10.0),
-                                                      border: Border.all(
-                                                        color:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .textAndStroke,
-                                                      ),
-                                                    ),
-                                                    child: Column(
-                                                      mainAxisSize:
-                                                          MainAxisSize.max,
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      children: [
-                                                        Padding(
-                                                          padding:
-                                                              EdgeInsetsDirectional
-                                                                  .fromSTEB(
-                                                                      0.0,
-                                                                      0.0,
-                                                                      0.0,
-                                                                      7.0),
+                                                                          .unfocus(),
+                                                                  child:
+                                                                      Padding(
+                                                                    padding: MediaQuery
+                                                                        .viewInsetsOf(
+                                                                            context),
+                                                                    child:
+                                                                        Container(
+                                                                      height:
+                                                                          MediaQuery.sizeOf(context).height *
+                                                                              0.8,
+                                                                      child:
+                                                                          SubscribersListWidget(
+                                                                        users: widget!
+                                                                            .company!
+                                                                            .subscribers
+                                                                            .map((e) =>
+                                                                                e.user)
+                                                                            .withoutNulls
+                                                                            .toList(),
+                                                                        company:
+                                                                            widget!.company!,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                );
+                                                              },
+                                                            ).then((value) =>
+                                                                safeSetState(
+                                                                    () {}));
+                                                          },
                                                           child: Container(
+                                                            width: 200.0,
+                                                            height: 100.0,
                                                             decoration:
                                                                 BoxDecoration(
-                                                              color:
-                                                                  Colors.white,
-                                                              shape: BoxShape
-                                                                  .circle,
+                                                              color: FlutterFlowTheme
+                                                                      .of(context)
+                                                                  .secondary,
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          10.0),
                                                               border:
                                                                   Border.all(
                                                                 color: FlutterFlowTheme.of(
@@ -929,218 +993,93 @@ class _CompanySettingsWidgetState extends State<CompanySettingsWidget> {
                                                                     .textAndStroke,
                                                               ),
                                                             ),
-                                                            child: Padding(
-                                                              padding:
-                                                                  EdgeInsetsDirectional
+                                                            child: Column(
+                                                              mainAxisSize:
+                                                                  MainAxisSize
+                                                                      .max,
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                              children: [
+                                                                Padding(
+                                                                  padding: EdgeInsetsDirectional
                                                                       .fromSTEB(
+                                                                          0.0,
+                                                                          0.0,
+                                                                          0.0,
+                                                                          7.0),
+                                                                  child:
+                                                                      Container(
+                                                                    decoration:
+                                                                        BoxDecoration(
+                                                                      color: Colors
+                                                                          .white,
+                                                                      shape: BoxShape
+                                                                          .circle,
+                                                                    ),
+                                                                    child:
+                                                                        Padding(
+                                                                      padding: EdgeInsetsDirectional.fromSTEB(
                                                                           12.0,
                                                                           12.0,
                                                                           14.0,
                                                                           12.0),
-                                                              child: Icon(
-                                                                Icons
-                                                                    .person_add,
-                                                                color: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .secondary,
-                                                                size: 24.0,
-                                                              ),
+                                                                      child:
+                                                                          Icon(
+                                                                        Icons
+                                                                            .person_add,
+                                                                        color: FlutterFlowTheme.of(context)
+                                                                            .secondary,
+                                                                        size:
+                                                                            24.0,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                Text(
+                                                                  'Add from subs',
+                                                                  style: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .bodyMedium
+                                                                      .override(
+                                                                        fontFamily:
+                                                                            'LTSuperior',
+                                                                        color: Colors
+                                                                            .white,
+                                                                        fontSize:
+                                                                            16.0,
+                                                                        letterSpacing:
+                                                                            0.0,
+                                                                        fontWeight:
+                                                                            FontWeight.w500,
+                                                                        useGoogleFonts:
+                                                                            false,
+                                                                      ),
+                                                                ),
+                                                              ],
                                                             ),
                                                           ),
                                                         ),
-                                                        Text(
-                                                          'Add from subs',
-                                                          style: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .bodyMedium
-                                                              .override(
-                                                                fontFamily:
-                                                                    'LTSuperior',
-                                                                color: Colors
-                                                                    .white,
-                                                                fontSize: 16.0,
-                                                                letterSpacing:
-                                                                    0.0,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w500,
-                                                                useGoogleFonts:
-                                                                    false,
-                                                              ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                              Expanded(
-                                                child: InkWell(
-                                                  splashColor:
-                                                      Colors.transparent,
-                                                  focusColor:
-                                                      Colors.transparent,
-                                                  hoverColor:
-                                                      Colors.transparent,
-                                                  highlightColor:
-                                                      Colors.transparent,
-                                                  onTap: () async {
-                                                    context.pushNamed(
-                                                      'smart_search_all',
-                                                      queryParameters: {
-                                                        'chosen':
-                                                            serializeParam(
-                                                          'People',
-                                                          ParamType.String,
-                                                        ),
-                                                      }.withoutNulls,
-                                                    );
-                                                  },
-                                                  child: Container(
-                                                    width: 200.0,
-                                                    height: 100.0,
-                                                    decoration: BoxDecoration(
-                                                      color: Color(0xFF39D29F),
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10.0),
-                                                      border: Border.all(
-                                                        color:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .textAndStroke,
                                                       ),
                                                     ),
-                                                    child: Column(
-                                                      mainAxisSize:
-                                                          MainAxisSize.max,
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      children: [
-                                                        Padding(
-                                                          padding:
-                                                              EdgeInsetsDirectional
-                                                                  .fromSTEB(
-                                                                      0.0,
-                                                                      0.0,
-                                                                      0.0,
-                                                                      7.0),
-                                                          child: Container(
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              color:
-                                                                  Colors.white,
-                                                              shape: BoxShape
-                                                                  .circle,
-                                                              border:
-                                                                  Border.all(
-                                                                color: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .textAndStroke,
-                                                              ),
-                                                            ),
-                                                            child: Padding(
-                                                              padding:
-                                                                  EdgeInsetsDirectional
-                                                                      .fromSTEB(
-                                                                          12.0,
-                                                                          12.0,
-                                                                          14.0,
-                                                                          12.0),
-                                                              child: Icon(
-                                                                FFIcons
-                                                                    .kprojectsW,
-                                                                color: Color(
-                                                                    0xFF39D29F),
-                                                                size: 24.0,
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        Text(
-                                                          'Smart Search',
-                                                          style: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .bodyMedium
-                                                              .override(
-                                                                fontFamily:
-                                                                    'LTSuperior',
-                                                                color: Colors
-                                                                    .white,
-                                                                fontSize: 16.0,
-                                                                letterSpacing:
+                                                  Expanded(
+                                                    child: Padding(
+                                                      padding:
+                                                          EdgeInsetsDirectional
+                                                              .fromSTEB(
+                                                                  0.0,
+                                                                  valueOrDefault<
+                                                                      double>(
+                                                                    containerProjectsRecord
+                                                                            .subscribers
+                                                                            .isNotEmpty
+                                                                        ? 5.0
+                                                                        : 0.0,
                                                                     0.0,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w500,
-                                                                useGoogleFonts:
-                                                                    false,
-                                                              ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ].divide(SizedBox(height: 10.0)),
-                                          ),
-                                          Builder(
-                                            builder: (context) {
-                                              final team = widget.company?.team
-                                                      ?.where((e) =>
-                                                          e.teamMember ==
-                                                          TeamMemberStatus
-                                                              .Accepted)
-                                                      .toList()
-                                                      ?.toList() ??
-                                                  [];
-                                              return ListView.separated(
-                                                padding: EdgeInsets.fromLTRB(
-                                                  10.0,
-                                                  0,
-                                                  20.0,
-                                                  0,
-                                                ),
-                                                primary: false,
-                                                shrinkWrap: true,
-                                                scrollDirection:
-                                                    Axis.horizontal,
-                                                itemCount: team.length,
-                                                separatorBuilder: (_, __) =>
-                                                    SizedBox(width: 12.0),
-                                                itemBuilder:
-                                                    (context, teamIndex) {
-                                                  final teamItem =
-                                                      team[teamIndex];
-                                                  return FutureBuilder<
-                                                      UsersRecord>(
-                                                    future: UsersRecord
-                                                        .getDocumentOnce(teamItem
-                                                            .userReference!),
-                                                    builder:
-                                                        (context, snapshot) {
-                                                      // Customize what your widget looks like when it's loading.
-                                                      if (!snapshot.hasData) {
-                                                        return Center(
-                                                          child: SizedBox(
-                                                            width: 50.0,
-                                                            height: 50.0,
-                                                            child:
-                                                                CircularProgressIndicator(
-                                                              valueColor:
-                                                                  AlwaysStoppedAnimation<
-                                                                      Color>(
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .primary,
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        );
-                                                      }
-                                                      final usercardSmallUsersRecord =
-                                                          snapshot.data!;
-                                                      return InkWell(
+                                                                  ),
+                                                                  0.0,
+                                                                  0.0),
+                                                      child: InkWell(
                                                         splashColor:
                                                             Colors.transparent,
                                                         focusColor:
@@ -1151,377 +1090,251 @@ class _CompanySettingsWidgetState extends State<CompanySettingsWidget> {
                                                             Colors.transparent,
                                                         onTap: () async {
                                                           context.pushNamed(
-                                                            'user_page',
+                                                            'smart_search_all_2',
                                                             queryParameters: {
-                                                              'user':
+                                                              'firstSearch':
                                                                   serializeParam(
-                                                                usercardSmallUsersRecord,
+                                                                'I want to find team memebers for my company. Company title: ${widget!.company?.title}, company description: ${widget!.company?.projectInformation?.description}',
                                                                 ParamType
-                                                                    .Document,
+                                                                    .String,
                                                               ),
                                                             }.withoutNulls,
-                                                            extra: <String,
-                                                                dynamic>{
-                                                              'user':
-                                                                  usercardSmallUsersRecord,
-                                                            },
                                                           );
                                                         },
-                                                        child:
-                                                            UsercardSmallWidget(
-                                                          key: Key(
-                                                              'Keyc5s_${teamIndex}_of_${team.length}'),
-                                                          user:
-                                                              usercardSmallUsersRecord,
-                                                          secondText:
-                                                              teamItem.role,
-                                                          teamEdit: true,
-                                                          index: teamIndex,
-                                                          company:
-                                                              widget.company,
-                                                          actionEdit:
-                                                              () async {},
-                                                        ),
-                                                      );
-                                                    },
-                                                  );
-                                                },
-                                              );
-                                            },
-                                          ),
-                                        ]
-                                            .addToStart(SizedBox(width: 20.0))
-                                            .addToEnd(SizedBox(width: 20.0)),
-                                      ),
-                                    );
-                                  } else {
-                                    return SingleChildScrollView(
-                                      scrollDirection: Axis.horizontal,
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.max,
-                                        children: [
-                                          Column(
-                                            mainAxisSize: MainAxisSize.max,
-                                            children: [
-                                              Expanded(
-                                                child: InkWell(
-                                                  splashColor:
-                                                      Colors.transparent,
-                                                  focusColor:
-                                                      Colors.transparent,
-                                                  hoverColor:
-                                                      Colors.transparent,
-                                                  highlightColor:
-                                                      Colors.transparent,
-                                                  onTap: () async {
-                                                    await showModalBottomSheet(
-                                                      isScrollControlled: true,
-                                                      backgroundColor:
-                                                          Colors.transparent,
-                                                      barrierColor:
-                                                          Color(0x66000000),
-                                                      context: context,
-                                                      builder: (context) {
-                                                        return GestureDetector(
-                                                          onTap: () => _model
-                                                                  .unfocusNode
-                                                                  .canRequestFocus
-                                                              ? FocusScope.of(
-                                                                      context)
-                                                                  .requestFocus(
-                                                                      _model
-                                                                          .unfocusNode)
-                                                              : FocusScope.of(
-                                                                      context)
-                                                                  .unfocus(),
-                                                          child: Padding(
-                                                            padding: MediaQuery
-                                                                .viewInsetsOf(
-                                                                    context),
-                                                            child: Container(
-                                                              height: MediaQuery
-                                                                          .sizeOf(
-                                                                              context)
-                                                                      .height *
-                                                                  0.8,
-                                                              child:
-                                                                  SubscribersListWidget(
-                                                                users: widget
-                                                                    .company!
-                                                                    .subscribers
-                                                                    .map((e) =>
-                                                                        e.user)
-                                                                    .withoutNulls
-                                                                    .toList(),
-                                                                company: widget
-                                                                    .company!,
-                                                              ),
+                                                        child: Container(
+                                                          width: 200.0,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: Color(
+                                                                0xFF39D29F),
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        10.0),
+                                                            border: Border.all(
+                                                              color: FlutterFlowTheme
+                                                                      .of(context)
+                                                                  .textAndStroke,
                                                             ),
                                                           ),
+                                                          child: Column(
+                                                            mainAxisSize:
+                                                                MainAxisSize
+                                                                    .max,
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
+                                                            children: [
+                                                              Padding(
+                                                                padding:
+                                                                    EdgeInsetsDirectional
+                                                                        .fromSTEB(
+                                                                            0.0,
+                                                                            0.0,
+                                                                            0.0,
+                                                                            7.0),
+                                                                child:
+                                                                    Container(
+                                                                  decoration:
+                                                                      BoxDecoration(
+                                                                    color: Colors
+                                                                        .white,
+                                                                    shape: BoxShape
+                                                                        .circle,
+                                                                  ),
+                                                                  child:
+                                                                      Padding(
+                                                                    padding: EdgeInsetsDirectional
+                                                                        .fromSTEB(
+                                                                            12.0,
+                                                                            12.0,
+                                                                            14.0,
+                                                                            12.0),
+                                                                    child: Icon(
+                                                                      FFIcons
+                                                                          .kprojectsW,
+                                                                      color: Color(
+                                                                          0xFF39D29F),
+                                                                      size:
+                                                                          24.0,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              Text(
+                                                                'Smart Search',
+                                                                style: FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodyMedium
+                                                                    .override(
+                                                                      fontFamily:
+                                                                          'LTSuperior',
+                                                                      color: Colors
+                                                                          .white,
+                                                                      fontSize:
+                                                                          16.0,
+                                                                      letterSpacing:
+                                                                          0.0,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w500,
+                                                                      useGoogleFonts:
+                                                                          false,
+                                                                    ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              Container(
+                                                decoration: BoxDecoration(),
+                                                child: Builder(
+                                                  builder: (context) {
+                                                    final team =
+                                                        containerProjectsRecord
+                                                            .teamMembers
+                                                            .where((e) =>
+                                                                e.teamMember ==
+                                                                TeamMemberStatus
+                                                                    .Accepted)
+                                                            .toList();
+
+                                                    return ListView.separated(
+                                                      padding:
+                                                          EdgeInsets.fromLTRB(
+                                                        10.0,
+                                                        0,
+                                                        20.0,
+                                                        0,
+                                                      ),
+                                                      primary: false,
+                                                      shrinkWrap: true,
+                                                      scrollDirection:
+                                                          Axis.horizontal,
+                                                      itemCount: team.length,
+                                                      separatorBuilder: (_,
+                                                              __) =>
+                                                          SizedBox(width: 12.0),
+                                                      itemBuilder:
+                                                          (context, teamIndex) {
+                                                        final teamItem =
+                                                            team[teamIndex];
+                                                        return FutureBuilder<
+                                                            UsersRecord>(
+                                                          future: UsersRecord
+                                                              .getDocumentOnce(
+                                                                  teamItem
+                                                                      .user!),
+                                                          builder: (context,
+                                                              snapshot) {
+                                                            // Customize what your widget looks like when it's loading.
+                                                            if (!snapshot
+                                                                .hasData) {
+                                                              return Center(
+                                                                child: SizedBox(
+                                                                  width: 50.0,
+                                                                  height: 50.0,
+                                                                  child:
+                                                                      CircularProgressIndicator(
+                                                                    valueColor:
+                                                                        AlwaysStoppedAnimation<
+                                                                            Color>(
+                                                                      FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .primary,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              );
+                                                            }
+
+                                                            final usercardSmallUsersRecord =
+                                                                snapshot.data!;
+
+                                                            return InkWell(
+                                                              splashColor: Colors
+                                                                  .transparent,
+                                                              focusColor: Colors
+                                                                  .transparent,
+                                                              hoverColor: Colors
+                                                                  .transparent,
+                                                              highlightColor:
+                                                                  Colors
+                                                                      .transparent,
+                                                              onTap: () async {
+                                                                context
+                                                                    .pushNamed(
+                                                                  'user_page',
+                                                                  queryParameters:
+                                                                      {
+                                                                    'user':
+                                                                        serializeParam(
+                                                                      usercardSmallUsersRecord,
+                                                                      ParamType
+                                                                          .Document,
+                                                                    ),
+                                                                  }.withoutNulls,
+                                                                  extra: <String,
+                                                                      dynamic>{
+                                                                    'user':
+                                                                        usercardSmallUsersRecord,
+                                                                  },
+                                                                );
+                                                              },
+                                                              child:
+                                                                  UsercardSmallWidget(
+                                                                key: Key(
+                                                                    'Keyc5s_${teamIndex}_of_${team.length}'),
+                                                                user:
+                                                                    usercardSmallUsersRecord,
+                                                                secondText:
+                                                                    teamItem
+                                                                        .role,
+                                                                teamEdit: true,
+                                                                index:
+                                                                    teamIndex,
+                                                                company: widget!
+                                                                    .company,
+                                                                members:
+                                                                    containerProjectsRecord
+                                                                        .teamMembers,
+                                                                isWaiting:
+                                                                    false,
+                                                                actionEdit:
+                                                                    () async {},
+                                                              ),
+                                                            );
+                                                          },
                                                         );
                                                       },
-                                                    ).then((value) =>
-                                                        safeSetState(() {}));
-                                                  },
-                                                  child: Container(
-                                                    width: 200.0,
-                                                    height: 100.0,
-                                                    decoration: BoxDecoration(
-                                                      color:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .secondary,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10.0),
-                                                      border: Border.all(
-                                                        color:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .textAndStroke,
-                                                      ),
-                                                    ),
-                                                    child: Column(
-                                                      mainAxisSize:
-                                                          MainAxisSize.max,
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      children: [
-                                                        Padding(
-                                                          padding:
-                                                              EdgeInsetsDirectional
-                                                                  .fromSTEB(
-                                                                      0.0,
-                                                                      0.0,
-                                                                      0.0,
-                                                                      7.0),
-                                                          child: Container(
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              color:
-                                                                  Colors.white,
-                                                              shape: BoxShape
-                                                                  .circle,
-                                                              border:
-                                                                  Border.all(
-                                                                color: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .textAndStroke,
-                                                              ),
-                                                            ),
-                                                            child: Padding(
-                                                              padding:
-                                                                  EdgeInsetsDirectional
-                                                                      .fromSTEB(
-                                                                          12.0,
-                                                                          12.0,
-                                                                          14.0,
-                                                                          12.0),
-                                                              child: Icon(
-                                                                Icons
-                                                                    .person_add,
-                                                                color: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .secondary,
-                                                                size: 24.0,
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        Text(
-                                                          'Add from subs',
-                                                          style: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .bodyMedium
-                                                              .override(
-                                                                fontFamily:
-                                                                    'LTSuperior',
-                                                                color: Colors
-                                                                    .white,
-                                                                fontSize: 16.0,
-                                                                letterSpacing:
-                                                                    0.0,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w500,
-                                                                useGoogleFonts:
-                                                                    false,
-                                                              ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                              Expanded(
-                                                child: InkWell(
-                                                  splashColor:
-                                                      Colors.transparent,
-                                                  focusColor:
-                                                      Colors.transparent,
-                                                  hoverColor:
-                                                      Colors.transparent,
-                                                  highlightColor:
-                                                      Colors.transparent,
-                                                  onTap: () async {
-                                                    context.pushNamed(
-                                                      'smart_search_all',
-                                                      queryParameters: {
-                                                        'chosen':
-                                                            serializeParam(
-                                                          'People',
-                                                          ParamType.String,
-                                                        ),
-                                                      }.withoutNulls,
                                                     );
                                                   },
-                                                  child: Container(
-                                                    width: 200.0,
-                                                    height: 100.0,
-                                                    decoration: BoxDecoration(
-                                                      color: Color(0xFF39D29F),
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10.0),
-                                                      border: Border.all(
-                                                        color:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .textAndStroke,
-                                                      ),
-                                                    ),
-                                                    child: Column(
-                                                      mainAxisSize:
-                                                          MainAxisSize.max,
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      children: [
-                                                        Padding(
-                                                          padding:
-                                                              EdgeInsetsDirectional
-                                                                  .fromSTEB(
-                                                                      0.0,
-                                                                      0.0,
-                                                                      0.0,
-                                                                      7.0),
-                                                          child: Container(
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              color:
-                                                                  Colors.white,
-                                                              shape: BoxShape
-                                                                  .circle,
-                                                              border:
-                                                                  Border.all(
-                                                                color: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .textAndStroke,
-                                                              ),
-                                                            ),
-                                                            child: Padding(
-                                                              padding:
-                                                                  EdgeInsetsDirectional
-                                                                      .fromSTEB(
-                                                                          12.0,
-                                                                          12.0,
-                                                                          14.0,
-                                                                          12.0),
-                                                              child: Icon(
-                                                                FFIcons
-                                                                    .kprojectsW,
-                                                                color: Color(
-                                                                    0xFF39D29F),
-                                                                size: 24.0,
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        Text(
-                                                          'Smart Search',
-                                                          style: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .bodyMedium
-                                                              .override(
-                                                                fontFamily:
-                                                                    'LTSuperior',
-                                                                color: Colors
-                                                                    .white,
-                                                                fontSize: 16.0,
-                                                                letterSpacing:
-                                                                    0.0,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w500,
-                                                                useGoogleFonts:
-                                                                    false,
-                                                              ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
                                                 ),
                                               ),
-                                            ].divide(SizedBox(height: 10.0)),
+                                            ]
+                                                .addToStart(
+                                                    SizedBox(width: 20.0))
+                                                .addToEnd(
+                                                    SizedBox(width: 20.0)),
                                           ),
-                                          Builder(
-                                            builder: (context) {
-                                              final team = widget.company?.team
-                                                      ?.where((e) =>
-                                                          e.teamMember ==
-                                                          TeamMemberStatus
-                                                              .isWaiting)
-                                                      .toList()
-                                                      ?.toList() ??
-                                                  [];
-                                              return ListView.separated(
-                                                padding: EdgeInsets.fromLTRB(
-                                                  10.0,
-                                                  0,
-                                                  20.0,
-                                                  0,
-                                                ),
-                                                primary: false,
-                                                shrinkWrap: true,
-                                                scrollDirection:
-                                                    Axis.horizontal,
-                                                itemCount: team.length,
-                                                separatorBuilder: (_, __) =>
-                                                    SizedBox(width: 12.0),
-                                                itemBuilder:
-                                                    (context, teamIndex) {
-                                                  final teamItem =
-                                                      team[teamIndex];
-                                                  return FutureBuilder<
-                                                      UsersRecord>(
-                                                    future: UsersRecord
-                                                        .getDocumentOnce(teamItem
-                                                            .userReference!),
-                                                    builder:
-                                                        (context, snapshot) {
-                                                      // Customize what your widget looks like when it's loading.
-                                                      if (!snapshot.hasData) {
-                                                        return Center(
-                                                          child: SizedBox(
-                                                            width: 50.0,
-                                                            height: 50.0,
-                                                            child:
-                                                                CircularProgressIndicator(
-                                                              valueColor:
-                                                                  AlwaysStoppedAnimation<
-                                                                      Color>(
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .primary,
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        );
-                                                      }
-                                                      final usercardSmallUsersRecord =
-                                                          snapshot.data!;
-                                                      return InkWell(
+                                        );
+                                      } else {
+                                        return SingleChildScrollView(
+                                          scrollDirection: Axis.horizontal,
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.max,
+                                            children: [
+                                              Column(
+                                                mainAxisSize: MainAxisSize.max,
+                                                children: [
+                                                  if (containerProjectsRecord
+                                                      .subscribers.isNotEmpty)
+                                                    Expanded(
+                                                      child: InkWell(
                                                         splashColor:
                                                             Colors.transparent,
                                                         focusColor:
@@ -1531,52 +1344,388 @@ class _CompanySettingsWidgetState extends State<CompanySettingsWidget> {
                                                         highlightColor:
                                                             Colors.transparent,
                                                         onTap: () async {
-                                                          context.pushNamed(
-                                                            'user_page',
-                                                            queryParameters: {
-                                                              'user':
-                                                                  serializeParam(
-                                                                usercardSmallUsersRecord,
-                                                                ParamType
-                                                                    .Document,
-                                                              ),
-                                                            }.withoutNulls,
-                                                            extra: <String,
-                                                                dynamic>{
-                                                              'user':
-                                                                  usercardSmallUsersRecord,
+                                                          await showModalBottomSheet(
+                                                            isScrollControlled:
+                                                                true,
+                                                            backgroundColor:
+                                                                Colors
+                                                                    .transparent,
+                                                            barrierColor: Color(
+                                                                0x66000000),
+                                                            context: context,
+                                                            builder: (context) {
+                                                              return GestureDetector(
+                                                                onTap: () =>
+                                                                    FocusScope.of(
+                                                                            context)
+                                                                        .unfocus(),
+                                                                child: Padding(
+                                                                  padding: MediaQuery
+                                                                      .viewInsetsOf(
+                                                                          context),
+                                                                  child:
+                                                                      Container(
+                                                                    height:
+                                                                        MediaQuery.sizeOf(context).height *
+                                                                            0.8,
+                                                                    child:
+                                                                        SubscribersListWidget(
+                                                                      users: widget!
+                                                                          .company!
+                                                                          .subscribers
+                                                                          .map((e) =>
+                                                                              e.user)
+                                                                          .withoutNulls
+                                                                          .toList(),
+                                                                      company:
+                                                                          widget!
+                                                                              .company!,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              );
                                                             },
+                                                          ).then((value) =>
+                                                              safeSetState(
+                                                                  () {}));
+                                                        },
+                                                        child: Container(
+                                                          width: 200.0,
+                                                          height: 100.0,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .secondary,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        10.0),
+                                                            border: Border.all(
+                                                              color: FlutterFlowTheme
+                                                                      .of(context)
+                                                                  .textAndStroke,
+                                                            ),
+                                                          ),
+                                                          child: Column(
+                                                            mainAxisSize:
+                                                                MainAxisSize
+                                                                    .max,
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
+                                                            children: [
+                                                              Padding(
+                                                                padding:
+                                                                    EdgeInsetsDirectional
+                                                                        .fromSTEB(
+                                                                            0.0,
+                                                                            0.0,
+                                                                            0.0,
+                                                                            7.0),
+                                                                child:
+                                                                    Container(
+                                                                  decoration:
+                                                                      BoxDecoration(
+                                                                    color: Colors
+                                                                        .white,
+                                                                    shape: BoxShape
+                                                                        .circle,
+                                                                    border:
+                                                                        Border
+                                                                            .all(
+                                                                      color: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .textAndStroke,
+                                                                    ),
+                                                                  ),
+                                                                  child:
+                                                                      Padding(
+                                                                    padding: EdgeInsetsDirectional
+                                                                        .fromSTEB(
+                                                                            12.0,
+                                                                            12.0,
+                                                                            14.0,
+                                                                            12.0),
+                                                                    child: Icon(
+                                                                      Icons
+                                                                          .person_add,
+                                                                      color: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .secondary,
+                                                                      size:
+                                                                          24.0,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              Text(
+                                                                'Add from subs',
+                                                                style: FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodyMedium
+                                                                    .override(
+                                                                      fontFamily:
+                                                                          'LTSuperior',
+                                                                      color: Colors
+                                                                          .white,
+                                                                      fontSize:
+                                                                          16.0,
+                                                                      letterSpacing:
+                                                                          0.0,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w500,
+                                                                      useGoogleFonts:
+                                                                          false,
+                                                                    ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  Expanded(
+                                                    child: InkWell(
+                                                      splashColor:
+                                                          Colors.transparent,
+                                                      focusColor:
+                                                          Colors.transparent,
+                                                      hoverColor:
+                                                          Colors.transparent,
+                                                      highlightColor:
+                                                          Colors.transparent,
+                                                      onTap: () async {
+                                                        context.pushNamed(
+                                                          'smart_search_all_2',
+                                                          queryParameters: {
+                                                            'firstSearch':
+                                                                serializeParam(
+                                                              'I want to find team memebers for my company. Company title: ${widget!.company?.title}, company description: ${widget!.company?.projectInformation?.description}',
+                                                              ParamType.String,
+                                                            ),
+                                                          }.withoutNulls,
+                                                        );
+                                                      },
+                                                      child: Container(
+                                                        width: 200.0,
+                                                        height: 100.0,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color:
+                                                              Color(0xFF39D29F),
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      10.0),
+                                                          border: Border.all(
+                                                            color: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .textAndStroke,
+                                                          ),
+                                                        ),
+                                                        child: Column(
+                                                          mainAxisSize:
+                                                              MainAxisSize.max,
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          children: [
+                                                            Padding(
+                                                              padding:
+                                                                  EdgeInsetsDirectional
+                                                                      .fromSTEB(
+                                                                          0.0,
+                                                                          0.0,
+                                                                          0.0,
+                                                                          7.0),
+                                                              child: Container(
+                                                                decoration:
+                                                                    BoxDecoration(
+                                                                  color: Colors
+                                                                      .white,
+                                                                  shape: BoxShape
+                                                                      .circle,
+                                                                  border: Border
+                                                                      .all(
+                                                                    color: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .textAndStroke,
+                                                                  ),
+                                                                ),
+                                                                child: Padding(
+                                                                  padding: EdgeInsetsDirectional
+                                                                      .fromSTEB(
+                                                                          12.0,
+                                                                          12.0,
+                                                                          14.0,
+                                                                          12.0),
+                                                                  child: Icon(
+                                                                    FFIcons
+                                                                        .kprojectsW,
+                                                                    color: Color(
+                                                                        0xFF39D29F),
+                                                                    size: 24.0,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            Text(
+                                                              'Smart Search',
+                                                              style: FlutterFlowTheme
+                                                                      .of(context)
+                                                                  .bodyMedium
+                                                                  .override(
+                                                                    fontFamily:
+                                                                        'LTSuperior',
+                                                                    color: Colors
+                                                                        .white,
+                                                                    fontSize:
+                                                                        16.0,
+                                                                    letterSpacing:
+                                                                        0.0,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w500,
+                                                                    useGoogleFonts:
+                                                                        false,
+                                                                  ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ].divide(
+                                                    SizedBox(height: 10.0)),
+                                              ),
+                                              Builder(
+                                                builder: (context) {
+                                                  final team =
+                                                      containerProjectsRecord
+                                                          .teamMembers
+                                                          .where((e) =>
+                                                              e.teamMember ==
+                                                              TeamMemberStatus
+                                                                  .isWaiting)
+                                                          .toList();
+
+                                                  return ListView.separated(
+                                                    padding:
+                                                        EdgeInsets.fromLTRB(
+                                                      10.0,
+                                                      0,
+                                                      20.0,
+                                                      0,
+                                                    ),
+                                                    primary: false,
+                                                    shrinkWrap: true,
+                                                    scrollDirection:
+                                                        Axis.horizontal,
+                                                    itemCount: team.length,
+                                                    separatorBuilder: (_, __) =>
+                                                        SizedBox(width: 12.0),
+                                                    itemBuilder:
+                                                        (context, teamIndex) {
+                                                      final teamItem =
+                                                          team[teamIndex];
+                                                      return FutureBuilder<
+                                                          UsersRecord>(
+                                                        future: UsersRecord
+                                                            .getDocumentOnce(
+                                                                teamItem.user!),
+                                                        builder: (context,
+                                                            snapshot) {
+                                                          // Customize what your widget looks like when it's loading.
+                                                          if (!snapshot
+                                                              .hasData) {
+                                                            return Center(
+                                                              child: SizedBox(
+                                                                width: 50.0,
+                                                                height: 50.0,
+                                                                child:
+                                                                    CircularProgressIndicator(
+                                                                  valueColor:
+                                                                      AlwaysStoppedAnimation<
+                                                                          Color>(
+                                                                    FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .primary,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            );
+                                                          }
+
+                                                          final usercardSmallUsersRecord =
+                                                              snapshot.data!;
+
+                                                          return InkWell(
+                                                            splashColor: Colors
+                                                                .transparent,
+                                                            focusColor: Colors
+                                                                .transparent,
+                                                            hoverColor: Colors
+                                                                .transparent,
+                                                            highlightColor:
+                                                                Colors
+                                                                    .transparent,
+                                                            onTap: () async {
+                                                              context.pushNamed(
+                                                                'user_page',
+                                                                queryParameters:
+                                                                    {
+                                                                  'user':
+                                                                      serializeParam(
+                                                                    usercardSmallUsersRecord,
+                                                                    ParamType
+                                                                        .Document,
+                                                                  ),
+                                                                }.withoutNulls,
+                                                                extra: <String,
+                                                                    dynamic>{
+                                                                  'user':
+                                                                      usercardSmallUsersRecord,
+                                                                },
+                                                              );
+                                                            },
+                                                            child:
+                                                                UsercardSmallWidget(
+                                                              key: Key(
+                                                                  'Key3ox_${teamIndex}_of_${team.length}'),
+                                                              user:
+                                                                  usercardSmallUsersRecord,
+                                                              secondText:
+                                                                  teamItem.role,
+                                                              teamEdit: true,
+                                                              company: widget!
+                                                                  .company,
+                                                              members:
+                                                                  containerProjectsRecord
+                                                                      .teamMembers,
+                                                              isWaiting: true,
+                                                              actionEdit:
+                                                                  () async {},
+                                                            ),
                                                           );
                                                         },
-                                                        child:
-                                                            UsercardSmallWidget(
-                                                          key: Key(
-                                                              'Key3ox_${teamIndex}_of_${team.length}'),
-                                                          user:
-                                                              usercardSmallUsersRecord,
-                                                          secondText:
-                                                              teamItem.role,
-                                                          teamEdit: false,
-                                                          company:
-                                                              widget.company,
-                                                          actionEdit:
-                                                              () async {},
-                                                        ),
                                                       );
                                                     },
                                                   );
                                                 },
-                                              );
-                                            },
+                                              ),
+                                            ]
+                                                .addToStart(
+                                                    SizedBox(width: 20.0))
+                                                .addToEnd(
+                                                    SizedBox(width: 20.0)),
                                           ),
-                                        ]
-                                            .addToStart(SizedBox(width: 20.0))
-                                            .addToEnd(SizedBox(width: 20.0)),
-                                      ),
-                                    );
-                                  }
-                                },
-                              ),
+                                        );
+                                      }
+                                    },
+                                  ),
+                                );
+                              },
                             ),
                           ),
                         ],
@@ -1609,12 +1758,12 @@ class _CompanySettingsWidgetState extends State<CompanySettingsWidget> {
                           'information_company',
                           queryParameters: {
                             'company': serializeParam(
-                              widget.company,
+                              widget!.company,
                               ParamType.Document,
                             ),
                           }.withoutNulls,
                           extra: <String, dynamic>{
-                            'company': widget.company,
+                            'company': widget!.company,
                           },
                         );
                       },
@@ -1690,80 +1839,6 @@ class _CompanySettingsWidgetState extends State<CompanySettingsWidget> {
                       hoverColor: Colors.transparent,
                       highlightColor: Colors.transparent,
                       onTap: () async {
-                        context.pushNamed('information');
-                      },
-                      child: Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                20.0, 0.0, 20.0, 0.0),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                Container(
-                                  width: 45.0,
-                                  height: 45.0,
-                                  decoration: BoxDecoration(
-                                    color: Color(0x154800B0),
-                                    borderRadius: BorderRadius.circular(7.0),
-                                  ),
-                                  child: Icon(
-                                    FFIcons.kfluentPeopleCommunity20Regular,
-                                    color: Color(0xFF4800B0),
-                                    size: 24.0,
-                                  ),
-                                ),
-                                Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      12.0, 0.0, 0.0, 0.0),
-                                  child: Text(
-                                    'Team',
-                                    style: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .override(
-                                          fontFamily: 'LTSuperior',
-                                          color: FlutterFlowTheme.of(context)
-                                              .secondaryText,
-                                          fontSize: 16.0,
-                                          letterSpacing: 0.0,
-                                          fontWeight: FontWeight.w600,
-                                          useGoogleFonts: false,
-                                        ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                0.0, 0.0, 12.0, 0.0),
-                            child: Transform.rotate(
-                              angle: 180.0 * (math.pi / 180),
-                              child: Opacity(
-                                opacity: 0.3,
-                                child: Icon(
-                                  FFIcons.kback,
-                                  color: Color(0x851D1D20),
-                                  size: 16.0,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding:
-                        EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 0.0),
-                    child: InkWell(
-                      splashColor: Colors.transparent,
-                      focusColor: Colors.transparent,
-                      hoverColor: Colors.transparent,
-                      highlightColor: Colors.transparent,
-                      onTap: () async {
                         await showModalBottomSheet(
                           isScrollControlled: true,
                           backgroundColor: Colors.transparent,
@@ -1771,10 +1846,7 @@ class _CompanySettingsWidgetState extends State<CompanySettingsWidget> {
                           context: context,
                           builder: (context) {
                             return GestureDetector(
-                              onTap: () => _model.unfocusNode.canRequestFocus
-                                  ? FocusScope.of(context)
-                                      .requestFocus(_model.unfocusNode)
-                                  : FocusScope.of(context).unfocus(),
+                              onTap: () => FocusScope.of(context).unfocus(),
                               child: Padding(
                                 padding: MediaQuery.viewInsetsOf(context),
                                 child: Container(
@@ -1782,7 +1854,7 @@ class _CompanySettingsWidgetState extends State<CompanySettingsWidget> {
                                       MediaQuery.sizeOf(context).height * 0.9,
                                   child: ListEventsOrProductsWidget(
                                     type: 'Companies',
-                                    company: widget.company,
+                                    company: widget!.company,
                                   ),
                                 ),
                               ),
@@ -1869,10 +1941,7 @@ class _CompanySettingsWidgetState extends State<CompanySettingsWidget> {
                           context: context,
                           builder: (context) {
                             return GestureDetector(
-                              onTap: () => _model.unfocusNode.canRequestFocus
-                                  ? FocusScope.of(context)
-                                      .requestFocus(_model.unfocusNode)
-                                  : FocusScope.of(context).unfocus(),
+                              onTap: () => FocusScope.of(context).unfocus(),
                               child: Padding(
                                 padding: MediaQuery.viewInsetsOf(context),
                                 child: Container(
@@ -1880,7 +1949,7 @@ class _CompanySettingsWidgetState extends State<CompanySettingsWidget> {
                                       MediaQuery.sizeOf(context).height * 0.9,
                                   child: ListEventsOrProductsWidget(
                                     type: 'Events',
-                                    company: widget.company,
+                                    company: widget!.company,
                                   ),
                                 ),
                               ),
@@ -1967,10 +2036,7 @@ class _CompanySettingsWidgetState extends State<CompanySettingsWidget> {
                           context: context,
                           builder: (context) {
                             return GestureDetector(
-                              onTap: () => _model.unfocusNode.canRequestFocus
-                                  ? FocusScope.of(context)
-                                      .requestFocus(_model.unfocusNode)
-                                  : FocusScope.of(context).unfocus(),
+                              onTap: () => FocusScope.of(context).unfocus(),
                               child: Padding(
                                 padding: MediaQuery.viewInsetsOf(context),
                                 child: Container(
@@ -1978,7 +2044,7 @@ class _CompanySettingsWidgetState extends State<CompanySettingsWidget> {
                                       MediaQuery.sizeOf(context).height * 0.9,
                                   child: ListEventsOrProductsWidget(
                                     type: 'Products',
-                                    company: widget.company,
+                                    company: widget!.company,
                                   ),
                                 ),
                               ),
@@ -2089,10 +2155,10 @@ class _CompanySettingsWidgetState extends State<CompanySettingsWidget> {
                                 currentUserDocument?.pushNotifications,
                                 false)) {
                               _model.pushes = false;
-                              setState(() {});
+                              safeSetState(() {});
                             } else {
                               _model.pushes = true;
-                              setState(() {});
+                              safeSetState(() {});
                             }
                           },
                           child: Container(
@@ -2187,22 +2253,19 @@ class _CompanySettingsWidgetState extends State<CompanySettingsWidget> {
                                     .resolve(Directionality.of(context)),
                                 child: GestureDetector(
                                   onTap: () =>
-                                      _model.unfocusNode.canRequestFocus
-                                          ? FocusScope.of(context)
-                                              .requestFocus(_model.unfocusNode)
-                                          : FocusScope.of(context).unfocus(),
+                                      FocusScope.of(dialogContext).unfocus(),
                                   child: Container(
                                     height: 201.0,
                                     width:
                                         MediaQuery.sizeOf(context).width * 0.9,
                                     child: DeleteCompanyWidget(
-                                      company: widget.company!.reference,
+                                      company: widget!.company!,
                                     ),
                                   ),
                                 ),
                               );
                             },
-                          ).then((value) => setState(() {}));
+                          );
                         },
                         child: Row(
                           mainAxisSize: MainAxisSize.max,
@@ -2254,18 +2317,18 @@ class _CompanySettingsWidgetState extends State<CompanySettingsWidget> {
                     ),
                   ),
                 ]
-                    .addToStart(SizedBox(height: 75.0))
+                    .addToStart(SizedBox(height: 110.0))
                     .addToEnd(SizedBox(height: 70.0)),
               ),
             ),
             Container(
               width: double.infinity,
-              height: 75.0,
+              height: 110.0,
               decoration: BoxDecoration(
                 color: FlutterFlowTheme.of(context).secondaryBackground,
               ),
               child: Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 15.0),
+                padding: EdgeInsetsDirectional.fromSTEB(0.0, 50.0, 0.0, 15.0),
                 child: Row(
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -2284,7 +2347,27 @@ class _CompanySettingsWidgetState extends State<CompanySettingsWidget> {
                           size: 13.0,
                         ),
                         onPressed: () async {
-                          context.safePop();
+                          context.pushNamed(
+                            'company_page',
+                            queryParameters: {
+                              'company': serializeParam(
+                                widget!.company,
+                                ParamType.Document,
+                              ),
+                              'isFrom': serializeParam(
+                                'company settings',
+                                ParamType.String,
+                              ),
+                            }.withoutNulls,
+                            extra: <String, dynamic>{
+                              'company': widget!.company,
+                              kTransitionInfoKey: TransitionInfo(
+                                hasTransition: true,
+                                transitionType: PageTransitionType.leftToRight,
+                                duration: Duration(milliseconds: 200),
+                              ),
+                            },
+                          );
                         },
                       ),
                     ),

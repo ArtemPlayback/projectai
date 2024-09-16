@@ -65,7 +65,7 @@ class EventStruct extends FFFirebaseStruct {
   set images(List<String>? val) => _images = val;
 
   void updateImages(Function(List<String>) updateFn) {
-    updateFn(images ??= []);
+    updateFn(_images ??= []);
   }
 
   bool hasImages() => _images != null;

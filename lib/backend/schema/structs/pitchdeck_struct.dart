@@ -103,7 +103,7 @@ class PitchdeckStruct extends FFFirebaseStruct {
   set firstImages(List<String>? val) => _firstImages = val;
 
   void updateFirstImages(Function(List<String>) updateFn) {
-    updateFn(firstImages ??= []);
+    updateFn(_firstImages ??= []);
   }
 
   bool hasFirstImages() => _firstImages != null;
@@ -159,7 +159,7 @@ class PitchdeckStruct extends FFFirebaseStruct {
   set solutions(List<SolutionsStruct>? val) => _solutions = val;
 
   void updateSolutions(Function(List<SolutionsStruct>) updateFn) {
-    updateFn(solutions ??= []);
+    updateFn(_solutions ??= []);
   }
 
   bool hasSolutions() => _solutions != null;
@@ -191,7 +191,7 @@ class PitchdeckStruct extends FFFirebaseStruct {
   set cashFlows(List<CashFlowStruct>? val) => _cashFlows = val;
 
   void updateCashFlows(Function(List<CashFlowStruct>) updateFn) {
-    updateFn(cashFlows ??= []);
+    updateFn(_cashFlows ??= []);
   }
 
   bool hasCashFlows() => _cashFlows != null;
@@ -244,7 +244,7 @@ class PitchdeckStruct extends FFFirebaseStruct {
   set competitors(List<CompetitorsStruct>? val) => _competitors = val;
 
   void updateCompetitors(Function(List<CompetitorsStruct>) updateFn) {
-    updateFn(competitors ??= []);
+    updateFn(_competitors ??= []);
   }
 
   bool hasCompetitors() => _competitors != null;
@@ -255,7 +255,7 @@ class PitchdeckStruct extends FFFirebaseStruct {
   set fiveYearsPlan(List<YearsPlanStruct>? val) => _fiveYearsPlan = val;
 
   void updateFiveYearsPlan(Function(List<YearsPlanStruct>) updateFn) {
-    updateFn(fiveYearsPlan ??= []);
+    updateFn(_fiveYearsPlan ??= []);
   }
 
   bool hasFiveYearsPlan() => _fiveYearsPlan != null;
@@ -294,7 +294,7 @@ class PitchdeckStruct extends FFFirebaseStruct {
   set statusAndPlans(List<String>? val) => _statusAndPlans = val;
 
   void updateStatusAndPlans(Function(List<String>) updateFn) {
-    updateFn(statusAndPlans ??= []);
+    updateFn(_statusAndPlans ??= []);
   }
 
   bool hasStatusAndPlans() => _statusAndPlans != null;

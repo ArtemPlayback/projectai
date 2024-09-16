@@ -16,6 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'product_settings_model.dart';
 export 'product_settings_model.dart';
@@ -49,8 +50,8 @@ class _ProductSettingsWidgetState extends State<ProductSettingsWidget>
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       _model.cover = valueOrDefault(currentUserDocument?.cover, '');
       _model.image = currentUserPhoto;
-      _model.images = widget.product!.images.toList().cast<String>();
-      setState(() {});
+      _model.images = widget!.product!.images.toList().cast<String>();
+      safeSetState(() {});
     });
 
     animationsMap.addAll({
@@ -75,7 +76,7 @@ class _ProductSettingsWidgetState extends State<ProductSettingsWidget>
       this,
     );
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -88,9 +89,7 @@ class _ProductSettingsWidgetState extends State<ProductSettingsWidget>
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => _model.unfocusNode.canRequestFocus
-          ? FocusScope.of(context).requestFocus(_model.unfocusNode)
-          : FocusScope.of(context).unfocus(),
+      onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
@@ -123,7 +122,7 @@ class _ProductSettingsWidgetState extends State<ProductSettingsWidget>
                                   'product_page',
                                   queryParameters: {
                                     'product': serializeParam(
-                                      widget.product,
+                                      widget!.product,
                                       ParamType.Document,
                                     ),
                                     'isFrom': serializeParam(
@@ -132,7 +131,7 @@ class _ProductSettingsWidgetState extends State<ProductSettingsWidget>
                                     ),
                                   }.withoutNulls,
                                   extra: <String, dynamic>{
-                                    'product': widget.product,
+                                    'product': widget!.product,
                                   },
                                 );
                               },
@@ -159,7 +158,7 @@ class _ProductSettingsWidgetState extends State<ProductSettingsWidget>
                                             borderRadius:
                                                 BorderRadius.circular(360.0),
                                             child: Image.network(
-                                              widget.product!.images.first,
+                                              widget!.product!.images.first,
                                               width: 73.0,
                                               height: 73.0,
                                               fit: BoxFit.cover,
@@ -186,7 +185,7 @@ class _ProductSettingsWidgetState extends State<ProductSettingsWidget>
                                                       0.0, 12.0, 0.0, 4.0),
                                               child: Text(
                                                 valueOrDefault<String>(
-                                                  widget.product?.title,
+                                                  widget!.product?.title,
                                                   'title',
                                                 ),
                                                 style: FlutterFlowTheme.of(
@@ -280,7 +279,7 @@ class _ProductSettingsWidgetState extends State<ProductSettingsWidget>
                                       selectedMedia.every((m) =>
                                           validateFileFormat(
                                               m.storagePath, context))) {
-                                    setState(
+                                    safeSetState(
                                         () => _model.isDataUploading = true);
                                     var selectedUploadedFiles =
                                         <FFUploadedFile>[];
@@ -315,13 +314,13 @@ class _ProductSettingsWidgetState extends State<ProductSettingsWidget>
                                             selectedMedia.length &&
                                         downloadUrls.length ==
                                             selectedMedia.length) {
-                                      setState(() {
+                                      safeSetState(() {
                                         _model.uploadedLocalFiles =
                                             selectedUploadedFiles;
                                         _model.uploadedFileUrls = downloadUrls;
                                       });
                                     } else {
-                                      setState(() {});
+                                      safeSetState(() {});
                                       return;
                                     }
                                   }
@@ -332,9 +331,9 @@ class _ProductSettingsWidgetState extends State<ProductSettingsWidget>
                                           _model.images.toList())
                                       .toList()
                                       .cast<String>();
-                                  setState(() {});
+                                  safeSetState(() {});
 
-                                  await widget.product!.reference.update({
+                                  await widget!.product!.reference.update({
                                     ...mapToFirestore(
                                       {
                                         'images': _model.images,
@@ -357,47 +356,88 @@ class _ProductSettingsWidgetState extends State<ProductSettingsWidget>
                                   ),
                                   child: Align(
                                     alignment: AlignmentDirectional(0.0, 0.0),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Container(
-                                          width: 45.0,
-                                          height: 45.0,
-                                          decoration: BoxDecoration(
-                                            color: FlutterFlowTheme.of(context)
-                                                .secondaryBackground,
-                                            shape: BoxShape.circle,
-                                            border: Border.all(
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .primary,
-                                              width: 2.0,
-                                            ),
-                                          ),
-                                          child: Icon(
-                                            Icons.add_rounded,
-                                            color: FlutterFlowTheme.of(context)
-                                                .primary,
-                                            size: 28.0,
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding:
-                                              EdgeInsetsDirectional.fromSTEB(
-                                                  0.0, 8.0, 0.0, 0.0),
-                                          child: Text(
-                                            'Add new images',
-                                            style: FlutterFlowTheme.of(context)
-                                                .bodyMedium
-                                                .override(
-                                                  fontFamily: 'LTSuperior',
-                                                  fontSize: 15.0,
-                                                  letterSpacing: 0.0,
-                                                  useGoogleFonts: false,
+                                    child: Builder(
+                                      builder: (context) {
+                                        if (!_model.isDataUploading) {
+                                          return Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Container(
+                                                width: 45.0,
+                                                height: 45.0,
+                                                decoration: BoxDecoration(
+                                                  color: FlutterFlowTheme.of(
+                                                          context)
+                                                      .secondaryBackground,
+                                                  shape: BoxShape.circle,
+                                                  border: Border.all(
+                                                    color: FlutterFlowTheme.of(
+                                                            context)
+                                                        .primary,
+                                                    width: 2.0,
+                                                  ),
                                                 ),
-                                          ),
-                                        ),
-                                      ],
+                                                child: Icon(
+                                                  Icons.add_rounded,
+                                                  color: FlutterFlowTheme.of(
+                                                          context)
+                                                      .primary,
+                                                  size: 28.0,
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding: EdgeInsetsDirectional
+                                                    .fromSTEB(
+                                                        0.0, 8.0, 0.0, 0.0),
+                                                child: Text(
+                                                  'Add new images',
+                                                  style: FlutterFlowTheme.of(
+                                                          context)
+                                                      .bodyMedium
+                                                      .override(
+                                                        fontFamily:
+                                                            'LTSuperior',
+                                                        fontSize: 15.0,
+                                                        letterSpacing: 0.0,
+                                                        useGoogleFonts: false,
+                                                      ),
+                                                ),
+                                              ),
+                                            ],
+                                          );
+                                        } else {
+                                          return Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Lottie.network(
+                                                'https://lottie.host/59e45826-b140-48cf-a63b-4d9aa6a9dad4/N7iAUsTSb4.json',
+                                                width: 40.0,
+                                                height: 40.0,
+                                                fit: BoxFit.cover,
+                                                animate: true,
+                                              ),
+                                              Padding(
+                                                padding: EdgeInsetsDirectional
+                                                    .fromSTEB(
+                                                        0.0, 8.0, 0.0, 0.0),
+                                                child: Text(
+                                                  'Images is uploading',
+                                                  style: FlutterFlowTheme.of(
+                                                          context)
+                                                      .bodyMedium
+                                                      .override(
+                                                        fontFamily:
+                                                            'LTSuperior',
+                                                        fontSize: 15.0,
+                                                        letterSpacing: 0.0,
+                                                        useGoogleFonts: false,
+                                                      ),
+                                                ),
+                                              ),
+                                            ],
+                                          );
+                                        }
+                                      },
                                     ),
                                   ),
                                 ),
@@ -409,6 +449,7 @@ class _ProductSettingsWidgetState extends State<ProductSettingsWidget>
                             Builder(
                               builder: (context) {
                                 final images2 = _model.images.toList();
+
                                 return ListView.separated(
                                   padding: EdgeInsets.zero,
                                   primary: false,
@@ -419,14 +460,53 @@ class _ProductSettingsWidgetState extends State<ProductSettingsWidget>
                                       SizedBox(width: 8.0),
                                   itemBuilder: (context, images2Index) {
                                     final images2Item = images2[images2Index];
-                                    return ClipRRect(
-                                      borderRadius: BorderRadius.circular(10.0),
-                                      child: Image.network(
-                                        images2Item,
-                                        width: 200.0,
-                                        height: 200.0,
-                                        fit: BoxFit.cover,
-                                      ),
+                                    return Stack(
+                                      alignment:
+                                          AlignmentDirectional(1.0, -1.0),
+                                      children: [
+                                        ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(10.0),
+                                          child: Image.network(
+                                            images2Item,
+                                            width: 200.0,
+                                            height: 200.0,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding:
+                                              EdgeInsetsDirectional.fromSTEB(
+                                                  0.0, 10.0, 10.0, 0.0),
+                                          child: FlutterFlowIconButton(
+                                            borderRadius: 10.0,
+                                            borderWidth: 1.0,
+                                            buttonSize: 35.0,
+                                            fillColor: Color(0x77000000),
+                                            icon: Icon(
+                                              Icons.close_rounded,
+                                              color: Colors.white,
+                                              size: 18.0,
+                                            ),
+                                            onPressed: () async {
+                                              _model.removeFromImages(
+                                                  images2Item);
+                                              safeSetState(() {});
+
+                                              await widget!.product!.reference
+                                                  .update({
+                                                ...mapToFirestore(
+                                                  {
+                                                    'images':
+                                                        FieldValue.arrayRemove(
+                                                            [images2Item]),
+                                                  },
+                                                ),
+                                              });
+                                            },
+                                          ),
+                                        ),
+                                      ],
                                     );
                                   },
                                 );
@@ -452,12 +532,12 @@ class _ProductSettingsWidgetState extends State<ProductSettingsWidget>
                           'product_information',
                           queryParameters: {
                             'product': serializeParam(
-                              widget.product,
+                              widget!.product,
                               ParamType.Document,
                             ),
                           }.withoutNulls,
                           extra: <String, dynamic>{
-                            'product': widget.product,
+                            'product': widget!.product,
                           },
                         );
                       },
@@ -563,10 +643,10 @@ class _ProductSettingsWidgetState extends State<ProductSettingsWidget>
                           onTap: () async {
                             if (_model.pushes) {
                               _model.pushes = false;
-                              setState(() {});
+                              safeSetState(() {});
                             } else {
                               _model.pushes = true;
-                              setState(() {});
+                              safeSetState(() {});
                             }
                           },
                           child: Container(
@@ -647,21 +727,18 @@ class _ProductSettingsWidgetState extends State<ProductSettingsWidget>
                                     .resolve(Directionality.of(context)),
                                 child: GestureDetector(
                                   onTap: () =>
-                                      _model.unfocusNode.canRequestFocus
-                                          ? FocusScope.of(context)
-                                              .requestFocus(_model.unfocusNode)
-                                          : FocusScope.of(context).unfocus(),
+                                      FocusScope.of(dialogContext).unfocus(),
                                   child: Container(
                                     width:
                                         MediaQuery.sizeOf(context).width * 0.9,
                                     child: DeleteEventProductWidget(
-                                      product: widget.product,
+                                      product: widget!.product,
                                     ),
                                   ),
                                 ),
                               );
                             },
-                          ).then((value) => setState(() {}));
+                          );
                         },
                         child: Row(
                           mainAxisSize: MainAxisSize.max,
@@ -744,7 +821,7 @@ class _ProductSettingsWidgetState extends State<ProductSettingsWidget>
                         ),
                         onPressed: () async {
                           _model.read = await ProductsRecord.getDocumentOnce(
-                              widget.product!.reference);
+                              widget!.product!.reference);
 
                           context.pushNamed(
                             'product_page',
@@ -760,10 +837,14 @@ class _ProductSettingsWidgetState extends State<ProductSettingsWidget>
                             }.withoutNulls,
                             extra: <String, dynamic>{
                               'product': _model.read,
+                              kTransitionInfoKey: TransitionInfo(
+                                hasTransition: true,
+                                transitionType: PageTransitionType.leftToRight,
+                              ),
                             },
                           );
 
-                          setState(() {});
+                          safeSetState(() {});
                         },
                       ),
                     ),

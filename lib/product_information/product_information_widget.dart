@@ -1,5 +1,6 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
+import '/backend/api_requests/api_streaming.dart';
 import '/backend/backend.dart';
 import '/backend/schema/structs/index.dart';
 import '/backend/supabase/supabase.dart';
@@ -10,6 +11,7 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import 'dart:async';
+import 'dart:convert';
 import 'dart:math';
 import '/flutter_flow/custom_functions.dart' as functions;
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -52,22 +54,22 @@ class _ProductInformationWidgetState extends State<ProductInformationWidget>
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       FFAppState().productInfo =
-          widget.product!.productInfo.toList().cast<ProductInfoAIStruct>();
-      FFAppState().update(() {});
-      _model.colors3 = widget.product!.colors.toList().cast<Color>();
-      setState(() {});
+          widget!.product!.productInfo.toList().cast<ProductInfoAIStruct>();
+      safeSetState(() {});
+      _model.colors3 = widget!.product!.colors.toList().cast<Color>();
+      safeSetState(() {});
     });
 
     _model.textController1 ??=
-        TextEditingController(text: widget.product?.title);
+        TextEditingController(text: widget!.product?.title);
     _model.textFieldFocusNode1 ??= FocusNode();
 
     _model.textController2 ??=
-        TextEditingController(text: widget.product?.description);
+        TextEditingController(text: widget!.product?.description);
     _model.textFieldFocusNode2 ??= FocusNode();
 
     _model.textController3 ??=
-        TextEditingController(text: widget.product?.price?.toString());
+        TextEditingController(text: widget!.product?.price?.toString());
     _model.textFieldFocusNode3 ??= FocusNode();
 
     animationsMap.addAll({
@@ -92,7 +94,7 @@ class _ProductInformationWidgetState extends State<ProductInformationWidget>
       this,
     );
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -107,9 +109,7 @@ class _ProductInformationWidgetState extends State<ProductInformationWidget>
     context.watch<FFAppState>();
 
     return GestureDetector(
-      onTap: () => _model.unfocusNode.canRequestFocus
-          ? FocusScope.of(context).requestFocus(_model.unfocusNode)
-          : FocusScope.of(context).unfocus(),
+      onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
@@ -390,7 +390,7 @@ class _ProductInformationWidgetState extends State<ProductInformationWidget>
                                 '_model.textController3',
                                 Duration(milliseconds: 1),
                                 () async {
-                                  setState(() {
+                                  safeSetState(() {
                                     _model.textController3?.text =
                                         functions.newCustomFunction(
                                             _model.textController3.text);
@@ -564,7 +564,7 @@ class _ProductInformationWidgetState extends State<ProductInformationWidget>
                                       }
 
                                       _model.addToColors3(_model.colorPicked!);
-                                      setState(() {});
+                                      safeSetState(() {});
                                     },
                                     child: Container(
                                       width: 50.0,
@@ -588,6 +588,7 @@ class _ProductInformationWidgetState extends State<ProductInformationWidget>
                                   Builder(
                                     builder: (context) {
                                       final colors = _model.colors3.toList();
+
                                       return Row(
                                         mainAxisSize: MainAxisSize.max,
                                         children: List.generate(colors.length,
@@ -656,7 +657,7 @@ class _ProductInformationWidgetState extends State<ProductInformationWidget>
                                                         _model
                                                             .removeFromColors3(
                                                                 colorsItem);
-                                                        setState(() {});
+                                                        safeSetState(() {});
                                                       },
                                                     ),
                                                   ),
@@ -714,6 +715,7 @@ class _ProductInformationWidgetState extends State<ProductInformationWidget>
                     Builder(
                       builder: (context) {
                         final productinfo = FFAppState().productInfo.toList();
+
                         return ListView.separated(
                           padding: EdgeInsets.fromLTRB(
                             0,
@@ -734,7 +736,7 @@ class _ProductInformationWidgetState extends State<ProductInformationWidget>
                                 productinfoIndex.toString(),
                                 productinfoIndex,
                               ),
-                              updateCallback: () => setState(() {}),
+                              updateCallback: () => safeSetState(() {}),
                               child: ProductBlockWidget(
                                 key: Key(
                                   'Keykus_${productinfoIndex.toString()}',
@@ -763,11 +765,12 @@ class _ProductInformationWidgetState extends State<ProductInformationWidget>
                                 .controller
                                 .forward(from: 0.0);
                           }
-                          FFAppState().addToSections(SectionStruct(
+                          FFAppState().addToProductInfo(ProductInfoAIStruct(
+                            type: 'text',
                             title: '',
                             text: '',
                           ));
-                          setState(() {});
+                          safeSetState(() {});
                         },
                         child: Container(
                           width: double.infinity,
@@ -859,7 +862,28 @@ class _ProductInformationWidgetState extends State<ProductInformationWidget>
                           size: 13.0,
                         ),
                         onPressed: () async {
-                          context.safePop();
+                          _model.readProduct =
+                              await ProductsRecord.getDocumentOnce(
+                                  widget!.product!.reference);
+
+                          context.pushNamed(
+                            'product_page',
+                            queryParameters: {
+                              'product': serializeParam(
+                                _model.readProduct,
+                                ParamType.Document,
+                              ),
+                              'isFrom': serializeParam(
+                                'settings',
+                                ParamType.String,
+                              ),
+                            }.withoutNulls,
+                            extra: <String, dynamic>{
+                              'product': _model.readProduct,
+                            },
+                          );
+
+                          safeSetState(() {});
                         },
                       ),
                     ),
@@ -901,7 +925,7 @@ class _ProductInformationWidgetState extends State<ProductInformationWidget>
                       EdgeInsetsDirectional.fromSTEB(20.0, 13.0, 20.0, 20.0),
                   child: FFButtonWidget(
                     onPressed: () async {
-                      await widget.product!.reference.update({
+                      await widget!.product!.reference.update({
                         ...createProductsRecordData(
                           description: _model.textController2.text,
                           title: _model.textController1.text,
@@ -921,24 +945,24 @@ class _ProductInformationWidgetState extends State<ProductInformationWidget>
                           await DocumentsTable().delete(
                             matchingRows: (rows) => rows.eq(
                               'firebase_id',
-                              widget.product?.customId,
+                              widget!.product?.customId,
                             ),
                           );
                         }(),
                       );
                       _model.upsert = await UpsertVectorsNeightnCall.call(
                         upsertText: functions.stringToAPI(
-                            'title: ${_model.textController1.text}, description: ${_model.textController2.text}, price (dollars): ${_model.textController3.text}, additional informational blocks: ${functions.jsonListToText(FFAppState().productInfo.map((e) => e.toMap()).toList())}'),
-                        ownerType: widget.product?.ownerPerson != null
+                            'firebase_id: ${widget!.product?.customId}, title: ${_model.textController1.text}, description: ${_model.textController2.text}, price (dollars): ${_model.textController3.text}, additional informational blocks: ${functions.jsonListToText(FFAppState().productInfo.map((e) => e.toMap()).toList(), null)}'),
+                        ownerType: widget!.product?.ownerPerson != null
                             ? 'person'
                             : 'company',
                         owner: valueOrDefault<String>(
-                          widget.product?.ownerPerson != null
-                              ? widget.product?.ownerPerson?.id
-                              : widget.product?.ownerCompany?.id,
+                          widget!.product?.ownerPerson != null
+                              ? widget!.product?.ownerPerson?.id
+                              : widget!.product?.ownerCompany?.id,
                           'tst',
                         ),
-                        documentId: widget.product?.customId,
+                        documentId: widget!.product?.customId,
                       );
 
                       await Future.delayed(const Duration(milliseconds: 1000));
@@ -946,21 +970,23 @@ class _ProductInformationWidgetState extends State<ProductInformationWidget>
                         () async {
                           await DocumentsTable().update(
                             data: {
-                              'firebase_id': widget.product?.customId,
+                              'firebase_id': widget!.product?.customId,
                             },
                             matchingRows: (rows) => rows.eq(
                               'content',
                               functions.stringToAPI(
-                                  'title: ${_model.textController1.text}, description: ${_model.textController2.text}, price (dollars): ${_model.textController3.text}, additional informational blocks: ${functions.jsonListToText(FFAppState().productInfo.map((e) => e.toMap()).toList())}'),
+                                  'title: ${_model.textController1.text}, description: ${_model.textController2.text}, price (dollars): ${_model.textController3.text}, additional informational blocks: ${functions.jsonListToText(FFAppState().productInfo.map((e) => e.toMap()).toList(), null)}'),
                             ),
                           );
                         }(),
                       );
                       FFAppState().sections = [];
-                      setState(() {});
+                      FFAppState().productInfo = [];
+                      safeSetState(() {});
+                      FFAppState().clearProductsProfileCache();
                       context.safePop();
 
-                      setState(() {});
+                      safeSetState(() {});
                     },
                     text: 'Save changes',
                     options: FFButtonOptions(

@@ -2,7 +2,6 @@ import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/backend/schema/structs/index.dart';
 import '/components/image_slider_widget.dart';
-import '/components/navigate_back_widget.dart';
 import '/components/toggle_widget.dart';
 import '/flutter_flow/flutter_flow_google_map.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
@@ -62,7 +61,6 @@ class EventPageModel extends FlutterFlowModel<EventPageWidget> {
 
   ///  State fields for stateful widgets in this page.
 
-  final unfocusNode = FocusNode();
   // Stores action output result for [Backend Call - Read Document] action in event_page widget.
   UsersRecord? owner;
   // Stores action output result for [Backend Call - Read Document] action in event_page widget.
@@ -80,27 +78,26 @@ class EventPageModel extends FlutterFlowModel<EventPageWidget> {
   final googleMapsController = Completer<GoogleMapController>();
   // Model for button_fixed_size component.
   late ButtonFixedSizeModel buttonFixedSizeModel1;
-  // Model for navigate_back component.
-  late NavigateBackModel navigateBackModel;
   // Model for toggle component.
   late ToggleModel toggleModel;
   // Model for button_fixed_size component.
   late ButtonFixedSizeModel buttonFixedSizeModel2;
+  // Model for button_fixed_size component.
+  late ButtonFixedSizeModel buttonFixedSizeModel3;
 
   @override
   void initState(BuildContext context) {
     buttonFixedSizeModel1 = createModel(context, () => ButtonFixedSizeModel());
-    navigateBackModel = createModel(context, () => NavigateBackModel());
     toggleModel = createModel(context, () => ToggleModel());
     buttonFixedSizeModel2 = createModel(context, () => ButtonFixedSizeModel());
+    buttonFixedSizeModel3 = createModel(context, () => ButtonFixedSizeModel());
   }
 
   @override
   void dispose() {
-    unfocusNode.dispose();
     buttonFixedSizeModel1.dispose();
-    navigateBackModel.dispose();
     toggleModel.dispose();
     buttonFixedSizeModel2.dispose();
+    buttonFixedSizeModel3.dispose();
   }
 }

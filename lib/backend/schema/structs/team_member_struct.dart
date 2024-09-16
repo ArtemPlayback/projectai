@@ -11,23 +11,16 @@ import '/flutter_flow/flutter_flow_util.dart';
 
 class TeamMemberStruct extends FFFirebaseStruct {
   TeamMemberStruct({
-    DocumentReference? userReference,
     String? role,
     String? description,
     TeamMemberStatus? teamMember,
+    DocumentReference? user,
     FirestoreUtilData firestoreUtilData = const FirestoreUtilData(),
-  })  : _userReference = userReference,
-        _role = role,
+  })  : _role = role,
         _description = description,
         _teamMember = teamMember,
+        _user = user,
         super(firestoreUtilData);
-
-  // "user_reference" field.
-  DocumentReference? _userReference;
-  DocumentReference? get userReference => _userReference;
-  set userReference(DocumentReference? val) => _userReference = val;
-
-  bool hasUserReference() => _userReference != null;
 
   // "role" field.
   String? _role;
@@ -50,12 +43,19 @@ class TeamMemberStruct extends FFFirebaseStruct {
 
   bool hasTeamMember() => _teamMember != null;
 
+  // "user" field.
+  DocumentReference? _user;
+  DocumentReference? get user => _user;
+  set user(DocumentReference? val) => _user = val;
+
+  bool hasUser() => _user != null;
+
   static TeamMemberStruct fromMap(Map<String, dynamic> data) =>
       TeamMemberStruct(
-        userReference: data['user_reference'] as DocumentReference?,
         role: data['role'] as String?,
         description: data['description'] as String?,
         teamMember: deserializeEnum<TeamMemberStatus>(data['team_member']),
+        user: data['user'] as DocumentReference?,
       );
 
   static TeamMemberStruct? maybeFromMap(dynamic data) => data is Map
@@ -63,18 +63,14 @@ class TeamMemberStruct extends FFFirebaseStruct {
       : null;
 
   Map<String, dynamic> toMap() => {
-        'user_reference': _userReference,
         'role': _role,
         'description': _description,
         'team_member': _teamMember?.serialize(),
+        'user': _user,
       }.withoutNulls;
 
   @override
   Map<String, dynamic> toSerializableMap() => {
-        'user_reference': serializeParam(
-          _userReference,
-          ParamType.DocumentReference,
-        ),
         'role': serializeParam(
           _role,
           ParamType.String,
@@ -87,16 +83,14 @@ class TeamMemberStruct extends FFFirebaseStruct {
           _teamMember,
           ParamType.Enum,
         ),
+        'user': serializeParam(
+          _user,
+          ParamType.DocumentReference,
+        ),
       }.withoutNulls;
 
   static TeamMemberStruct fromSerializableMap(Map<String, dynamic> data) =>
       TeamMemberStruct(
-        userReference: deserializeParam(
-          data['user_reference'],
-          ParamType.DocumentReference,
-          false,
-          collectionNamePath: ['users'],
-        ),
         role: deserializeParam(
           data['role'],
           ParamType.String,
@@ -112,6 +106,12 @@ class TeamMemberStruct extends FFFirebaseStruct {
           ParamType.Enum,
           false,
         ),
+        user: deserializeParam(
+          data['user'],
+          ParamType.DocumentReference,
+          false,
+          collectionNamePath: ['users'],
+        ),
       );
 
   @override
@@ -120,32 +120,32 @@ class TeamMemberStruct extends FFFirebaseStruct {
   @override
   bool operator ==(Object other) {
     return other is TeamMemberStruct &&
-        userReference == other.userReference &&
         role == other.role &&
         description == other.description &&
-        teamMember == other.teamMember;
+        teamMember == other.teamMember &&
+        user == other.user;
   }
 
   @override
   int get hashCode =>
-      const ListEquality().hash([userReference, role, description, teamMember]);
+      const ListEquality().hash([role, description, teamMember, user]);
 }
 
 TeamMemberStruct createTeamMemberStruct({
-  DocumentReference? userReference,
   String? role,
   String? description,
   TeamMemberStatus? teamMember,
+  DocumentReference? user,
   Map<String, dynamic> fieldValues = const {},
   bool clearUnsetFields = true,
   bool create = false,
   bool delete = false,
 }) =>
     TeamMemberStruct(
-      userReference: userReference,
       role: role,
       description: description,
       teamMember: teamMember,
+      user: user,
       firestoreUtilData: FirestoreUtilData(
         clearUnsetFields: clearUnsetFields,
         create: create,

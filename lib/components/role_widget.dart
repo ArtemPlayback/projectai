@@ -33,7 +33,7 @@ class _RoleWidgetState extends State<RoleWidget> {
     super.initState();
     _model = createModel(context, () => RoleModel());
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -78,7 +78,8 @@ class _RoleWidgetState extends State<RoleWidget> {
                         EdgeInsetsDirectional.fromSTEB(15.0, 30.0, 15.0, 0.0),
                     child: Builder(
                       builder: (context) {
-                        final opt = widget.options?.toList() ?? [];
+                        final opt = widget!.options?.toList() ?? [];
+
                         return Column(
                           mainAxisSize: MainAxisSize.max,
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -94,7 +95,7 @@ class _RoleWidgetState extends State<RoleWidget> {
                                 highlightColor: Colors.transparent,
                                 onTap: () async {
                                   _model.chosen = optItem;
-                                  setState(() {});
+                                  safeSetState(() {});
                                 },
                                 child: Container(
                                   width: double.infinity,

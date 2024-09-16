@@ -1,4 +1,6 @@
 import '/auth/firebase_auth/auth_util.dart';
+import '/backend/api_requests/api_calls.dart';
+import '/backend/api_requests/api_streaming.dart';
 import '/backend/backend.dart';
 import '/backend/schema/structs/index.dart';
 import '/components/section_widget.dart';
@@ -7,8 +9,11 @@ import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
+import 'dart:convert';
 import 'dart:math';
+import '/flutter_flow/custom_functions.dart' as functions;
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -43,7 +48,7 @@ class _InformationWidgetState extends State<InformationWidget>
       FFAppState().sections = (currentUserDocument?.sections?.toList() ?? [])
           .toList()
           .cast<SectionStruct>();
-      setState(() {});
+      safeSetState(() {});
     });
 
     _model.textController1 ??=
@@ -92,7 +97,7 @@ class _InformationWidgetState extends State<InformationWidget>
       this,
     );
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -107,9 +112,7 @@ class _InformationWidgetState extends State<InformationWidget>
     context.watch<FFAppState>();
 
     return GestureDetector(
-      onTap: () => _model.unfocusNode.canRequestFocus
-          ? FocusScope.of(context).requestFocus(_model.unfocusNode)
-          : FocusScope.of(context).unfocus(),
+      onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
@@ -245,7 +248,7 @@ class _InformationWidgetState extends State<InformationWidget>
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Short information',
+                            'General information',
                             style: FlutterFlowTheme.of(context)
                                 .bodyMedium
                                 .override(
@@ -260,7 +263,7 @@ class _InformationWidgetState extends State<InformationWidget>
                             padding: EdgeInsetsDirectional.fromSTEB(
                                 0.0, 4.0, 0.0, 0.0),
                             child: Text(
-                              'Tell about yourserlf in 10 words',
+                              'Tell about yourserlf ',
                               style: FlutterFlowTheme.of(context)
                                   .bodyMedium
                                   .override(
@@ -279,6 +282,14 @@ class _InformationWidgetState extends State<InformationWidget>
                                 builder: (context) => TextFormField(
                                   controller: _model.textController2,
                                   focusNode: _model.textFieldFocusNode2,
+                                  onChanged: (_) => EasyDebounce.debounce(
+                                    '_model.textController2',
+                                    Duration(milliseconds: 100),
+                                    () async {
+                                      _model.descriptionChanged = true;
+                                      safeSetState(() {});
+                                    },
+                                  ),
                                   autofocus: false,
                                   textCapitalization:
                                       TextCapitalization.sentences,
@@ -344,13 +355,8 @@ class _InformationWidgetState extends State<InformationWidget>
                                         fontWeight: FontWeight.normal,
                                         useGoogleFonts: false,
                                       ),
-                                  maxLines: 3,
-                                  maxLength: 60,
-                                  buildCounter: (context,
-                                          {required currentLength,
-                                          required isFocused,
-                                          maxLength}) =>
-                                      null,
+                                  maxLines: null,
+                                  minLines: 3,
                                   keyboardType: TextInputType.multiline,
                                   validator: _model.textController2Validator
                                       .asValidator(context),
@@ -855,6 +861,7 @@ class _InformationWidgetState extends State<InformationWidget>
                     Builder(
                       builder: (context) {
                         final sections = FFAppState().sections.toList();
+
                         return ListView.separated(
                           padding: EdgeInsets.fromLTRB(
                             0,
@@ -898,7 +905,7 @@ class _InformationWidgetState extends State<InformationWidget>
                             title: '',
                             text: '',
                           ));
-                          setState(() {});
+                          safeSetState(() {});
                         },
                         child: Container(
                           width: double.infinity,
@@ -1038,29 +1045,71 @@ class _InformationWidgetState extends State<InformationWidget>
                       )),
                   child: FFButtonWidget(
                     onPressed: () async {
-                      await currentUserReference!.update({
-                        ...createUsersRecordData(
-                          displayName: _model.textController1.text,
-                          description: _model.textController2.text,
-                          socialmedia: createSocialmediaStruct(
-                            instagram: _model.textController4.text,
-                            telegram: _model.textController5.text,
-                            email: _model.textController3.text,
-                            clearUnsetFields: false,
-                          ),
-                          professionalInformation: _model.textController6.text,
-                        ),
-                        ...mapToFirestore(
-                          {
-                            'sections': getSectionListFirestoreData(
-                              FFAppState().sections,
+                      if (_model.descriptionChanged) {
+                        _model.shortDescription =
+                            await ShortDescriptionUserCall.call(
+                          question: functions
+                              .stringToAPI(_model.textController2.text),
+                        );
+
+                        await currentUserReference!.update({
+                          ...createUsersRecordData(
+                            displayName: _model.textController1.text,
+                            description: _model.textController2.text,
+                            socialmedia: createSocialmediaStruct(
+                              instagram: _model.textController4.text,
+                              telegram: _model.textController5.text,
+                              email: _model.textController3.text,
+                              clearUnsetFields: false,
                             ),
-                          },
-                        ),
-                      });
-                      FFAppState().sections = [];
-                      setState(() {});
-                      context.safePop();
+                            professionalInformation:
+                                _model.textController6.text,
+                            email: '',
+                            shortDescription: getJsonField(
+                              (_model.shortDescription?.jsonBody ?? ''),
+                              r'''$.text''',
+                            ).toString(),
+                          ),
+                          ...mapToFirestore(
+                            {
+                              'sections': getSectionListFirestoreData(
+                                FFAppState().sections,
+                              ),
+                            },
+                          ),
+                        });
+                        FFAppState().sections = [];
+                        safeSetState(() {});
+                        context.safePop();
+                      } else {
+                        await currentUserReference!.update({
+                          ...createUsersRecordData(
+                            displayName: _model.textController1.text,
+                            description: _model.textController2.text,
+                            socialmedia: createSocialmediaStruct(
+                              instagram: _model.textController4.text,
+                              telegram: _model.textController5.text,
+                              email: _model.textController3.text,
+                              clearUnsetFields: false,
+                            ),
+                            professionalInformation:
+                                _model.textController6.text,
+                            email: '',
+                          ),
+                          ...mapToFirestore(
+                            {
+                              'sections': getSectionListFirestoreData(
+                                FFAppState().sections,
+                              ),
+                            },
+                          ),
+                        });
+                        FFAppState().sections = [];
+                        safeSetState(() {});
+                        context.safePop();
+                      }
+
+                      safeSetState(() {});
                     },
                     text: 'Save changes',
                     options: FFButtonOptions(

@@ -28,7 +28,7 @@ class _RoleChooseWidgetState extends State<RoleChooseWidget> {
     super.initState();
     _model = createModel(context, () => RoleChooseModel());
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override

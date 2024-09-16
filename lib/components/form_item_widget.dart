@@ -51,7 +51,7 @@ class _FormItemWidgetState extends State<FormItemWidget> {
     _model.textController ??= TextEditingController();
     _model.textFieldFocusNode ??= FocusNode();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -81,7 +81,7 @@ class _FormItemWidgetState extends State<FormItemWidget> {
                     children: [
                       TextSpan(
                         text: valueOrDefault<String>(
-                          widget.question?.question,
+                          widget!.question?.question,
                           'title',
                         ),
                         style: FlutterFlowTheme.of(context).bodyMedium.override(
@@ -110,13 +110,13 @@ class _FormItemWidgetState extends State<FormItemWidget> {
               ),
             ],
           ),
-          if (widget.question?.description != null &&
-              widget.question?.description != '')
+          if (widget!.question?.description != null &&
+              widget!.question?.description != '')
             Padding(
               padding: EdgeInsetsDirectional.fromSTEB(0.0, 7.0, 24.0, 0.0),
               child: Text(
                 valueOrDefault<String>(
-                  widget.question?.description,
+                  widget!.question?.description,
                   'e',
                 ),
                 style: FlutterFlowTheme.of(context).bodyMedium.override(
@@ -139,7 +139,7 @@ class _FormItemWidgetState extends State<FormItemWidget> {
                     children: [
                       Builder(
                         builder: (context) {
-                          if (widget.question?.type == 'textfield') {
+                          if (widget!.question?.type == 'textfield') {
                             return TextFormField(
                               controller: _model.textController,
                               focusNode: _model.textFieldFocusNode,
@@ -148,11 +148,11 @@ class _FormItemWidgetState extends State<FormItemWidget> {
                                 Duration(milliseconds: 20),
                                 () async {
                                   FFAppState().updateQuestionsAtIndex(
-                                    widget.index!,
+                                    widget!.index!,
                                     (e) =>
                                         e..answer = _model.textController.text,
                                   );
-                                  setState(() {});
+                                  safeSetState(() {});
                                   await widget.updatePagestate?.call();
                                 },
                               ),
@@ -221,25 +221,25 @@ class _FormItemWidgetState extends State<FormItemWidget> {
                               validator: _model.textControllerValidator
                                   .asValidator(context),
                             );
-                          } else if (widget.question?.type == 'choice_chips') {
+                          } else if (widget!.question?.type == 'choice_chips') {
                             return Builder(
                               builder: (context) {
-                                if (widget.question?.isMultiselect ?? false) {
+                                if (widget!.question?.isMultiselect ?? false) {
                                   return FlutterFlowChoiceChips(
-                                    options: widget.question!.options
+                                    options: widget!.question!.options
                                         .map((label) => ChipData(label))
                                         .toList(),
                                     onChanged: (val) async {
-                                      setState(() =>
+                                      safeSetState(() =>
                                           _model.choiceChipsValues1 = val);
                                       FFAppState().updateQuestionsAtIndex(
-                                        widget.index!,
+                                        widget!.index!,
                                         (e) => e
                                           ..multipleAnswer = _model
                                               .choiceChipsValues1!
                                               .toList(),
                                       );
-                                      setState(() {});
+                                      safeSetState(() {});
                                       await widget.updatePagestate?.call();
                                     },
                                     selectedChipStyle: ChipStyle(
@@ -299,18 +299,19 @@ class _FormItemWidgetState extends State<FormItemWidget> {
                                   );
                                 } else {
                                   return FlutterFlowChoiceChips(
-                                    options: widget.question!.options
+                                    options: widget!.question!.options
                                         .map((label) => ChipData(label))
                                         .toList(),
                                     onChanged: (val) async {
-                                      setState(() => _model.choiceChipsValue2 =
-                                          val?.firstOrNull);
+                                      safeSetState(() =>
+                                          _model.choiceChipsValue2 =
+                                              val?.firstOrNull);
                                       FFAppState().updateQuestionsAtIndex(
-                                        widget.index!,
+                                        widget!.index!,
                                         (e) => e
                                           ..answer = _model.choiceChipsValue2,
                                       );
-                                      setState(() {});
+                                      safeSetState(() {});
                                       await widget.updatePagestate?.call();
                                     },
                                     selectedChipStyle: ChipStyle(
@@ -369,7 +370,7 @@ class _FormItemWidgetState extends State<FormItemWidget> {
                                 }
                               },
                             );
-                          } else if (widget.question?.type == 'map') {
+                          } else if (widget!.question?.type == 'map') {
                             return Align(
                               alignment: AlignmentDirectional(-1.0, -1.0),
                               child: Column(
@@ -465,7 +466,7 @@ class _FormItemWidgetState extends State<FormItemWidget> {
                                             webGoogleMapsApiKey:
                                                 'AIzaSyBb9qGEcU87nPm0uhZNTdje-WL8lCPAS6g',
                                             onSelect: (place) async {
-                                              setState(() => _model
+                                              safeSetState(() => _model
                                                   .placePickerValue = place);
                                               (await _model.googleMapsController
                                                       .future)
@@ -602,13 +603,13 @@ class _FormItemWidgetState extends State<FormItemWidget> {
                                       FFAppState()
                                           .addToColors(_model.colorPicked!);
                                       FFAppState().updateQuestionsAtIndex(
-                                        widget.index!,
+                                        widget!.index!,
                                         (e) => e
                                           ..updateColors(
                                             (e) => e.add(_model.colorPicked!),
                                           ),
                                       );
-                                      setState(() {});
+                                      FFAppState().update(() {});
                                       await widget.updatePagestate?.call();
                                     },
                                     child: Container(
@@ -633,8 +634,9 @@ class _FormItemWidgetState extends State<FormItemWidget> {
                                   Builder(
                                     builder: (context) {
                                       final colors =
-                                          widget.question?.colors?.toList() ??
+                                          widget!.question?.colors?.toList() ??
                                               [];
+
                                       return Row(
                                         mainAxisSize: MainAxisSize.max,
                                         children: List.generate(colors.length,
@@ -702,7 +704,7 @@ class _FormItemWidgetState extends State<FormItemWidget> {
                                                       onPressed: () async {
                                                         FFAppState()
                                                             .updateQuestionsAtIndex(
-                                                          widget.index!,
+                                                          widget!.index!,
                                                           (e) => e
                                                             ..updateColors(
                                                               (e) => e.remove(

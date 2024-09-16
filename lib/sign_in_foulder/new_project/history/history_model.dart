@@ -1,9 +1,9 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/backend/schema/structs/index.dart';
+import '/components/company_small_card_widget.dart';
 import '/components/event_card_small_widget.dart';
 import '/components/navigationbar_widget.dart';
-import '/components/project_small_card_widget.dart';
 import '/components/usercard_small_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -42,7 +42,6 @@ class HistoryModel extends FlutterFlowModel<HistoryWidget> {
 
   ///  State fields for stateful widgets in this page.
 
-  final unfocusNode = FocusNode();
   // Stores action output result for [Firestore Query - Query a collection] action in history widget.
   List<EventsRecord>? events;
   // Model for navigationbar component.
@@ -55,7 +54,6 @@ class HistoryModel extends FlutterFlowModel<HistoryWidget> {
 
   @override
   void dispose() {
-    unfocusNode.dispose();
     navigationbarModel.dispose();
   }
 }

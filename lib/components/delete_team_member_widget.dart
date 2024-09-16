@@ -1,9 +1,15 @@
+import '/auth/firebase_auth/auth_util.dart';
+import '/backend/backend.dart';
+import '/backend/schema/structs/index.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
+import 'dart:async';
 import 'dart:ui';
+import '/flutter_flow/custom_functions.dart' as functions;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'delete_team_member_model.dart';
@@ -14,10 +20,12 @@ class DeleteTeamMemberWidget extends StatefulWidget {
     super.key,
     required this.company,
     required this.user,
+    required this.teamMembers2,
   });
 
   final DocumentReference? company;
   final DocumentReference? user;
+  final List<TeamMemberStruct>? teamMembers2;
 
   @override
   State<DeleteTeamMemberWidget> createState() => _DeleteTeamMemberWidgetState();
@@ -37,7 +45,14 @@ class _DeleteTeamMemberWidgetState extends State<DeleteTeamMemberWidget> {
     super.initState();
     _model = createModel(context, () => DeleteTeamMemberModel());
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    // On component load action.
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
+      _model.teamMembers =
+          widget!.teamMembers2!.toList().cast<TeamMemberStruct>();
+      _model.updatePage(() {});
+    });
+
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -113,8 +128,30 @@ class _DeleteTeamMemberWidgetState extends State<DeleteTeamMemberWidget> {
                   children: [
                     Expanded(
                       child: FFButtonWidget(
-                        onPressed: () {
-                          print('Button pressed ...');
+                        onPressed: () async {
+                          _model.teamMembers = widget!.teamMembers2!
+                              .toList()
+                              .cast<TeamMemberStruct>();
+                          safeSetState(() {});
+                          _model.removeAtIndexFromTeamMembers(
+                              functions.findMemberIndexInList(
+                                  widget!.user!, _model.teamMembers.toList()));
+                          _model.updatePage(() {});
+                          unawaited(
+                            () async {
+                              await widget!.company!.update({
+                                ...mapToFirestore(
+                                  {
+                                    'team_members':
+                                        getTeamMemberListFirestoreData(
+                                      _model.teamMembers,
+                                    ),
+                                  },
+                                ),
+                              });
+                            }(),
+                          );
+                          Navigator.pop(context);
                         },
                         text: 'Delete',
                         options: FFButtonOptions(

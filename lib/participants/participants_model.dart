@@ -43,7 +43,6 @@ class ParticipantsModel extends FlutterFlowModel<ParticipantsWidget> {
 
   ///  State fields for stateful widgets in this page.
 
-  final unfocusNode = FocusNode();
   // State field(s) for TabBar widget.
   TabController? tabBarController;
   int get tabBarCurrentIndex =>
@@ -54,7 +53,6 @@ class ParticipantsModel extends FlutterFlowModel<ParticipantsWidget> {
 
   @override
   void dispose() {
-    unfocusNode.dispose();
     tabBarController?.dispose();
   }
 }

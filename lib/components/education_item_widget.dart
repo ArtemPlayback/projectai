@@ -35,14 +35,14 @@ class _EducationItemWidgetState extends State<EducationItemWidget> {
     _model = createModel(context, () => EducationItemModel());
 
     _model.textController1 ??= TextEditingController(
-        text: FFAppState().experience[widget.parameter1!].title);
+        text: FFAppState().experience[widget!.parameter1!].title);
     _model.textFieldFocusNode1 ??= FocusNode();
 
     _model.textController2 ??= TextEditingController(
-        text: FFAppState().experience[widget.parameter1!].details);
+        text: FFAppState().experience[widget!.parameter1!].details);
     _model.textFieldFocusNode2 ??= FocusNode();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -66,7 +66,7 @@ class _EducationItemWidgetState extends State<EducationItemWidget> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Experience ${widget.parameter1?.toString()}',
+                'Experience ${widget!.parameter1?.toString()}',
                 style: FlutterFlowTheme.of(context).bodyMedium.override(
                       fontFamily: 'LTSuperior',
                       color: FlutterFlowTheme.of(context).primary,
@@ -82,8 +82,8 @@ class _EducationItemWidgetState extends State<EducationItemWidget> {
                 hoverColor: Colors.transparent,
                 highlightColor: Colors.transparent,
                 onTap: () async {
-                  FFAppState().removeAtIndexFromEducation(widget.parameter1!);
-                  setState(() {});
+                  FFAppState().removeAtIndexFromEducation(widget!.parameter1!);
+                  safeSetState(() {});
                 },
                 child: Icon(
                   Icons.close,
@@ -99,10 +99,10 @@ class _EducationItemWidgetState extends State<EducationItemWidget> {
           focusNode: _model.textFieldFocusNode1,
           onFieldSubmitted: (_) async {
             FFAppState().updateExperienceAtIndex(
-              widget.parameter1!,
+              widget!.parameter1!,
               (e) => e..title = _model.textController1.text,
             );
-            setState(() {});
+            safeSetState(() {});
           },
           autofocus: false,
           obscureText: false,
@@ -170,10 +170,10 @@ class _EducationItemWidgetState extends State<EducationItemWidget> {
               Duration(milliseconds: 2),
               () async {
                 FFAppState().updateExperienceAtIndex(
-                  widget.parameter1!,
+                  widget!.parameter1!,
                   (e) => e..details = _model.textController2.text,
                 );
-                setState(() {});
+                safeSetState(() {});
               },
             ),
             autofocus: false,

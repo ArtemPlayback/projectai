@@ -10,3 +10,9 @@ export 'send_email_webhook.dart' show sendEmailWebhook;
 export 'machine_effect.dart' show machineEffect;
 export 'query_users.dart' show queryUsers;
 export 'hide_keyboard.dart' show hideKeyboard;
+export 'query_docs_and_check_existence_people.dart'
+    show queryDocsAndCheckExistencePeople;
+export 'video_metadata.dart' show videoMetadata;
+export 'check_if_email_exists.dart' show checkIfEmailExists;
+export 'check_users_exists.dart' show checkUsersExists;
+export 'query_projects.dart' show queryProjects;

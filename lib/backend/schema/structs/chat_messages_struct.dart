@@ -20,6 +20,9 @@ class ChatMessagesStruct extends FFFirebaseStruct {
     List<String>? images,
     String? audio,
     String? aIChatType,
+    bool? isAIrepost,
+    String? video,
+    int? videoDuration,
     FirestoreUtilData firestoreUtilData = const FirestoreUtilData(),
   })  : _text = text,
         _from = from,
@@ -30,6 +33,9 @@ class ChatMessagesStruct extends FFFirebaseStruct {
         _images = images,
         _audio = audio,
         _aIChatType = aIChatType,
+        _isAIrepost = isAIrepost,
+        _video = video,
+        _videoDuration = videoDuration,
         super(firestoreUtilData);
 
   // "text" field.
@@ -80,7 +86,7 @@ class ChatMessagesStruct extends FFFirebaseStruct {
   set images(List<String>? val) => _images = val;
 
   void updateImages(Function(List<String>) updateFn) {
-    updateFn(images ??= []);
+    updateFn(_images ??= []);
   }
 
   bool hasImages() => _images != null;
@@ -99,6 +105,30 @@ class ChatMessagesStruct extends FFFirebaseStruct {
 
   bool hasAIChatType() => _aIChatType != null;
 
+  // "isAIrepost" field.
+  bool? _isAIrepost;
+  bool get isAIrepost => _isAIrepost ?? false;
+  set isAIrepost(bool? val) => _isAIrepost = val;
+
+  bool hasIsAIrepost() => _isAIrepost != null;
+
+  // "video" field.
+  String? _video;
+  String get video => _video ?? '';
+  set video(String? val) => _video = val;
+
+  bool hasVideo() => _video != null;
+
+  // "video_duration" field.
+  int? _videoDuration;
+  int get videoDuration => _videoDuration ?? 0;
+  set videoDuration(int? val) => _videoDuration = val;
+
+  void incrementVideoDuration(int amount) =>
+      videoDuration = videoDuration + amount;
+
+  bool hasVideoDuration() => _videoDuration != null;
+
   static ChatMessagesStruct fromMap(Map<String, dynamic> data) =>
       ChatMessagesStruct(
         text: data['text'] as String?,
@@ -110,6 +140,9 @@ class ChatMessagesStruct extends FFFirebaseStruct {
         images: getDataList(data['images']),
         audio: data['audio'] as String?,
         aIChatType: data['AI_chat_type'] as String?,
+        isAIrepost: data['isAIrepost'] as bool?,
+        video: data['video'] as String?,
+        videoDuration: castToType<int>(data['video_duration']),
       );
 
   static ChatMessagesStruct? maybeFromMap(dynamic data) => data is Map
@@ -126,6 +159,9 @@ class ChatMessagesStruct extends FFFirebaseStruct {
         'images': _images,
         'audio': _audio,
         'AI_chat_type': _aIChatType,
+        'isAIrepost': _isAIrepost,
+        'video': _video,
+        'video_duration': _videoDuration,
       }.withoutNulls;
 
   @override
@@ -166,6 +202,18 @@ class ChatMessagesStruct extends FFFirebaseStruct {
         'AI_chat_type': serializeParam(
           _aIChatType,
           ParamType.String,
+        ),
+        'isAIrepost': serializeParam(
+          _isAIrepost,
+          ParamType.bool,
+        ),
+        'video': serializeParam(
+          _video,
+          ParamType.String,
+        ),
+        'video_duration': serializeParam(
+          _videoDuration,
+          ParamType.int,
         ),
       }.withoutNulls;
 
@@ -217,6 +265,21 @@ class ChatMessagesStruct extends FFFirebaseStruct {
           ParamType.String,
           false,
         ),
+        isAIrepost: deserializeParam(
+          data['isAIrepost'],
+          ParamType.bool,
+          false,
+        ),
+        video: deserializeParam(
+          data['video'],
+          ParamType.String,
+          false,
+        ),
+        videoDuration: deserializeParam(
+          data['video_duration'],
+          ParamType.int,
+          false,
+        ),
       );
 
   @override
@@ -234,12 +297,27 @@ class ChatMessagesStruct extends FFFirebaseStruct {
         type == other.type &&
         listEquality.equals(images, other.images) &&
         audio == other.audio &&
-        aIChatType == other.aIChatType;
+        aIChatType == other.aIChatType &&
+        isAIrepost == other.isAIrepost &&
+        video == other.video &&
+        videoDuration == other.videoDuration;
   }
 
   @override
-  int get hashCode => const ListEquality()
-      .hash([text, from, when, isRead, id, type, images, audio, aIChatType]);
+  int get hashCode => const ListEquality().hash([
+        text,
+        from,
+        when,
+        isRead,
+        id,
+        type,
+        images,
+        audio,
+        aIChatType,
+        isAIrepost,
+        video,
+        videoDuration
+      ]);
 }
 
 ChatMessagesStruct createChatMessagesStruct({
@@ -251,6 +329,9 @@ ChatMessagesStruct createChatMessagesStruct({
   String? type,
   String? audio,
   String? aIChatType,
+  bool? isAIrepost,
+  String? video,
+  int? videoDuration,
   Map<String, dynamic> fieldValues = const {},
   bool clearUnsetFields = true,
   bool create = false,
@@ -265,6 +346,9 @@ ChatMessagesStruct createChatMessagesStruct({
       type: type,
       audio: audio,
       aIChatType: aIChatType,
+      isAIrepost: isAIrepost,
+      video: video,
+      videoDuration: videoDuration,
       firestoreUtilData: FirestoreUtilData(
         clearUnsetFields: clearUnsetFields,
         create: create,

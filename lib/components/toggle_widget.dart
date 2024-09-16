@@ -41,11 +41,11 @@ class _ToggleWidgetState extends State<ToggleWidget> {
 
     // On component load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
-      _model.boolean = widget.boolean!;
+      _model.boolean = widget!.boolean!;
       _model.updatePage(() {});
     });
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -61,35 +61,35 @@ class _ToggleWidgetState extends State<ToggleWidget> {
       borderRadius: BorderRadius.circular(10.0),
       child: BackdropFilter(
         filter: ImageFilter.blur(
-          sigmaX: 7.0,
-          sigmaY: 7.0,
+          sigmaX: 15.0,
+          sigmaY: 15.0,
         ),
         child: Container(
           decoration: BoxDecoration(
-            color: Color(0x67000000),
+            color: Color(0xA3FBF9F9),
           ),
           child: Builder(
             builder: (context) {
               if (!_model.boolean) {
                 return FlutterFlowIconButton(
-                  borderColor: Color(0x31C6C6D5),
+                  borderColor: FlutterFlowTheme.of(context).textAndStroke,
                   borderRadius: 10.0,
                   borderWidth: 1.0,
                   buttonSize: 40.0,
                   icon: Icon(
                     Icons.favorite_border_outlined,
-                    color: Colors.white,
+                    color: FlutterFlowTheme.of(context).secondaryText,
                     size: 18.0,
                   ),
                   onPressed: () async {
                     if (_model.boolean) {
                       await widget.toggleOff?.call();
                       _model.boolean = false;
-                      setState(() {});
+                      safeSetState(() {});
                     } else {
                       await widget.toggleOn?.call();
                       _model.boolean = true;
-                      setState(() {});
+                      safeSetState(() {});
                     }
                   },
                 );
@@ -101,18 +101,18 @@ class _ToggleWidgetState extends State<ToggleWidget> {
                   buttonSize: 40.0,
                   icon: Icon(
                     Icons.favorite_rounded,
-                    color: Colors.white,
+                    color: FlutterFlowTheme.of(context).secondaryText,
                     size: 18.0,
                   ),
                   onPressed: () async {
                     if (_model.boolean) {
                       await widget.toggleOff?.call();
                       _model.boolean = false;
-                      setState(() {});
+                      safeSetState(() {});
                     } else {
                       await widget.toggleOn?.call();
                       _model.boolean = true;
-                      setState(() {});
+                      safeSetState(() {});
                     }
                   },
                 );

@@ -1,9 +1,12 @@
+import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
+import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import 'dart:async';
 import 'dart:ui';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -39,7 +42,7 @@ class _DeleteEventProductWidgetState extends State<DeleteEventProductWidget> {
     super.initState();
     _model = createModel(context, () => DeleteEventProductModel());
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -72,7 +75,7 @@ class _DeleteEventProductWidgetState extends State<DeleteEventProductWidget> {
                 Padding(
                   padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 6.0),
                   child: Text(
-                    widget.event != null ? 'Delete event' : 'Delete product',
+                    widget!.event != null ? 'Delete event' : 'Delete product',
                     style: FlutterFlowTheme.of(context).bodyMedium.override(
                           fontFamily: 'LTSuperior',
                           fontSize: 18.0,
@@ -85,7 +88,7 @@ class _DeleteEventProductWidgetState extends State<DeleteEventProductWidget> {
                 Padding(
                   padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 25.0),
                   child: Text(
-                    'Are you sure you want to delete ${widget.event != null ? 'event' : 'product'}? This action cannot be undone.',
+                    'Are you sure you want to delete ${widget!.event != null ? 'event' : 'product'}? This action cannot be undone.',
                     textAlign: TextAlign.center,
                     style: FlutterFlowTheme.of(context).bodyMedium.override(
                           fontFamily: 'LTSuperior',
@@ -102,32 +105,94 @@ class _DeleteEventProductWidgetState extends State<DeleteEventProductWidget> {
                     Expanded(
                       child: FFButtonWidget(
                         onPressed: () async {
-                          if (widget.event != null) {
+                          if (widget!.event != null) {
                             unawaited(
                               () async {
-                                await widget.event!.reference.delete();
+                                await widget!.event!.reference.delete();
                               }(),
                             );
+                            unawaited(
+                              () async {
+                                await currentUserReference!.update({
+                                  ...mapToFirestore(
+                                    {
+                                      'events': FieldValue.arrayRemove(
+                                          [widget!.event?.reference]),
+                                    },
+                                  ),
+                                });
+                              }(),
+                            );
+                            unawaited(
+                              () async {
+                                await DocumentsTable().delete(
+                                  matchingRows: (rows) => rows.eq(
+                                    'firebase_id',
+                                    widget!.product?.customId,
+                                  ),
+                                );
+                              }(),
+                            );
+                            FFAppState().clearEventsProfileCache();
                             unawaited(
                               () async {
                                 Navigator.pop(context);
                               }(),
                             );
 
-                            context.pushNamed('profile');
+                            context.pushNamed(
+                              'profile',
+                              queryParameters: {
+                                'chosen': serializeParam(
+                                  'Events',
+                                  ParamType.String,
+                                ),
+                              }.withoutNulls,
+                            );
                           } else {
                             unawaited(
                               () async {
-                                await widget.product!.reference.delete();
+                                await widget!.product!.reference.delete();
                               }(),
                             );
+                            unawaited(
+                              () async {
+                                await currentUserReference!.update({
+                                  ...mapToFirestore(
+                                    {
+                                      'products': FieldValue.arrayRemove(
+                                          [widget!.product?.reference]),
+                                    },
+                                  ),
+                                });
+                              }(),
+                            );
+                            unawaited(
+                              () async {
+                                await DocumentsTable().delete(
+                                  matchingRows: (rows) => rows.eq(
+                                    'firebase_id',
+                                    widget!.product?.customId,
+                                  ),
+                                );
+                              }(),
+                            );
+                            FFAppState().clearProductsProfileCache();
                             unawaited(
                               () async {
                                 Navigator.pop(context);
                               }(),
                             );
 
-                            context.pushNamed('profile');
+                            context.pushNamed(
+                              'profile',
+                              queryParameters: {
+                                'chosen': serializeParam(
+                                  'Products',
+                                  ParamType.String,
+                                ),
+                              }.withoutNulls,
+                            );
                           }
                         },
                         text: 'Delete',
@@ -137,18 +202,19 @@ class _DeleteEventProductWidgetState extends State<DeleteEventProductWidget> {
                               37.0, 0.0, 37.0, 0.0),
                           iconPadding: EdgeInsetsDirectional.fromSTEB(
                               37.0, 0.0, 37.0, 0.0),
-                          color: FlutterFlowTheme.of(context).primary,
+                          color: FlutterFlowTheme.of(context).error,
                           textStyle:
                               FlutterFlowTheme.of(context).titleSmall.override(
                                     fontFamily: 'LTSuperior',
                                     color: Colors.white,
-                                    fontSize: 15.0,
+                                    fontSize: 16.0,
                                     letterSpacing: 0.0,
-                                    fontWeight: FontWeight.bold,
+                                    fontWeight: FontWeight.w600,
                                     useGoogleFonts: false,
                                   ),
                           elevation: 0.0,
                           borderSide: BorderSide(
+                            color: Colors.transparent,
                             width: 0.0,
                           ),
                           borderRadius: BorderRadius.circular(10.0),
@@ -168,18 +234,20 @@ class _DeleteEventProductWidgetState extends State<DeleteEventProductWidget> {
                           iconPadding: EdgeInsetsDirectional.fromSTEB(
                               37.0, 0.0, 37.0, 0.0),
                           color: Color(0x02007AFF),
-                          textStyle:
-                              FlutterFlowTheme.of(context).titleSmall.override(
-                                    fontFamily: 'LTSuperior',
-                                    color: FlutterFlowTheme.of(context).primary,
-                                    fontSize: 15.0,
-                                    letterSpacing: 0.0,
-                                    fontWeight: FontWeight.bold,
-                                    useGoogleFonts: false,
-                                  ),
+                          textStyle: FlutterFlowTheme.of(context)
+                              .titleSmall
+                              .override(
+                                fontFamily: 'LTSuperior',
+                                color:
+                                    FlutterFlowTheme.of(context).secondaryText,
+                                fontSize: 16.0,
+                                letterSpacing: 0.0,
+                                fontWeight: FontWeight.w600,
+                                useGoogleFonts: false,
+                              ),
                           elevation: 0.0,
                           borderSide: BorderSide(
-                            color: FlutterFlowTheme.of(context).primary,
+                            color: FlutterFlowTheme.of(context).textAndStroke,
                             width: 1.0,
                           ),
                           borderRadius: BorderRadius.circular(10.0),

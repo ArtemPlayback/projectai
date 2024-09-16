@@ -29,7 +29,7 @@ class _WishlistEventsEmptyWidgetState extends State<WishlistEventsEmptyWidget> {
     super.initState();
     _model = createModel(context, () => WishlistEventsEmptyModel());
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -63,9 +63,6 @@ class _WishlistEventsEmptyWidgetState extends State<WishlistEventsEmptyWidget> {
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10.0),
-                  border: Border.all(
-                    color: FlutterFlowTheme.of(context).textAndStroke,
-                  ),
                 ),
                 child: Padding(
                   padding:
@@ -133,7 +130,7 @@ class _WishlistEventsEmptyWidgetState extends State<WishlistEventsEmptyWidget> {
                             30.0, 20.0, 30.0, 0.0),
                         child: wrapWithModel(
                           model: _model.buttonFixedSizeModel,
-                          updateCallback: () => setState(() {}),
+                          updateCallback: () => safeSetState(() {}),
                           child: ButtonFixedSizeWidget(
                             width: 458.0,
                             height: 50.0,
@@ -143,7 +140,7 @@ class _WishlistEventsEmptyWidgetState extends State<WishlistEventsEmptyWidget> {
                             textcolor: Colors.white,
                             showLoadingIndicator: false,
                             action: () async {
-                              context.pushNamed('smart_search_all');
+                              context.pushNamed('smart_search_all_2');
                             },
                           ),
                         ),

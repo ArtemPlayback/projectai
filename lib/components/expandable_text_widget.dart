@@ -33,7 +33,7 @@ class _ExpandableTextWidgetState extends State<ExpandableTextWidget> {
     super.initState();
     _model = createModel(context, () => ExpandableTextModel());
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -51,7 +51,7 @@ class _ExpandableTextWidgetState extends State<ExpandableTextWidget> {
         padding: EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 0.0),
         child: Builder(
           builder: (context) {
-            if (_model.open && ((widget.parameter1!).length > 140)) {
+            if (_model.open && ((widget!.parameter1!).length > 140)) {
               return Column(
                 mainAxisSize: MainAxisSize.max,
                 children: [
@@ -67,7 +67,7 @@ class _ExpandableTextWidgetState extends State<ExpandableTextWidget> {
                             children: [
                               TextSpan(
                                 text: valueOrDefault<String>(
-                                  widget.parameter1,
+                                  widget!.parameter1,
                                   'q',
                                 ),
                                 style: FlutterFlowTheme.of(context)
@@ -93,10 +93,10 @@ class _ExpandableTextWidgetState extends State<ExpandableTextWidget> {
                                   ..onTap = () async {
                                     if (_model.open) {
                                       _model.open = false;
-                                      setState(() {});
+                                      safeSetState(() {});
                                     } else {
                                       _model.open = true;
-                                      setState(() {});
+                                      safeSetState(() {});
                                     }
                                   },
                               )
@@ -118,7 +118,7 @@ class _ExpandableTextWidgetState extends State<ExpandableTextWidget> {
                   ),
                 ],
               );
-            } else if (!_model.open && !((widget.parameter1!).length > 140)) {
+            } else if (!_model.open && !((widget!.parameter1!).length > 140)) {
               return Column(
                 mainAxisSize: MainAxisSize.max,
                 children: [
@@ -131,7 +131,7 @@ class _ExpandableTextWidgetState extends State<ExpandableTextWidget> {
                             return text.length <= 140
                                 ? text
                                 : text.substring(0, 140);
-                          }(widget.parameter1!),
+                          }(widget!.parameter1!),
                           style: FlutterFlowTheme.of(context)
                               .bodyMedium
                               .override(
@@ -145,10 +145,10 @@ class _ExpandableTextWidgetState extends State<ExpandableTextWidget> {
                             ..onTap = () async {
                               if (_model.open) {
                                 _model.open = false;
-                                setState(() {});
+                                safeSetState(() {});
                               } else {
                                 _model.open = true;
-                                setState(() {});
+                                safeSetState(() {});
                               }
                             },
                         )
@@ -162,7 +162,7 @@ class _ExpandableTextWidgetState extends State<ExpandableTextWidget> {
                   ),
                 ],
               );
-            } else if (!_model.open && ((widget.parameter1!).length > 140)) {
+            } else if (!_model.open && ((widget!.parameter1!).length > 140)) {
               return Column(
                 mainAxisSize: MainAxisSize.max,
                 children: [
@@ -175,7 +175,7 @@ class _ExpandableTextWidgetState extends State<ExpandableTextWidget> {
                             return text.length <= 140
                                 ? text
                                 : text.substring(0, 140);
-                          }(widget.parameter1!),
+                          }(widget!.parameter1!),
                           style: FlutterFlowTheme.of(context)
                               .bodyMedium
                               .override(
@@ -213,7 +213,7 @@ class _ExpandableTextWidgetState extends State<ExpandableTextWidget> {
                     text: TextSpan(
                       children: [
                         TextSpan(
-                          text: widget.parameter1!,
+                          text: widget!.parameter1!,
                           style: FlutterFlowTheme.of(context)
                               .bodyMedium
                               .override(
@@ -236,10 +236,10 @@ class _ExpandableTextWidgetState extends State<ExpandableTextWidget> {
                             ..onTap = () async {
                               if (_model.open) {
                                 _model.open = false;
-                                setState(() {});
+                                safeSetState(() {});
                               } else {
                                 _model.open = true;
-                                setState(() {});
+                                safeSetState(() {});
                               }
                             },
                         )

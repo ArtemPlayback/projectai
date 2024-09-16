@@ -1,4 +1,5 @@
 import '/backend/backend.dart';
+import '/components/image_slider_widget.dart';
 import '/components/list_events_or_products_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';

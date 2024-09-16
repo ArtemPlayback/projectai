@@ -38,7 +38,7 @@ class _CreateProjectImagesWidgetState extends State<CreateProjectImagesWidget> {
     super.initState();
     _model = createModel(context, () => CreateProjectImagesModel());
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -51,9 +51,7 @@ class _CreateProjectImagesWidgetState extends State<CreateProjectImagesWidget> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => _model.unfocusNode.canRequestFocus
-          ? FocusScope.of(context).requestFocus(_model.unfocusNode)
-          : FocusScope.of(context).unfocus(),
+      onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
@@ -67,7 +65,7 @@ class _CreateProjectImagesWidgetState extends State<CreateProjectImagesWidget> {
                 child: PageView(
                   controller: _model.pageViewController ??=
                       PageController(initialPage: 0),
-                  onPageChanged: (_) => setState(() {}),
+                  onPageChanged: (_) => safeSetState(() {}),
                   scrollDirection: Axis.horizontal,
                   children: [
                     Padding(
@@ -140,7 +138,7 @@ class _CreateProjectImagesWidgetState extends State<CreateProjectImagesWidget> {
                                     selectedMedia.every((m) =>
                                         validateFileFormat(
                                             m.storagePath, context))) {
-                                  setState(
+                                  safeSetState(
                                       () => _model.isDataUploading1 = true);
                                   var selectedUploadedFiles =
                                       <FFUploadedFile>[];
@@ -174,14 +172,14 @@ class _CreateProjectImagesWidgetState extends State<CreateProjectImagesWidget> {
                                           selectedMedia.length &&
                                       downloadUrls.length ==
                                           selectedMedia.length) {
-                                    setState(() {
+                                    safeSetState(() {
                                       _model.uploadedLocalFile1 =
                                           selectedUploadedFiles.first;
                                       _model.uploadedFileUrl1 =
                                           downloadUrls.first;
                                     });
                                   } else {
-                                    setState(() {});
+                                    safeSetState(() {});
                                     return;
                                   }
                                 }
@@ -307,7 +305,7 @@ class _CreateProjectImagesWidgetState extends State<CreateProjectImagesWidget> {
                                     selectedMedia.every((m) =>
                                         validateFileFormat(
                                             m.storagePath, context))) {
-                                  setState(
+                                  safeSetState(
                                       () => _model.isDataUploading2 = true);
                                   var selectedUploadedFiles =
                                       <FFUploadedFile>[];
@@ -341,14 +339,14 @@ class _CreateProjectImagesWidgetState extends State<CreateProjectImagesWidget> {
                                           selectedMedia.length &&
                                       downloadUrls.length ==
                                           selectedMedia.length) {
-                                    setState(() {
+                                    safeSetState(() {
                                       _model.uploadedLocalFile2 =
                                           selectedUploadedFiles.first;
                                       _model.uploadedFileUrl2 =
                                           downloadUrls.first;
                                     });
                                   } else {
-                                    setState(() {});
+                                    safeSetState(() {});
                                     return;
                                   }
                                 }
@@ -486,7 +484,7 @@ class _CreateProjectImagesWidgetState extends State<CreateProjectImagesWidget> {
                                   } else {
                                     _model.dfgg =
                                         await ProjectsRecord.getDocumentOnce(
-                                            widget.project!.reference);
+                                            widget!.project!.reference);
                                     await showDialog(
                                       barrierColor: Color(0xA9000000),
                                       context: context,
@@ -500,27 +498,23 @@ class _CreateProjectImagesWidgetState extends State<CreateProjectImagesWidget> {
                                               .resolve(
                                                   Directionality.of(context)),
                                           child: GestureDetector(
-                                            onTap: () => _model
-                                                    .unfocusNode.canRequestFocus
-                                                ? FocusScope.of(context)
-                                                    .requestFocus(
-                                                        _model.unfocusNode)
-                                                : FocusScope.of(context)
+                                            onTap: () =>
+                                                FocusScope.of(dialogContext)
                                                     .unfocus(),
                                             child: Container(
                                               height: 466.0,
                                               child:
                                                   ProjectsCreatedImagesWidget(
-                                                project: widget.project!,
+                                                project: widget!.project!,
                                               ),
                                             ),
                                           ),
                                         );
                                       },
-                                    ).then((value) => setState(() {}));
+                                    );
                                   }
 
-                                  setState(() {});
+                                  safeSetState(() {});
                                 },
                                 text: 'Next',
                                 options: FFButtonOptions(

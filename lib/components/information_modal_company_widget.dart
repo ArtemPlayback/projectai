@@ -1,4 +1,5 @@
 import '/backend/backend.dart';
+import '/backend/schema/enums/enums.dart';
 import '/backend/schema/structs/index.dart';
 import '/components/usercard_small_widget.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
@@ -40,7 +41,7 @@ class _InformationModalCompanyWidgetState
     super.initState();
     _model = createModel(context, () => InformationModalCompanyModel());
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -77,56 +78,15 @@ class _InformationModalCompanyWidgetState
           ),
           child: Stack(
             children: [
-              Container(
-                width: double.infinity,
-                height: 70.0,
-                decoration: BoxDecoration(
-                  color: FlutterFlowTheme.of(context).secondaryBackground,
-                ),
-                child: Padding(
-                  padding:
-                      EdgeInsetsDirectional.fromSTEB(20.0, 15.0, 20.0, 0.0),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        '${widget.company?.title}',
-                        style: FlutterFlowTheme.of(context).bodyMedium.override(
-                              fontFamily: 'LTSuperior',
-                              fontSize: 16.0,
-                              letterSpacing: 0.0,
-                              fontWeight: FontWeight.w500,
-                              useGoogleFonts: false,
-                            ),
-                      ),
-                      FlutterFlowIconButton(
-                        borderColor: FlutterFlowTheme.of(context).textAndStroke,
-                        borderRadius: 10.0,
-                        borderWidth: 1.0,
-                        buttonSize: 40.0,
-                        icon: Icon(
-                          Icons.close_rounded,
-                          color: FlutterFlowTheme.of(context).primaryText,
-                          size: 24.0,
-                        ),
-                        onPressed: () async {
-                          Navigator.pop(context);
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-              ),
               SingleChildScrollView(
                 primary: false,
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if (widget.company?.projectInformation?.description !=
+                    if (widget!.company?.projectInformation?.description !=
                             null &&
-                        widget.company?.projectInformation?.description != '')
+                        widget!.company?.projectInformation?.description != '')
                       Padding(
                         padding: EdgeInsetsDirectional.fromSTEB(
                             20.0, 0.0, 20.0, 0.0),
@@ -152,7 +112,7 @@ class _InformationModalCompanyWidgetState
                                     15.0, 0.0, 0.0, 0.0),
                                 child: Text(
                                   valueOrDefault<String>(
-                                    widget.company?.projectInformation
+                                    widget!.company?.projectInformation
                                         ?.shortDescription,
                                     'zxc',
                                   ),
@@ -170,9 +130,9 @@ class _InformationModalCompanyWidgetState
                           ],
                         ),
                       ),
-                    if (widget.company?.projectInformation?.description !=
+                    if (widget!.company?.projectInformation?.description !=
                             null &&
-                        widget.company?.projectInformation?.description != '')
+                        widget!.company?.projectInformation?.description != '')
                       Padding(
                         padding: EdgeInsetsDirectional.fromSTEB(
                             20.0, 30.0, 20.0, 0.0),
@@ -191,7 +151,7 @@ class _InformationModalCompanyWidgetState
                           arrayContains: getSubscriptionsFirestoreData(
                             SubscriptionsStruct(
                               type: 'company',
-                              company: widget.company?.reference,
+                              company: widget!.company?.reference,
                             ),
                             true,
                           ),
@@ -214,6 +174,7 @@ class _InformationModalCompanyWidgetState
                         }
                         List<UsersRecord> containerUsersRecordList =
                             snapshot.data!;
+
                         return Container(
                           decoration: BoxDecoration(),
                           child: Padding(
@@ -274,8 +235,8 @@ class _InformationModalCompanyWidgetState
                         ),
                       ),
                     ),
-                    if ((widget.company?.team != null &&
-                            (widget.company?.team)!.isNotEmpty) ==
+                    if ((widget!.company?.team != null &&
+                            (widget!.company?.team)!.isNotEmpty) ==
                         true)
                       Column(
                         mainAxisSize: MainAxisSize.max,
@@ -305,8 +266,14 @@ class _InformationModalCompanyWidgetState
                               decoration: BoxDecoration(),
                               child: Builder(
                                 builder: (context) {
-                                  final team =
-                                      widget.company?.team?.toList() ?? [];
+                                  final team = widget!.company?.teamMembers
+                                          ?.where((e) =>
+                                              e.teamMember ==
+                                              TeamMemberStatus.Accepted)
+                                          .toList()
+                                          ?.toList() ??
+                                      [];
+
                                   return ListView.separated(
                                     padding: EdgeInsets.fromLTRB(
                                       20.0,
@@ -324,7 +291,7 @@ class _InformationModalCompanyWidgetState
                                       final teamItem = team[teamIndex];
                                       return FutureBuilder<UsersRecord>(
                                         future: UsersRecord.getDocumentOnce(
-                                            teamItem.userReference!),
+                                            teamItem.user!),
                                         builder: (context, snapshot) {
                                           // Customize what your widget looks like when it's loading.
                                           if (!snapshot.hasData) {
@@ -344,8 +311,10 @@ class _InformationModalCompanyWidgetState
                                               ),
                                             );
                                           }
+
                                           final usercardSmallUsersRecord =
                                               snapshot.data!;
+
                                           return InkWell(
                                             splashColor: Colors.transparent,
                                             focusColor: Colors.transparent,
@@ -395,12 +364,12 @@ class _InformationModalCompanyWidgetState
                         ),
                       ),
                     ),
-                    if ((widget.company?.socialmedia?.instagram != null &&
-                            widget.company?.socialmedia?.instagram != '') &&
-                        (widget.company?.socialmedia?.telegram != null &&
-                            widget.company?.socialmedia?.telegram != '') &&
-                        (widget.company?.socialmedia?.email != null &&
-                            widget.company?.socialmedia?.email != ''))
+                    if ((widget!.company?.socialmedia?.instagram != null &&
+                            widget!.company?.socialmedia?.instagram != '') &&
+                        (widget!.company?.socialmedia?.telegram != null &&
+                            widget!.company?.socialmedia?.telegram != '') &&
+                        (widget!.company?.socialmedia?.email != null &&
+                            widget!.company?.socialmedia?.email != ''))
                       Padding(
                         padding:
                             EdgeInsetsDirectional.fromSTEB(20.0, 0.0, 0.0, 8.0),
@@ -416,8 +385,8 @@ class _InformationModalCompanyWidgetState
                                   ),
                         ),
                       ),
-                    if (widget.company?.socialmedia?.email != null &&
-                        widget.company?.socialmedia?.email != '')
+                    if (widget!.company?.socialmedia?.email != null &&
+                        widget!.company?.socialmedia?.email != '')
                       Padding(
                         padding: EdgeInsetsDirectional.fromSTEB(
                             20.0, 8.0, 20.0, 0.0),
@@ -428,7 +397,7 @@ class _InformationModalCompanyWidgetState
                           highlightColor: Colors.transparent,
                           onTap: () async {
                             await Clipboard.setData(ClipboardData(
-                                text: widget.company!.socialmedia.email));
+                                text: widget!.company!.socialmedia.email));
                           },
                           child: Row(
                             mainAxisSize: MainAxisSize.max,
@@ -452,7 +421,7 @@ class _InformationModalCompanyWidgetState
                                       15.0, 0.0, 0.0, 0.0),
                                   child: Text(
                                     valueOrDefault<String>(
-                                      widget.company?.socialmedia?.email,
+                                      widget!.company?.socialmedia?.email,
                                       'email',
                                     ),
                                     style: FlutterFlowTheme.of(context)
@@ -470,8 +439,8 @@ class _InformationModalCompanyWidgetState
                           ),
                         ),
                       ),
-                    if (widget.company?.socialmedia?.instagram != null &&
-                        widget.company?.socialmedia?.instagram != '')
+                    if (widget!.company?.socialmedia?.instagram != null &&
+                        widget!.company?.socialmedia?.instagram != '')
                       Padding(
                         padding: EdgeInsetsDirectional.fromSTEB(
                             20.0, 8.0, 20.0, 0.0),
@@ -500,7 +469,7 @@ class _InformationModalCompanyWidgetState
                                     15.0, 0.0, 0.0, 0.0),
                                 child: Text(
                                   valueOrDefault<String>(
-                                    widget.company?.socialmedia?.instagram,
+                                    widget!.company?.socialmedia?.instagram,
                                     'email',
                                   ),
                                   style: FlutterFlowTheme.of(context)
@@ -517,8 +486,8 @@ class _InformationModalCompanyWidgetState
                           ],
                         ),
                       ),
-                    if (widget.company?.socialmedia?.telegram != null &&
-                        widget.company?.socialmedia?.telegram != '')
+                    if (widget!.company?.socialmedia?.telegram != null &&
+                        widget!.company?.socialmedia?.telegram != '')
                       Padding(
                         padding: EdgeInsetsDirectional.fromSTEB(
                             20.0, 8.0, 20.0, 0.0),
@@ -547,7 +516,7 @@ class _InformationModalCompanyWidgetState
                                     15.0, 0.0, 0.0, 0.0),
                                 child: Text(
                                   valueOrDefault<String>(
-                                    widget.company?.socialmedia?.telegram,
+                                    widget!.company?.socialmedia?.telegram,
                                     'email',
                                   ),
                                   style: FlutterFlowTheme.of(context)
@@ -564,12 +533,12 @@ class _InformationModalCompanyWidgetState
                           ],
                         ),
                       ),
-                    if ((widget.company?.socialmedia?.instagram != null &&
-                            widget.company?.socialmedia?.instagram != '') &&
-                        (widget.company?.socialmedia?.telegram != null &&
-                            widget.company?.socialmedia?.telegram != '') &&
-                        (widget.company?.socialmedia?.email != null &&
-                            widget.company?.socialmedia?.email != ''))
+                    if ((widget!.company?.socialmedia?.instagram != null &&
+                            widget!.company?.socialmedia?.instagram != '') &&
+                        (widget!.company?.socialmedia?.telegram != null &&
+                            widget!.company?.socialmedia?.telegram != '') &&
+                        (widget!.company?.socialmedia?.email != null &&
+                            widget!.company?.socialmedia?.email != ''))
                       Padding(
                         padding: EdgeInsetsDirectional.fromSTEB(
                             0.0, 30.0, 0.0, 30.0),
@@ -581,8 +550,8 @@ class _InformationModalCompanyWidgetState
                           ),
                         ),
                       ),
-                    if ((widget.company?.sections != null &&
-                            (widget.company?.sections)!.isNotEmpty) ==
+                    if ((widget!.company?.sections != null &&
+                            (widget!.company?.sections)!.isNotEmpty) ==
                         true)
                       Padding(
                         padding: EdgeInsetsDirectional.fromSTEB(
@@ -590,9 +559,11 @@ class _InformationModalCompanyWidgetState
                         child: Builder(
                           builder: (context) {
                             final sections =
-                                widget.company?.sections?.toList() ?? [];
+                                widget!.company?.sections?.toList() ?? [];
+
                             return ListView.builder(
                               padding: EdgeInsets.zero,
+                              primary: false,
                               shrinkWrap: true,
                               scrollDirection: Axis.vertical,
                               itemCount: sections.length,
@@ -652,6 +623,47 @@ class _InformationModalCompanyWidgetState
                         ),
                       ),
                   ].addToStart(SizedBox(height: 85.0)),
+                ),
+              ),
+              Container(
+                width: double.infinity,
+                height: 70.0,
+                decoration: BoxDecoration(
+                  color: FlutterFlowTheme.of(context).secondaryBackground,
+                ),
+                child: Padding(
+                  padding:
+                      EdgeInsetsDirectional.fromSTEB(20.0, 15.0, 20.0, 0.0),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        '${widget!.company?.title}',
+                        style: FlutterFlowTheme.of(context).bodyMedium.override(
+                              fontFamily: 'LTSuperior',
+                              fontSize: 16.0,
+                              letterSpacing: 0.0,
+                              fontWeight: FontWeight.w500,
+                              useGoogleFonts: false,
+                            ),
+                      ),
+                      FlutterFlowIconButton(
+                        borderColor: FlutterFlowTheme.of(context).textAndStroke,
+                        borderRadius: 10.0,
+                        borderWidth: 1.0,
+                        buttonSize: 40.0,
+                        icon: Icon(
+                          Icons.close_rounded,
+                          color: FlutterFlowTheme.of(context).primaryText,
+                          size: 24.0,
+                        ),
+                        onPressed: () async {
+                          Navigator.pop(context);
+                        },
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],

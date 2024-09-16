@@ -59,7 +59,7 @@ class QuestionsStruct extends FFFirebaseStruct {
   set options(List<String>? val) => _options = val;
 
   void updateOptions(Function(List<String>) updateFn) {
-    updateFn(options ??= []);
+    updateFn(_options ??= []);
   }
 
   bool hasOptions() => _options != null;
@@ -77,7 +77,7 @@ class QuestionsStruct extends FFFirebaseStruct {
   set multipleAnswer(List<String>? val) => _multipleAnswer = val;
 
   void updateMultipleAnswer(Function(List<String>) updateFn) {
-    updateFn(multipleAnswer ??= []);
+    updateFn(_multipleAnswer ??= []);
   }
 
   bool hasMultipleAnswer() => _multipleAnswer != null;
@@ -95,7 +95,7 @@ class QuestionsStruct extends FFFirebaseStruct {
   set colors(List<Color>? val) => _colors = val;
 
   void updateColors(Function(List<Color>) updateFn) {
-    updateFn(colors ??= []);
+    updateFn(_colors ??= []);
   }
 
   bool hasColors() => _colors != null;

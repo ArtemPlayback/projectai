@@ -39,7 +39,7 @@ class _CopiedWidgetState extends State<CopiedWidget> {
       Navigator.pop(context);
     });
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -61,7 +61,7 @@ class _CopiedWidgetState extends State<CopiedWidget> {
         alignment: AlignmentDirectional(0.0, 0.0),
         child: Text(
           valueOrDefault<String>(
-            widget.text,
+            widget!.text,
             'Copied!',
           ),
           style: FlutterFlowTheme.of(context).bodyMedium.override(

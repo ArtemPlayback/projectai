@@ -1,6 +1,10 @@
 import '/auth/firebase_auth/auth_util.dart';
+import '/backend/api_requests/api_calls.dart';
+import '/backend/api_requests/api_streaming.dart';
 import '/backend/backend.dart';
+import '/backend/schema/enums/enums.dart';
 import '/backend/schema/structs/index.dart';
+import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -8,9 +12,13 @@ import '/flutter_flow/flutter_flow_widgets.dart';
 import '/sign_in_foulder/new_project/button_fixed_size/button_fixed_size_widget.dart';
 import '/sign_in_foulder/new_project/button_infinity/button_infinity_widget.dart';
 import 'dart:async';
+import 'dart:convert';
 import 'dart:ui';
+import '/flutter_flow/custom_functions.dart' as functions;
+import '/flutter_flow/random_data_util.dart' as random_data;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:provider/provider.dart';
@@ -34,16 +42,25 @@ class _CreateProject1WidgetState extends State<CreateProject1Widget> {
     super.initState();
     _model = createModel(context, () => CreateProject1Model());
 
+    // On page load action.
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
+      _model.customId = random_data.randomString(
+        10,
+        12,
+        true,
+        false,
+        true,
+      );
+      safeSetState(() {});
+    });
+
     _model.textController1 ??= TextEditingController();
     _model.textFieldFocusNode1 ??= FocusNode();
 
     _model.textController2 ??= TextEditingController();
     _model.textFieldFocusNode2 ??= FocusNode();
 
-    _model.textController3 ??= TextEditingController();
-    _model.textFieldFocusNode3 ??= FocusNode();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -55,10 +72,10 @@ class _CreateProject1WidgetState extends State<CreateProject1Widget> {
 
   @override
   Widget build(BuildContext context) {
+    context.watch<FFAppState>();
+
     return GestureDetector(
-      onTap: () => _model.unfocusNode.canRequestFocus
-          ? FocusScope.of(context).requestFocus(_model.unfocusNode)
-          : FocusScope.of(context).unfocus(),
+      onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
@@ -71,7 +88,7 @@ class _CreateProject1WidgetState extends State<CreateProject1Widget> {
               child: PageView(
                 controller: _model.pageViewController ??=
                     PageController(initialPage: 0),
-                onPageChanged: (_) => setState(() {}),
+                onPageChanged: (_) => safeSetState(() {}),
                 scrollDirection: Axis.horizontal,
                 children: [
                   SingleChildScrollView(
@@ -91,7 +108,7 @@ class _CreateProject1WidgetState extends State<CreateProject1Widget> {
                                   fontFamily: 'LTSuperior',
                                   fontSize: 35.0,
                                   letterSpacing: 0.0,
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight: FontWeight.w600,
                                   useGoogleFonts: false,
                                   lineHeight: 1.2,
                                 ),
@@ -394,7 +411,7 @@ class _CreateProject1WidgetState extends State<CreateProject1Widget> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Project\'s name',
+                            'Company\'s name',
                             style: FlutterFlowTheme.of(context)
                                 .bodyMedium
                                 .override(
@@ -409,7 +426,7 @@ class _CreateProject1WidgetState extends State<CreateProject1Widget> {
                             padding: EdgeInsetsDirectional.fromSTEB(
                                 0.0, 7.0, 0.0, 0.0),
                             child: Text(
-                              'Remember: the more you tell us, the more suitable participants will find your event',
+                              'Remember: the more you tell us, the more suitable users will find you company',
                               style: FlutterFlowTheme.of(context)
                                   .bodyMedium
                                   .override(
@@ -510,6 +527,7 @@ class _CreateProject1WidgetState extends State<CreateProject1Widget> {
                                             required isFocused,
                                             maxLength}) =>
                                         null,
+                                    keyboardType: TextInputType.name,
                                     validator: _model.textController1Validator
                                         .asValidator(context),
                                   ),
@@ -533,145 +551,7 @@ class _CreateProject1WidgetState extends State<CreateProject1Widget> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Two words about project',
-                            style: FlutterFlowTheme.of(context)
-                                .bodyMedium
-                                .override(
-                                  fontFamily: 'LTSuperior',
-                                  fontSize: 24.0,
-                                  letterSpacing: 0.0,
-                                  fontWeight: FontWeight.w600,
-                                  useGoogleFonts: false,
-                                ),
-                          ),
-                          Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                0.0, 7.0, 0.0, 0.0),
-                            child: Text(
-                              'Share your project in 15 words so people quickly understand what your company does',
-                              style: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .override(
-                                    fontFamily: 'LTSuperior',
-                                    color: FlutterFlowTheme.of(context)
-                                        .secondaryText,
-                                    letterSpacing: 0.0,
-                                    useGoogleFonts: false,
-                                  ),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                0.0, 35.0, 0.0, 0.0),
-                            child: Container(
-                              decoration: BoxDecoration(),
-                              child: Stack(
-                                alignment: AlignmentDirectional(1.0, 1.0),
-                                children: [
-                                  TextFormField(
-                                    controller: _model.textController2,
-                                    focusNode: _model.textFieldFocusNode2,
-                                    autofocus: false,
-                                    textCapitalization:
-                                        TextCapitalization.sentences,
-                                    textInputAction: TextInputAction.next,
-                                    obscureText: false,
-                                    decoration: InputDecoration(
-                                      hintText: 'Short description',
-                                      hintStyle: FlutterFlowTheme.of(context)
-                                          .labelMedium
-                                          .override(
-                                            fontFamily: 'LTSuperior',
-                                            color: FlutterFlowTheme.of(context)
-                                                .textAndStroke,
-                                            letterSpacing: 0.0,
-                                            useGoogleFonts: false,
-                                          ),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: FlutterFlowTheme.of(context)
-                                              .textAndStroke,
-                                          width: 1.0,
-                                        ),
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: FlutterFlowTheme.of(context)
-                                              .thirdText,
-                                          width: 1.0,
-                                        ),
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
-                                      ),
-                                      errorBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: FlutterFlowTheme.of(context)
-                                              .error,
-                                          width: 1.0,
-                                        ),
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
-                                      ),
-                                      focusedErrorBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: FlutterFlowTheme.of(context)
-                                              .error,
-                                          width: 1.0,
-                                        ),
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
-                                      ),
-                                      filled: true,
-                                      fillColor: FlutterFlowTheme.of(context)
-                                          .whiteBlur,
-                                      contentPadding:
-                                          EdgeInsetsDirectional.fromSTEB(
-                                              18.0, 15.0, 18.0, 15.0),
-                                    ),
-                                    style: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .override(
-                                          fontFamily: 'LTSuperior',
-                                          color: FlutterFlowTheme.of(context)
-                                              .primaryText,
-                                          letterSpacing: 0.0,
-                                          fontWeight: FontWeight.normal,
-                                          useGoogleFonts: false,
-                                        ),
-                                    maxLines: 2,
-                                    minLines: 2,
-                                    maxLength: 75,
-                                    buildCounter: (context,
-                                            {required currentLength,
-                                            required isFocused,
-                                            maxLength}) =>
-                                        null,
-                                    validator: _model.textController2Validator
-                                        .asValidator(context),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ]
-                            .addToStart(SizedBox(height: 146.0))
-                            .addToEnd(SizedBox(height: 180.0)),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding:
-                        EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
-                    child: SingleChildScrollView(
-                      primary: false,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.max,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Project\'s description',
+                            'Company\'s description',
                             style: FlutterFlowTheme.of(context)
                                 .bodyMedium
                                 .override(
@@ -707,8 +587,8 @@ class _CreateProject1WidgetState extends State<CreateProject1Widget> {
                                 alignment: AlignmentDirectional(1.0, 1.0),
                                 children: [
                                   TextFormField(
-                                    controller: _model.textController3,
-                                    focusNode: _model.textFieldFocusNode3,
+                                    controller: _model.textController2,
+                                    focusNode: _model.textFieldFocusNode2,
                                     autofocus: false,
                                     textCapitalization:
                                         TextCapitalization.sentences,
@@ -780,13 +660,7 @@ class _CreateProject1WidgetState extends State<CreateProject1Widget> {
                                         ),
                                     maxLines: null,
                                     minLines: 6,
-                                    maxLength: 500,
-                                    buildCounter: (context,
-                                            {required currentLength,
-                                            required isFocused,
-                                            maxLength}) =>
-                                        null,
-                                    validator: _model.textController3Validator
+                                    validator: _model.textController2Validator
                                         .asValidator(context),
                                   ),
                                 ],
@@ -855,7 +729,7 @@ class _CreateProject1WidgetState extends State<CreateProject1Widget> {
                                                 width:
                                                     MediaQuery.sizeOf(context)
                                                             .width *
-                                                        0.3,
+                                                        0.44,
                                                 lineHeight: 7.0,
                                                 animation: true,
                                                 animateFromLastPercent: true,
@@ -886,38 +760,7 @@ class _CreateProject1WidgetState extends State<CreateProject1Widget> {
                                                 width:
                                                     MediaQuery.sizeOf(context)
                                                             .width *
-                                                        0.3,
-                                                lineHeight: 7.0,
-                                                animation: true,
-                                                animateFromLastPercent: true,
-                                                progressColor:
-                                                    FlutterFlowTheme.of(context)
-                                                        .primary,
-                                                backgroundColor:
-                                                    Color(0x82A3A3B3),
-                                                padding: EdgeInsets.zero,
-                                              ),
-                                            ),
-                                            Container(
-                                              width: 4.0,
-                                              height: 7.0,
-                                              decoration: BoxDecoration(
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .secondaryBackground,
-                                              ),
-                                            ),
-                                            Expanded(
-                                              child: LinearPercentIndicator(
-                                                percent:
-                                                    _model.pageViewCurrentIndex >=
-                                                            3
-                                                        ? 1.0
-                                                        : 0.0,
-                                                width:
-                                                    MediaQuery.sizeOf(context)
-                                                            .width *
-                                                        0.3,
+                                                        0.44,
                                                 lineHeight: 7.0,
                                                 animation: true,
                                                 animateFromLastPercent: true,
@@ -1008,7 +851,7 @@ class _CreateProject1WidgetState extends State<CreateProject1Widget> {
                                               model:
                                                   _model.buttonFixedSizeModel1,
                                               updateCallback: () =>
-                                                  setState(() {}),
+                                                  safeSetState(() {}),
                                               child: ButtonFixedSizeWidget(
                                                 width: 150.0,
                                                 height: 43.0,
@@ -1024,11 +867,11 @@ class _CreateProject1WidgetState extends State<CreateProject1Widget> {
                                                 textcolor:
                                                     FlutterFlowTheme.of(context)
                                                         .info,
-                                                showLoadingIndicator: false,
+                                                showLoadingIndicator: true,
                                                 action: () async {
                                                   if (_model
                                                           .pageViewCurrentIndex !=
-                                                      3) {
+                                                      2) {
                                                     await _model
                                                         .pageViewController
                                                         ?.nextPage(
@@ -1037,6 +880,15 @@ class _CreateProject1WidgetState extends State<CreateProject1Widget> {
                                                       curve: Curves.ease,
                                                     );
                                                   } else {
+                                                    _model.descrioptionCompany =
+                                                        await ShortDescriptionCompanyCall
+                                                            .call(
+                                                      question: functions
+                                                          .stringToAPI(_model
+                                                              .textController2
+                                                              .text),
+                                                    );
+
                                                     var projectsRecordReference =
                                                         ProjectsRecord
                                                             .collection
@@ -1055,16 +907,22 @@ class _CreateProject1WidgetState extends State<CreateProject1Widget> {
                                                             description: _model
                                                                 .textController2
                                                                 .text,
-                                                            shortDescription: _model
-                                                                .textController2
-                                                                .text,
+                                                            shortDescription:
+                                                                getJsonField(
+                                                              (_model.descrioptionCompany
+                                                                      ?.jsonBody ??
+                                                                  ''),
+                                                              r'''$.text''',
+                                                            ).toString(),
                                                           ),
                                                           clearUnsetFields:
                                                               false,
                                                           create: true,
                                                         ),
                                                         mainImage:
-                                                            'https://firebasestorage.googleapis.com/v0/b/project-e33e5.appspot.com/o/placeholder%20company.png?alt=media&token=2808caf2-01cb-4434-9d4c-3f16d9ebfab5',
+                                                            'https://firebasestorage.googleapis.com/v0/b/project-e33e5.appspot.com/o/image%20221.png?alt=media&token=346ca1fb-a801-413f-b40b-881b9d5e8be7',
+                                                        customId:
+                                                            _model.customId,
                                                       ),
                                                       ...mapToFirestore(
                                                         {
@@ -1072,11 +930,32 @@ class _CreateProject1WidgetState extends State<CreateProject1Widget> {
                                                             getTeamMemberFirestoreData(
                                                               updateTeamMemberStruct(
                                                                 TeamMemberStruct(
-                                                                  userReference:
-                                                                      currentUserReference,
                                                                   role: 'Owner',
                                                                   description:
                                                                       'Owner of this company',
+                                                                  teamMember:
+                                                                      TeamMemberStatus
+                                                                          .Accepted,
+                                                                  user:
+                                                                      currentUserReference,
+                                                                ),
+                                                                clearUnsetFields:
+                                                                    false,
+                                                                create: true,
+                                                              ),
+                                                              true,
+                                                            )
+                                                          ],
+                                                          'team_members': [
+                                                            getTeamMemberFirestoreData(
+                                                              updateTeamMemberStruct(
+                                                                TeamMemberStruct(
+                                                                  role: 'Owner',
+                                                                  teamMember:
+                                                                      TeamMemberStatus
+                                                                          .Accepted,
+                                                                  user:
+                                                                      currentUserReference,
                                                                 ),
                                                                 clearUnsetFields:
                                                                     false,
@@ -1103,16 +982,22 @@ class _CreateProject1WidgetState extends State<CreateProject1Widget> {
                                                             description: _model
                                                                 .textController2
                                                                 .text,
-                                                            shortDescription: _model
-                                                                .textController2
-                                                                .text,
+                                                            shortDescription:
+                                                                getJsonField(
+                                                              (_model.descrioptionCompany
+                                                                      ?.jsonBody ??
+                                                                  ''),
+                                                              r'''$.text''',
+                                                            ).toString(),
                                                           ),
                                                           clearUnsetFields:
                                                               false,
                                                           create: true,
                                                         ),
                                                         mainImage:
-                                                            'https://firebasestorage.googleapis.com/v0/b/project-e33e5.appspot.com/o/placeholder%20company.png?alt=media&token=2808caf2-01cb-4434-9d4c-3f16d9ebfab5',
+                                                            'https://firebasestorage.googleapis.com/v0/b/project-e33e5.appspot.com/o/image%20221.png?alt=media&token=346ca1fb-a801-413f-b40b-881b9d5e8be7',
+                                                        customId:
+                                                            _model.customId,
                                                       ),
                                                       ...mapToFirestore(
                                                         {
@@ -1120,11 +1005,32 @@ class _CreateProject1WidgetState extends State<CreateProject1Widget> {
                                                             getTeamMemberFirestoreData(
                                                               updateTeamMemberStruct(
                                                                 TeamMemberStruct(
-                                                                  userReference:
-                                                                      currentUserReference,
                                                                   role: 'Owner',
                                                                   description:
                                                                       'Owner of this company',
+                                                                  teamMember:
+                                                                      TeamMemberStatus
+                                                                          .Accepted,
+                                                                  user:
+                                                                      currentUserReference,
+                                                                ),
+                                                                clearUnsetFields:
+                                                                    false,
+                                                                create: true,
+                                                              ),
+                                                              true,
+                                                            )
+                                                          ],
+                                                          'team_members': [
+                                                            getTeamMemberFirestoreData(
+                                                              updateTeamMemberStruct(
+                                                                TeamMemberStruct(
+                                                                  role: 'Owner',
+                                                                  teamMember:
+                                                                      TeamMemberStatus
+                                                                          .Accepted,
+                                                                  user:
+                                                                      currentUserReference,
                                                                 ),
                                                                 clearUnsetFields:
                                                                     false,
@@ -1136,8 +1042,43 @@ class _CreateProject1WidgetState extends State<CreateProject1Widget> {
                                                         },
                                                       ),
                                                     }, projectsRecordReference);
-                                                    FFAppState()
-                                                        .clearProjectsProfileCache();
+                                                    await UpsertVectorsNeightnCall
+                                                        .call(
+                                                      upsertText:
+                                                          functions.stringToAPI(
+                                                              'firebase_id: ${_model.project?.customId}, title: ${_model.textController1.text}, short description:${getJsonField(
+                                                        (_model.descrioptionCompany
+                                                                ?.jsonBody ??
+                                                            ''),
+                                                        r'''$.text''',
+                                                      ).toString()}, description: ${_model.textController2.text}, sections: ${functions.jsonListToText(FFAppState().sections.map((e) => e.toMap()).toList(), null)}'),
+                                                      ownerType: 'person',
+                                                      owner: currentUserUid,
+                                                      documentId:
+                                                          _model.customId,
+                                                    );
+
+                                                    await Future.delayed(
+                                                        const Duration(
+                                                            milliseconds: 200));
+                                                    await DocumentsTable()
+                                                        .update(
+                                                      data: {
+                                                        'firebase_id':
+                                                            _model.customId,
+                                                      },
+                                                      matchingRows: (rows) =>
+                                                          rows.eq(
+                                                        'content',
+                                                        functions.stringToAPI(
+                                                            'firebase_id: ${_model.project?.customId}, title: ${_model.textController1.text}, short description:${getJsonField(
+                                                          (_model.descrioptionCompany
+                                                                  ?.jsonBody ??
+                                                              ''),
+                                                          r'''$.text''',
+                                                        ).toString()}, description: ${_model.textController2.text}, sections: ${functions.jsonListToText(FFAppState().sections.map((e) => e.toMap()).toList(), null)}'),
+                                                      ),
+                                                    );
                                                     unawaited(
                                                       () async {
                                                         await currentUserReference!
@@ -1164,6 +1105,11 @@ class _CreateProject1WidgetState extends State<CreateProject1Widget> {
                                                           _model.project,
                                                           ParamType.Document,
                                                         ),
+                                                        'isFrom':
+                                                            serializeParam(
+                                                          'create',
+                                                          ParamType.String,
+                                                        ),
                                                       }.withoutNulls,
                                                       extra: <String, dynamic>{
                                                         'company':
@@ -1172,7 +1118,7 @@ class _CreateProject1WidgetState extends State<CreateProject1Widget> {
                                                     );
                                                   }
 
-                                                  setState(() {});
+                                                  safeSetState(() {});
                                                 },
                                               ),
                                             ),
@@ -1190,14 +1136,14 @@ class _CreateProject1WidgetState extends State<CreateProject1Widget> {
                             alignment: AlignmentDirectional(0.0, 1.0),
                             child: Padding(
                               padding: EdgeInsetsDirectional.fromSTEB(
-                                  30.0, 0.0, 30.0, 50.0),
+                                  30.0, 0.0, 30.0, 25.0),
                               child: Container(
                                 width: double.infinity,
                                 height: 49.0,
                                 decoration: BoxDecoration(),
                                 child: wrapWithModel(
                                   model: _model.buttonInfinityModel,
-                                  updateCallback: () => setState(() {}),
+                                  updateCallback: () => safeSetState(() {}),
                                   child: ButtonInfinityWidget(
                                     width: 450.0,
                                     height: 49.0,
@@ -1254,7 +1200,7 @@ class _CreateProject1WidgetState extends State<CreateProject1Widget> {
                   ),
                   child: Container(
                     width: double.infinity,
-                    height: 102.0,
+                    height: 120.0,
                     decoration: BoxDecoration(
                       color: FlutterFlowTheme.of(context).mainThemeBlur,
                     ),
@@ -1267,10 +1213,10 @@ class _CreateProject1WidgetState extends State<CreateProject1Widget> {
                           alignment: AlignmentDirectional(-1.0, 1.0),
                           child: Padding(
                             padding: EdgeInsetsDirectional.fromSTEB(
-                                24.0, 15.0, 0.0, 17.0),
+                                24.0, 20.0, 0.0, 17.0),
                             child: wrapWithModel(
                               model: _model.buttonFixedSizeModel2,
-                              updateCallback: () => setState(() {}),
+                              updateCallback: () => safeSetState(() {}),
                               child: ButtonFixedSizeWidget(
                                 width: 130.0,
                                 height: 38.0,

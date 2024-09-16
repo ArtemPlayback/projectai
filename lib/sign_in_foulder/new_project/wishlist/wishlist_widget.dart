@@ -1,10 +1,11 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/backend/schema/structs/index.dart';
+import '/components/company_small_card_widget.dart';
 import '/components/event_card_small_widget.dart';
 import '/components/navigationbar_widget.dart';
 import '/components/product_card_small_widget.dart';
-import '/components/project_small_card_widget.dart';
+import '/components/toggle_widget.dart';
 import '/components/usercard_small_widget.dart';
 import '/components/wishlist_events_empty_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -12,10 +13,12 @@ import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/sign_in_foulder/new_project/button_fixed_size/button_fixed_size_widget.dart';
 import '/sign_in_foulder/new_project/event_card/event_card_widget.dart';
+import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'wishlist_model.dart';
@@ -58,7 +61,7 @@ class _WishlistWidgetState extends State<WishlistWidget> {
       );
     });
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -71,9 +74,7 @@ class _WishlistWidgetState extends State<WishlistWidget> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => _model.unfocusNode.canRequestFocus
-          ? FocusScope.of(context).requestFocus(_model.unfocusNode)
-          : FocusScope.of(context).unfocus(),
+      onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
@@ -103,189 +104,473 @@ class _WishlistWidgetState extends State<WishlistWidget> {
                                       Column(
                                         mainAxisSize: MainAxisSize.max,
                                         children: [
-                                          Container(
-                                            width: double.infinity,
-                                            decoration: BoxDecoration(
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .secondaryBackground,
-                                              borderRadius:
-                                                  BorderRadius.circular(15.0),
-                                            ),
-                                            child: Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(
-                                                      0.0, 0.0, 0.0, 20.0),
-                                              child: Column(
-                                                mainAxisSize: MainAxisSize.max,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Padding(
-                                                    padding:
-                                                        EdgeInsetsDirectional
-                                                            .fromSTEB(20.0,
-                                                                20.0, 0.0, 0.0),
-                                                    child: Text(
-                                                      'Saved events',
-                                                      style: FlutterFlowTheme
-                                                              .of(context)
-                                                          .bodyMedium
-                                                          .override(
-                                                            fontFamily:
-                                                                'LTSuperior',
-                                                            fontSize: 18.0,
-                                                            letterSpacing: 0.0,
-                                                            fontWeight:
-                                                                FontWeight.w600,
-                                                            useGoogleFonts:
-                                                                false,
-                                                          ),
-                                                    ),
-                                                  ),
-                                                  if ((currentUserDocument
-                                                                  ?.saved
-                                                                  ?.toList() ??
-                                                              [])
-                                                          .where((e) =>
-                                                              e.events != null)
-                                                          .toList()
-                                                          .length !=
-                                                      0)
-                                                    Padding(
-                                                      padding:
-                                                          EdgeInsetsDirectional
-                                                              .fromSTEB(
-                                                                  0.0,
-                                                                  15.0,
-                                                                  0.0,
-                                                                  0.0),
-                                                      child: Container(
-                                                        height: 310.0,
-                                                        decoration:
-                                                            BoxDecoration(),
-                                                        child: Builder(
-                                                          builder: (context) {
-                                                            final saved = (currentUserDocument
-                                                                        ?.saved
-                                                                        ?.toList() ??
-                                                                    [])
-                                                                .where((e) =>
-                                                                    e.events !=
-                                                                    null)
-                                                                .toList();
-                                                            return ListView
-                                                                .separated(
-                                                              padding:
-                                                                  EdgeInsets
-                                                                      .fromLTRB(
-                                                                20.0,
-                                                                0,
-                                                                20.0,
-                                                                0,
+                                          if ((currentUserDocument?.saved
+                                                          ?.toList() ??
+                                                      [])
+                                                  .where(
+                                                      (e) => e.events != null)
+                                                  .toList()
+                                                  .length !=
+                                              0)
+                                            Container(
+                                              width: double.infinity,
+                                              decoration: BoxDecoration(
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .secondaryBackground,
+                                                borderRadius:
+                                                    BorderRadius.circular(15.0),
+                                              ),
+                                              child: Padding(
+                                                padding: EdgeInsetsDirectional
+                                                    .fromSTEB(
+                                                        0.0, 0.0, 0.0, 20.0),
+                                                child: Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.max,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    if ((currentUserDocument
+                                                                    ?.saved
+                                                                    ?.toList() ??
+                                                                [])
+                                                            .where((e) =>
+                                                                e.events !=
+                                                                null)
+                                                            .toList()
+                                                            .length !=
+                                                        0)
+                                                      Padding(
+                                                        padding:
+                                                            EdgeInsetsDirectional
+                                                                .fromSTEB(
+                                                                    20.0,
+                                                                    20.0,
+                                                                    0.0,
+                                                                    0.0),
+                                                        child: Text(
+                                                          'Saved events',
+                                                          style: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .bodyMedium
+                                                              .override(
+                                                                fontFamily:
+                                                                    'LTSuperior',
+                                                                fontSize: 18.0,
+                                                                letterSpacing:
+                                                                    0.0,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600,
+                                                                useGoogleFonts:
+                                                                    false,
                                                               ),
-                                                              primary: false,
-                                                              shrinkWrap: true,
-                                                              scrollDirection:
-                                                                  Axis.horizontal,
-                                                              itemCount:
-                                                                  saved.length,
-                                                              separatorBuilder: (_,
-                                                                      __) =>
-                                                                  SizedBox(
-                                                                      width:
-                                                                          12.0),
-                                                              itemBuilder:
-                                                                  (context,
-                                                                      savedIndex) {
-                                                                final savedItem =
-                                                                    saved[
-                                                                        savedIndex];
-                                                                return Container(
-                                                                  decoration:
-                                                                      BoxDecoration(),
-                                                                  child: FutureBuilder<
-                                                                      EventsRecord>(
-                                                                    future: EventsRecord.getDocumentOnce(
-                                                                        savedItem
-                                                                            .events!),
-                                                                    builder:
-                                                                        (context,
-                                                                            snapshot) {
-                                                                      // Customize what your widget looks like when it's loading.
-                                                                      if (!snapshot
-                                                                          .hasData) {
-                                                                        return Center(
-                                                                          child:
-                                                                              SizedBox(
-                                                                            width:
-                                                                                50,
-                                                                            height:
-                                                                                50,
-                                                                            child:
-                                                                                CircularProgressIndicator(
-                                                                              valueColor: AlwaysStoppedAnimation<Color>(
-                                                                                Color(0x06007AFF),
-                                                                              ),
-                                                                            ),
-                                                                          ),
-                                                                        );
-                                                                      }
-                                                                      final eventCardSmallEventsRecord =
-                                                                          snapshot
-                                                                              .data!;
-                                                                      return InkWell(
-                                                                        splashColor:
-                                                                            Colors.transparent,
-                                                                        focusColor:
-                                                                            Colors.transparent,
-                                                                        hoverColor:
-                                                                            Colors.transparent,
-                                                                        highlightColor:
-                                                                            Colors.transparent,
-                                                                        onTap:
-                                                                            () async {
-                                                                          context
-                                                                              .pushNamed(
-                                                                            'event_page',
-                                                                            queryParameters:
-                                                                                {
-                                                                              'events': serializeParam(
-                                                                                eventCardSmallEventsRecord,
-                                                                                ParamType.Document,
-                                                                              ),
-                                                                              'isFrom': serializeParam(
-                                                                                'profile',
-                                                                                ParamType.String,
-                                                                              ),
-                                                                            }.withoutNulls,
-                                                                            extra: <String,
-                                                                                dynamic>{
-                                                                              'events': eventCardSmallEventsRecord,
-                                                                            },
-                                                                          );
-                                                                        },
-                                                                        child:
-                                                                            EventCardSmallWidget(
-                                                                          key: Key(
-                                                                              'Keyj90_${savedIndex}_of_${saved.length}'),
-                                                                          event:
-                                                                              eventCardSmallEventsRecord,
-                                                                        ),
-                                                                      );
-                                                                    },
-                                                                  ),
-                                                                );
-                                                              },
-                                                            );
-                                                          },
                                                         ),
                                                       ),
-                                                    ),
-                                                ],
+                                                    if ((currentUserDocument
+                                                                    ?.saved
+                                                                    ?.toList() ??
+                                                                [])
+                                                            .where((e) =>
+                                                                e.events !=
+                                                                null)
+                                                            .toList()
+                                                            .length !=
+                                                        0)
+                                                      Padding(
+                                                        padding:
+                                                            EdgeInsetsDirectional
+                                                                .fromSTEB(
+                                                                    0.0,
+                                                                    15.0,
+                                                                    0.0,
+                                                                    0.0),
+                                                        child: Container(
+                                                          height: 310.0,
+                                                          decoration:
+                                                              BoxDecoration(),
+                                                          child: Builder(
+                                                            builder: (context) {
+                                                              if (_model.events
+                                                                      ?.length !=
+                                                                  1) {
+                                                                return Builder(
+                                                                  builder:
+                                                                      (context) {
+                                                                    final saved = (currentUserDocument?.saved?.toList() ??
+                                                                            [])
+                                                                        .where((e) =>
+                                                                            e.events !=
+                                                                            null)
+                                                                        .toList();
+
+                                                                    return ListView
+                                                                        .separated(
+                                                                      padding:
+                                                                          EdgeInsets
+                                                                              .fromLTRB(
+                                                                        20.0,
+                                                                        0,
+                                                                        20.0,
+                                                                        0,
+                                                                      ),
+                                                                      primary:
+                                                                          false,
+                                                                      shrinkWrap:
+                                                                          true,
+                                                                      scrollDirection:
+                                                                          Axis.horizontal,
+                                                                      itemCount:
+                                                                          saved
+                                                                              .length,
+                                                                      separatorBuilder: (_,
+                                                                              __) =>
+                                                                          SizedBox(
+                                                                              width: 12.0),
+                                                                      itemBuilder:
+                                                                          (context,
+                                                                              savedIndex) {
+                                                                        final savedItem =
+                                                                            saved[savedIndex];
+                                                                        return Container(
+                                                                          decoration:
+                                                                              BoxDecoration(),
+                                                                          child:
+                                                                              FutureBuilder<EventsRecord>(
+                                                                            future:
+                                                                                EventsRecord.getDocumentOnce(savedItem.events!),
+                                                                            builder:
+                                                                                (context, snapshot) {
+                                                                              // Customize what your widget looks like when it's loading.
+                                                                              if (!snapshot.hasData) {
+                                                                                return Center(
+                                                                                  child: SizedBox(
+                                                                                    width: 50,
+                                                                                    height: 50,
+                                                                                    child: CircularProgressIndicator(
+                                                                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                                                                        Color(0x06007AFF),
+                                                                                      ),
+                                                                                    ),
+                                                                                  ),
+                                                                                );
+                                                                              }
+
+                                                                              final eventCardSmallEventsRecord = snapshot.data!;
+
+                                                                              return InkWell(
+                                                                                splashColor: Colors.transparent,
+                                                                                focusColor: Colors.transparent,
+                                                                                hoverColor: Colors.transparent,
+                                                                                highlightColor: Colors.transparent,
+                                                                                onTap: () async {
+                                                                                  context.pushNamed(
+                                                                                    'event_page',
+                                                                                    queryParameters: {
+                                                                                      'events': serializeParam(
+                                                                                        eventCardSmallEventsRecord,
+                                                                                        ParamType.Document,
+                                                                                      ),
+                                                                                      'isFrom': serializeParam(
+                                                                                        'profile',
+                                                                                        ParamType.String,
+                                                                                      ),
+                                                                                    }.withoutNulls,
+                                                                                    extra: <String, dynamic>{
+                                                                                      'events': eventCardSmallEventsRecord,
+                                                                                    },
+                                                                                  );
+                                                                                },
+                                                                                child: EventCardSmallWidget(
+                                                                                  key: Key('Keyj90_${savedIndex}_of_${saved.length}'),
+                                                                                  event: eventCardSmallEventsRecord,
+                                                                                ),
+                                                                              );
+                                                                            },
+                                                                          ),
+                                                                        );
+                                                                      },
+                                                                    );
+                                                                  },
+                                                                );
+                                                              } else {
+                                                                return Padding(
+                                                                  padding: EdgeInsetsDirectional
+                                                                      .fromSTEB(
+                                                                          20.0,
+                                                                          0.0,
+                                                                          20.0,
+                                                                          0.0),
+                                                                  child:
+                                                                      InkWell(
+                                                                    splashColor:
+                                                                        Colors
+                                                                            .transparent,
+                                                                    focusColor:
+                                                                        Colors
+                                                                            .transparent,
+                                                                    hoverColor:
+                                                                        Colors
+                                                                            .transparent,
+                                                                    highlightColor:
+                                                                        Colors
+                                                                            .transparent,
+                                                                    onTap:
+                                                                        () async {
+                                                                      context
+                                                                          .pushNamed(
+                                                                        'event_page',
+                                                                        queryParameters:
+                                                                            {
+                                                                          'events':
+                                                                              serializeParam(
+                                                                            _model.events?.first,
+                                                                            ParamType.Document,
+                                                                          ),
+                                                                          'isFrom':
+                                                                              serializeParam(
+                                                                            'wishlist',
+                                                                            ParamType.String,
+                                                                          ),
+                                                                        }.withoutNulls,
+                                                                        extra: <String,
+                                                                            dynamic>{
+                                                                          'events': _model
+                                                                              .events
+                                                                              ?.first,
+                                                                        },
+                                                                      );
+                                                                    },
+                                                                    child:
+                                                                        Column(
+                                                                      mainAxisSize:
+                                                                          MainAxisSize
+                                                                              .max,
+                                                                      crossAxisAlignment:
+                                                                          CrossAxisAlignment
+                                                                              .start,
+                                                                      children: [
+                                                                        Align(
+                                                                          alignment: AlignmentDirectional(
+                                                                              1.0,
+                                                                              -1.0),
+                                                                          child:
+                                                                              Stack(
+                                                                            alignment:
+                                                                                AlignmentDirectional(1.0, -1.0),
+                                                                            children: [
+                                                                              Align(
+                                                                                alignment: AlignmentDirectional(-1.0, 0.0),
+                                                                                child: Padding(
+                                                                                  padding: EdgeInsetsDirectional.fromSTEB(2.0, 0.0, 0.0, 0.0),
+                                                                                  child: Builder(
+                                                                                    builder: (context) {
+                                                                                      final images = _model.events?.first?.eventInfo?.images?.toList() ?? [];
+
+                                                                                      return Container(
+                                                                                        width: double.infinity,
+                                                                                        height: 215.0,
+                                                                                        child: PageView.builder(
+                                                                                          physics: const NeverScrollableScrollPhysics(),
+                                                                                          controller: _model.pageViewController ??= PageController(initialPage: max(0, min(0, images.length - 1))),
+                                                                                          scrollDirection: Axis.horizontal,
+                                                                                          itemCount: images.length,
+                                                                                          itemBuilder: (context, imagesIndex) {
+                                                                                            final imagesItem = images[imagesIndex];
+                                                                                            return ClipRRect(
+                                                                                              borderRadius: BorderRadius.circular(8.0),
+                                                                                              child: Image.network(
+                                                                                                valueOrDefault<String>(
+                                                                                                  imagesItem,
+                                                                                                  'https://as1.ftcdn.net/v2/jpg/05/85/45/22/1000_F_585452272_Ci6U9qLUPiqiLF15Zk5e4x8a0slzhHgV.jpg',
+                                                                                                ),
+                                                                                                width: 300.0,
+                                                                                                height: 200.0,
+                                                                                                fit: BoxFit.cover,
+                                                                                              ),
+                                                                                            );
+                                                                                          },
+                                                                                        ),
+                                                                                      );
+                                                                                    },
+                                                                                  ),
+                                                                                ),
+                                                                              ),
+                                                                              Align(
+                                                                                alignment: AlignmentDirectional(1.0, -1.0),
+                                                                                child: Padding(
+                                                                                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 10.0, 0.0),
+                                                                                  child: wrapWithModel(
+                                                                                    model: _model.toggleModel,
+                                                                                    updateCallback: () => safeSetState(() {}),
+                                                                                    updateOnChange: true,
+                                                                                    child: ToggleWidget(
+                                                                                      boolean: (currentUserDocument?.saved?.toList() ?? []).where((e) => e.events == _model.events?.first?.reference).toList().length > 0,
+                                                                                      toggleOn: () async {
+                                                                                        unawaited(
+                                                                                          () async {
+                                                                                            await currentUserReference!.update({
+                                                                                              ...mapToFirestore(
+                                                                                                {
+                                                                                                  'saved': FieldValue.arrayUnion([
+                                                                                                    getSavedFirestoreData(
+                                                                                                      updateSavedStruct(
+                                                                                                        SavedStruct(
+                                                                                                          events: _model.events?.first?.reference,
+                                                                                                        ),
+                                                                                                        clearUnsetFields: false,
+                                                                                                      ),
+                                                                                                      true,
+                                                                                                    )
+                                                                                                  ]),
+                                                                                                },
+                                                                                              ),
+                                                                                            });
+                                                                                          }(),
+                                                                                        );
+                                                                                      },
+                                                                                      toggleOff: () async {
+                                                                                        unawaited(
+                                                                                          () async {
+                                                                                            await currentUserReference!.update({
+                                                                                              ...mapToFirestore(
+                                                                                                {
+                                                                                                  'saved': FieldValue.arrayUnion([
+                                                                                                    getSavedFirestoreData(
+                                                                                                      updateSavedStruct(
+                                                                                                        SavedStruct(
+                                                                                                          events: _model.events?.first?.reference,
+                                                                                                        ),
+                                                                                                        clearUnsetFields: false,
+                                                                                                      ),
+                                                                                                      true,
+                                                                                                    )
+                                                                                                  ]),
+                                                                                                },
+                                                                                              ),
+                                                                                            });
+                                                                                          }(),
+                                                                                        );
+                                                                                      },
+                                                                                    ),
+                                                                                  ),
+                                                                                ),
+                                                                              ),
+                                                                            ],
+                                                                          ),
+                                                                        ),
+                                                                        Padding(
+                                                                          padding: EdgeInsetsDirectional.fromSTEB(
+                                                                              0.0,
+                                                                              10.0,
+                                                                              0.0,
+                                                                              0.0),
+                                                                          child:
+                                                                              Text(
+                                                                            valueOrDefault<String>(
+                                                                              _model.events?.first?.eventInfo?.title,
+                                                                              'event',
+                                                                            ).maybeHandleOverflow(maxChars: 30),
+                                                                            maxLines:
+                                                                                1,
+                                                                            style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                  fontFamily: 'LTSuperior',
+                                                                                  fontSize: 18.0,
+                                                                                  letterSpacing: 0.0,
+                                                                                  fontWeight: FontWeight.w600,
+                                                                                  useGoogleFonts: false,
+                                                                                ),
+                                                                          ),
+                                                                        ),
+                                                                        Padding(
+                                                                          padding: EdgeInsetsDirectional.fromSTEB(
+                                                                              0.0,
+                                                                              8.0,
+                                                                              0.0,
+                                                                              0.0),
+                                                                          child:
+                                                                              Row(
+                                                                            mainAxisSize:
+                                                                                MainAxisSize.max,
+                                                                            children: [
+                                                                              Padding(
+                                                                                padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 9.0, 0.0),
+                                                                                child: FaIcon(
+                                                                                  FontAwesomeIcons.locationArrow,
+                                                                                  color: FlutterFlowTheme.of(context).primary,
+                                                                                  size: 18.0,
+                                                                                ),
+                                                                              ),
+                                                                              Align(
+                                                                                alignment: AlignmentDirectional(-1.0, 0.0),
+                                                                                child: Text(
+                                                                                  valueOrDefault<String>(
+                                                                                    _model.events?.first?.eventInfo?.locationTitle,
+                                                                                    'location',
+                                                                                  ),
+                                                                                  textAlign: TextAlign.start,
+                                                                                  style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                        fontFamily: 'LTSuperior',
+                                                                                        color: FlutterFlowTheme.of(context).secondaryText,
+                                                                                        fontSize: 15.0,
+                                                                                        letterSpacing: 0.0,
+                                                                                        useGoogleFonts: false,
+                                                                                      ),
+                                                                                ),
+                                                                              ),
+                                                                            ],
+                                                                          ),
+                                                                        ),
+                                                                        Padding(
+                                                                          padding: EdgeInsetsDirectional.fromSTEB(
+                                                                              0.0,
+                                                                              3.0,
+                                                                              0.0,
+                                                                              0.0),
+                                                                          child:
+                                                                              Row(
+                                                                            mainAxisSize:
+                                                                                MainAxisSize.max,
+                                                                            children: [
+                                                                              Padding(
+                                                                                padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 6.0, 0.0),
+                                                                                child: Icon(
+                                                                                  Icons.timelapse_sharp,
+                                                                                  color: FlutterFlowTheme.of(context).primary,
+                                                                                  size: 19.0,
+                                                                                ),
+                                                                              ),
+                                                                              Align(
+                                                                                alignment: AlignmentDirectional(-1.0, 0.0),
+                                                                                child: Text(
+                                                                                  '${dateTimeFormat("yMMMd", _model.events?.first?.eventInfo?.startDate)} ${dateTimeFormat("Hm", _model.events?.first?.eventInfo?.startTime)}',
+                                                                                  textAlign: TextAlign.start,
+                                                                                  style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                        fontFamily: 'LTSuperior',
+                                                                                        color: FlutterFlowTheme.of(context).secondaryText,
+                                                                                        fontSize: 15.0,
+                                                                                        letterSpacing: 0.0,
+                                                                                        useGoogleFonts: false,
+                                                                                      ),
+                                                                                ),
+                                                                              ),
+                                                                            ],
+                                                                          ),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                );
+                                                              }
+                                                            },
+                                                          ),
+                                                        ),
+                                                      ),
+                                                  ],
+                                                ),
                                               ),
                                             ),
-                                          ),
                                           if ((currentUserDocument?.saved
                                                           ?.toList() ??
                                                       [])
@@ -367,6 +652,7 @@ class _WishlistWidgetState extends State<WishlistWidget> {
                                                                       e.products !=
                                                                       null)
                                                                   .toList();
+
                                                               return ListView
                                                                   .separated(
                                                                 padding:
@@ -422,9 +708,11 @@ class _WishlistWidgetState extends State<WishlistWidget> {
                                                                           ),
                                                                         );
                                                                       }
+
                                                                       final productCardSmallProductsRecord =
                                                                           snapshot
                                                                               .data!;
+
                                                                       return ProductCardSmallWidget(
                                                                         key: Key(
                                                                             'Keyic1_${productsIndex}_of_${products.length}'),
@@ -532,6 +820,7 @@ class _WishlistWidgetState extends State<WishlistWidget> {
                                                                       e.people !=
                                                                       null)
                                                                   .toList();
+
                                                               return ListView
                                                                   .separated(
                                                                 padding:
@@ -588,9 +877,11 @@ class _WishlistWidgetState extends State<WishlistWidget> {
                                                                           ),
                                                                         );
                                                                       }
+
                                                                       final usercardSmallUsersRecord =
                                                                           snapshot
                                                                               .data!;
+
                                                                       return InkWell(
                                                                         splashColor:
                                                                             Colors.transparent,
@@ -722,6 +1013,7 @@ class _WishlistWidgetState extends State<WishlistWidget> {
                                                                       e.company !=
                                                                       null)
                                                                   .toList();
+
                                                               return ListView
                                                                   .separated(
                                                                 padding:
@@ -782,15 +1074,17 @@ class _WishlistWidgetState extends State<WishlistWidget> {
                                                                               ),
                                                                             );
                                                                           }
-                                                                          final projectSmallCardProjectsRecord =
+
+                                                                          final companySmallCardProjectsRecord =
                                                                               snapshot.data!;
-                                                                          return ProjectSmallCardWidget(
+
+                                                                          return CompanySmallCardWidget(
                                                                             key:
                                                                                 Key('Key0fq_${companiesIndex}_of_${companies.length}'),
                                                                             parameter2:
-                                                                                projectSmallCardProjectsRecord.projectInformation.shortDescription,
+                                                                                companySmallCardProjectsRecord.projectInformation.shortDescription,
                                                                             companyRef:
-                                                                                projectSmallCardProjectsRecord,
+                                                                                companySmallCardProjectsRecord,
                                                                           );
                                                                         },
                                                                       ),
@@ -840,11 +1134,6 @@ class _WishlistWidgetState extends State<WishlistWidget> {
                                           decoration: BoxDecoration(
                                             borderRadius:
                                                 BorderRadius.circular(10.0),
-                                            border: Border.all(
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .textAndStroke,
-                                            ),
                                           ),
                                           child: Padding(
                                             padding:
@@ -940,7 +1229,7 @@ class _WishlistWidgetState extends State<WishlistWidget> {
                                                     model: _model
                                                         .buttonFixedSizeModel1,
                                                     updateCallback: () =>
-                                                        setState(() {}),
+                                                        safeSetState(() {}),
                                                     child:
                                                         ButtonFixedSizeWidget(
                                                       width: 458.0,
@@ -956,7 +1245,7 @@ class _WishlistWidgetState extends State<WishlistWidget> {
                                                           false,
                                                       action: () async {
                                                         context.pushNamed(
-                                                            'smart_search_all');
+                                                            'smart_search_all_2');
                                                       },
                                                     ),
                                                   ),
@@ -987,7 +1276,7 @@ class _WishlistWidgetState extends State<WishlistWidget> {
                                 child: Container(
                                   width: double.infinity,
                                   height:
-                                      MediaQuery.sizeOf(context).height * 0.7,
+                                      MediaQuery.sizeOf(context).height * 0.8,
                                   decoration: BoxDecoration(
                                     color: FlutterFlowTheme.of(context)
                                         .secondaryBackground,
@@ -1008,6 +1297,7 @@ class _WishlistWidgetState extends State<WishlistWidget> {
                                                         ?.toList() ??
                                                     [])
                                                 .toList();
+
                                         return Column(
                                           mainAxisSize: MainAxisSize.min,
                                           children: List.generate(
@@ -1047,8 +1337,10 @@ class _WishlistWidgetState extends State<WishlistWidget> {
                                                           ),
                                                         );
                                                       }
+
                                                       final rowProjectsRecord =
                                                           snapshot.data!;
+
                                                       return InkWell(
                                                         splashColor:
                                                             Colors.transparent,
@@ -1087,10 +1379,14 @@ class _WishlistWidgetState extends State<WishlistWidget> {
                                                                           10.0),
                                                               child:
                                                                   Image.network(
-                                                                rowProjectsRecord
-                                                                    .mainImage,
-                                                                width: 50.0,
-                                                                height: 50.0,
+                                                                valueOrDefault<
+                                                                    String>(
+                                                                  rowProjectsRecord
+                                                                      .mainImage,
+                                                                  'https://t4.ftcdn.net/jpg/02/17/34/67/360_F_217346796_TSg5VcYjsFxZtIDK6Qdctg3yqAapG7Xa.jpg',
+                                                                ),
+                                                                width: 60.0,
+                                                                height: 60.0,
                                                                 fit: BoxFit
                                                                     .cover,
                                                               ),
@@ -1125,6 +1421,8 @@ class _WishlistWidgetState extends State<WishlistWidget> {
                                                                                 'LTSuperior',
                                                                             color:
                                                                                 FlutterFlowTheme.of(context).primaryText,
+                                                                            fontSize:
+                                                                                16.0,
                                                                             letterSpacing:
                                                                                 0.0,
                                                                             fontWeight:
@@ -1134,7 +1432,7 @@ class _WishlistWidgetState extends State<WishlistWidget> {
                                                                           ),
                                                                     ),
                                                                     Text(
-                                                                      'Company',
+                                                                      'company',
                                                                       style: FlutterFlowTheme.of(
                                                                               context)
                                                                           .bodyMedium
@@ -1144,7 +1442,7 @@ class _WishlistWidgetState extends State<WishlistWidget> {
                                                                             color:
                                                                                 Color(0x801A1B1F),
                                                                             fontSize:
-                                                                                12.0,
+                                                                                14.0,
                                                                             letterSpacing:
                                                                                 0.0,
                                                                             useGoogleFonts:
@@ -1188,8 +1486,10 @@ class _WishlistWidgetState extends State<WishlistWidget> {
                                                           ),
                                                         );
                                                       }
+
                                                       final rowUsersRecord =
                                                           snapshot.data!;
+
                                                       return InkWell(
                                                         splashColor:
                                                             Colors.transparent,
@@ -1228,10 +1528,14 @@ class _WishlistWidgetState extends State<WishlistWidget> {
                                                                           10.0),
                                                               child:
                                                                   Image.network(
-                                                                rowUsersRecord
-                                                                    .photoUrl,
-                                                                width: 50.0,
-                                                                height: 50.0,
+                                                                valueOrDefault<
+                                                                    String>(
+                                                                  rowUsersRecord
+                                                                      .photoUrl,
+                                                                  'https://t4.ftcdn.net/jpg/02/17/34/67/360_F_217346796_TSg5VcYjsFxZtIDK6Qdctg3yqAapG7Xa.jpg',
+                                                                ),
+                                                                width: 60.0,
+                                                                height: 60.0,
                                                                 fit: BoxFit
                                                                     .cover,
                                                               ),
@@ -1266,6 +1570,8 @@ class _WishlistWidgetState extends State<WishlistWidget> {
                                                                                 'LTSuperior',
                                                                             color:
                                                                                 FlutterFlowTheme.of(context).primaryText,
+                                                                            fontSize:
+                                                                                16.0,
                                                                             letterSpacing:
                                                                                 0.0,
                                                                             fontWeight:
@@ -1275,7 +1581,7 @@ class _WishlistWidgetState extends State<WishlistWidget> {
                                                                           ),
                                                                     ),
                                                                     Text(
-                                                                      'person',
+                                                                      'user',
                                                                       style: FlutterFlowTheme.of(
                                                                               context)
                                                                           .bodyMedium
@@ -1285,7 +1591,7 @@ class _WishlistWidgetState extends State<WishlistWidget> {
                                                                             color:
                                                                                 Color(0x801A1B1F),
                                                                             fontSize:
-                                                                                12.0,
+                                                                                14.0,
                                                                             letterSpacing:
                                                                                 0.0,
                                                                             useGoogleFonts:
@@ -1342,11 +1648,6 @@ class _WishlistWidgetState extends State<WishlistWidget> {
                                           decoration: BoxDecoration(
                                             borderRadius:
                                                 BorderRadius.circular(10.0),
-                                            border: Border.all(
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .textAndStroke,
-                                            ),
                                           ),
                                           child: Padding(
                                             padding:
@@ -1441,7 +1742,7 @@ class _WishlistWidgetState extends State<WishlistWidget> {
                                                     model: _model
                                                         .buttonFixedSizeModel2,
                                                     updateCallback: () =>
-                                                        setState(() {}),
+                                                        safeSetState(() {}),
                                                     child:
                                                         ButtonFixedSizeWidget(
                                                       width: 458.0,
@@ -1457,7 +1758,7 @@ class _WishlistWidgetState extends State<WishlistWidget> {
                                                           false,
                                                       action: () async {
                                                         context.pushNamed(
-                                                            'smart_search_all');
+                                                            'smart_search_all_2');
                                                       },
                                                     ),
                                                   ),
@@ -1491,6 +1792,7 @@ class _WishlistWidgetState extends State<WishlistWidget> {
                                 if (eventsParticipated.isEmpty) {
                                   return WishlistEventsEmptyWidget();
                                 }
+
                                 return Column(
                                   mainAxisSize: MainAxisSize.max,
                                   children:
@@ -1507,6 +1809,7 @@ class _WishlistWidgetState extends State<WishlistWidget> {
                                     );
                                   })
                                           .divide(SizedBox(height: 15.0))
+                                          .addToStart(SizedBox(height: 20.0))
                                           .addToEnd(SizedBox(height: 20.0)),
                                 );
                               },
@@ -1525,7 +1828,7 @@ class _WishlistWidgetState extends State<WishlistWidget> {
               alignment: AlignmentDirectional(0.0, 1.0),
               child: wrapWithModel(
                 model: _model.navigationbarModel,
-                updateCallback: () => setState(() {}),
+                updateCallback: () => safeSetState(() {}),
                 child: NavigationbarWidget(),
               ),
             ),
@@ -1536,7 +1839,7 @@ class _WishlistWidgetState extends State<WishlistWidget> {
                 children: [
                   Container(
                     width: double.infinity,
-                    height: 106.0,
+                    height: 108.0,
                     decoration: BoxDecoration(
                       color: FlutterFlowTheme.of(context).secondaryBackground,
                       borderRadius: BorderRadius.only(
@@ -1551,7 +1854,7 @@ class _WishlistWidgetState extends State<WishlistWidget> {
                       children: [
                         Padding(
                           padding: EdgeInsetsDirectional.fromSTEB(
-                              20.0, 60.0, 20.0, 0.0),
+                              20.0, 50.0, 20.0, 0.0),
                           child: Row(
                             mainAxisSize: MainAxisSize.max,
                             mainAxisAlignment: MainAxisAlignment.start,
@@ -1643,7 +1946,7 @@ class _WishlistWidgetState extends State<WishlistWidget> {
                                       highlightColor: Colors.transparent,
                                       onTap: () async {
                                         _model.chosenState = 'Saved';
-                                        setState(() {});
+                                        safeSetState(() {});
                                       },
                                       child: Container(
                                         width: 100.0,
@@ -1687,7 +1990,7 @@ class _WishlistWidgetState extends State<WishlistWidget> {
                                       highlightColor: Colors.transparent,
                                       onTap: () async {
                                         _model.chosenState = 'Subscriptions';
-                                        setState(() {});
+                                        safeSetState(() {});
                                       },
                                       child: Container(
                                         width: 100.0,
@@ -1732,7 +2035,7 @@ class _WishlistWidgetState extends State<WishlistWidget> {
                                       highlightColor: Colors.transparent,
                                       onTap: () async {
                                         _model.chosenState = 'Events';
-                                        setState(() {});
+                                        safeSetState(() {});
                                       },
                                       child: Container(
                                         width: 100.0,

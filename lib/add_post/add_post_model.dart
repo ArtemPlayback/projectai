@@ -12,6 +12,7 @@ import 'dart:async';
 import 'dart:ui';
 import '/flutter_flow/custom_functions.dart' as functions;
 import 'add_post_widget.dart' show AddPostWidget;
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
@@ -51,9 +52,26 @@ class AddPostModel extends FlutterFlowModel<AddPostWidget> {
   void updatePostsAtIndex(int index, Function(PostStruct) updateFn) =>
       posts[index] = updateFn(posts[index]);
 
+  List<String> oldImages = [];
+  void addToOldImages(String item) => oldImages.add(item);
+  void removeFromOldImages(String item) => oldImages.remove(item);
+  void removeAtIndexFromOldImages(int index) => oldImages.removeAt(index);
+  void insertAtIndexInOldImages(int index, String item) =>
+      oldImages.insert(index, item);
+  void updateOldImagesAtIndex(int index, Function(String) updateFn) =>
+      oldImages[index] = updateFn(oldImages[index]);
+
+  List<String> newImages = [];
+  void addToNewImages(String item) => newImages.add(item);
+  void removeFromNewImages(String item) => newImages.remove(item);
+  void removeAtIndexFromNewImages(int index) => newImages.removeAt(index);
+  void insertAtIndexInNewImages(int index, String item) =>
+      newImages.insert(index, item);
+  void updateNewImagesAtIndex(int index, Function(String) updateFn) =>
+      newImages[index] = updateFn(newImages[index]);
+
   ///  State fields for stateful widgets in this page.
 
-  final unfocusNode = FocusNode();
   // State field(s) for TextField widget.
   FocusNode? textFieldFocusNode;
   TextEditingController? textController;
@@ -67,7 +85,6 @@ class AddPostModel extends FlutterFlowModel<AddPostWidget> {
 
   @override
   void dispose() {
-    unfocusNode.dispose();
     textFieldFocusNode?.dispose();
     textController?.dispose();
   }

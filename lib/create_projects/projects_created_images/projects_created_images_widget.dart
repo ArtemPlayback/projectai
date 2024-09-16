@@ -39,7 +39,7 @@ class _ProjectsCreatedImagesWidgetState
     super.initState();
     _model = createModel(context, () => ProjectsCreatedImagesModel());
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -105,13 +105,13 @@ class _ProjectsCreatedImagesWidgetState
                 child: FFButtonWidget(
                   onPressed: () async {
                     _model.sdf = await ProjectsRecord.getDocumentOnce(
-                        widget.project!.reference);
+                        widget!.project!.reference);
 
                     context.pushNamed(
                       'createBusinessPlan',
                       queryParameters: {
                         'project': serializeParam(
-                          widget.project,
+                          widget!.project,
                           ParamType.Document,
                         ),
                         'initialPage': serializeParam(
@@ -124,11 +124,11 @@ class _ProjectsCreatedImagesWidgetState
                         ),
                       }.withoutNulls,
                       extra: <String, dynamic>{
-                        'project': widget.project,
+                        'project': widget!.project,
                       },
                     );
 
-                    setState(() {});
+                    safeSetState(() {});
                   },
                   text: 'Create business plan',
                   options: FFButtonOptions(
@@ -158,9 +158,9 @@ class _ProjectsCreatedImagesWidgetState
                 child: FFButtonWidget(
                   onPressed: () async {
                     _model.vfd = await ProjectsRecord.getDocumentOnce(
-                        widget.project!.reference);
+                        widget!.project!.reference);
 
-                    setState(() {});
+                    safeSetState(() {});
                   },
                   text: 'Go to project',
                   options: FFButtonOptions(

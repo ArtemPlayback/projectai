@@ -1,7 +1,9 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
+import '/backend/api_requests/api_streaming.dart';
 import '/backend/backend.dart';
 import '/backend/firebase_storage/storage.dart';
+import '/backend/schema/enums/enums.dart';
 import '/backend/schema/structs/index.dart';
 import '/components/business_model_card_widget.dart';
 import '/components/comparison_option_widget.dart';
@@ -17,6 +19,7 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/flutter_flow/upload_data.dart';
+import 'dart:convert';
 import 'dart:ui';
 import '/flutter_flow/custom_functions.dart' as functions;
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -60,78 +63,78 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
     SchedulerBinding.instance.addPostFrameCallback((_) async {});
 
     _model.textController1 ??= TextEditingController(
-        text: widget.project?.pitchDeck?.shortDescription);
+        text: widget!.project?.pitchDeck?.shortDescription);
     _model.textFieldFocusNode1 ??= FocusNode();
 
     _model.textController2 ??= TextEditingController(
-        text: widget.project?.pitchDeck?.operatingIndustry);
+        text: widget!.project?.pitchDeck?.operatingIndustry);
     _model.textFieldFocusNode2 ??= FocusNode();
 
-    _model.textController3 ??=
-        TextEditingController(text: widget.project?.pitchDeck?.potentialMarket);
+    _model.textController3 ??= TextEditingController(
+        text: widget!.project?.pitchDeck?.potentialMarket);
     _model.textFieldFocusNode3 ??= FocusNode();
 
     _model.textController4 ??= TextEditingController(
-        text: widget.project?.pitchDeck?.fiveYearProfit?.toString());
+        text: widget!.project?.pitchDeck?.fiveYearProfit?.toString());
     _model.textFieldFocusNode4 ??= FocusNode();
 
     _model.textController5 ??=
-        TextEditingController(text: widget.project?.pitchDeck?.investorShare);
+        TextEditingController(text: widget!.project?.pitchDeck?.investorShare);
     _model.textFieldFocusNode5 ??= FocusNode();
 
     _model.textController6 ??= TextEditingController(
-        text: widget.project?.pitchDeck?.neededInvestment?.toString());
+        text: widget!.project?.pitchDeck?.neededInvestment?.toString());
     _model.textFieldFocusNode6 ??= FocusNode();
 
     _model.textController7 ??= TextEditingController(
-        text: widget.project?.pitchDeck?.problemDefinintion);
+        text: widget!.project?.pitchDeck?.problemDefinintion);
     _model.textFieldFocusNode7 ??= FocusNode();
 
     _model.textController8 ??= TextEditingController(
-        text: widget.project?.pitchDeck?.businessModelName);
+        text: widget!.project?.pitchDeck?.businessModelName);
     _model.textFieldFocusNode8 ??= FocusNode();
 
     _model.textController9 ??= TextEditingController(
-        text: widget.project?.pitchDeck?.businessModelDescription);
+        text: widget!.project?.pitchDeck?.businessModelDescription);
     _model.textFieldFocusNode9 ??= FocusNode();
 
-    _model.textController10 ??=
-        TextEditingController(text: widget.project?.pitchDeck?.financialGrowth);
+    _model.textController10 ??= TextEditingController(
+        text: widget!.project?.pitchDeck?.financialGrowth);
     _model.textFieldFocusNode10 ??= FocusNode();
 
     _model.textController11 ??=
-        TextEditingController(text: widget.project?.pitchDeck?.marketName);
+        TextEditingController(text: widget!.project?.pitchDeck?.marketName);
     _model.textFieldFocusNode11 ??= FocusNode();
 
     _model.textController12 ??= TextEditingController(
-        text: widget.project?.pitchDeck?.marketDescription);
+        text: widget!.project?.pitchDeck?.marketDescription);
     _model.textFieldFocusNode12 ??= FocusNode();
 
     _model.textController13 ??= TextEditingController(
-        text: widget.project?.pitchDeck?.marketChartDescription);
+        text: widget!.project?.pitchDeck?.marketChartDescription);
     _model.textFieldFocusNode13 ??= FocusNode();
 
     _model.textController14 ??= TextEditingController(
-        text: widget.project?.pitchDeck?.statusDescription);
+        text: widget!.project?.pitchDeck?.statusDescription);
     _model.textFieldFocusNode14 ??= FocusNode();
 
     _model.textController15 ??= TextEditingController(
-        text: widget.project?.pitchDeck?.messageToInvestor);
+        text: widget!.project?.pitchDeck?.messageToInvestor);
     _model.textFieldFocusNode15 ??= FocusNode();
 
-    _model.textController16 ??=
-        TextEditingController(text: widget.project?.pitchDeck?.linkToPrototype);
+    _model.textController16 ??= TextEditingController(
+        text: widget!.project?.pitchDeck?.linkToPrototype);
     _model.textFieldFocusNode16 ??= FocusNode();
 
     _model.textController17 ??=
-        TextEditingController(text: widget.project?.pitchDeck?.email);
+        TextEditingController(text: widget!.project?.pitchDeck?.email);
     _model.textFieldFocusNode17 ??= FocusNode();
 
     _model.textController18 ??=
-        TextEditingController(text: widget.project?.pitchDeck?.phoneNumber);
+        TextEditingController(text: widget!.project?.pitchDeck?.phoneNumber);
     _model.textFieldFocusNode18 ??= FocusNode();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -146,9 +149,7 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
     context.watch<FFAppState>();
 
     return GestureDetector(
-      onTap: () => _model.unfocusNode.canRequestFocus
-          ? FocusScope.of(context).requestFocus(_model.unfocusNode)
-          : FocusScope.of(context).unfocus(),
+      onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: Color(0xFFF9F9F9),
@@ -164,7 +165,7 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                   child: PageView(
                     controller: _model.pageViewController ??=
                         PageController(initialPage: 1),
-                    onPageChanged: (_) => setState(() {}),
+                    onPageChanged: (_) => safeSetState(() {}),
                     scrollDirection: Axis.horizontal,
                     children: [
                       Stack(
@@ -308,7 +309,7 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                                   Colors.transparent,
                                               onTap: () async {
                                                 _model.chosenColor = 'Blue';
-                                                setState(() {});
+                                                safeSetState(() {});
                                               },
                                               child: Container(
                                                 width: 24.0,
@@ -455,7 +456,7 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                                   Colors.transparent,
                                               onTap: () async {
                                                 _model.chosenColor = 'Red';
-                                                setState(() {});
+                                                safeSetState(() {});
                                               },
                                               child: Container(
                                                 width: 24.0,
@@ -622,7 +623,7 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                       onTap: () async {
                                         _model.firstImagesType =
                                             'mobile screens';
-                                        setState(() {});
+                                        safeSetState(() {});
                                       },
                                       child: Container(
                                         width: double.infinity,
@@ -649,7 +650,7 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                                 onTap: () async {
                                                   _model.firstImagesType =
                                                       'mobile screens';
-                                                  setState(() {});
+                                                  safeSetState(() {});
                                                 },
                                                 child: Container(
                                                   width: 24.0,
@@ -769,7 +770,7 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                       highlightColor: Colors.transparent,
                                       onTap: () async {
                                         _model.firstImagesType = 'gallery';
-                                        setState(() {});
+                                        safeSetState(() {});
                                       },
                                       child: Container(
                                         width: double.infinity,
@@ -796,7 +797,7 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                                 onTap: () async {
                                                   _model.firstImagesType =
                                                       'gallery';
-                                                  setState(() {});
+                                                  safeSetState(() {});
                                                 },
                                                 child: Container(
                                                   width: 24.0,
@@ -830,7 +831,7 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                                         onTap: () async {
                                                           _model.firstImagesType =
                                                               'gallery';
-                                                          setState(() {});
+                                                          safeSetState(() {});
                                                         },
                                                         child: Container(
                                                           width: 15.0,
@@ -929,7 +930,7 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                       highlightColor: Colors.transparent,
                                       onTap: () async {
                                         _model.firstImagesType = 'Single image';
-                                        setState(() {});
+                                        safeSetState(() {});
                                       },
                                       child: Container(
                                         width: double.infinity,
@@ -956,7 +957,7 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                                 onTap: () async {
                                                   _model.firstImagesType =
                                                       'single image';
-                                                  setState(() {});
+                                                  safeSetState(() {});
                                                 },
                                                 child: Container(
                                                   width: 24.0,
@@ -1105,7 +1106,7 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                                               validateFileFormat(
                                                                   m.storagePath,
                                                                   context))) {
-                                                        setState(() => _model
+                                                        safeSetState(() => _model
                                                                 .isDataUploading1 =
                                                             true);
                                                         var selectedUploadedFiles =
@@ -1162,7 +1163,7 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                                                     .length ==
                                                                 selectedMedia
                                                                     .length) {
-                                                          setState(() {
+                                                          safeSetState(() {
                                                             _model.uploadedLocalFile1 =
                                                                 selectedUploadedFiles
                                                                     .first;
@@ -1171,7 +1172,7 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                                                     .first;
                                                           });
                                                         } else {
-                                                          setState(() {});
+                                                          safeSetState(() {});
                                                           return;
                                                         }
                                                       }
@@ -1179,7 +1180,7 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                                       _model.addToFirstImagesLinks(
                                                           _model
                                                               .uploadedFileUrl1);
-                                                      setState(() {});
+                                                      safeSetState(() {});
                                                     },
                                                     child: Container(
                                                       width: 173.0,
@@ -1307,6 +1308,7 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                                       final images1 = _model
                                                           .firstImagesLinks
                                                           .toList();
+
                                                       return Row(
                                                         mainAxisSize:
                                                             MainAxisSize.max,
@@ -1370,7 +1372,7 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                                                         () async {
                                                                       _model.removeAtIndexFromFirstImagesLinks(
                                                                           images1Index);
-                                                                      setState(
+                                                                      safeSetState(
                                                                           () {});
                                                                     },
                                                                   ),
@@ -1430,7 +1432,7 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                                               validateFileFormat(
                                                                   m.storagePath,
                                                                   context))) {
-                                                        setState(() => _model
+                                                        safeSetState(() => _model
                                                                 .isDataUploading2 =
                                                             true);
                                                         var selectedUploadedFiles =
@@ -1487,7 +1489,7 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                                                     .length ==
                                                                 selectedMedia
                                                                     .length) {
-                                                          setState(() {
+                                                          safeSetState(() {
                                                             _model.uploadedLocalFile2 =
                                                                 selectedUploadedFiles
                                                                     .first;
@@ -1496,7 +1498,7 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                                                     .first;
                                                           });
                                                         } else {
-                                                          setState(() {});
+                                                          safeSetState(() {});
                                                           return;
                                                         }
                                                       }
@@ -1504,7 +1506,7 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                                       _model.addToFirstImagesLinks(
                                                           _model
                                                               .uploadedFileUrl2);
-                                                      setState(() {});
+                                                      safeSetState(() {});
                                                     },
                                                     child: Container(
                                                       width: 173.0,
@@ -1585,6 +1587,7 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                                           _model
                                                               .firstImagesLinks
                                                               .toList();
+
                                                       return Row(
                                                         mainAxisSize:
                                                             MainAxisSize.max,
@@ -1652,7 +1655,7 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                                                         () async {
                                                                       _model.removeAtIndexFromFirstImagesLinks(
                                                                           firstImages2Index);
-                                                                      setState(
+                                                                      safeSetState(
                                                                           () {});
                                                                     },
                                                                   ),
@@ -1731,7 +1734,8 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                                                 () async {
                                                               _model.firstImageLink =
                                                                   null;
-                                                              setState(() {});
+                                                              safeSetState(
+                                                                  () {});
                                                             },
                                                           ),
                                                         ),
@@ -1764,7 +1768,7 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                                             validateFileFormat(
                                                                 m.storagePath,
                                                                 context))) {
-                                                      setState(() => _model
+                                                      safeSetState(() => _model
                                                               .isDataUploading3 =
                                                           true);
                                                       var selectedUploadedFiles =
@@ -1819,7 +1823,7 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                                           downloadUrls.length ==
                                                               selectedMedia
                                                                   .length) {
-                                                        setState(() {
+                                                        safeSetState(() {
                                                           _model.uploadedLocalFile3 =
                                                               selectedUploadedFiles
                                                                   .first;
@@ -1828,14 +1832,14 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                                                   .first;
                                                         });
                                                       } else {
-                                                        setState(() {});
+                                                        safeSetState(() {});
                                                         return;
                                                       }
                                                     }
 
                                                     _model.firstImageLink =
                                                         _model.uploadedFileUrl3;
-                                                    setState(() {});
+                                                    safeSetState(() {});
                                                   },
                                                   child: Container(
                                                     width: double.infinity,
@@ -2569,7 +2573,7 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                                       onPressed: () async {
                                                         _model.problemImage =
                                                             null;
-                                                        setState(() {});
+                                                        safeSetState(() {});
                                                       },
                                                     ),
                                                   ],
@@ -2602,7 +2606,7 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                                     validateFileFormat(
                                                         m.storagePath,
                                                         context))) {
-                                              setState(() => _model
+                                              safeSetState(() => _model
                                                   .isDataUploading4 = true);
                                               var selectedUploadedFiles =
                                                   <FFUploadedFile>[];
@@ -2649,7 +2653,7 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                                       selectedMedia.length &&
                                                   downloadUrls.length ==
                                                       selectedMedia.length) {
-                                                setState(() {
+                                                safeSetState(() {
                                                   _model.uploadedLocalFile4 =
                                                       selectedUploadedFiles
                                                           .first;
@@ -2657,14 +2661,14 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                                       downloadUrls.first;
                                                 });
                                               } else {
-                                                setState(() {});
+                                                safeSetState(() {});
                                                 return;
                                               }
                                             }
 
                                             _model.problemImage =
                                                 _model.uploadedFileUrl4;
-                                            setState(() {});
+                                            safeSetState(() {});
                                           },
                                           child: Container(
                                             width: double.infinity,
@@ -2873,6 +2877,7 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                           builder: (context) {
                                             final soliutions =
                                                 FFAppState().solutions.toList();
+
                                             return Column(
                                               mainAxisSize: MainAxisSize.max,
                                               children: List.generate(
@@ -2893,7 +2898,7 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                                       soliutionsIndex,
                                                       (e) => e,
                                                     );
-                                                    setState(() {});
+                                                    safeSetState(() {});
                                                   },
                                                 );
                                               })
@@ -3056,7 +3061,7 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                                       validateFileFormat(
                                                           m.storagePath,
                                                           context))) {
-                                                setState(() => _model
+                                                safeSetState(() => _model
                                                     .isDataUploading5 = true);
                                                 var selectedUploadedFiles =
                                                     <FFUploadedFile>[];
@@ -3105,7 +3110,7 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                                         selectedMedia.length &&
                                                     downloadUrls.length ==
                                                         selectedMedia.length) {
-                                                  setState(() {
+                                                  safeSetState(() {
                                                     _model.uploadedLocalFile5 =
                                                         selectedUploadedFiles
                                                             .first;
@@ -3113,14 +3118,14 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                                         downloadUrls.first;
                                                   });
                                                 } else {
-                                                  setState(() {});
+                                                  safeSetState(() {});
                                                   return;
                                                 }
                                               }
 
                                               _model.businessModelChart =
                                                   _model.uploadedFileUrl5;
-                                              setState(() {});
+                                              safeSetState(() {});
                                             },
                                             child: Container(
                                               width: double.infinity,
@@ -3450,6 +3455,7 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                       builder: (context) {
                                         final cashflow =
                                             FFAppState().cashFlows.toList();
+
                                         return Column(
                                           mainAxisSize: MainAxisSize.max,
                                           children:
@@ -3636,7 +3642,7 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                                     onPressed: () async {
                                                       _model.financeChart =
                                                           null;
-                                                      setState(() {});
+                                                      safeSetState(() {});
                                                     },
                                                   ),
                                                 ],
@@ -3669,7 +3675,7 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                                   validateFileFormat(
                                                       m.storagePath,
                                                       context))) {
-                                            setState(() =>
+                                            safeSetState(() =>
                                                 _model.isDataUploading6 = true);
                                             var selectedUploadedFiles =
                                                 <FFUploadedFile>[];
@@ -3712,21 +3718,21 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                                     selectedMedia.length &&
                                                 downloadUrls.length ==
                                                     selectedMedia.length) {
-                                              setState(() {
+                                              safeSetState(() {
                                                 _model.uploadedLocalFile6 =
                                                     selectedUploadedFiles.first;
                                                 _model.uploadedFileUrl6 =
                                                     downloadUrls.first;
                                               });
                                             } else {
-                                              setState(() {});
+                                              safeSetState(() {});
                                               return;
                                             }
                                           }
 
                                           _model.financeChart =
                                               _model.uploadedFileUrl6;
-                                          setState(() {});
+                                          safeSetState(() {});
                                         },
                                         child: Container(
                                           width: double.infinity,
@@ -3825,7 +3831,7 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                                 EasyDebounce.debounce(
                                               '_model.textController10',
                                               Duration(milliseconds: 200),
-                                              () => setState(() {}),
+                                              () => safeSetState(() {}),
                                             ),
                                             autofocus: false,
                                             obscureText: false,
@@ -4178,7 +4184,7 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                                   validateFileFormat(
                                                       m.storagePath,
                                                       context))) {
-                                            setState(() =>
+                                            safeSetState(() =>
                                                 _model.isDataUploading7 = true);
                                             var selectedUploadedFiles =
                                                 <FFUploadedFile>[];
@@ -4221,21 +4227,21 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                                     selectedMedia.length &&
                                                 downloadUrls.length ==
                                                     selectedMedia.length) {
-                                              setState(() {
+                                              safeSetState(() {
                                                 _model.uploadedLocalFile7 =
                                                     selectedUploadedFiles.first;
                                                 _model.uploadedFileUrl7 =
                                                     downloadUrls.first;
                                               });
                                             } else {
-                                              setState(() {});
+                                              safeSetState(() {});
                                               return;
                                             }
                                           }
 
                                           _model.marketChart =
                                               _model.uploadedFileUrl7;
-                                          setState(() {});
+                                          safeSetState(() {});
                                         },
                                         child: Container(
                                           width: double.infinity,
@@ -4348,7 +4354,7 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                                     ),
                                                     onPressed: () async {
                                                       _model.marketChart = null;
-                                                      setState(() {});
+                                                      safeSetState(() {});
                                                     },
                                                   ),
                                                 ],
@@ -4489,6 +4495,7 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                           final comparisonOptions = FFAppState()
                                               .comparisonOptions
                                               .toList();
+
                                           return Column(
                                             mainAxisSize: MainAxisSize.max,
                                             children: List.generate(
@@ -4522,7 +4529,7 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                                 .addToComparisonOptions(' ');
                                             FFAppState().addToProjectOptions(
                                                 CompetitorOptionsStruct());
-                                            setState(() {});
+                                            safeSetState(() {});
                                           },
                                           text: 'ADD COMPARISON PARAMETER',
                                           options: FFButtonOptions(
@@ -4612,6 +4619,7 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                               final competitors = FFAppState()
                                                   .competitors
                                                   .toList();
+
                                               return Column(
                                                 mainAxisSize: MainAxisSize.max,
                                                 children: List.generate(
@@ -4641,6 +4649,7 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                             final competitors = FFAppState()
                                                 .testCompetitors
                                                 .toList();
+
                                             return Column(
                                               mainAxisSize: MainAxisSize.max,
                                               children: List.generate(
@@ -4676,7 +4685,7 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                             onPressed: () async {
                                               FFAppState().addToTestCompetitors(
                                                   TestCompetitorsStruct());
-                                              setState(() {});
+                                              safeSetState(() {});
                                             },
                                             text: 'ADD COMPETITOR',
                                             options: FFButtonOptions(
@@ -4919,7 +4928,7 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                                 children: [
                                                   Text(
                                                     valueOrDefault<String>(
-                                                      widget.project?.title,
+                                                      widget!.project?.title,
                                                       'Q',
                                                     ),
                                                     style: FlutterFlowTheme.of(
@@ -4947,6 +4956,7 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                                         final opts = FFAppState()
                                                             .comparisonOptions
                                                             .toList();
+
                                                         return Column(
                                                           mainAxisSize:
                                                               MainAxisSize.max,
@@ -5030,6 +5040,7 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                   builder: (context) {
                                     final competitors434 =
                                         FFAppState().competitors.toList();
+
                                     return Column(
                                       mainAxisSize: MainAxisSize.max,
                                       crossAxisAlignment:
@@ -5071,6 +5082,7 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                                             competitors434Item
                                                                 .options
                                                                 .toList();
+
                                                         return Column(
                                                           mainAxisSize:
                                                               MainAxisSize.max,
@@ -5122,6 +5134,7 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                   builder: (context) {
                                     final competitors2 =
                                         FFAppState().competitors.toList();
+
                                     return Column(
                                       mainAxisSize: MainAxisSize.max,
                                       children:
@@ -5193,6 +5206,7 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                                               FFAppState()
                                                                   .comparisonOptions
                                                                   .toList();
+
                                                           return Column(
                                                             mainAxisSize:
                                                                 MainAxisSize
@@ -5288,6 +5302,7 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                   builder: (context) {
                                     final team =
                                         FFAppState().teamMembers.toList();
+
                                     return Column(
                                       mainAxisSize: MainAxisSize.max,
                                       children: List.generate(team.length,
@@ -5297,16 +5312,16 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                           key: Key(
                                               'Keyydj_${teamIndex}_of_${team.length}'),
                                           parameter3: teamItem.role,
-                                          parameter4: teamItem.userReference,
+                                          parameter4: teamItem.user,
                                           index: teamIndex,
                                           dataType: TeamMemberStruct(
-                                            userReference:
-                                                teamItem.userReference,
                                             role: teamItem.role,
                                             description: teamItem.description,
+                                            teamMember:
+                                                TeamMemberStatus.isWaiting,
                                           ),
                                           projectReference:
-                                              widget.project!.reference,
+                                              widget!.project!.reference,
                                         );
                                       }),
                                     );
@@ -5414,7 +5429,7 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                                         validateFileFormat(
                                                             m.storagePath,
                                                             context))) {
-                                                  setState(() => _model
+                                                  safeSetState(() => _model
                                                       .isDataUploading8 = true);
                                                   var selectedUploadedFiles =
                                                       <FFUploadedFile>[];
@@ -5466,7 +5481,7 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                                       downloadUrls.length ==
                                                           selectedMedia
                                                               .length) {
-                                                    setState(() {
+                                                    safeSetState(() {
                                                       _model.uploadedLocalFile8 =
                                                           selectedUploadedFiles
                                                               .first;
@@ -5474,14 +5489,14 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                                           downloadUrls.first;
                                                     });
                                                   } else {
-                                                    setState(() {});
+                                                    safeSetState(() {});
                                                     return;
                                                   }
                                                 }
 
                                                 _model.addToCurrentStatusImages(
                                                     _model.uploadedFileUrl8);
-                                                setState(() {});
+                                                safeSetState(() {});
                                               },
                                               child: Container(
                                                 width: 196.0,
@@ -5559,6 +5574,7 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                               final images2 = _model
                                                   .currentStatusImages
                                                   .toList();
+
                                               return Row(
                                                 mainAxisSize: MainAxisSize.max,
                                                 children: List.generate(
@@ -5620,7 +5636,8 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                                                   () async {
                                                                 _model.removeFromCurrentStatusImages(
                                                                     images2Item);
-                                                                setState(() {});
+                                                                safeSetState(
+                                                                    () {});
                                                               },
                                                             ),
                                                           ),
@@ -5815,6 +5832,7 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                                     final tasks = FFAppState()
                                                         .yearsPlan
                                                         .toList();
+
                                                     return Column(
                                                       mainAxisSize:
                                                           MainAxisSize.max,
@@ -5859,7 +5877,7 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                                                 YearsPlanStruct(
                                                           year: 1,
                                                         ));
-                                                        setState(() {});
+                                                        safeSetState(() {});
                                                       },
                                                       text: 'ADD TASK',
                                                       options: FFButtonOptions(
@@ -5963,6 +5981,7 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                                     final tasks2 = FFAppState()
                                                         .yearsPlan
                                                         .toList();
+
                                                     return Column(
                                                       mainAxisSize:
                                                           MainAxisSize.max,
@@ -6007,7 +6026,7 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                                                 YearsPlanStruct(
                                                           year: 2,
                                                         ));
-                                                        setState(() {});
+                                                        safeSetState(() {});
                                                       },
                                                       text: 'ADD TASK',
                                                       options: FFButtonOptions(
@@ -6111,6 +6130,7 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                                     final tasks3 = FFAppState()
                                                         .yearsPlan
                                                         .toList();
+
                                                     return Column(
                                                       mainAxisSize:
                                                           MainAxisSize.max,
@@ -6155,7 +6175,7 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                                                 YearsPlanStruct(
                                                           year: 3,
                                                         ));
-                                                        setState(() {});
+                                                        safeSetState(() {});
                                                       },
                                                       text: 'ADD TASK',
                                                       options: FFButtonOptions(
@@ -6259,6 +6279,7 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                                     final tasks4 = FFAppState()
                                                         .yearsPlan
                                                         .toList();
+
                                                     return Column(
                                                       mainAxisSize:
                                                           MainAxisSize.max,
@@ -6303,7 +6324,7 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                                                 YearsPlanStruct(
                                                           year: 4,
                                                         ));
-                                                        setState(() {});
+                                                        safeSetState(() {});
                                                       },
                                                       text: 'ADD TASK',
                                                       options: FFButtonOptions(
@@ -6407,6 +6428,7 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                                     final tasks5 = FFAppState()
                                                         .yearsPlan
                                                         .toList();
+
                                                     return Column(
                                                       mainAxisSize:
                                                           MainAxisSize.max,
@@ -6692,7 +6714,7 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                   onChanged: (_) => EasyDebounce.debounce(
                                     '_model.textController16',
                                     Duration(milliseconds: 3000),
-                                    () => setState(() {}),
+                                    () => safeSetState(() {}),
                                   ),
                                   autofocus: false,
                                   obscureText: false,
@@ -6770,7 +6792,7 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                   onChanged: (_) => EasyDebounce.debounce(
                                     '_model.textController17',
                                     Duration(milliseconds: 3000),
-                                    () => setState(() {}),
+                                    () => safeSetState(() {}),
                                   ),
                                   autofocus: false,
                                   obscureText: false,
@@ -6848,7 +6870,7 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                   onChanged: (_) => EasyDebounce.debounce(
                                     '_model.textController18',
                                     Duration(milliseconds: 3000),
-                                    () => setState(() {}),
+                                    () => safeSetState(() {}),
                                   ),
                                   autofocus: false,
                                   obscureText: false,
@@ -6965,7 +6987,7 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                               FFAppState().myOptions = [];
                               FFAppState().projectOptions = [];
                               FFAppState().testCompetitors = [];
-                              setState(() {});
+                              safeSetState(() {});
                             },
                           ),
                         ),
@@ -7087,7 +7109,7 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                 try {
                                   if (_model.pageViewCurrentIndex == 7) {
                                     firestoreBatch
-                                        .update(widget.project!.reference, {
+                                        .update(widget!.project!.reference, {
                                       ...createProjectsRecordData(
                                         pitchDeck: updatePitchdeckStruct(
                                           PitchdeckStruct(
@@ -7167,7 +7189,7 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                     if (true) {
                                       _model.project =
                                           await ProjectsRecord.getDocumentOnce(
-                                              widget.project!.reference);
+                                              widget!.project!.reference);
                                     } else {
                                       context.safePop();
                                     }
@@ -7178,7 +7200,7 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                     );
 
                                     firestoreBatch
-                                        .update(widget.project!.reference, {
+                                        .update(widget!.project!.reference, {
                                       ...createProjectsRecordData(
                                         pitchDeck: updatePitchdeckStruct(
                                           PitchdeckStruct(
@@ -7258,7 +7280,7 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                   if (_model.pageViewCurrentIndex == 7) {
                                     _model.ref12 =
                                         await ProjectsRecord.getDocumentOnce(
-                                            widget.project!.reference);
+                                            widget!.project!.reference);
                                     FFAppState().solutions = [];
                                     FFAppState().cashFlows = [];
                                     FFAppState().yearsPlan = [];
@@ -7268,7 +7290,7 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                     FFAppState().myOptions = [];
                                     FFAppState().projectOptions = [];
                                     FFAppState().testCompetitors = [];
-                                    setState(() {});
+                                    safeSetState(() {});
 
                                     context.pushNamed(
                                       'pitchdeck',
@@ -7291,7 +7313,7 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                                   await firestoreBatch.commit();
                                 }
 
-                                setState(() {});
+                                safeSetState(() {});
                               },
                               text: _model.pageViewCurrentIndex == 7
                                   ? 'SAVE'
@@ -7349,12 +7371,12 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                             if (_model.pageViewCurrentIndex == 1) {
                               _model.shortDescr =
                                   await ShortDescriptionCall.call(
-                                question: functions.stringToAPI(widget
+                                question: functions.stringToAPI(widget!
                                     .project?.projectInformation?.description),
                               );
 
                               if ((_model.shortDescr?.succeeded ?? true)) {
-                                setState(() {
+                                safeSetState(() {
                                   _model.textController1?.text = getJsonField(
                                     (_model.shortDescr?.jsonBody ?? ''),
                                     r'''$.text''',
@@ -7367,11 +7389,11 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                               }
                               _model.operatingIndustry =
                                   await OperatingIndustryCall.call(
-                                question: functions.stringToAPI(widget
+                                question: functions.stringToAPI(widget!
                                     .project?.projectInformation?.description),
                               );
 
-                              setState(() {
+                              safeSetState(() {
                                 _model.textController2?.text = getJsonField(
                                   (_model.operatingIndustry?.jsonBody ?? ''),
                                   r'''$.text''',
@@ -7384,10 +7406,10 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                               _model.marketize =
                                   await PotentialMarketSizeCall.call(
                                 question: functions.stringToAPI(
-                                    widget.project?.businessPlan?.marketSize),
+                                    widget!.project?.businessPlan?.marketSize),
                               );
 
-                              setState(() {
+                              safeSetState(() {
                                 _model.textController3?.text = getJsonField(
                                   (_model.marketize?.jsonBody ?? ''),
                                   r'''$.text''',
@@ -7400,12 +7422,12 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                             } else if (_model.pageViewCurrentIndex == 2) {
                               _model.apiResulta1j =
                                   await ProblemDefinitionCall.call(
-                                question: functions.stringToAPI(widget
+                                question: functions.stringToAPI(widget!
                                     .project?.projectInformation?.description),
                               );
 
                               if ((_model.apiResulta1j?.succeeded ?? true)) {
-                                setState(() {
+                                safeSetState(() {
                                   _model.textController7?.text = getJsonField(
                                     (_model.apiResulta1j?.jsonBody ?? ''),
                                     r'''$.text''',
@@ -7419,11 +7441,11 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                             } else if (_model.pageViewCurrentIndex == 3) {
                               _model.businessModelName =
                                   await BusinessModelNameCall.call(
-                                question: functions.stringToAPI(
-                                    widget.project?.businessPlan?.monetization),
+                                question: functions.stringToAPI(widget!
+                                    .project?.businessPlan?.monetization),
                               );
 
-                              setState(() {
+                              safeSetState(() {
                                 _model.textController8?.text = getJsonField(
                                   (_model.businessModelName?.jsonBody ?? ''),
                                   r'''$.text''',
@@ -7435,11 +7457,11 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                               });
                               _model.businessModeDescription =
                                   await BusinessModelDescriptionCall.call(
-                                question: functions.stringToAPI(
-                                    widget.project?.businessPlan?.monetization),
+                                question: functions.stringToAPI(widget!
+                                    .project?.businessPlan?.monetization),
                               );
 
-                              setState(() {
+                              safeSetState(() {
                                 _model.textController9?.text = getJsonField(
                                   (_model.businessModeDescription?.jsonBody ??
                                       ''),
@@ -7452,11 +7474,11 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                               });
                             } else if (_model.pageViewCurrentIndex == 4) {
                               _model.marketName = await MarketNameCall.call(
-                                question: functions.stringToAPI(widget
+                                question: functions.stringToAPI(widget!
                                     .project?.businessPlan?.marketingPlan),
                               );
 
-                              setState(() {
+                              safeSetState(() {
                                 _model.textController11?.text = getJsonField(
                                   (_model.marketName?.jsonBody ?? ''),
                                   r'''$.text''',
@@ -7468,11 +7490,11 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                               });
                               _model.marketDescription =
                                   await MarketDescriptionCall.call(
-                                question: functions.stringToAPI(widget
+                                question: functions.stringToAPI(widget!
                                     .project?.businessPlan?.marketingPlan),
                               );
 
-                              setState(() {
+                              safeSetState(() {
                                 _model.textController14?.text = getJsonField(
                                   (_model.marketDescription?.jsonBody ?? ''),
                                   r'''$.text''',
@@ -7484,7 +7506,7 @@ class _CreatePitchDeckWidgetState extends State<CreatePitchDeckWidget> {
                               });
                             }
 
-                            setState(() {});
+                            safeSetState(() {});
                           },
                           text: 'GENERATE WITH AI',
                           options: FFButtonOptions(

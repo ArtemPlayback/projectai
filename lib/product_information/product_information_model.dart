@@ -1,5 +1,6 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
+import '/backend/api_requests/api_streaming.dart';
 import '/backend/backend.dart';
 import '/backend/schema/structs/index.dart';
 import '/backend/supabase/supabase.dart';
@@ -10,6 +11,7 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import 'dart:async';
+import 'dart:convert';
 import 'dart:math';
 import '/flutter_flow/custom_functions.dart' as functions;
 import 'product_information_widget.dart' show ProductInformationWidget;
@@ -37,7 +39,6 @@ class ProductInformationModel
 
   ///  State fields for stateful widgets in this page.
 
-  final unfocusNode = FocusNode();
   // State field(s) for TextField widget.
   FocusNode? textFieldFocusNode1;
   TextEditingController? textController1;
@@ -53,6 +54,8 @@ class ProductInformationModel
   Color? colorPicked;
   // Models for product_block dynamic component.
   late FlutterFlowDynamicModels<ProductBlockModel> productBlockModels;
+  // Stores action output result for [Backend Call - Read Document] action in IconButton widget.
+  ProductsRecord? readProduct;
   // Stores action output result for [Backend Call - API (upsert vectors neightn)] action in Button widget.
   ApiCallResponse? upsert;
 
@@ -63,7 +66,6 @@ class ProductInformationModel
 
   @override
   void dispose() {
-    unfocusNode.dispose();
     textFieldFocusNode1?.dispose();
     textController1?.dispose();
 

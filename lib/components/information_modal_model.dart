@@ -1,3 +1,4 @@
+import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/backend/schema/structs/index.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
@@ -21,15 +22,19 @@ class InformationModalModel extends FlutterFlowModel<InformationModalWidget> {
   ///  State fields for stateful widgets in this component.
 
   // Model for button_fixed_size component.
-  late ButtonFixedSizeModel buttonFixedSizeModel;
+  late ButtonFixedSizeModel buttonFixedSizeModel1;
+  // Model for button_fixed_size component.
+  late ButtonFixedSizeModel buttonFixedSizeModel2;
 
   @override
   void initState(BuildContext context) {
-    buttonFixedSizeModel = createModel(context, () => ButtonFixedSizeModel());
+    buttonFixedSizeModel1 = createModel(context, () => ButtonFixedSizeModel());
+    buttonFixedSizeModel2 = createModel(context, () => ButtonFixedSizeModel());
   }
 
   @override
   void dispose() {
-    buttonFixedSizeModel.dispose();
+    buttonFixedSizeModel1.dispose();
+    buttonFixedSizeModel2.dispose();
   }
 }

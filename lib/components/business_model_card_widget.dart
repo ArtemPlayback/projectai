@@ -40,14 +40,15 @@ class _BusinessModelCardWidgetState extends State<BusinessModelCardWidget> {
     super.initState();
     _model = createModel(context, () => BusinessModelCardModel());
 
-    _model.textController1 ??= TextEditingController(text: widget.cashflowName);
+    _model.textController1 ??=
+        TextEditingController(text: widget!.cashflowName);
     _model.textFieldFocusNode1 ??= FocusNode();
 
     _model.textController2 ??=
-        TextEditingController(text: widget.cashflowdescription);
+        TextEditingController(text: widget!.cashflowdescription);
     _model.textFieldFocusNode2 ??= FocusNode();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -77,7 +78,7 @@ class _BusinessModelCardWidgetState extends State<BusinessModelCardWidget> {
                 Align(
                   alignment: AlignmentDirectional(-1.0, -1.0),
                   child: Text(
-                    'Cashflow ${((widget.parameter1!) + 1).toString()}',
+                    'Cashflow ${((widget!.parameter1!) + 1).toString()}',
                     style: FlutterFlowTheme.of(context).bodyMedium.override(
                           fontFamily: 'Montserrat',
                           color: FlutterFlowTheme.of(context).primary,
@@ -97,7 +98,8 @@ class _BusinessModelCardWidgetState extends State<BusinessModelCardWidget> {
                     size: 20.0,
                   ),
                   onPressed: () async {
-                    FFAppState().removeAtIndexFromCashFlows(widget.parameter1!);
+                    FFAppState()
+                        .removeAtIndexFromCashFlows(widget!.parameter1!);
                     FFAppState().update(() {});
                   },
                 ),
@@ -113,7 +115,7 @@ class _BusinessModelCardWidgetState extends State<BusinessModelCardWidget> {
                   Duration(milliseconds: 200),
                   () async {
                     FFAppState().updateCashFlowsAtIndex(
-                      widget.parameter1!,
+                      widget!.parameter1!,
                       (e) => e..title = _model.textController1.text,
                     );
                     FFAppState().update(() {});
@@ -185,7 +187,7 @@ class _BusinessModelCardWidgetState extends State<BusinessModelCardWidget> {
                   Duration(milliseconds: 200),
                   () async {
                     FFAppState().updateCashFlowsAtIndex(
-                      widget.parameter1!,
+                      widget!.parameter1!,
                       (e) => e..description = _model.textController2.text,
                     );
                     FFAppState().update(() {});

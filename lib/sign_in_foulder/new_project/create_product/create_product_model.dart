@@ -1,8 +1,10 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
+import '/backend/api_requests/api_streaming.dart';
 import '/backend/backend.dart';
 import '/backend/firebase_storage/storage.dart';
 import '/backend/schema/structs/index.dart';
+import '/backend/supabase/supabase.dart';
 import '/components/form_item_widget.dart';
 import '/flutter_flow/flutter_flow_animations.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
@@ -13,9 +15,9 @@ import '/flutter_flow/upload_data.dart';
 import '/sign_in_foulder/new_project/button_fixed_size/button_fixed_size_widget.dart';
 import '/sign_in_foulder/new_project/button_infinity/button_infinity_widget.dart';
 import 'dart:async';
+import 'dart:convert';
 import 'dart:math';
 import 'dart:ui';
-import '/backend/schema/structs/index.dart';
 import '/custom_code/actions/index.dart' as actions;
 import '/flutter_flow/custom_functions.dart' as functions;
 import '/flutter_flow/random_data_util.dart' as random_data;
@@ -86,7 +88,7 @@ class CreateProductModel extends FlutterFlowModel<CreateProductWidget> {
 
   ///  State fields for stateful widgets in this page.
 
-  final unfocusNode = FocusNode();
+  final formKey = GlobalKey<FormState>();
   // State field(s) for PageView widget.
   PageController? pageViewController;
 
@@ -95,24 +97,72 @@ class CreateProductModel extends FlutterFlowModel<CreateProductWidget> {
           pageViewController!.page != null
       ? pageViewController!.page!.round()
       : 0;
+  // State field(s) for Column widget.
+  ScrollController? columnController1;
+  // State field(s) for Column widget.
+  ScrollController? columnController2;
+  // State field(s) for Column widget.
+  ScrollController? columnController3;
+  // State field(s) for ListView widget.
+  ScrollController? listViewController;
   // Stores action output result for [Custom Action - reorderItems] action in ListView widget.
   List<String>? reorder;
   bool isDataUploading = false;
   List<FFUploadedFile> uploadedLocalFiles = [];
   List<String> uploadedFileUrls = [];
 
+  // State field(s) for priceColumn widget.
+  ScrollController? priceColumn;
   // State field(s) for TextField widget.
   FocusNode? textFieldFocusNode1;
   TextEditingController? textController1;
   String? Function(BuildContext, String?)? textController1Validator;
+  String? _textController1Validator(BuildContext context, String? val) {
+    if (val == null || val.isEmpty) {
+      return 'Field is required';
+    }
+
+    if (val.length < 1) {
+      return 'Requires at least 1 characters.';
+    }
+
+    return null;
+  }
+
   // State field(s) for TextField widget.
   FocusNode? textFieldFocusNode2;
   TextEditingController? textController2;
   String? Function(BuildContext, String?)? textController2Validator;
+  String? _textController2Validator(BuildContext context, String? val) {
+    if (val == null || val.isEmpty) {
+      return 'Field is required';
+    }
+
+    if (val.length < 1) {
+      return 'Requires at least 1 characters.';
+    }
+
+    return null;
+  }
+
   // State field(s) for TextField widget.
   FocusNode? textFieldFocusNode3;
   TextEditingController? textController3;
   String? Function(BuildContext, String?)? textController3Validator;
+  String? _textController3Validator(BuildContext context, String? val) {
+    if (val == null || val.isEmpty) {
+      return 'Field is required';
+    }
+
+    if (val.length < 2) {
+      return 'Requires at least 2 characters.';
+    }
+
+    return null;
+  }
+
+  // State field(s) for Column widget.
+  ScrollController? columnController4;
   // Model for button_fixed_size component.
   late ButtonFixedSizeModel buttonFixedSizeModel1;
   // Stores action output result for [Backend Call - API (create questions)] action in button_fixed_size widget.
@@ -123,9 +173,22 @@ class CreateProductModel extends FlutterFlowModel<CreateProductWidget> {
   late ButtonInfinityModel buttonInfinityModel;
   // Model for button_fixed_size component.
   late ButtonFixedSizeModel buttonFixedSizeModel2;
+  // Stores action output result for [Backend Call - Create Document] action in button_fixed_size widget.
+  ProductsRecord? createdProductSave;
+  // Stores action output result for [Backend Call - API (upsert vectors neightn)] action in button_fixed_size widget.
+  ApiCallResponse? upsert;
 
   @override
   void initState(BuildContext context) {
+    columnController1 = ScrollController();
+    columnController2 = ScrollController();
+    columnController3 = ScrollController();
+    listViewController = ScrollController();
+    priceColumn = ScrollController();
+    textController1Validator = _textController1Validator;
+    textController2Validator = _textController2Validator;
+    textController3Validator = _textController3Validator;
+    columnController4 = ScrollController();
     buttonFixedSizeModel1 = createModel(context, () => ButtonFixedSizeModel());
     buttonInfinityModel = createModel(context, () => ButtonInfinityModel());
     buttonFixedSizeModel2 = createModel(context, () => ButtonFixedSizeModel());
@@ -133,7 +196,11 @@ class CreateProductModel extends FlutterFlowModel<CreateProductWidget> {
 
   @override
   void dispose() {
-    unfocusNode.dispose();
+    columnController1?.dispose();
+    columnController2?.dispose();
+    columnController3?.dispose();
+    listViewController?.dispose();
+    priceColumn?.dispose();
     textFieldFocusNode1?.dispose();
     textController1?.dispose();
 
@@ -143,6 +210,7 @@ class CreateProductModel extends FlutterFlowModel<CreateProductWidget> {
     textFieldFocusNode3?.dispose();
     textController3?.dispose();
 
+    columnController4?.dispose();
     buttonFixedSizeModel1.dispose();
     buttonInfinityModel.dispose();
     buttonFixedSizeModel2.dispose();

@@ -18,7 +18,6 @@ class CreateProjectImagesModel
     extends FlutterFlowModel<CreateProjectImagesWidget> {
   ///  State fields for stateful widgets in this page.
 
-  final unfocusNode = FocusNode();
   // State field(s) for PageView widget.
   PageController? pageViewController;
 
@@ -44,7 +43,5 @@ class CreateProjectImagesModel
   void initState(BuildContext context) {}
 
   @override
-  void dispose() {
-    unfocusNode.dispose();
-  }
+  void dispose() {}
 }

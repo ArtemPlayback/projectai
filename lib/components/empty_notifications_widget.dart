@@ -28,7 +28,7 @@ class _EmptyNotificationsWidgetState extends State<EmptyNotificationsWidget> {
     super.initState();
     _model = createModel(context, () => EmptyNotificationsModel());
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override

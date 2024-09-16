@@ -42,15 +42,15 @@ class _TeamWidgetState extends State<TeamWidget> {
 
     // On component load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
-      _model.team2 = widget.company!.team.toList().cast<TeamMemberStruct>();
-      setState(() {});
+      _model.team2 = widget!.company!.team.toList().cast<TeamMemberStruct>();
+      safeSetState(() {});
     });
 
     _model.textController ??= TextEditingController(
-        text: (widget.company?.team?[_model.teamIndex!])?.role);
+        text: (widget!.company?.team?[_model.teamIndex!])?.role);
     _model.textFieldFocusNode ??= FocusNode();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -88,6 +88,7 @@ class _TeamWidgetState extends State<TeamWidget> {
                         Builder(
                           builder: (context) {
                             final team = _model.team2.toList();
+
                             return ListView.separated(
                               padding: EdgeInsets.fromLTRB(
                                 0,
@@ -112,7 +113,7 @@ class _TeamWidgetState extends State<TeamWidget> {
                                         15.0, 0.0, 15.0, 0.0),
                                     child: FutureBuilder<UsersRecord>(
                                       future: UsersRecord.getDocumentOnce(
-                                          teamItem.userReference!),
+                                          teamItem.user!),
                                       builder: (context, snapshot) {
                                         // Customize what your widget looks like when it's loading.
                                         if (!snapshot.hasData) {
@@ -131,7 +132,9 @@ class _TeamWidgetState extends State<TeamWidget> {
                                             ),
                                           );
                                         }
+
                                         final rowUsersRecord = snapshot.data!;
+
                                         return Row(
                                           mainAxisSize: MainAxisSize.max,
                                           mainAxisAlignment:
@@ -266,7 +269,7 @@ class _TeamWidgetState extends State<TeamWidget> {
                                                           rowUsersRecord;
                                                       _model.teamIndex =
                                                           teamIndex;
-                                                      setState(() {});
+                                                      safeSetState(() {});
                                                       await _model
                                                           .pageViewController
                                                           ?.nextPage(
@@ -294,9 +297,9 @@ class _TeamWidgetState extends State<TeamWidget> {
                                                     _model
                                                         .removeAtIndexFromTeam2(
                                                             teamIndex);
-                                                    setState(() {});
+                                                    safeSetState(() {});
 
-                                                    await widget
+                                                    await widget!
                                                         .company!.reference
                                                         .update({
                                                       ...mapToFirestore(
@@ -362,7 +365,7 @@ class _TeamWidgetState extends State<TeamWidget> {
                             onPressed: () async {
                               _model.read =
                                   await ProjectsRecord.getDocumentOnce(
-                                      widget.company!.reference);
+                                      widget!.company!.reference);
 
                               context.pushNamed(
                                 'company_settings',
@@ -377,7 +380,7 @@ class _TeamWidgetState extends State<TeamWidget> {
                                 },
                               );
 
-                              setState(() {});
+                              safeSetState(() {});
                             },
                           ),
                         ],
@@ -462,7 +465,7 @@ class _TeamWidgetState extends State<TeamWidget> {
                           onChanged: (_) => EasyDebounce.debounce(
                             '_model.textController',
                             Duration(milliseconds: 10),
-                            () => setState(() {}),
+                            () => safeSetState(() {}),
                           ),
                           autofocus: false,
                           textCapitalization: TextCapitalization.sentences,
@@ -539,7 +542,7 @@ class _TeamWidgetState extends State<TeamWidget> {
                             20.0, 20.0, 20.0, 0.0),
                         child: wrapWithModel(
                           model: _model.buttonInfinityModel,
-                          updateCallback: () => setState(() {}),
+                          updateCallback: () => safeSetState(() {}),
                           child: ButtonInfinityWidget(
                             width: 450.0,
                             height: 40.0,
@@ -552,9 +555,9 @@ class _TeamWidgetState extends State<TeamWidget> {
                                 _model.teamIndex!,
                                 (e) => e..role = _model.textController.text,
                               );
-                              setState(() {});
+                              safeSetState(() {});
 
-                              await widget.company!.reference.update({
+                              await widget!.company!.reference.update({
                                 ...mapToFirestore(
                                   {
                                     'team': getTeamMemberListFirestoreData(
@@ -625,7 +628,7 @@ class _TeamWidgetState extends State<TeamWidget> {
                             onPressed: () async {
                               _model.readCopy =
                                   await ProjectsRecord.getDocumentOnce(
-                                      widget.company!.reference);
+                                      widget!.company!.reference);
 
                               context.pushNamed(
                                 'company_settings',
@@ -640,7 +643,7 @@ class _TeamWidgetState extends State<TeamWidget> {
                                 },
                               );
 
-                              setState(() {});
+                              safeSetState(() {});
                             },
                           ),
                         ],

@@ -33,7 +33,7 @@ class _ChangePasswordWidgetState extends State<ChangePasswordWidget> {
         TextEditingController(text: currentUserEmail);
     _model.textFieldFocusNode ??= FocusNode();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override

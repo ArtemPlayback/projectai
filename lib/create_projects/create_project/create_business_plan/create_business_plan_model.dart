@@ -1,10 +1,8 @@
 import '/auth/firebase_auth/auth_util.dart';
-import '/backend/api_requests/api_calls.dart';
 import '/backend/backend.dart';
 import '/backend/schema/structs/index.dart';
 import '/backend/supabase/supabase.dart';
 import '/create_projects/create_project/market_size_chat/market_size_chat_widget.dart';
-import '/create_projects/projects_created_pitch_deck/projects_created_pitch_deck_widget.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -34,7 +32,6 @@ class CreateBusinessPlanModel
 
   ///  State fields for stateful widgets in this page.
 
-  final unfocusNode = FocusNode();
   // State field(s) for PageView widget.
   PageController? pageViewController;
 
@@ -63,20 +60,10 @@ class CreateBusinessPlanModel
   FocusNode? textFieldFocusNode5;
   TextEditingController? textController5;
   String? Function(BuildContext, String?)? textController5Validator;
-  // Stores action output result for [Backend Call - Read Document] action in Button widget.
-  ProjectsRecord? dfgg5;
-  // Stores action output result for [Backend Call - Read Document] action in Button widget.
-  ProjectsRecord? read23;
-  // Stores action output result for [Backend Call - Read Document] action in Button widget.
-  ProjectsRecord? proj;
   // Stores action output result for [Backend Call - Read Document] action in IconButton widget.
   ProjectsRecord? read;
   // Stores action output result for [Backend Call - Read Document] action in IconButton widget.
   ProjectsRecord? vgf;
-  // Stores action output result for [Backend Call - Read Document] action in Button widget.
-  ProjectsRecord? read25;
-  // Stores action output result for [Backend Call - Read Document] action in Button widget.
-  ProjectsRecord? vgf5;
   // Stores action output result for [Backend Call - Read Document] action in Button widget.
   ProjectsRecord? gfdg5;
 
@@ -85,7 +72,6 @@ class CreateBusinessPlanModel
 
   @override
   void dispose() {
-    unfocusNode.dispose();
     textFieldFocusNode1?.dispose();
     textController1?.dispose();
 

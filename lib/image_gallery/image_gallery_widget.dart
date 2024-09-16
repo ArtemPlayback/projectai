@@ -48,17 +48,17 @@ class _ImageGalleryWidgetState extends State<ImageGalleryWidget> {
 
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
-      _model.images4 = widget.project != null
-          ? widget.project!.images
-          : (widget.user != null
-                  ? widget.user!.images
+      _model.images4 = widget!.project != null
+          ? widget!.project!.images
+          : (widget!.user != null
+                  ? widget!.user!.images
                   : (currentUserDocument?.images?.toList() ?? []))
               .toList()
               .cast<String>();
-      setState(() {});
+      safeSetState(() {});
     });
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -71,9 +71,7 @@ class _ImageGalleryWidgetState extends State<ImageGalleryWidget> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => _model.unfocusNode.canRequestFocus
-          ? FocusScope.of(context).requestFocus(_model.unfocusNode)
-          : FocusScope.of(context).unfocus(),
+      onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
@@ -97,7 +95,11 @@ class _ImageGalleryWidgetState extends State<ImageGalleryWidget> {
                         ),
                         child: Builder(
                           builder: (context) {
-                            final images = _model.images4.toList();
+                            final images = functions
+                                    .reverseImagesList(_model.images4.toList())
+                                    ?.toList() ??
+                                [];
+
                             return GridView.builder(
                               padding: EdgeInsets.zero,
                               gridDelegate:
@@ -141,33 +143,31 @@ class _ImageGalleryWidgetState extends State<ImageGalleryWidget> {
                                                               Directionality.of(
                                                                   context)),
                                                   child: GestureDetector(
-                                                    onTap: () => _model
-                                                            .unfocusNode
-                                                            .canRequestFocus
-                                                        ? FocusScope.of(context)
-                                                            .requestFocus(_model
-                                                                .unfocusNode)
-                                                        : FocusScope.of(context)
-                                                            .unfocus(),
+                                                    onTap: () => FocusScope.of(
+                                                            dialogContext)
+                                                        .unfocus(),
                                                     child: Container(
                                                       height: MediaQuery.sizeOf(
                                                                   context)
                                                               .height *
                                                           1.0,
                                                       child: ImageSliderWidget(
-                                                        images: widget.images!,
+                                                        images: widget!.images!,
                                                         initialindex:
                                                             imagesIndex,
-                                                        user: widget.user,
-                                                        project: widget.project,
-                                                        isThisYours: widget
+                                                        user: widget!.user,
+                                                        project:
+                                                            widget!.project,
+                                                        isThisYours: widget!
                                                             .isProjectYours,
+                                                        actionDelete:
+                                                            (images) async {},
                                                       ),
                                                     ),
                                                   ),
                                                 );
                                               },
-                                            ).then((value) => setState(() {}));
+                                            );
                                           },
                                           child: ClipRRect(
                                             borderRadius:
@@ -191,7 +191,7 @@ class _ImageGalleryWidgetState extends State<ImageGalleryWidget> {
                       ),
                     ),
                   ),
-                ].addToStart(SizedBox(height: 40.0)),
+                ].addToStart(SizedBox(height: 60.0)),
               ),
             ),
             ClipRRect(
@@ -208,34 +208,39 @@ class _ImageGalleryWidgetState extends State<ImageGalleryWidget> {
                   ),
                   child: Padding(
                     padding:
-                        EdgeInsetsDirectional.fromSTEB(0.0, 30.0, 0.0, 0.0),
+                        EdgeInsetsDirectional.fromSTEB(0.0, 50.0, 0.0, 0.0),
                     child: Row(
                       mainAxisSize: MainAxisSize.max,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        FlutterFlowIconButton(
-                          borderColor: Colors.transparent,
-                          borderRadius: 20.0,
-                          borderWidth: 1.0,
-                          buttonSize: 45.0,
-                          fillColor: Colors.transparent,
-                          icon: Icon(
-                            Icons.chevron_left,
-                            color: Color(0x8A000000),
-                            size: 30.0,
-                          ),
-                          onPressed: () async {
-                            if (widget.project != null) {
-                              _model.fgg = await ProjectsRecord.getDocumentOnce(
-                                  widget.project!.reference);
-                            } else if (widget.user != null) {
-                              context.safePop();
-                            } else {
-                              context.safePop();
-                            }
+                        Padding(
+                          padding: EdgeInsetsDirectional.fromSTEB(
+                              12.0, 0.0, 0.0, 0.0),
+                          child: FlutterFlowIconButton(
+                            borderColor:
+                                FlutterFlowTheme.of(context).textAndStroke,
+                            borderRadius: 10.0,
+                            borderWidth: 1.0,
+                            buttonSize: 40.0,
+                            icon: Icon(
+                              FFIcons.kback,
+                              color: FlutterFlowTheme.of(context).secondaryText,
+                              size: 14.0,
+                            ),
+                            onPressed: () async {
+                              if (widget!.project != null) {
+                                _model.fgg =
+                                    await ProjectsRecord.getDocumentOnce(
+                                        widget!.project!.reference);
+                              } else if (widget!.user != null) {
+                                context.safePop();
+                              } else {
+                                context.safePop();
+                              }
 
-                            setState(() {});
-                          },
+                              safeSetState(() {});
+                            },
+                          ),
                         ),
                         Text(
                           'Images Gallery',
@@ -247,107 +252,150 @@ class _ImageGalleryWidgetState extends State<ImageGalleryWidget> {
                                     fontWeight: FontWeight.w600,
                                   ),
                         ),
-                        Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              0.0, 5.0, 5.0, 0.0),
-                          child: FlutterFlowIconButton(
-                            borderColor: Colors.transparent,
-                            borderRadius: 20.0,
-                            borderWidth: 1.0,
-                            buttonSize: 45.0,
-                            fillColor: Colors.transparent,
-                            icon: Icon(
-                              Icons.add_circle_outline,
-                              color: Color(0x8A000000),
-                              size: 24.0,
-                            ),
-                            onPressed: () async {
-                              final selectedMedia = await selectMedia(
-                                mediaSource: MediaSource.photoGallery,
-                                multiImage: true,
-                              );
-                              if (selectedMedia != null &&
-                                  selectedMedia.every((m) => validateFileFormat(
-                                      m.storagePath, context))) {
-                                setState(() => _model.isDataUploading = true);
-                                var selectedUploadedFiles = <FFUploadedFile>[];
-
-                                var downloadUrls = <String>[];
-                                try {
-                                  selectedUploadedFiles = selectedMedia
-                                      .map((m) => FFUploadedFile(
-                                            name: m.storagePath.split('/').last,
-                                            bytes: m.bytes,
-                                            height: m.dimensions?.height,
-                                            width: m.dimensions?.width,
-                                            blurHash: m.blurHash,
-                                          ))
-                                      .toList();
-
-                                  downloadUrls = (await Future.wait(
-                                    selectedMedia.map(
-                                      (m) async => await uploadData(
-                                          m.storagePath, m.bytes),
+                        Builder(
+                          builder: (context) {
+                            if ((widget!.user?.reference ==
+                                    currentUserReference) ||
+                                widget!.isProjectYours) {
+                              return Visibility(
+                                visible: (widget!.user?.reference ==
+                                        currentUserReference) ||
+                                    widget!.isProjectYours,
+                                child: Padding(
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      1.0, 0.0, 12.0, 0.0),
+                                  child: FlutterFlowIconButton(
+                                    borderColor: FlutterFlowTheme.of(context)
+                                        .textAndStroke,
+                                    borderRadius: 10.0,
+                                    borderWidth: 1.0,
+                                    buttonSize: 40.0,
+                                    icon: Icon(
+                                      Icons.add,
+                                      color: FlutterFlowTheme.of(context)
+                                          .secondaryText,
+                                      size: 24.0,
                                     ),
-                                  ))
-                                      .where((u) => u != null)
-                                      .map((u) => u!)
-                                      .toList();
-                                } finally {
-                                  _model.isDataUploading = false;
-                                }
-                                if (selectedUploadedFiles.length ==
-                                        selectedMedia.length &&
-                                    downloadUrls.length ==
-                                        selectedMedia.length) {
-                                  setState(() {
-                                    _model.uploadedLocalFiles =
-                                        selectedUploadedFiles;
-                                    _model.uploadedFileUrls = downloadUrls;
-                                  });
-                                } else {
-                                  setState(() {});
-                                  return;
-                                }
-                              }
+                                    onPressed: () async {
+                                      final selectedMedia = await selectMedia(
+                                        mediaSource: MediaSource.photoGallery,
+                                        multiImage: true,
+                                      );
+                                      if (selectedMedia != null &&
+                                          selectedMedia.every((m) =>
+                                              validateFileFormat(
+                                                  m.storagePath, context))) {
+                                        safeSetState(() =>
+                                            _model.isDataUploading = true);
+                                        var selectedUploadedFiles =
+                                            <FFUploadedFile>[];
 
-                              _model.images4 = functions
-                                  .imagesList(_model.uploadedFileUrls.toList(),
-                                      _model.images4.toList())
-                                  .toList()
-                                  .cast<String>();
-                              setState(() {});
-                              if (widget.project != null) {
-                                unawaited(
-                                  () async {
-                                    await widget.project!.reference.update({
-                                      ...mapToFirestore(
-                                        {
-                                          'images': functions.imagesList(
+                                        var downloadUrls = <String>[];
+                                        try {
+                                          selectedUploadedFiles = selectedMedia
+                                              .map((m) => FFUploadedFile(
+                                                    name: m.storagePath
+                                                        .split('/')
+                                                        .last,
+                                                    bytes: m.bytes,
+                                                    height:
+                                                        m.dimensions?.height,
+                                                    width: m.dimensions?.width,
+                                                    blurHash: m.blurHash,
+                                                  ))
+                                              .toList();
+
+                                          downloadUrls = (await Future.wait(
+                                            selectedMedia.map(
+                                              (m) async => await uploadData(
+                                                  m.storagePath, m.bytes),
+                                            ),
+                                          ))
+                                              .where((u) => u != null)
+                                              .map((u) => u!)
+                                              .toList();
+                                        } finally {
+                                          _model.isDataUploading = false;
+                                        }
+                                        if (selectedUploadedFiles.length ==
+                                                selectedMedia.length &&
+                                            downloadUrls.length ==
+                                                selectedMedia.length) {
+                                          safeSetState(() {
+                                            _model.uploadedLocalFiles =
+                                                selectedUploadedFiles;
+                                            _model.uploadedFileUrls =
+                                                downloadUrls;
+                                          });
+                                        } else {
+                                          safeSetState(() {});
+                                          return;
+                                        }
+                                      }
+
+                                      _model.images4 = functions
+                                          .imagesList(
                                               _model.uploadedFileUrls.toList(),
-                                              _model.images4.toList()),
-                                        },
-                                      ),
-                                    });
-                                  }(),
-                                );
-                              } else {
-                                unawaited(
-                                  () async {
-                                    await currentUserReference!.update({
-                                      ...mapToFirestore(
-                                        {
-                                          'images': functions.imagesList(
-                                              _model.uploadedFileUrls.toList(),
-                                              _model.images4.toList()),
-                                        },
-                                      ),
-                                    });
-                                  }(),
-                                );
-                              }
-                            },
-                          ),
+                                              _model.images4.toList())
+                                          .toList()
+                                          .cast<String>();
+                                      safeSetState(() {});
+                                      if (widget!.project != null) {
+                                        unawaited(
+                                          () async {
+                                            await widget!.project!.reference
+                                                .update({
+                                              ...mapToFirestore(
+                                                {
+                                                  'images':
+                                                      functions.imagesList(
+                                                          _model
+                                                              .uploadedFileUrls
+                                                              .toList(),
+                                                          _model.images4
+                                                              .toList()),
+                                                },
+                                              ),
+                                            });
+                                          }(),
+                                        );
+                                      } else {
+                                        unawaited(
+                                          () async {
+                                            await currentUserReference!.update({
+                                              ...mapToFirestore(
+                                                {
+                                                  'images':
+                                                      functions.imagesList(
+                                                          _model
+                                                              .uploadedFileUrls
+                                                              .toList(),
+                                                          _model.images4
+                                                              .toList()),
+                                                },
+                                              ),
+                                            });
+                                          }(),
+                                        );
+                                      }
+                                    },
+                                  ),
+                                ),
+                              );
+                            } else {
+                              return Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    0.0, 0.0, 12.0, 0.0),
+                                child: Container(
+                                  width: 40.0,
+                                  height: 40.0,
+                                  decoration: BoxDecoration(
+                                    color: Color(0x03FFFFFF),
+                                  ),
+                                ),
+                              );
+                            }
+                          },
                         ),
                       ],
                     ),

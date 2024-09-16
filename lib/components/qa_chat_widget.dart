@@ -1,5 +1,6 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
+import '/backend/api_requests/api_streaming.dart';
 import '/backend/backend.dart';
 import '/backend/schema/structs/index.dart';
 import '/flutter_flow/flutter_flow_animations.dart';
@@ -7,6 +8,7 @@ import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'dart:async';
+import 'dart:convert';
 import 'dart:math';
 import 'dart:ui';
 import '/flutter_flow/custom_functions.dart' as functions;
@@ -57,7 +59,7 @@ class _QaChatWidgetState extends State<QaChatWidget>
         queryBuilder: (aiChatsRecord) => aiChatsRecord
             .where(
               'event',
-              isEqualTo: widget.event?.reference,
+              isEqualTo: widget!.event?.reference,
             )
             .where(
               'user',
@@ -66,23 +68,23 @@ class _QaChatWidgetState extends State<QaChatWidget>
         singleRecord: true,
       ).then((s) => s.firstOrNull);
       _model.docref = _model.eventchat?.reference;
-      setState(() {});
+      safeSetState(() {});
       if (_model.eventchat?.reference != null) {
         _model.chatmessages =
             _model.eventchat!.messages.toList().cast<ChatMessagesStruct>();
-        setState(() {});
+        safeSetState(() {});
       } else {
         _model.addToChatmessages(ChatMessagesStruct(
           text: 'Zdarova',
           type: 'AI',
         ));
-        setState(() {});
+        safeSetState(() {});
 
         var aiChatsRecordReference = AiChatsRecord.collection.doc();
         await aiChatsRecordReference.set({
           ...createAiChatsRecordData(
             user: currentUserReference,
-            event: widget.event?.reference,
+            event: widget!.event?.reference,
           ),
           ...mapToFirestore(
             {
@@ -95,7 +97,7 @@ class _QaChatWidgetState extends State<QaChatWidget>
         _model.aichat2 = AiChatsRecord.getDocumentFromData({
           ...createAiChatsRecordData(
             user: currentUserReference,
-            event: widget.event?.reference,
+            event: widget!.event?.reference,
           ),
           ...mapToFirestore(
             {
@@ -106,7 +108,7 @@ class _QaChatWidgetState extends State<QaChatWidget>
           ),
         }, aiChatsRecordReference);
         _model.docref = _model.aichat2?.reference;
-        setState(() {});
+        safeSetState(() {});
       }
     });
 
@@ -128,7 +130,7 @@ class _QaChatWidgetState extends State<QaChatWidget>
       ),
     });
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -168,6 +170,7 @@ class _QaChatWidgetState extends State<QaChatWidget>
                 child: Builder(
                   builder: (context) {
                     final messages = _model.chatmessages.toList();
+
                     return SingleChildScrollView(
                       primary: false,
                       controller: _model.columnController,
@@ -240,7 +243,7 @@ class _QaChatWidgetState extends State<QaChatWidget>
                                                         0.0, 0.0, 10.0, 6.0),
                                                 child: Text(
                                                   dateTimeFormat(
-                                                      'jm', messagesItem.when!),
+                                                      "jm", messagesItem.when!),
                                                   style: FlutterFlowTheme.of(
                                                           context)
                                                       .bodyMedium
@@ -352,7 +355,7 @@ class _QaChatWidgetState extends State<QaChatWidget>
                                                                     6.0),
                                                         child: Text(
                                                           dateTimeFormat(
-                                                              'jm',
+                                                              "jm",
                                                               messagesItem
                                                                   .when!),
                                                           style: FlutterFlowTheme
@@ -437,7 +440,7 @@ class _QaChatWidgetState extends State<QaChatWidget>
                                                             .fromSTEB(0.0, 0.0,
                                                                 10.0, 8.0),
                                                     child: Text(
-                                                      dateTimeFormat('Hm',
+                                                      dateTimeFormat("Hm",
                                                           messagesItem.when!),
                                                       style: FlutterFlowTheme
                                                               .of(context)
@@ -566,7 +569,7 @@ class _QaChatWidgetState extends State<QaChatWidget>
                                                   () async {
                                                     _model.message = _model
                                                         .textController.text;
-                                                    setState(() {});
+                                                    safeSetState(() {});
                                                   },
                                                 ),
                                                 autofocus: false,
@@ -647,7 +650,7 @@ class _QaChatWidgetState extends State<QaChatWidget>
                                             size: 21.0,
                                           ),
                                           onPressed: () async {
-                                            setState(() {
+                                            safeSetState(() {
                                               _model.textController?.clear();
                                             });
                                             _model.addToChatmessages(
@@ -655,7 +658,7 @@ class _QaChatWidgetState extends State<QaChatWidget>
                                               text: _model.message,
                                               type: 'User',
                                             ));
-                                            setState(() {});
+                                            safeSetState(() {});
                                             _model.qa = await QABotCall.call(
                                               text: functions
                                                   .stringToAPI(_model.message),
@@ -672,7 +675,7 @@ class _QaChatWidgetState extends State<QaChatWidget>
                                                 when: getCurrentTimestamp,
                                                 type: 'AI',
                                               ));
-                                              setState(() {});
+                                              safeSetState(() {});
                                               unawaited(
                                                 () async {
                                                   await _model.docref!.update({
@@ -703,10 +706,10 @@ class _QaChatWidgetState extends State<QaChatWidget>
                                                 when: getCurrentTimestamp,
                                                 type: 'AI',
                                               ));
-                                              setState(() {});
+                                              safeSetState(() {});
                                             }
 
-                                            setState(() {});
+                                            safeSetState(() {});
                                           },
                                         ).animateOnPageLoad(animationsMap[
                                             'iconButtonOnPageLoadAnimation']!),
@@ -809,7 +812,7 @@ class _QaChatWidgetState extends State<QaChatWidget>
                                 shape: BoxShape.circle,
                               ),
                               child: Image.network(
-                                widget.event!.eventInfo.images.first,
+                                widget!.event!.eventInfo.images.first,
                                 fit: BoxFit.cover,
                               ),
                             ),

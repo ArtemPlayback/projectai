@@ -1,10 +1,8 @@
 import '/auth/firebase_auth/auth_util.dart';
-import '/backend/api_requests/api_calls.dart';
 import '/backend/backend.dart';
 import '/backend/schema/structs/index.dart';
 import '/backend/supabase/supabase.dart';
 import '/create_projects/create_project/market_size_chat/market_size_chat_widget.dart';
-import '/create_projects/projects_created_pitch_deck/projects_created_pitch_deck_widget.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -50,32 +48,32 @@ class _CreateBusinessPlanWidgetState extends State<CreateBusinessPlanWidget> {
 
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
-      _model.cover = widget.project?.cover;
-      _model.doc = widget.project;
-      setState(() {});
+      _model.cover = widget!.project?.cover;
+      _model.doc = widget!.project;
+      safeSetState(() {});
     });
 
     _model.textController1 ??=
-        TextEditingController(text: widget.project?.businessPlan?.marketSize);
+        TextEditingController(text: widget!.project?.businessPlan?.marketSize);
     _model.textFieldFocusNode1 ??= FocusNode();
 
-    _model.textController2 ??=
-        TextEditingController(text: widget.project?.businessPlan?.monetization);
+    _model.textController2 ??= TextEditingController(
+        text: widget!.project?.businessPlan?.monetization);
     _model.textFieldFocusNode2 ??= FocusNode();
 
     _model.textController3 ??= TextEditingController(
-        text: widget.project?.businessPlan?.marketingPlan);
+        text: widget!.project?.businessPlan?.marketingPlan);
     _model.textFieldFocusNode3 ??= FocusNode();
 
     _model.textController4 ??= TextEditingController(
-        text: widget.project?.businessPlan?.financialPlan);
+        text: widget!.project?.businessPlan?.financialPlan);
     _model.textFieldFocusNode4 ??= FocusNode();
 
     _model.textController5 ??= TextEditingController(
-        text: widget.project?.businessPlan?.productionPlan);
+        text: widget!.project?.businessPlan?.productionPlan);
     _model.textFieldFocusNode5 ??= FocusNode();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -88,9 +86,7 @@ class _CreateBusinessPlanWidgetState extends State<CreateBusinessPlanWidget> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => _model.unfocusNode.canRequestFocus
-          ? FocusScope.of(context).requestFocus(_model.unfocusNode)
-          : FocusScope.of(context).unfocus(),
+      onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
@@ -107,7 +103,7 @@ class _CreateBusinessPlanWidgetState extends State<CreateBusinessPlanWidget> {
                           0,
                           min(
                               valueOrDefault<int>(
-                                widget.initialPage,
+                                widget!.initialPage,
                                 0,
                               ),
                               4))),
@@ -175,7 +171,7 @@ class _CreateBusinessPlanWidgetState extends State<CreateBusinessPlanWidget> {
                                 onChanged: (_) => EasyDebounce.debounce(
                                   '_model.textController1',
                                   Duration(milliseconds: 20),
-                                  () => setState(() {}),
+                                  () => safeSetState(() {}),
                                 ),
                                 autofocus: false,
                                 obscureText: false,
@@ -304,12 +300,8 @@ class _CreateBusinessPlanWidgetState extends State<CreateBusinessPlanWidget> {
                                     context: context,
                                     builder: (context) {
                                       return GestureDetector(
-                                        onTap: () => _model
-                                                .unfocusNode.canRequestFocus
-                                            ? FocusScope.of(context)
-                                                .requestFocus(
-                                                    _model.unfocusNode)
-                                            : FocusScope.of(context).unfocus(),
+                                        onTap: () =>
+                                            FocusScope.of(context).unfocus(),
                                         child: Padding(
                                           padding:
                                               MediaQuery.viewInsetsOf(context),
@@ -322,7 +314,7 @@ class _CreateBusinessPlanWidgetState extends State<CreateBusinessPlanWidget> {
                                               textField:
                                                   _model.textController1.text,
                                               comeFrom: 'market size',
-                                              isUpdate: widget.isUpdate!,
+                                              isUpdate: widget!.isUpdate!,
                                             ),
                                           ),
                                         ),
@@ -413,7 +405,7 @@ class _CreateBusinessPlanWidgetState extends State<CreateBusinessPlanWidget> {
                                 onChanged: (_) => EasyDebounce.debounce(
                                   '_model.textController2',
                                   Duration(milliseconds: 20),
-                                  () => setState(() {}),
+                                  () => safeSetState(() {}),
                                 ),
                                 autofocus: false,
                                 obscureText: false,
@@ -542,12 +534,8 @@ class _CreateBusinessPlanWidgetState extends State<CreateBusinessPlanWidget> {
                                     context: context,
                                     builder: (context) {
                                       return GestureDetector(
-                                        onTap: () => _model
-                                                .unfocusNode.canRequestFocus
-                                            ? FocusScope.of(context)
-                                                .requestFocus(
-                                                    _model.unfocusNode)
-                                            : FocusScope.of(context).unfocus(),
+                                        onTap: () =>
+                                            FocusScope.of(context).unfocus(),
                                         child: Padding(
                                           padding:
                                               MediaQuery.viewInsetsOf(context),
@@ -560,7 +548,7 @@ class _CreateBusinessPlanWidgetState extends State<CreateBusinessPlanWidget> {
                                               textField:
                                                   _model.textController2.text,
                                               comeFrom: 'monetization',
-                                              isUpdate: widget.isUpdate!,
+                                              isUpdate: widget!.isUpdate!,
                                             ),
                                           ),
                                         ),
@@ -651,7 +639,7 @@ class _CreateBusinessPlanWidgetState extends State<CreateBusinessPlanWidget> {
                                 onChanged: (_) => EasyDebounce.debounce(
                                   '_model.textController3',
                                   Duration(milliseconds: 20),
-                                  () => setState(() {}),
+                                  () => safeSetState(() {}),
                                 ),
                                 autofocus: false,
                                 obscureText: false,
@@ -780,12 +768,8 @@ class _CreateBusinessPlanWidgetState extends State<CreateBusinessPlanWidget> {
                                     context: context,
                                     builder: (context) {
                                       return GestureDetector(
-                                        onTap: () => _model
-                                                .unfocusNode.canRequestFocus
-                                            ? FocusScope.of(context)
-                                                .requestFocus(
-                                                    _model.unfocusNode)
-                                            : FocusScope.of(context).unfocus(),
+                                        onTap: () =>
+                                            FocusScope.of(context).unfocus(),
                                         child: Padding(
                                           padding:
                                               MediaQuery.viewInsetsOf(context),
@@ -798,7 +782,7 @@ class _CreateBusinessPlanWidgetState extends State<CreateBusinessPlanWidget> {
                                               textField:
                                                   _model.textController3.text,
                                               comeFrom: 'marketing plan',
-                                              isUpdate: widget.isUpdate!,
+                                              isUpdate: widget!.isUpdate!,
                                             ),
                                           ),
                                         ),
@@ -889,7 +873,7 @@ class _CreateBusinessPlanWidgetState extends State<CreateBusinessPlanWidget> {
                                 onChanged: (_) => EasyDebounce.debounce(
                                   '_model.textController4',
                                   Duration(milliseconds: 20),
-                                  () => setState(() {}),
+                                  () => safeSetState(() {}),
                                 ),
                                 autofocus: false,
                                 obscureText: false,
@@ -1018,12 +1002,8 @@ class _CreateBusinessPlanWidgetState extends State<CreateBusinessPlanWidget> {
                                     context: context,
                                     builder: (context) {
                                       return GestureDetector(
-                                        onTap: () => _model
-                                                .unfocusNode.canRequestFocus
-                                            ? FocusScope.of(context)
-                                                .requestFocus(
-                                                    _model.unfocusNode)
-                                            : FocusScope.of(context).unfocus(),
+                                        onTap: () =>
+                                            FocusScope.of(context).unfocus(),
                                         child: Padding(
                                           padding:
                                               MediaQuery.viewInsetsOf(context),
@@ -1036,7 +1016,7 @@ class _CreateBusinessPlanWidgetState extends State<CreateBusinessPlanWidget> {
                                               textField:
                                                   _model.textController4.text,
                                               comeFrom: 'financial plan',
-                                              isUpdate: widget.isUpdate!,
+                                              isUpdate: widget!.isUpdate!,
                                             ),
                                           ),
                                         ),
@@ -1127,7 +1107,7 @@ class _CreateBusinessPlanWidgetState extends State<CreateBusinessPlanWidget> {
                                 onChanged: (_) => EasyDebounce.debounce(
                                   '_model.textController5',
                                   Duration(milliseconds: 20),
-                                  () => setState(() {}),
+                                  () => safeSetState(() {}),
                                 ),
                                 autofocus: false,
                                 obscureText: false,
@@ -1256,12 +1236,8 @@ class _CreateBusinessPlanWidgetState extends State<CreateBusinessPlanWidget> {
                                     context: context,
                                     builder: (context) {
                                       return GestureDetector(
-                                        onTap: () => _model
-                                                .unfocusNode.canRequestFocus
-                                            ? FocusScope.of(context)
-                                                .requestFocus(
-                                                    _model.unfocusNode)
-                                            : FocusScope.of(context).unfocus(),
+                                        onTap: () =>
+                                            FocusScope.of(context).unfocus(),
                                         child: Padding(
                                           padding:
                                               MediaQuery.viewInsetsOf(context),
@@ -1274,7 +1250,7 @@ class _CreateBusinessPlanWidgetState extends State<CreateBusinessPlanWidget> {
                                               textField:
                                                   _model.textController5.text,
                                               comeFrom: 'production plan',
-                                              isUpdate: widget.isUpdate!,
+                                              isUpdate: widget!.isUpdate!,
                                             ),
                                           ),
                                         ),
@@ -1361,7 +1337,7 @@ class _CreateBusinessPlanWidgetState extends State<CreateBusinessPlanWidget> {
                                   curve: Curves.ease,
                                 );
                                 _model.indexPageView = _model.indexPageView + 1;
-                                setState(() {});
+                                safeSetState(() {});
                               },
                               child: Container(
                                 height: 45.0,
@@ -1393,208 +1369,35 @@ class _CreateBusinessPlanWidgetState extends State<CreateBusinessPlanWidget> {
                                 ),
                               ),
                             ),
-                            Builder(
-                              builder: (context) => FFButtonWidget(
-                                onPressed: () async {
-                                  final firestoreBatch =
-                                      FirebaseFirestore.instance.batch();
-                                  try {
-                                    _model.indexPageView =
-                                        _model.indexPageView + 1;
-                                    setState(() {});
-                                    if (_model.pageViewCurrentIndex == 0) {
-                                      await _model.pageViewController?.nextPage(
-                                        duration: Duration(milliseconds: 300),
-                                        curve: Curves.ease,
-                                      );
-                                    } else if (_model.pageViewCurrentIndex ==
-                                        1) {
-                                      await _model.pageViewController?.nextPage(
-                                        duration: Duration(milliseconds: 300),
-                                        curve: Curves.ease,
-                                      );
-                                    } else if (_model.pageViewCurrentIndex ==
-                                        2) {
-                                      await _model.pageViewController?.nextPage(
-                                        duration: Duration(milliseconds: 300),
-                                        curve: Curves.ease,
-                                      );
-
-                                      firestoreBatch.update(
-                                          _model.doc!.reference,
-                                          createProjectsRecordData(
-                                            businessPlan:
-                                                updateProjectBusinessPlanStruct(
-                                              ProjectBusinessPlanStruct(
-                                                monetization:
-                                                    _model.textController2.text,
-                                                marketingPlan:
-                                                    _model.textController3.text,
-                                                financialPlan:
-                                                    _model.textController4.text,
-                                                marketSize:
-                                                    _model.textController1.text,
-                                                productionPlan:
-                                                    _model.textController5.text,
-                                              ),
-                                              clearUnsetFields: false,
-                                            ),
-                                          ));
-                                    } else if (_model.pageViewCurrentIndex ==
-                                        3) {
-                                      await _model.pageViewController?.nextPage(
-                                        duration: Duration(milliseconds: 300),
-                                        curve: Curves.ease,
-                                      );
-
-                                      firestoreBatch.update(
-                                          _model.doc!.reference,
-                                          createProjectsRecordData(
-                                            businessPlan:
-                                                updateProjectBusinessPlanStruct(
-                                              ProjectBusinessPlanStruct(
-                                                monetization:
-                                                    _model.textController2.text,
-                                                marketingPlan:
-                                                    _model.textController3.text,
-                                                financialPlan:
-                                                    _model.textController4.text,
-                                                marketSize:
-                                                    _model.textController1.text,
-                                                productionPlan:
-                                                    _model.textController5.text,
-                                              ),
-                                              clearUnsetFields: false,
-                                            ),
-                                          ));
-                                    } else {
-                                      firestoreBatch.update(
-                                          _model.doc!.reference,
-                                          createProjectsRecordData(
-                                            businessPlan:
-                                                updateProjectBusinessPlanStruct(
-                                              ProjectBusinessPlanStruct(
-                                                monetization:
-                                                    _model.textController2.text,
-                                                marketingPlan:
-                                                    _model.textController3.text,
-                                                financialPlan:
-                                                    _model.textController4.text,
-                                                marketSize:
-                                                    _model.textController1.text,
-                                                productionPlan:
-                                                    _model.textController5.text,
-                                              ),
-                                              clearUnsetFields: false,
-                                            ),
-                                          ));
-                                      _model.dfgg5 =
-                                          await ProjectsRecord.getDocumentOnce(
-                                              widget.project!.reference);
-                                      if (widget.isUpdate!) {
-                                        if (true) {
-                                          _model.read23 = await ProjectsRecord
-                                              .getDocumentOnce(
-                                                  widget.project!.reference);
-                                          unawaited(
-                                            () async {
-                                              await ProjectsSearchTable()
-                                                  .delete(
-                                                matchingRows: (rows) => rows.eq(
-                                                  'firestore_id',
-                                                  widget.project?.reference.id,
-                                                ),
-                                              );
-                                            }(),
-                                          );
-                                          await SmartSearchUpsertProjectCall
-                                              .call(
-                                            text: functions.stringToAPI(
-                                                'firestore_id: ${_model.read23?.reference.id}, project_title: ${_model.read23?.title}, project\'s industry: ${_model.read23?.projectInformation?.businessArea}, project\'s description: ${_model.read23?.projectInformation?.description}, projects\' stage: ${_model.read?.projectInformation?.status}, business plan: ${(_model.read23?.businessPlan?.toMap())?.toString()}, pitch_deck: ${(_model.read23?.pitchDeck?.toMap())?.toString()}'),
-                                          );
-
-                                          await ProjectsSearchTable().update(
-                                            data: {
-                                              'firestore_id':
-                                                  widget.project?.reference.id,
-                                            },
-                                            matchingRows: (rows) => rows.eq(
-                                              'content',
-                                              functions.stringToAPI(
-                                                  'firestore_id: ${_model.read25?.reference.id}, project_title: ${_model.read25?.title}, project\'s industry: ${_model.read25?.projectInformation?.businessArea}, project\'s description: ${_model.read25?.projectInformation?.description}, projects\' stage: ${_model.read?.projectInformation?.status}, business plan: ${(_model.read25?.businessPlan?.toMap())?.toString()}, pitch_deck: ${(_model.read25?.pitchDeck?.toMap())?.toString()}'),
-                                            ),
-                                          );
-                                        }
-                                        _model.proj = await ProjectsRecord
-                                            .getDocumentOnce(
-                                                widget.project!.reference);
-                                      } else {
-                                        await showDialog(
-                                          barrierColor: Color(0xA2000000),
-                                          context: context,
-                                          builder: (dialogContext) {
-                                            return Dialog(
-                                              elevation: 0,
-                                              insetPadding: EdgeInsets.zero,
-                                              backgroundColor:
-                                                  Colors.transparent,
-                                              alignment:
-                                                  AlignmentDirectional(0.0, 1.0)
-                                                      .resolve(
-                                                          Directionality.of(
-                                                              context)),
-                                              child: GestureDetector(
-                                                onTap: () => _model.unfocusNode
-                                                        .canRequestFocus
-                                                    ? FocusScope.of(context)
-                                                        .requestFocus(
-                                                            _model.unfocusNode)
-                                                    : FocusScope.of(context)
-                                                        .unfocus(),
-                                                child: Container(
-                                                  height: 475.0,
-                                                  child:
-                                                      ProjectsCreatedPitchDeckWidget(
-                                                    project: _model.dfgg5!,
-                                                  ),
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                        ).then((value) => setState(() {}));
-                                      }
-                                    }
-                                  } finally {
-                                    await firestoreBatch.commit();
-                                  }
-
-                                  setState(() {});
-                                },
-                                text: _model.pageViewCurrentIndex == 4
-                                    ? 'Save'
-                                    : 'Next',
-                                options: FFButtonOptions(
-                                  height: 45.0,
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      24.0, 0.0, 24.0, 0.0),
-                                  iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                      0.0, 0.0, 0.0, 0.0),
-                                  color: FlutterFlowTheme.of(context).primary,
-                                  textStyle: FlutterFlowTheme.of(context)
-                                      .titleSmall
-                                      .override(
-                                        fontFamily: 'Montserrat',
-                                        color: Colors.white,
-                                        fontSize: 16.0,
-                                        letterSpacing: 0.0,
-                                      ),
-                                  elevation: 0.0,
-                                  borderSide: BorderSide(
-                                    color: Colors.transparent,
-                                    width: 1.0,
-                                  ),
-                                  borderRadius: BorderRadius.circular(15.0),
+                            FFButtonWidget(
+                              onPressed: () async {
+                                _model.indexPageView = _model.indexPageView + 1;
+                                safeSetState(() {});
+                              },
+                              text: _model.pageViewCurrentIndex == 4
+                                  ? 'Save'
+                                  : 'Next',
+                              options: FFButtonOptions(
+                                height: 45.0,
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    24.0, 0.0, 24.0, 0.0),
+                                iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                    0.0, 0.0, 0.0, 0.0),
+                                color: FlutterFlowTheme.of(context).primary,
+                                textStyle: FlutterFlowTheme.of(context)
+                                    .titleSmall
+                                    .override(
+                                      fontFamily: 'Montserrat',
+                                      color: Colors.white,
+                                      fontSize: 16.0,
+                                      letterSpacing: 0.0,
+                                    ),
+                                elevation: 0.0,
+                                borderSide: BorderSide(
+                                  color: Colors.transparent,
+                                  width: 1.0,
                                 ),
+                                borderRadius: BorderRadius.circular(15.0),
                               ),
                             ),
                           ],
@@ -1624,27 +1427,22 @@ class _CreateBusinessPlanWidgetState extends State<CreateBusinessPlanWidget> {
                           size: 25.0,
                         ),
                         onPressed: () async {
-                          if (widget.isUpdate!) {
+                          if (widget!.isUpdate!) {
                             _model.read = await ProjectsRecord.getDocumentOnce(
-                                widget.project!.reference);
+                                widget!.project!.reference);
                             unawaited(
                               () async {
-                                await ProjectsSearchTable().delete(
+                                await DocumentsTable().delete(
                                   matchingRows: (rows) => rows.eq(
-                                    'firestore_id',
-                                    widget.project?.reference.id,
+                                    'firebase_id',
+                                    widget!.project?.customId,
                                   ),
                                 );
                               }(),
                             );
-                            await SmartSearchUpsertProjectCall.call(
-                              text: functions.stringToAPI(
-                                  'firestore_id: ${_model.read?.reference.id}, project_title: ${_model.read?.title}, project\'s industry: ${_model.read?.projectInformation?.businessArea}, project\'s description: ${_model.read?.projectInformation?.description}, projects\' stage: ${_model.read?.projectInformation?.status}, business plan: ${(_model.read?.businessPlan?.toMap())?.toString()}, pitch_deck: ${(_model.read?.pitchDeck?.toMap())?.toString()}'),
-                            );
-
-                            await ProjectsSearchTable().update(
+                            await DocumentsTable().update(
                               data: {
-                                'firestore_id': widget.project?.reference.id,
+                                'firebase_id': widget!.project?.customId,
                               },
                               matchingRows: (rows) => rows.eq(
                                 'content',
@@ -1653,7 +1451,7 @@ class _CreateBusinessPlanWidgetState extends State<CreateBusinessPlanWidget> {
                               ),
                             );
                             _model.vgf = await ProjectsRecord.getDocumentOnce(
-                                widget.project!.reference);
+                                widget!.project!.reference);
                           } else {
                             context.safePop();
                           }
@@ -1672,7 +1470,7 @@ class _CreateBusinessPlanWidgetState extends State<CreateBusinessPlanWidget> {
                             ),
                           );
 
-                          setState(() {});
+                          safeSetState(() {});
                         },
                       ),
                     ),
@@ -1694,42 +1492,10 @@ class _CreateBusinessPlanWidgetState extends State<CreateBusinessPlanWidget> {
                               clearUnsetFields: false,
                             ),
                           ));
-                          if (true) {
-                            _model.read25 =
-                                await ProjectsRecord.getDocumentOnce(
-                                    widget.project!.reference);
-                            unawaited(
-                              () async {
-                                await ProjectsSearchTable().delete(
-                                  matchingRows: (rows) => rows.eq(
-                                    'firestore_id',
-                                    widget.project?.reference.id,
-                                  ),
-                                );
-                              }(),
-                            );
-                            await SmartSearchUpsertProjectCall.call(
-                              text: functions.stringToAPI(
-                                  'firestore_id: ${_model.read25?.reference.id}, project_title: ${_model.read25?.title}, project\'s industry: ${_model.read25?.projectInformation?.businessArea}, project\'s description: ${_model.read25?.projectInformation?.description}, projects\' stage: ${_model.read?.projectInformation?.status}, business plan: ${(_model.read25?.businessPlan?.toMap())?.toString()}, pitch_deck: ${(_model.read25?.pitchDeck?.toMap())?.toString()}'),
-                            );
-
-                            await ProjectsSearchTable().update(
-                              data: {
-                                'firestore_id': widget.project?.reference.id,
-                              },
-                              matchingRows: (rows) => rows.eq(
-                                'content',
-                                functions.stringToAPI(
-                                    'firestore_id: ${_model.read25?.reference.id}, project_title: ${_model.read25?.title}, project\'s industry: ${_model.read25?.projectInformation?.businessArea}, project\'s description: ${_model.read25?.projectInformation?.description}, projects\' stage: ${_model.read?.projectInformation?.status}, business plan: ${(_model.read25?.businessPlan?.toMap())?.toString()}, pitch_deck: ${(_model.read25?.pitchDeck?.toMap())?.toString()}'),
-                              ),
-                            );
-                            _model.vgf5 = await ProjectsRecord.getDocumentOnce(
-                                widget.project!.reference);
-                          }
                           _model.gfdg5 = await ProjectsRecord.getDocumentOnce(
-                              widget.project!.reference);
+                              widget!.project!.reference);
 
-                          setState(() {});
+                          safeSetState(() {});
                         },
                         text: 'Skip all',
                         options: FFButtonOptions(

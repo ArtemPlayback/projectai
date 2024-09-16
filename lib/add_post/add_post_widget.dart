@@ -11,6 +11,7 @@ import '/flutter_flow/upload_data.dart';
 import 'dart:async';
 import 'dart:ui';
 import '/flutter_flow/custom_functions.dart' as functions;
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
@@ -50,15 +51,15 @@ class _AddPostWidgetState extends State<AddPostWidget> {
 
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
-      _model.images = widget.post!.postInfo.images.toList().cast<String>();
-      setState(() {});
+      _model.images = widget!.post!.postInfo.images.toList().cast<String>();
+      safeSetState(() {});
     });
 
     _model.textController ??=
-        TextEditingController(text: widget.post?.postInfo?.text);
+        TextEditingController(text: widget!.post?.postInfo?.text);
     _model.textFieldFocusNode ??= FocusNode();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -71,22 +72,21 @@ class _AddPostWidgetState extends State<AddPostWidget> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => _model.unfocusNode.canRequestFocus
-          ? FocusScope.of(context).requestFocus(_model.unfocusNode)
-          : FocusScope.of(context).unfocus(),
+      onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: Color(0xFFF8F8F8),
         body: Stack(
           children: [
-            Column(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 0.0),
-                  child: SingleChildScrollView(
-                    primary: false,
+            SingleChildScrollView(
+              primary: false,
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding:
+                        EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 0.0),
                     child: Column(
                       mainAxisSize: MainAxisSize.max,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -100,7 +100,7 @@ class _AddPostWidgetState extends State<AddPostWidget> {
                             onChanged: (_) => EasyDebounce.debounce(
                               '_model.textController',
                               Duration(milliseconds: 1),
-                              () => setState(() {}),
+                              () => safeSetState(() {}),
                             ),
                             autofocus: false,
                             textCapitalization: TextCapitalization.sentences,
@@ -114,7 +114,7 @@ class _AddPostWidgetState extends State<AddPostWidget> {
                                     letterSpacing: 0.0,
                                     useGoogleFonts: false,
                                   ),
-                              hintText: 'Start writing',
+                              hintText: 'Start writing...',
                               hintStyle: FlutterFlowTheme.of(context)
                                   .labelMedium
                                   .override(
@@ -217,9 +217,11 @@ class _AddPostWidgetState extends State<AddPostWidget> {
                                                       .primaryBackground,
                                                   size: 13.0,
                                                 ),
-                                                onPressed: () {
-                                                  print(
-                                                      'IconButton pressed ...');
+                                                onPressed: () async {
+                                                  _model
+                                                      .removeAtIndexFromImages(
+                                                          0);
+                                                  safeSetState(() {});
                                                 },
                                               ),
                                             ),
@@ -249,6 +251,7 @@ class _AddPostWidgetState extends State<AddPostWidget> {
                                                 builder: (context) {
                                                   final images2 =
                                                       _model.images.toList();
+
                                                   return Row(
                                                     mainAxisSize:
                                                         MainAxisSize.max,
@@ -356,7 +359,7 @@ class _AddPostWidgetState extends State<AddPostWidget> {
                                                                       () async {
                                                                     _model.removeAtIndexFromImages(
                                                                         images2Index);
-                                                                    setState(
+                                                                    safeSetState(
                                                                         () {});
                                                                   },
                                                                 ),
@@ -385,14 +388,14 @@ class _AddPostWidgetState extends State<AddPostWidget> {
                       ].addToEnd(SizedBox(height: 150.0)),
                     ),
                   ),
-                ),
-              ].addToStart(SizedBox(height: 100.0)),
+                ].addToStart(SizedBox(height: 100.0)),
+              ),
             ),
             Align(
               alignment: AlignmentDirectional(0.0, 1.0),
               child: Container(
                 width: double.infinity,
-                height: 95.0,
+                height: 105.0,
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.only(
@@ -405,7 +408,7 @@ class _AddPostWidgetState extends State<AddPostWidget> {
                 ),
                 child: Padding(
                   padding:
-                      EdgeInsetsDirectional.fromSTEB(16.0, 16.0, 16.0, 35.0),
+                      EdgeInsetsDirectional.fromSTEB(16.0, 16.0, 16.0, 25.0),
                   child: Row(
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -431,7 +434,8 @@ class _AddPostWidgetState extends State<AddPostWidget> {
                               if (selectedMedia != null &&
                                   selectedMedia.every((m) => validateFileFormat(
                                       m.storagePath, context))) {
-                                setState(() => _model.isDataUploading = true);
+                                safeSetState(
+                                    () => _model.isDataUploading = true);
                                 var selectedUploadedFiles = <FFUploadedFile>[];
 
                                 var downloadUrls = <String>[];
@@ -462,23 +466,32 @@ class _AddPostWidgetState extends State<AddPostWidget> {
                                         selectedMedia.length &&
                                     downloadUrls.length ==
                                         selectedMedia.length) {
-                                  setState(() {
+                                  safeSetState(() {
                                     _model.uploadedLocalFiles =
                                         selectedUploadedFiles;
                                     _model.uploadedFileUrls = downloadUrls;
                                   });
                                 } else {
-                                  setState(() {});
+                                  safeSetState(() {});
                                   return;
                                 }
                               }
 
-                              _model.images = functions
-                                  .imagesList(_model.uploadedFileUrls.toList(),
+                              _model.images = _model.uploadedFileUrls.isNotEmpty
+                                  ? functions.imagesList(
+                                      _model.uploadedFileUrls.toList(),
                                       _model.images.toList())
-                                  .toList()
-                                  .cast<String>();
-                              setState(() {});
+                                  : _model.images.toList().cast<String>();
+                              safeSetState(() {});
+                              if (widget!.isUpdate!) {
+                                _model.newImages = functions
+                                    .imagesList(
+                                        _model.uploadedFileUrls.toList(),
+                                        _model.newImages.toList())
+                                    .toList()
+                                    .cast<String>();
+                                safeSetState(() {});
+                              }
                             },
                           ),
                         ],
@@ -487,11 +500,11 @@ class _AddPostWidgetState extends State<AddPostWidget> {
                         alignment: AlignmentDirectional(1.0, 0.0),
                         child: FFButtonWidget(
                           onPressed: () async {
-                            if (widget.isUpdate!) {
-                              if (widget.project != null) {
+                            if (widget!.isUpdate!) {
+                              if (widget!.project != null) {
                                 unawaited(
                                   () async {
-                                    await widget.post!.reference
+                                    await widget!.post!.reference
                                         .update(createPostsRecordData(
                                       postInfo: createPostStruct(
                                         text: _model.textController.text,
@@ -503,10 +516,20 @@ class _AddPostWidgetState extends State<AddPostWidget> {
                                     ));
                                   }(),
                                 );
+
+                                await widget!.project!.reference.update({
+                                  ...mapToFirestore(
+                                    {
+                                      'images': functions.imagesList(
+                                          _model.newImages.toList(),
+                                          widget!.project?.images?.toList()),
+                                    },
+                                  ),
+                                });
                               } else {
                                 unawaited(
                                   () async {
-                                    await widget.post!.reference
+                                    await widget!.post!.reference
                                         .update(createPostsRecordData(
                                       postInfo: createPostStruct(
                                         text: _model.textController.text,
@@ -518,11 +541,25 @@ class _AddPostWidgetState extends State<AddPostWidget> {
                                     ));
                                   }(),
                                 );
+
+                                await currentUserReference!.update({
+                                  ...mapToFirestore(
+                                    {
+                                      'images': functions.imagesList(
+                                          _model.newImages.toList(),
+                                          (currentUserDocument?.images
+                                                      ?.toList() ??
+                                                  [])
+                                              .toList()),
+                                    },
+                                  ),
+                                });
                               }
 
+                              Navigator.pop(context);
                               context.safePop();
                             } else {
-                              if (widget.project != null) {
+                              if (widget!.project != null) {
                                 await PostsRecord.collection
                                     .doc()
                                     .set(createPostsRecordData(
@@ -535,8 +572,18 @@ class _AddPostWidgetState extends State<AddPostWidget> {
                                         clearUnsetFields: false,
                                         create: true,
                                       ),
-                                      company: widget.project?.reference,
+                                      company: widget!.project?.reference,
                                     ));
+
+                                await widget!.project!.reference.update({
+                                  ...mapToFirestore(
+                                    {
+                                      'images': functions.imagesList(
+                                          _model.images.toList(),
+                                          widget!.project?.images?.toList()),
+                                    },
+                                  ),
+                                });
                               } else {
                                 await PostsRecord.collection
                                     .doc()
@@ -552,8 +599,22 @@ class _AddPostWidgetState extends State<AddPostWidget> {
                                       ),
                                       user: currentUserReference,
                                     ));
+
+                                await currentUserReference!.update({
+                                  ...mapToFirestore(
+                                    {
+                                      'images': functions.imagesList(
+                                          _model.images.toList(),
+                                          (currentUserDocument?.images
+                                                      ?.toList() ??
+                                                  [])
+                                              .toList()),
+                                    },
+                                  ),
+                                });
                               }
 
+                              Navigator.pop(context);
                               context.safePop();
                             }
                           },
@@ -593,91 +654,94 @@ class _AddPostWidgetState extends State<AddPostWidget> {
             ),
             Align(
               alignment: AlignmentDirectional(0.0, -1.0),
-              child: SafeArea(
-                child: Container(
-                  width: double.infinity,
-                  height: 80.0,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(0.0),
-                      bottomRight: Radius.circular(0.0),
-                      topLeft: Radius.circular(15.0),
-                      topRight: Radius.circular(15.0),
-                    ),
-                    shape: BoxShape.rectangle,
+              child: Container(
+                width: double.infinity,
+                height: 105.0,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(0.0),
+                    bottomRight: Radius.circular(0.0),
+                    topLeft: Radius.circular(0.0),
+                    topRight: Radius.circular(0.0),
                   ),
-                  child: Padding(
-                    padding:
-                        EdgeInsetsDirectional.fromSTEB(16.0, 16.0, 16.0, 16.0),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            AuthUserStreamWidget(
-                              builder: (context) => ClipRRect(
-                                borderRadius: BorderRadius.circular(360.0),
-                                child: Image.network(
-                                  valueOrDefault<String>(
-                                    widget.project != null
-                                        ? widget.project?.mainImage
-                                        : currentUserPhoto,
-                                    'https://picsum.photos/seed/975/600',
-                                  ),
-                                  width: 40.0,
-                                  height: 40.0,
-                                  fit: BoxFit.cover,
+                  shape: BoxShape.rectangle,
+                ),
+                child: Padding(
+                  padding:
+                      EdgeInsetsDirectional.fromSTEB(16.0, 50.0, 16.0, 16.0),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          AuthUserStreamWidget(
+                            builder: (context) => ClipRRect(
+                              borderRadius: BorderRadius.circular(360.0),
+                              child: CachedNetworkImage(
+                                fadeInDuration: Duration(milliseconds: 0),
+                                fadeOutDuration: Duration(milliseconds: 0),
+                                imageUrl: valueOrDefault<String>(
+                                  widget!.project != null
+                                      ? widget!.project?.mainImage
+                                      : currentUserPhoto,
+                                  'https://firebasestorage.googleapis.com/v0/b/avaai-c0e27.appspot.com/o/dimageenko_Flat_medium_gray_silhouette_of_a_person_from_the_sho_2f244edd-3317-46aa-80ca-f9b06476d361.png?alt=media&token=e63ae723-a3a6-4e0b-a7f1-51e6ffbf866f',
                                 ),
+                                width: 40.0,
+                                height: 40.0,
+                                fit: BoxFit.cover,
                               ),
                             ),
-                            Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  12.0, 0.0, 0.0, 0.0),
-                              child: AuthUserStreamWidget(
-                                builder: (context) => Text(
-                                  valueOrDefault<String>(
-                                    widget.project != null
-                                        ? widget.project?.title
-                                        : currentUserDisplayName,
-                                    'j',
-                                  ),
-                                  style: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .override(
-                                        fontFamily: 'LTSuperior',
-                                        fontSize: 16.0,
-                                        letterSpacing: 0.0,
-                                        fontWeight: FontWeight.w500,
-                                        useGoogleFonts: false,
-                                      ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Align(
-                          alignment: AlignmentDirectional(1.0, 0.0),
-                          child: FlutterFlowIconButton(
-                            borderColor:
-                                FlutterFlowTheme.of(context).textAndStroke,
-                            borderRadius: 10.0,
-                            borderWidth: 1.0,
-                            buttonSize: 40.0,
-                            icon: Icon(
-                              Icons.close,
-                              color: FlutterFlowTheme.of(context).primaryText,
-                              size: 20.0,
-                            ),
-                            onPressed: () async {
-                              context.safePop();
-                            },
                           ),
+                          Padding(
+                            padding: EdgeInsetsDirectional.fromSTEB(
+                                12.0, 0.0, 0.0, 0.0),
+                            child: AuthUserStreamWidget(
+                              builder: (context) => Text(
+                                valueOrDefault<String>(
+                                  widget!.project != null
+                                      ? widget!.project?.title
+                                      : valueOrDefault<String>(
+                                          currentUserDisplayName,
+                                          'Name',
+                                        ),
+                                  'Name',
+                                ),
+                                style: FlutterFlowTheme.of(context)
+                                    .bodyMedium
+                                    .override(
+                                      fontFamily: 'LTSuperior',
+                                      fontSize: 16.0,
+                                      letterSpacing: 0.0,
+                                      fontWeight: FontWeight.w500,
+                                      useGoogleFonts: false,
+                                    ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Align(
+                        alignment: AlignmentDirectional(1.0, 0.0),
+                        child: FlutterFlowIconButton(
+                          borderColor:
+                              FlutterFlowTheme.of(context).textAndStroke,
+                          borderRadius: 10.0,
+                          borderWidth: 1.0,
+                          buttonSize: 40.0,
+                          icon: Icon(
+                            Icons.close,
+                            color: FlutterFlowTheme.of(context).primaryText,
+                            size: 20.0,
+                          ),
+                          onPressed: () async {
+                            context.safePop();
+                          },
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
               ),

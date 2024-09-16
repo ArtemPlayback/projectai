@@ -31,7 +31,7 @@ class CompetitorsStruct extends FFFirebaseStruct {
   set options(List<CompetitorOptionsStruct>? val) => _options = val;
 
   void updateOptions(Function(List<CompetitorOptionsStruct>) updateFn) {
-    updateFn(options ??= []);
+    updateFn(_options ??= []);
   }
 
   bool hasOptions() => _options != null;

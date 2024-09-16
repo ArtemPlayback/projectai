@@ -41,6 +41,18 @@ class NotificationCardModel extends FlutterFlowModel<NotificationCardWidget> {
   void updateInvitesAtIndex(int index, Function(InvitesStruct) updateFn) =>
       invites[index] = updateFn(invites[index]);
 
+  List<TeamMemberStruct> teamMembers = [];
+  void addToTeamMembers(TeamMemberStruct item) => teamMembers.add(item);
+  void removeFromTeamMembers(TeamMemberStruct item) => teamMembers.remove(item);
+  void removeAtIndexFromTeamMembers(int index) => teamMembers.removeAt(index);
+  void insertAtIndexInTeamMembers(int index, TeamMemberStruct item) =>
+      teamMembers.insert(index, item);
+  void updateTeamMembersAtIndex(
+          int index, Function(TeamMemberStruct) updateFn) =>
+      teamMembers[index] = updateFn(teamMembers[index]);
+
+  String? test = 'старт';
+
   @override
   void initState(BuildContext context) {}
 

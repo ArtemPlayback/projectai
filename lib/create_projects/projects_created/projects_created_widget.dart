@@ -37,7 +37,7 @@ class _ProjectsCreatedWidgetState extends State<ProjectsCreatedWidget> {
     super.initState();
     _model = createModel(context, () => ProjectsCreatedModel());
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -104,7 +104,7 @@ class _ProjectsCreatedWidgetState extends State<ProjectsCreatedWidget> {
                 child: FFButtonWidget(
                   onPressed: () async {
                     _model.sdf = await ProjectsRecord.getDocumentOnce(
-                        widget.project!.reference);
+                        widget!.project!.reference);
 
                     context.pushNamed(
                       'createProjectImages',
@@ -119,7 +119,7 @@ class _ProjectsCreatedWidgetState extends State<ProjectsCreatedWidget> {
                       },
                     );
 
-                    setState(() {});
+                    safeSetState(() {});
                   },
                   text: 'Continue setup',
                   options: FFButtonOptions(

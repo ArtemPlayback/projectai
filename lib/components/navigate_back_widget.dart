@@ -11,10 +11,10 @@ export 'navigate_back_model.dart';
 class NavigateBackWidget extends StatefulWidget {
   const NavigateBackWidget({
     super.key,
-    required this.parameter1,
+    required this.isFrom,
   });
 
-  final String? parameter1;
+  final String? isFrom;
 
   @override
   State<NavigateBackWidget> createState() => _NavigateBackWidgetState();
@@ -34,7 +34,7 @@ class _NavigateBackWidgetState extends State<NavigateBackWidget> {
     super.initState();
     _model = createModel(context, () => NavigateBackModel());
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -50,27 +50,39 @@ class _NavigateBackWidgetState extends State<NavigateBackWidget> {
       borderRadius: BorderRadius.circular(10.0),
       child: BackdropFilter(
         filter: ImageFilter.blur(
-          sigmaX: 7.0,
-          sigmaY: 7.0,
+          sigmaX: 15.0,
+          sigmaY: 15.0,
         ),
         child: FlutterFlowIconButton(
-          borderColor: Colors.transparent,
+          borderColor: FlutterFlowTheme.of(context).textAndStroke,
           borderRadius: 10.0,
           borderWidth: 1.0,
           buttonSize: 40.0,
-          fillColor: Color(0x67000000),
+          fillColor: Color(0xA8FFFFFF),
           icon: Icon(
             Icons.chevron_left,
-            color: Colors.white,
+            color: FlutterFlowTheme.of(context).secondaryText,
             size: 23.0,
           ),
           onPressed: () async {
-            if (widget.parameter1 == 'smartsearch') {
+            if (widget!.isFrom == 'smartsearch') {
               context.safePop();
-            } else if (widget.parameter1 == 'profile') {
+            } else if (widget!.isFrom == 'profile') {
               context.safePop();
-            } else {
+            } else if (widget!.isFrom == 'createCompany') {
               context.pushNamed('profile');
+            } else if (widget!.isFrom == 'company settings') {
+              context.pushNamed(
+                'profile',
+                queryParameters: {
+                  'chosen': serializeParam(
+                    'Companies',
+                    ParamType.String,
+                  ),
+                }.withoutNulls,
+              );
+            } else {
+              context.safePop();
             }
           },
         ),

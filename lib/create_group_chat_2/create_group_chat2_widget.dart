@@ -41,16 +41,16 @@ class _CreateGroupChat2WidgetState extends State<CreateGroupChat2Widget> {
 
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
-      _model.usersList = widget.users!.toList().cast<DocumentReference>();
-      setState(() {});
+      _model.usersList = widget!.users!.toList().cast<DocumentReference>();
+      safeSetState(() {});
       _model.addToUsersList(currentUserReference!);
-      setState(() {});
+      safeSetState(() {});
     });
 
     _model.textController ??= TextEditingController(text: 'New group chat');
     _model.textFieldFocusNode ??= FocusNode();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -63,9 +63,7 @@ class _CreateGroupChat2WidgetState extends State<CreateGroupChat2Widget> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => _model.unfocusNode.canRequestFocus
-          ? FocusScope.of(context).requestFocus(_model.unfocusNode)
-          : FocusScope.of(context).unfocus(),
+      onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
@@ -117,7 +115,7 @@ class _CreateGroupChat2WidgetState extends State<CreateGroupChat2Widget> {
                                             selectedMedia.every((m) =>
                                                 validateFileFormat(
                                                     m.storagePath, context))) {
-                                          setState(() =>
+                                          safeSetState(() =>
                                               _model.isDataUploading1 = true);
                                           var selectedUploadedFiles =
                                               <FFUploadedFile>[];
@@ -155,20 +153,20 @@ class _CreateGroupChat2WidgetState extends State<CreateGroupChat2Widget> {
                                                   selectedMedia.length &&
                                               downloadUrls.length ==
                                                   selectedMedia.length) {
-                                            setState(() {
+                                            safeSetState(() {
                                               _model.uploadedLocalFile1 =
                                                   selectedUploadedFiles.first;
                                               _model.uploadedFileUrl1 =
                                                   downloadUrls.first;
                                             });
                                           } else {
-                                            setState(() {});
+                                            safeSetState(() {});
                                             return;
                                           }
                                         }
 
                                         _model.image = _model.uploadedFileUrl1;
-                                        setState(() {});
+                                        safeSetState(() {});
                                       },
                                       child: Container(
                                         width: 85.0,
@@ -235,7 +233,7 @@ class _CreateGroupChat2WidgetState extends State<CreateGroupChat2Widget> {
                                                     onTap: () async {
                                                       _model.image =
                                                           'https://cdn.raceroster.com/assets/images/team-placeholder.png';
-                                                      setState(() {});
+                                                      safeSetState(() {});
                                                     },
                                                     child: ClipRRect(
                                                       borderRadius:
@@ -266,7 +264,7 @@ class _CreateGroupChat2WidgetState extends State<CreateGroupChat2Widget> {
                                                           onPressed: () async {
                                                             _model.image =
                                                                 'https://cdn.raceroster.com/assets/images/team-placeholder.png';
-                                                            setState(() {});
+                                                            safeSetState(() {});
                                                           },
                                                         ),
                                                       ),
@@ -330,9 +328,9 @@ class _CreateGroupChat2WidgetState extends State<CreateGroupChat2Widget> {
                                                                   validateFileFormat(
                                                                       m.storagePath,
                                                                       context))) {
-                                                            setState(() => _model
-                                                                    .isDataUploading2 =
-                                                                true);
+                                                            safeSetState(() =>
+                                                                _model.isDataUploading2 =
+                                                                    true);
                                                             var selectedUploadedFiles =
                                                                 <FFUploadedFile>[];
 
@@ -385,7 +383,7 @@ class _CreateGroupChat2WidgetState extends State<CreateGroupChat2Widget> {
                                                                         .length ==
                                                                     selectedMedia
                                                                         .length) {
-                                                              setState(() {
+                                                              safeSetState(() {
                                                                 _model.uploadedLocalFile2 =
                                                                     selectedUploadedFiles
                                                                         .first;
@@ -394,14 +392,15 @@ class _CreateGroupChat2WidgetState extends State<CreateGroupChat2Widget> {
                                                                         .first;
                                                               });
                                                             } else {
-                                                              setState(() {});
+                                                              safeSetState(
+                                                                  () {});
                                                               return;
                                                             }
                                                           }
 
                                                           _model.image = _model
                                                               .uploadedFileUrl2;
-                                                          setState(() {});
+                                                          safeSetState(() {});
                                                         },
                                                       ),
                                                     ),
@@ -421,7 +420,9 @@ class _CreateGroupChat2WidgetState extends State<CreateGroupChat2Widget> {
                                       child: TextFormField(
                                         controller: _model.textController,
                                         focusNode: _model.textFieldFocusNode,
-                                        autofocus: true,
+                                        autofocus: false,
+                                        textCapitalization:
+                                            TextCapitalization.sentences,
                                         obscureText: false,
                                         decoration: InputDecoration(
                                           labelStyle:
@@ -553,7 +554,7 @@ class _CreateGroupChat2WidgetState extends State<CreateGroupChat2Widget> {
                   StreamBuilder<List<UsersRecord>>(
                     stream: queryUsersRecord(
                       queryBuilder: (usersRecord) => usersRecord.whereIn(
-                          'uid', widget.users?.map((e) => e.id).toList()),
+                          'uid', widget!.users?.map((e) => e.id).toList()),
                     ),
                     builder: (context, snapshot) {
                       // Customize what your widget looks like when it's loading.
@@ -572,6 +573,7 @@ class _CreateGroupChat2WidgetState extends State<CreateGroupChat2Widget> {
                       }
                       List<UsersRecord> containerUsersRecordList =
                           snapshot.data!;
+
                       return Container(
                         width: double.infinity,
                         height: MediaQuery.sizeOf(context).height * 0.6,
@@ -593,7 +595,10 @@ class _CreateGroupChat2WidgetState extends State<CreateGroupChat2Widget> {
                               padding: EdgeInsetsDirectional.fromSTEB(
                                   20.0, 20.0, 0.0, 15.0),
                               child: Text(
-                                '${widget.users?.length?.toString()} participants',
+                                '${valueOrDefault<String>(
+                                  containerUsersRecordList.length.toString(),
+                                  '0',
+                                )} participants',
                                 style: FlutterFlowTheme.of(context)
                                     .bodyMedium
                                     .override(
@@ -609,6 +614,7 @@ class _CreateGroupChat2WidgetState extends State<CreateGroupChat2Widget> {
                             Builder(
                               builder: (context) {
                                 final users = containerUsersRecordList.toList();
+
                                 return ListView.separated(
                                   padding: EdgeInsets.zero,
                                   primary: false,
@@ -660,8 +666,12 @@ class _CreateGroupChat2WidgetState extends State<CreateGroupChat2Widget> {
                                                             ),
                                                             child:
                                                                 Image.network(
-                                                              usersItem
-                                                                  .photoUrl,
+                                                              valueOrDefault<
+                                                                  String>(
+                                                                usersItem
+                                                                    .photoUrl,
+                                                                'https://firebasestorage.googleapis.com/v0/b/avaai-c0e27.appspot.com/o/dimageenko_Flat_medium_gray_silhouette_of_a_person_from_the_sho_2f244edd-3317-46aa-80ca-f9b06476d361.png?alt=media&token=e63ae723-a3a6-4e0b-a7f1-51e6ffbf866f',
+                                                              ),
                                                               fit: BoxFit.cover,
                                                             ),
                                                           ),
@@ -827,11 +837,11 @@ class _CreateGroupChat2WidgetState extends State<CreateGroupChat2Widget> {
                   mainAxisSize: MainAxisSize.max,
                   children: [
                     Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(20.0, 15.0, 20.0, 0.0),
+                      padding: EdgeInsetsDirectional.fromSTEB(
+                          20.0, 15.0, 20.0, 15.0),
                       child: wrapWithModel(
                         model: _model.buttonInfinityModel,
-                        updateCallback: () => setState(() {}),
+                        updateCallback: () => safeSetState(() {}),
                         child: ButtonInfinityWidget(
                           width: 450.0,
                           height: 44.0,
@@ -848,6 +858,8 @@ class _CreateGroupChat2WidgetState extends State<CreateGroupChat2Widget> {
                                 image: _model.image,
                                 lastMessageTime: getCurrentTimestamp,
                                 chatType: 'group chat',
+                                type: 'User',
+                                groupChatOwner: currentUserReference,
                               ),
                               ...mapToFirestore(
                                 {
@@ -877,6 +889,8 @@ class _CreateGroupChat2WidgetState extends State<CreateGroupChat2Widget> {
                                 image: _model.image,
                                 lastMessageTime: getCurrentTimestamp,
                                 chatType: 'group chat',
+                                type: 'User',
+                                groupChatOwner: currentUserReference,
                               ),
                               ...mapToFirestore(
                                 {
@@ -908,13 +922,17 @@ class _CreateGroupChat2WidgetState extends State<CreateGroupChat2Widget> {
                                   _model.groupchat,
                                   ParamType.Document,
                                 ),
+                                'isFrom': serializeParam(
+                                  'settings',
+                                  ParamType.String,
+                                ),
                               }.withoutNulls,
                               extra: <String, dynamic>{
                                 'chat': _model.groupchat,
                               },
                             );
 
-                            setState(() {});
+                            safeSetState(() {});
                           },
                         ),
                       ),

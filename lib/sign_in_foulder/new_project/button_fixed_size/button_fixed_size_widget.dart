@@ -68,7 +68,7 @@ class _ButtonFixedSizeWidgetState extends State<ButtonFixedSizeWidget>
           ScaleEffect(
             curve: Curves.easeOut,
             delay: 0.0.ms,
-            duration: 130.0.ms,
+            duration: 80.0.ms,
             begin: Offset(1.0, 1.0),
             end: Offset(0.98, 0.98),
           ),
@@ -82,7 +82,7 @@ class _ButtonFixedSizeWidgetState extends State<ButtonFixedSizeWidget>
       this,
     );
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -106,18 +106,18 @@ class _ButtonFixedSizeWidgetState extends State<ButtonFixedSizeWidget>
         }
         await widget.action?.call();
       },
-      text: widget.text!,
-      icon: widget.icon,
+      text: widget!.text!,
+      icon: widget!.icon,
       options: FFButtonOptions(
-        width: widget.width,
-        height: widget.height,
+        width: widget!.width,
+        height: widget!.height,
         padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 1.0),
         iconPadding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-        color: widget.buttonColor,
+        color: widget!.buttonColor,
         textStyle: FlutterFlowTheme.of(context).titleSmall.override(
               fontFamily: 'LTSuperior',
-              color: widget.textcolor,
-              fontSize: widget.fontsize?.toDouble(),
+              color: widget!.textcolor,
+              fontSize: widget!.fontsize?.toDouble(),
               letterSpacing: 0.0,
               fontWeight: FontWeight.w600,
               useGoogleFonts: false,
@@ -125,13 +125,14 @@ class _ButtonFixedSizeWidgetState extends State<ButtonFixedSizeWidget>
         elevation: 0.0,
         borderSide: BorderSide(
           color: valueOrDefault<Color>(
-            widget.borderColor,
+            widget!.borderColor,
             Colors.transparent,
           ),
           width: 0.0,
         ),
         borderRadius: BorderRadius.circular(10.0),
       ),
+      showLoadingIndicator: widget!.showLoadingIndicator,
     ).animateOnActionTrigger(
       animationsMap['buttonOnActionTriggerAnimation']!,
     );

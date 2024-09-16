@@ -34,7 +34,7 @@ class _ProjectTextExpandableWidgetState
     super.initState();
     _model = createModel(context, () => ProjectTextExpandableModel());
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -51,14 +51,14 @@ class _ProjectTextExpandableWidgetState
       decoration: BoxDecoration(),
       child: Builder(
         builder: (context) {
-          if (!_model.open && ((widget.text!).length > 250)) {
+          if (!_model.open && ((widget!.text!).length > 250)) {
             return Container(
               width: double.infinity,
               decoration: BoxDecoration(),
               child: Stack(
                 children: [
                   Text(
-                    widget.text!,
+                    widget!.text!,
                     maxLines: 5,
                     style: FlutterFlowTheme.of(context).bodyMedium.override(
                           fontFamily: 'Manrope',
@@ -97,7 +97,7 @@ class _ProjectTextExpandableWidgetState
                         highlightColor: Colors.transparent,
                         onTap: () async {
                           _model.open = true;
-                          setState(() {});
+                          safeSetState(() {});
                         },
                         child: Container(
                           height: 20.0,
@@ -140,7 +140,7 @@ class _ProjectTextExpandableWidgetState
               child: Stack(
                 children: [
                   Text(
-                    widget.text!,
+                    widget!.text!,
                     style: FlutterFlowTheme.of(context).bodyMedium.override(
                           fontFamily: 'Manrope',
                           fontSize: 15.0,

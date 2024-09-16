@@ -36,7 +36,7 @@ class _TextfieldCompWidgetState extends State<TextfieldCompWidget> {
     _model.textController ??= TextEditingController();
     _model.textFieldFocusNode ??= FocusNode();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -102,7 +102,7 @@ class _TextfieldCompWidgetState extends State<TextfieldCompWidget> {
           },
           child: wrapWithModel(
             model: _model.componentSearchModel,
-            updateCallback: () => setState(() {}),
+            updateCallback: () => safeSetState(() {}),
             child: ComponentSearchWidget(),
           ),
         ),

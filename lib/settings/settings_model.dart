@@ -16,6 +16,7 @@ import 'settings_widget.dart' show SettingsWidget;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -31,11 +32,12 @@ class SettingsModel extends FlutterFlowModel<SettingsWidget> {
 
   String? image;
 
+  bool copied = false;
+
   ///  State fields for stateful widgets in this page.
 
-  final unfocusNode = FocusNode();
   // Model for button_infinity component.
-  late ButtonInfinityModel buttonInfinityModel;
+  late ButtonInfinityModel buttonInfinityModel1;
   bool isDataUploading1 = false;
   FFUploadedFile uploadedLocalFile1 =
       FFUploadedFile(bytes: Uint8List.fromList([]));
@@ -51,14 +53,32 @@ class SettingsModel extends FlutterFlowModel<SettingsWidget> {
       FFUploadedFile(bytes: Uint8List.fromList([]));
   String uploadedFileUrl3 = '';
 
+  // Model for button_infinity component.
+  late ButtonInfinityModel buttonInfinityModel2;
+  bool isDataUploading4 = false;
+  FFUploadedFile uploadedLocalFile4 =
+      FFUploadedFile(bytes: Uint8List.fromList([]));
+  String uploadedFileUrl4 = '';
+
+  bool isDataUploading5 = false;
+  FFUploadedFile uploadedLocalFile5 =
+      FFUploadedFile(bytes: Uint8List.fromList([]));
+  String uploadedFileUrl5 = '';
+
+  bool isDataUploading6 = false;
+  FFUploadedFile uploadedLocalFile6 =
+      FFUploadedFile(bytes: Uint8List.fromList([]));
+  String uploadedFileUrl6 = '';
+
   @override
   void initState(BuildContext context) {
-    buttonInfinityModel = createModel(context, () => ButtonInfinityModel());
+    buttonInfinityModel1 = createModel(context, () => ButtonInfinityModel());
+    buttonInfinityModel2 = createModel(context, () => ButtonInfinityModel());
   }
 
   @override
   void dispose() {
-    unfocusNode.dispose();
-    buttonInfinityModel.dispose();
+    buttonInfinityModel1.dispose();
+    buttonInfinityModel2.dispose();
   }
 }

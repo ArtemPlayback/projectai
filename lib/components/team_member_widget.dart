@@ -45,14 +45,14 @@ class _TeamMemberWidgetState extends State<TeamMemberWidget> {
     super.initState();
     _model = createModel(context, () => TeamMemberModel());
 
-    _model.textController1 ??= TextEditingController(text: widget.parameter3);
+    _model.textController1 ??= TextEditingController(text: widget!.parameter3);
     _model.textFieldFocusNode1 ??= FocusNode();
 
     _model.textController2 ??=
-        TextEditingController(text: widget.dataType?.description);
+        TextEditingController(text: widget!.dataType?.description);
     _model.textFieldFocusNode2 ??= FocusNode();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -65,7 +65,7 @@ class _TeamMemberWidgetState extends State<TeamMemberWidget> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<UsersRecord>(
-      future: UsersRecord.getDocumentOnce(widget.parameter4!),
+      future: UsersRecord.getDocumentOnce(widget!.parameter4!),
       builder: (context, snapshot) {
         // Customize what your widget looks like when it's loading.
         if (!snapshot.hasData) {
@@ -81,7 +81,9 @@ class _TeamMemberWidgetState extends State<TeamMemberWidget> {
             ),
           );
         }
+
         final containerUsersRecord = snapshot.data!;
+
         return Container(
           width: double.infinity,
           decoration: BoxDecoration(
@@ -145,12 +147,12 @@ class _TeamMemberWidgetState extends State<TeamMemberWidget> {
                                       Duration(milliseconds: 200),
                                       () async {
                                         FFAppState().updateTeamMembersAtIndex(
-                                          widget.index!,
+                                          widget!.index!,
                                           (e) => e
                                             ..role =
                                                 _model.textController1.text,
                                         );
-                                        setState(() {});
+                                        safeSetState(() {});
                                       },
                                     ),
                                     autofocus: false,
@@ -243,10 +245,10 @@ class _TeamMemberWidgetState extends State<TeamMemberWidget> {
                       Duration(milliseconds: 200),
                       () async {
                         FFAppState().updateTeamMembersAtIndex(
-                          widget.index!,
+                          widget!.index!,
                           (e) => e..description = _model.textController2.text,
                         );
-                        setState(() {});
+                        safeSetState(() {});
                       },
                     ),
                     autofocus: false,
@@ -313,7 +315,7 @@ class _TeamMemberWidgetState extends State<TeamMemberWidget> {
                   padding: EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 0.0),
                   child: FFButtonWidget(
                     onPressed: () async {
-                      FFAppState().removeFromTeamMembers(widget.dataType!);
+                      FFAppState().removeFromTeamMembers(widget!.dataType!);
                       FFAppState().update(() {});
                     },
                     text: 'REMOVE TEAM MEMBER',

@@ -1,5 +1,6 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
+import '/backend/api_requests/api_streaming.dart';
 import '/backend/backend.dart';
 import '/backend/firebase_storage/storage.dart';
 import '/backend/schema/structs/index.dart';
@@ -15,11 +16,13 @@ import '/flutter_flow/upload_data.dart';
 import '/sign_in_foulder/new_project/button_fixed_size/button_fixed_size_widget.dart';
 import '/sign_in_foulder/new_project/button_infinity/button_infinity_widget.dart';
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 import 'dart:ui';
 import '/custom_code/actions/index.dart' as actions;
 import '/flutter_flow/custom_functions.dart' as functions;
+import '/flutter_flow/permissions_util.dart';
 import '/flutter_flow/random_data_util.dart' as random_data;
 import 'create_event_widget.dart' show CreateEventWidget;
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -68,7 +71,8 @@ class CreateEventModel extends FlutterFlowModel<CreateEventWidget> {
 
   ///  State fields for stateful widgets in this page.
 
-  final unfocusNode = FocusNode();
+  final formKey1 = GlobalKey<FormState>();
+  final formKey2 = GlobalKey<FormState>();
   // State field(s) for PageView widget.
   PageController? pageViewController;
 
@@ -81,10 +85,34 @@ class CreateEventModel extends FlutterFlowModel<CreateEventWidget> {
   FocusNode? textFieldFocusNode1;
   TextEditingController? textController1;
   String? Function(BuildContext, String?)? textController1Validator;
+  String? _textController1Validator(BuildContext context, String? val) {
+    if (val == null || val.isEmpty) {
+      return 'Field is required';
+    }
+
+    if (val.length < 1) {
+      return 'Requires at least 1 characters.';
+    }
+
+    return null;
+  }
+
   // State field(s) for TextField widget.
   FocusNode? textFieldFocusNode2;
   TextEditingController? textController2;
   String? Function(BuildContext, String?)? textController2Validator;
+  String? _textController2Validator(BuildContext context, String? val) {
+    if (val == null || val.isEmpty) {
+      return 'Field is required';
+    }
+
+    if (val.length < 5) {
+      return 'Requires at least 5 characters.';
+    }
+
+    return null;
+  }
+
   // State field(s) for PlacePicker widget.
   FFPlace placePickerValue = FFPlace();
   // State field(s) for TextField widget.
@@ -117,11 +145,15 @@ class CreateEventModel extends FlutterFlowModel<CreateEventWidget> {
   late ButtonInfinityModel buttonInfinityModel;
   // Model for button_fixed_size component.
   late ButtonFixedSizeModel buttonFixedSizeModel2;
+  // Stores action output result for [Backend Call - Read Document] action in button_fixed_size widget.
+  EventsRecord? eventRead;
   // Stores action output result for [Backend Call - Create Document] action in button_fixed_size widget.
   EventsRecord? eventCopy;
 
   @override
   void initState(BuildContext context) {
+    textController1Validator = _textController1Validator;
+    textController2Validator = _textController2Validator;
     buttonFixedSizeModel1 = createModel(context, () => ButtonFixedSizeModel());
     buttonInfinityModel = createModel(context, () => ButtonInfinityModel());
     buttonFixedSizeModel2 = createModel(context, () => ButtonFixedSizeModel());
@@ -129,7 +161,6 @@ class CreateEventModel extends FlutterFlowModel<CreateEventWidget> {
 
   @override
   void dispose() {
-    unfocusNode.dispose();
     textFieldFocusNode1?.dispose();
     textController1?.dispose();
 

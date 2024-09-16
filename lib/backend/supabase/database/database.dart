@@ -5,8 +5,11 @@ export '../supabase.dart';
 export 'row.dart';
 export 'table.dart';
 
-export 'tables/projects_search.dart';
-export 'tables/smart_search_recommendations.dart';
+export 'tables/spatial_ref_sys.dart';
+export 'tables/geometry_columns.dart';
+export 'tables/services.dart';
+export 'tables/geography_columns.dart';
+export 'tables/events.dart';
 export 'tables/documents.dart';
-export 'tables/user_activity.dart';
-export 'tables/people.dart';
+export 'tables/users.dart';
+export 'tables/reviews.dart';

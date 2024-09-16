@@ -42,13 +42,13 @@ class _SolutionCardWidgetState extends State<SolutionCardWidget> {
     super.initState();
     _model = createModel(context, () => SolutionCardModel());
 
-    _model.textController1 ??= TextEditingController(text: widget.title);
+    _model.textController1 ??= TextEditingController(text: widget!.title);
     _model.textFieldFocusNode1 ??= FocusNode();
 
-    _model.textController2 ??= TextEditingController(text: widget.description);
+    _model.textController2 ??= TextEditingController(text: widget!.description);
     _model.textFieldFocusNode2 ??= FocusNode();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -78,7 +78,7 @@ class _SolutionCardWidgetState extends State<SolutionCardWidget> {
                 Align(
                   alignment: AlignmentDirectional(-1.0, -1.0),
                   child: Text(
-                    'Solution part ${((widget.parameter1!) + 1).toString()}',
+                    'Solution part ${((widget!.parameter1!) + 1).toString()}',
                     style: FlutterFlowTheme.of(context).bodyMedium.override(
                           fontFamily: 'Montserrat',
                           color: FlutterFlowTheme.of(context).primary,
@@ -98,7 +98,8 @@ class _SolutionCardWidgetState extends State<SolutionCardWidget> {
                     size: 20.0,
                   ),
                   onPressed: () async {
-                    FFAppState().removeAtIndexFromSolutions(widget.parameter1!);
+                    FFAppState()
+                        .removeAtIndexFromSolutions(widget!.parameter1!);
                     FFAppState().update(() {});
                   },
                 ),
@@ -114,7 +115,7 @@ class _SolutionCardWidgetState extends State<SolutionCardWidget> {
                   Duration(milliseconds: 200),
                   () async {
                     FFAppState().updateSolutionsAtIndex(
-                      widget.parameter1!,
+                      widget!.parameter1!,
                       (e) => e..title = _model.textController1.text,
                     );
                     FFAppState().update(() {});
@@ -186,7 +187,7 @@ class _SolutionCardWidgetState extends State<SolutionCardWidget> {
                   Duration(milliseconds: 200),
                   () async {
                     FFAppState().updateSolutionsAtIndex(
-                      widget.parameter1!,
+                      widget!.parameter1!,
                       (e) => e..description = _model.textController2.text,
                     );
                     FFAppState().update(() {});

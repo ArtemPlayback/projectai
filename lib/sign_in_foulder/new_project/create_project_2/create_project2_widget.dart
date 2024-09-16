@@ -39,7 +39,7 @@ class _CreateProject2WidgetState extends State<CreateProject2Widget> {
     _model.textController2 ??= TextEditingController();
     _model.textFieldFocusNode2 ??= FocusNode();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -52,9 +52,7 @@ class _CreateProject2WidgetState extends State<CreateProject2Widget> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => _model.unfocusNode.canRequestFocus
-          ? FocusScope.of(context).requestFocus(_model.unfocusNode)
-          : FocusScope.of(context).unfocus(),
+      onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
@@ -513,7 +511,7 @@ class _CreateProject2WidgetState extends State<CreateProject2Widget> {
                                                         fontSize: 16.0,
                                                         letterSpacing: 0.0,
                                                         fontWeight:
-                                                            FontWeight.bold,
+                                                            FontWeight.w600,
                                                         useGoogleFonts: false,
                                                       ),
                                                   elevation: 0.0,
@@ -540,7 +538,7 @@ class _CreateProject2WidgetState extends State<CreateProject2Widget> {
                                                 model: _model
                                                     .buttonFixedSizeModel1,
                                                 updateCallback: () =>
-                                                    setState(() {}),
+                                                    safeSetState(() {}),
                                                 child: ButtonFixedSizeWidget(
                                                   width: 150.0,
                                                   height: 43.0,
@@ -616,16 +614,9 @@ class _CreateProject2WidgetState extends State<CreateProject2Widget> {
                                                                         context)),
                                                             child:
                                                                 GestureDetector(
-                                                              onTap: () => _model
-                                                                      .unfocusNode
-                                                                      .canRequestFocus
-                                                                  ? FocusScope.of(
-                                                                          context)
-                                                                      .requestFocus(
-                                                                          _model
-                                                                              .unfocusNode)
-                                                                  : FocusScope.of(
-                                                                          context)
+                                                              onTap: () =>
+                                                                  FocusScope.of(
+                                                                          dialogContext)
                                                                       .unfocus(),
                                                               child: Container(
                                                                 height: 455.0,
@@ -638,11 +629,10 @@ class _CreateProject2WidgetState extends State<CreateProject2Widget> {
                                                             ),
                                                           );
                                                         },
-                                                      ).then((value) =>
-                                                          setState(() {}));
+                                                      );
                                                     }
 
-                                                    setState(() {});
+                                                    safeSetState(() {});
                                                   },
                                                 ),
                                               ),
@@ -668,7 +658,7 @@ class _CreateProject2WidgetState extends State<CreateProject2Widget> {
                                 decoration: BoxDecoration(),
                                 child: wrapWithModel(
                                   model: _model.buttonInfinityModel,
-                                  updateCallback: () => setState(() {}),
+                                  updateCallback: () => safeSetState(() {}),
                                   child: ButtonInfinityWidget(
                                     width: 0.0,
                                     height: 49.0,
@@ -740,7 +730,7 @@ class _CreateProject2WidgetState extends State<CreateProject2Widget> {
                                 24.0, 15.0, 0.0, 17.0),
                             child: wrapWithModel(
                               model: _model.buttonFixedSizeModel2,
-                              updateCallback: () => setState(() {}),
+                              updateCallback: () => safeSetState(() {}),
                               child: ButtonFixedSizeWidget(
                                 width: 130.0,
                                 height: 38.0,

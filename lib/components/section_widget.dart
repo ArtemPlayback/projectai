@@ -35,15 +35,15 @@ class _SectionWidgetState extends State<SectionWidget> {
     super.initState();
     _model = createModel(context, () => SectionModel());
 
-    _model.textController1 ??=
-        TextEditingController(text: FFAppState().sections[widget.index!].title);
+    _model.textController1 ??= TextEditingController(
+        text: FFAppState().sections[widget!.index!].title);
     _model.textFieldFocusNode1 ??= FocusNode();
 
     _model.textController2 ??=
-        TextEditingController(text: FFAppState().sections[widget.index!].text);
+        TextEditingController(text: FFAppState().sections[widget!.index!].text);
     _model.textFieldFocusNode2 ??= FocusNode();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -59,10 +59,9 @@ class _SectionWidgetState extends State<SectionWidget> {
 
     return Container(
       decoration: BoxDecoration(
-        color: Color(0xFFFBF6F6),
         borderRadius: BorderRadius.circular(10.0),
         border: Border.all(
-          color: Color(0x1AC6C6D5),
+          color: Color(0x71C6C6D5),
         ),
       ),
       child: Padding(
@@ -78,7 +77,7 @@ class _SectionWidgetState extends State<SectionWidget> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Section ${((widget.index!) + 1).toString()}',
+                    'Section ${((widget!.index!) + 1).toString()}',
                     style: FlutterFlowTheme.of(context).bodyMedium.override(
                           fontFamily: 'LTSuperior',
                           fontSize: 16.0,
@@ -97,7 +96,7 @@ class _SectionWidgetState extends State<SectionWidget> {
                       size: 19.0,
                     ),
                     onPressed: () async {
-                      FFAppState().removeAtIndexFromSections(widget.index!);
+                      FFAppState().removeAtIndexFromSections(widget!.index!);
                       FFAppState().update(() {});
                     },
                   ),
@@ -117,7 +116,7 @@ class _SectionWidgetState extends State<SectionWidget> {
                     Duration(milliseconds: 10),
                     () async {
                       FFAppState().updateSectionsAtIndex(
-                        widget.index!,
+                        widget!.index!,
                         (e) => e..title = _model.textController1.text,
                       );
                       FFAppState().update(() {});
@@ -193,7 +192,7 @@ class _SectionWidgetState extends State<SectionWidget> {
                     Duration(milliseconds: 10),
                     () async {
                       FFAppState().updateSectionsAtIndex(
-                        widget.index!,
+                        widget!.index!,
                         (e) => e..text = _model.textController2.text,
                       );
                       FFAppState().update(() {});

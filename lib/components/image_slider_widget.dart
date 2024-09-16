@@ -1,9 +1,11 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
+import '/components/delete_image_widget.dart';
 import '/flutter_flow/flutter_flow_expanded_image_view.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
+import 'dart:async';
 import 'dart:ui';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart'
     as smooth_page_indicator;
@@ -26,6 +28,7 @@ class ImageSliderWidget extends StatefulWidget {
     required this.isThisYours,
     this.product,
     this.event,
+    this.actionDelete,
   });
 
   final List<String>? images;
@@ -35,6 +38,7 @@ class ImageSliderWidget extends StatefulWidget {
   final bool? isThisYours;
   final ProductsRecord? product;
   final EventsRecord? event;
+  final Future Function(List<String>? images)? actionDelete;
 
   @override
   State<ImageSliderWidget> createState() => _ImageSliderWidgetState();
@@ -56,11 +60,19 @@ class _ImageSliderWidgetState extends State<ImageSliderWidget> {
 
     // On component load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
-      _model.imagesPage = widget.images!.toList().cast<String>();
-      setState(() {});
+      await _model.pageViewController?.animateToPage(
+        valueOrDefault<int>(
+          widget!.initialindex,
+          0,
+        ),
+        duration: Duration(milliseconds: 500),
+        curve: Curves.ease,
+      );
+      _model.imagesPage = widget!.images!.toList().cast<String>();
+      safeSetState(() {});
     });
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -88,6 +100,7 @@ class _ImageSliderWidgetState extends State<ImageSliderWidget> {
             sigmaY: 15.0,
           ),
           child: Container(
+            height: MediaQuery.sizeOf(context).height * 1.0,
             decoration: BoxDecoration(
               color: Color(0xE6000000),
             ),
@@ -103,97 +116,91 @@ class _ImageSliderWidgetState extends State<ImageSliderWidget> {
                         child: Builder(
                           builder: (context) {
                             final images2 = _model.imagesPage.toList();
+
                             return Container(
                               width: double.infinity,
                               height: MediaQuery.sizeOf(context).height * 1.0,
                               child: Stack(
                                 children: [
-                                  Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        0.0, 0.0, 0.0, 40.0),
-                                    child: PageView.builder(
-                                      controller: _model.pageViewController ??=
-                                          PageController(
-                                              initialPage: max(
-                                                  0,
-                                                  min(
-                                                      valueOrDefault<int>(
-                                                        widget.initialindex,
-                                                        0,
-                                                      ),
-                                                      images2.length - 1))),
-                                      onPageChanged: (_) => setState(() {}),
-                                      scrollDirection: Axis.horizontal,
-                                      itemCount: images2.length,
-                                      itemBuilder: (context, images2Index) {
-                                        final images2Item =
-                                            images2[images2Index];
-                                        return Padding(
-                                          padding:
-                                              EdgeInsetsDirectional.fromSTEB(
-                                                  0.0, 120.0, 0.0, 90.0),
-                                          child: InkWell(
-                                            splashColor: Colors.transparent,
-                                            focusColor: Colors.transparent,
-                                            hoverColor: Colors.transparent,
-                                            highlightColor: Colors.transparent,
-                                            onTap: () async {
-                                              await Navigator.push(
-                                                context,
-                                                PageTransition(
-                                                  type: PageTransitionType.fade,
-                                                  child:
-                                                      FlutterFlowExpandedImageView(
-                                                    image: Image.network(
-                                                      valueOrDefault<String>(
-                                                        images2Item,
-                                                        'https://i.redd.it/to1j3t4ys5o91.jpg',
-                                                      ),
-                                                      fit: BoxFit.contain,
-                                                      alignment:
-                                                          Alignment(0.0, 0.0),
+                                  PageView.builder(
+                                    controller: _model.pageViewController ??=
+                                        PageController(
+                                            initialPage: max(
+                                                0,
+                                                min(
+                                                    valueOrDefault<int>(
+                                                      widget!.initialindex,
+                                                      0,
                                                     ),
-                                                    allowRotation: false,
-                                                    tag: valueOrDefault<String>(
+                                                    images2.length - 1))),
+                                    onPageChanged: (_) => safeSetState(() {}),
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: images2.length,
+                                    itemBuilder: (context, images2Index) {
+                                      final images2Item = images2[images2Index];
+                                      return Padding(
+                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                            0.0, 120.0, 0.0, 90.0),
+                                        child: InkWell(
+                                          splashColor: Colors.transparent,
+                                          focusColor: Colors.transparent,
+                                          hoverColor: Colors.transparent,
+                                          highlightColor: Colors.transparent,
+                                          onTap: () async {
+                                            await Navigator.push(
+                                              context,
+                                              PageTransition(
+                                                type: PageTransitionType.fade,
+                                                child:
+                                                    FlutterFlowExpandedImageView(
+                                                  image: Image.network(
+                                                    valueOrDefault<String>(
                                                       images2Item,
-                                                      'https://i.redd.it/to1j3t4ys5o91.jpg' +
-                                                          '$images2Index',
+                                                      'https://i.redd.it/to1j3t4ys5o91.jpg',
                                                     ),
-                                                    useHeroAnimation: true,
+                                                    fit: BoxFit.contain,
+                                                    alignment:
+                                                        Alignment(0.0, 0.0),
                                                   ),
-                                                ),
-                                              );
-                                            },
-                                            child: Hero(
-                                              tag: valueOrDefault<String>(
-                                                images2Item,
-                                                'https://i.redd.it/to1j3t4ys5o91.jpg' +
-                                                    '$images2Index',
-                                              ),
-                                              transitionOnUserGestures: true,
-                                              child: ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(8.0),
-                                                child: Image.network(
-                                                  valueOrDefault<String>(
+                                                  allowRotation: false,
+                                                  tag: valueOrDefault<String>(
                                                     images2Item,
-                                                    'https://i.redd.it/to1j3t4ys5o91.jpg',
+                                                    'https://i.redd.it/to1j3t4ys5o91.jpg' +
+                                                        '$images2Index',
                                                   ),
-                                                  width: double.infinity,
-                                                  height:
-                                                      MediaQuery.sizeOf(context)
-                                                              .height *
-                                                          0.8,
-                                                  fit: BoxFit.contain,
-                                                  alignment:
-                                                      Alignment(0.0, 0.0),
+                                                  useHeroAnimation: true,
                                                 ),
+                                              ),
+                                            );
+                                          },
+                                          child: Hero(
+                                            tag: valueOrDefault<String>(
+                                              images2Item,
+                                              'https://i.redd.it/to1j3t4ys5o91.jpg' +
+                                                  '$images2Index',
+                                            ),
+                                            transitionOnUserGestures: true,
+                                            child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(8.0),
+                                              child: Image.network(
+                                                valueOrDefault<String>(
+                                                  images2Item,
+                                                  'https://i.redd.it/to1j3t4ys5o91.jpg',
+                                                ),
+                                                width: double.infinity,
+                                                height:
+                                                    MediaQuery.sizeOf(context)
+                                                            .height *
+                                                        0.8,
+                                                fit: BoxFit.contain,
+                                                alignment: Alignment(0.0, 0.0),
                                               ),
                                             ),
                                           ),
-                                        );
-                                      },
-                                    ),
+                                        ),
+                                      );
+                                    },
                                   ),
                                   Align(
                                     alignment: AlignmentDirectional(0.0, 1.0),
@@ -209,7 +216,7 @@ class _ImageSliderWidgetState extends State<ImageSliderWidget> {
                                                     0,
                                                     min(
                                                         valueOrDefault<int>(
-                                                          widget.initialindex,
+                                                          widget!.initialindex,
                                                           0,
                                                         ),
                                                         images2.length - 1))),
@@ -223,7 +230,7 @@ class _ImageSliderWidgetState extends State<ImageSliderWidget> {
                                                 Duration(milliseconds: 500),
                                             curve: Curves.ease,
                                           );
-                                          setState(() {});
+                                          safeSetState(() {});
                                         },
                                         effect: smooth_page_indicator
                                             .ExpandingDotsEffect(
@@ -266,78 +273,117 @@ class _ImageSliderWidgetState extends State<ImageSliderWidget> {
                           size: 20.0,
                         ),
                         onPressed: () async {
-                          Navigator.pop(context);
+                          Navigator.pop(context, _model.imagesPage);
                         },
                       ),
                     ),
-                    if (widget.isThisYours ?? true)
-                      Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(
-                            0.0, 40.0, 20.0, 0.0),
-                        child: FlutterFlowIconButton(
-                          borderColor:
-                              FlutterFlowTheme.of(context).textAndStroke,
-                          borderRadius: 10.0,
-                          borderWidth: 1.0,
-                          buttonSize: 35.0,
-                          icon: Icon(
-                            FFIcons.kdelete2,
-                            color: Colors.white,
-                            size: 13.0,
+                    if (widget!.isThisYours ?? true)
+                      Builder(
+                        builder: (context) => Padding(
+                          padding: EdgeInsetsDirectional.fromSTEB(
+                              0.0, 40.0, 20.0, 0.0),
+                          child: FlutterFlowIconButton(
+                            borderColor:
+                                FlutterFlowTheme.of(context).textAndStroke,
+                            borderRadius: 10.0,
+                            borderWidth: 1.0,
+                            buttonSize: 35.0,
+                            icon: Icon(
+                              FFIcons.kdelete2,
+                              color: Colors.white,
+                              size: 13.0,
+                            ),
+                            onPressed: () async {
+                              await showDialog(
+                                barrierColor: Color(0xBE000000),
+                                context: context,
+                                builder: (dialogContext) {
+                                  return Dialog(
+                                    elevation: 0,
+                                    insetPadding: EdgeInsets.zero,
+                                    backgroundColor: Colors.transparent,
+                                    alignment: AlignmentDirectional(0.0, 0.0)
+                                        .resolve(Directionality.of(context)),
+                                    child: Container(
+                                      height: 190.0,
+                                      width: MediaQuery.sizeOf(context).width *
+                                          0.8,
+                                      child: DeleteImageWidget(
+                                        action: () async {
+                                          if (widget!.user != null) {
+                                            _model.removeAtIndexFromImagesPage(
+                                                _model.pageViewCurrentIndex);
+                                            safeSetState(() {});
+
+                                            await widget!.user!.reference
+                                                .update({
+                                              ...mapToFirestore(
+                                                {
+                                                  'images': _model.imagesPage,
+                                                },
+                                              ),
+                                            });
+                                          } else if (widget!.project != null) {
+                                            _model.removeAtIndexFromImagesPage(
+                                                _model.pageViewCurrentIndex);
+                                            safeSetState(() {});
+
+                                            await widget!.project!.reference
+                                                .update({
+                                              ...mapToFirestore(
+                                                {
+                                                  'images': _model.imagesPage,
+                                                },
+                                              ),
+                                            });
+                                          } else if (widget!.product != null) {
+                                            _model.removeAtIndexFromImagesPage(
+                                                _model.pageViewCurrentIndex);
+                                            safeSetState(() {});
+
+                                            await widget!.product!.reference
+                                                .update({
+                                              ...mapToFirestore(
+                                                {
+                                                  'images': _model.imagesPage,
+                                                },
+                                              ),
+                                            });
+                                          } else {
+                                            _model.removeAtIndexFromImagesPage(
+                                                _model.pageViewCurrentIndex);
+                                            safeSetState(() {});
+
+                                            await widget!.event!.reference
+                                                .update(createEventsRecordData(
+                                              eventInfo: createEventStruct(
+                                                fieldValues: {
+                                                  'images': _model.imagesPage,
+                                                },
+                                                clearUnsetFields: false,
+                                              ),
+                                            ));
+                                          }
+
+                                          unawaited(
+                                            () async {
+                                              await widget.actionDelete?.call(
+                                                _model.imagesPage,
+                                              );
+                                            }(),
+                                          );
+                                          if ((_model.imagesPage.isNotEmpty) !=
+                                              true) {
+                                            Navigator.pop(context);
+                                          }
+                                        },
+                                      ),
+                                    ),
+                                  );
+                                },
+                              );
+                            },
                           ),
-                          onPressed: () async {
-                            if (widget.user != null) {
-                              _model.removeAtIndexFromImagesPage(
-                                  _model.pageViewCurrentIndex);
-                              setState(() {});
-
-                              await widget.user!.reference.update({
-                                ...mapToFirestore(
-                                  {
-                                    'images': _model.imagesPage,
-                                  },
-                                ),
-                              });
-                            } else if (widget.project != null) {
-                              _model.removeAtIndexFromImagesPage(
-                                  _model.pageViewCurrentIndex);
-                              setState(() {});
-
-                              await widget.project!.reference.update({
-                                ...mapToFirestore(
-                                  {
-                                    'images': _model.imagesPage,
-                                  },
-                                ),
-                              });
-                            } else if (widget.product != null) {
-                              _model.removeAtIndexFromImagesPage(
-                                  _model.pageViewCurrentIndex);
-                              setState(() {});
-
-                              await widget.product!.reference.update({
-                                ...mapToFirestore(
-                                  {
-                                    'images': _model.imagesPage,
-                                  },
-                                ),
-                              });
-                            } else {
-                              _model.removeAtIndexFromImagesPage(
-                                  _model.pageViewCurrentIndex);
-                              setState(() {});
-
-                              await widget.event!.reference
-                                  .update(createEventsRecordData(
-                                eventInfo: createEventStruct(
-                                  fieldValues: {
-                                    'images': _model.imagesPage,
-                                  },
-                                  clearUnsetFields: false,
-                                ),
-                              ));
-                            }
-                          },
                         ),
                       ),
                   ],

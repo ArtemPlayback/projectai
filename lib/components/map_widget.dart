@@ -41,12 +41,12 @@ class _MapWidgetState extends State<MapWidget> {
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       await _model.googleMapsController.future.then(
         (c) => c.animateCamera(
-          CameraUpdate.newLatLng(widget.parameter1!.toGoogleMaps()),
+          CameraUpdate.newLatLng(widget!.parameter1!.toGoogleMaps()),
         ),
       );
     });
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -67,7 +67,7 @@ class _MapWidgetState extends State<MapWidget> {
         highlightColor: Colors.transparent,
         onTap: () async {
           await launchMap(
-            address: widget.address,
+            address: widget!.address,
             title: '',
           );
         },
@@ -79,7 +79,7 @@ class _MapWidgetState extends State<MapWidget> {
               borderRadius: BorderRadius.circular(10.0),
             ),
             child: Builder(builder: (context) {
-              final _googleMapMarker = widget.parameter1;
+              final _googleMapMarker = widget!.parameter1;
               return FlutterFlowGoogleMap(
                 controller: _model.googleMapsController,
                 onCameraIdle: (latLng) => _model.googleMapsCenter = latLng,

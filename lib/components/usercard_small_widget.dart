@@ -25,7 +25,10 @@ class UsercardSmallWidget extends StatefulWidget {
     this.actionEdit,
     this.company,
     this.index,
-  }) : this.teamEdit = teamEdit ?? false;
+    this.members,
+    bool? isWaiting,
+  })  : this.teamEdit = teamEdit ?? false,
+        this.isWaiting = isWaiting ?? false;
 
   final UsersRecord? user;
   final String? secondText;
@@ -33,6 +36,8 @@ class UsercardSmallWidget extends StatefulWidget {
   final Future Function()? actionEdit;
   final ProjectsRecord? company;
   final int? index;
+  final List<TeamMemberStruct>? members;
+  final bool isWaiting;
 
   @override
   State<UsercardSmallWidget> createState() => _UsercardSmallWidgetState();
@@ -52,7 +57,7 @@ class _UsercardSmallWidgetState extends State<UsercardSmallWidget> {
     super.initState();
     _model = createModel(context, () => UsercardSmallModel());
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -76,7 +81,10 @@ class _UsercardSmallWidgetState extends State<UsercardSmallWidget> {
             ClipRRect(
               borderRadius: BorderRadius.circular(8.0),
               child: Image.network(
-                widget.user!.photoUrl,
+                valueOrDefault<String>(
+                  widget!.user?.photoUrl,
+                  'https://firebasestorage.googleapis.com/v0/b/avaai-c0e27.appspot.com/o/dimageenko_Flat_medium_gray_silhouette_of_a_person_from_the_sho_2f244edd-3317-46aa-80ca-f9b06476d361.png?alt=media&token=e63ae723-a3a6-4e0b-a7f1-51e6ffbf866f',
+                ),
                 width: double.infinity,
                 height: double.infinity,
                 fit: BoxFit.cover,
@@ -105,7 +113,7 @@ class _UsercardSmallWidgetState extends State<UsercardSmallWidget> {
                     children: [
                       Text(
                         valueOrDefault<String>(
-                          widget.user?.displayName,
+                          widget!.user?.displayName,
                           'Name',
                         ),
                         style: FlutterFlowTheme.of(context).bodyMedium.override(
@@ -124,11 +132,11 @@ class _UsercardSmallWidgetState extends State<UsercardSmallWidget> {
                               0.0, 2.0, 0.0, 0.0),
                           child: Text(
                             valueOrDefault<String>(
-                              widget.secondText != null &&
-                                      widget.secondText != ''
-                                  ? widget.secondText
+                              widget!.secondText != null &&
+                                      widget!.secondText != ''
+                                  ? widget!.secondText
                                   : valueOrDefault<String>(
-                                      widget.user?.description,
+                                      widget!.user?.description,
                                       'description',
                                     ),
                               'text',
@@ -154,20 +162,20 @@ class _UsercardSmallWidgetState extends State<UsercardSmallWidget> {
               alignment: AlignmentDirectional(1.0, -1.0),
               child: Builder(
                 builder: (context) {
-                  if (!widget.teamEdit) {
+                  if (!widget!.teamEdit) {
                     return Padding(
                       padding:
                           EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 10.0, 0.0),
                       child: AuthUserStreamWidget(
                         builder: (context) => wrapWithModel(
                           model: _model.toggleModel,
-                          updateCallback: () => setState(() {}),
+                          updateCallback: () => safeSetState(() {}),
                           updateOnChange: true,
                           child: ToggleWidget(
                             boolean:
                                 (currentUserDocument?.saved?.toList() ?? [])
                                         .where((e) =>
-                                            e.people == widget.user?.reference)
+                                            e.people == widget!.user?.reference)
                                         .toList()
                                         .length >
                                     0,
@@ -181,7 +189,7 @@ class _UsercardSmallWidgetState extends State<UsercardSmallWidget> {
                                           getSavedFirestoreData(
                                             updateSavedStruct(
                                               SavedStruct(
-                                                people: widget.user?.reference,
+                                                people: widget!.user?.reference,
                                               ),
                                               clearUnsetFields: false,
                                             ),
@@ -204,7 +212,7 @@ class _UsercardSmallWidgetState extends State<UsercardSmallWidget> {
                                           getSavedFirestoreData(
                                             updateSavedStruct(
                                               SavedStruct(
-                                                people: widget.user?.reference,
+                                                people: widget!.user?.reference,
                                               ),
                                               clearUnsetFields: false,
                                             ),
@@ -267,13 +275,14 @@ class _UsercardSmallWidgetState extends State<UsercardSmallWidget> {
                                               width: 350.0,
                                               child: DeleteTeamMemberWidget(
                                                 company:
-                                                    widget.company!.reference,
-                                                user: widget.user!.reference,
+                                                    widget!.company!.reference,
+                                                user: widget!.user!.reference,
+                                                teamMembers2: widget!.members!,
                                               ),
                                             ),
                                           );
                                         },
-                                      ).then((value) => setState(() {}));
+                                      );
                                     },
                                   ),
                                 ),
@@ -281,57 +290,58 @@ class _UsercardSmallWidgetState extends State<UsercardSmallWidget> {
                             ),
                           ),
                         ),
-                        Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              0.0, 6.0, 15.0, 0.0),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(10.0),
-                            child: BackdropFilter(
-                              filter: ImageFilter.blur(
-                                sigmaX: 7.0,
-                                sigmaY: 7.0,
-                              ),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: Color(0x67000000),
+                        if (!widget!.isWaiting)
+                          Padding(
+                            padding: EdgeInsetsDirectional.fromSTEB(
+                                0.0, 6.0, 15.0, 0.0),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(10.0),
+                              child: BackdropFilter(
+                                filter: ImageFilter.blur(
+                                  sigmaX: 7.0,
+                                  sigmaY: 7.0,
                                 ),
-                                child: FlutterFlowIconButton(
-                                  borderColor: Color(0x31C6C6D5),
-                                  borderRadius: 10.0,
-                                  borderWidth: 1.0,
-                                  buttonSize: 40.0,
-                                  icon: Icon(
-                                    FFIcons.keditPencil01,
-                                    color: Colors.white,
-                                    size: 15.0,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Color(0x67000000),
                                   ),
-                                  onPressed: () async {
-                                    await showModalBottomSheet(
-                                      isScrollControlled: true,
-                                      backgroundColor: Colors.transparent,
-                                      barrierColor: Color(0x73000000),
-                                      context: context,
-                                      builder: (context) {
-                                        return Padding(
-                                          padding:
-                                              MediaQuery.viewInsetsOf(context),
-                                          child: Container(
-                                            height: 290.0,
-                                            child: EditMemberWidget(
-                                              user: widget.user!,
-                                              company: widget.company!,
-                                              index: widget.index!,
+                                  child: FlutterFlowIconButton(
+                                    borderColor: Color(0x31C6C6D5),
+                                    borderRadius: 10.0,
+                                    borderWidth: 1.0,
+                                    buttonSize: 40.0,
+                                    icon: Icon(
+                                      FFIcons.keditPencil01,
+                                      color: Colors.white,
+                                      size: 15.0,
+                                    ),
+                                    onPressed: () async {
+                                      await showModalBottomSheet(
+                                        isScrollControlled: true,
+                                        backgroundColor: Colors.transparent,
+                                        barrierColor: Color(0x73000000),
+                                        context: context,
+                                        builder: (context) {
+                                          return Padding(
+                                            padding: MediaQuery.viewInsetsOf(
+                                                context),
+                                            child: Container(
+                                              height: 290.0,
+                                              child: EditMemberWidget(
+                                                user: widget!.user!,
+                                                company: widget!.company!,
+                                                index: widget!.index!,
+                                              ),
                                             ),
-                                          ),
-                                        );
-                                      },
-                                    ).then((value) => safeSetState(() {}));
-                                  },
+                                          );
+                                        },
+                                      ).then((value) => safeSetState(() {}));
+                                    },
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
                       ],
                     );
                   }

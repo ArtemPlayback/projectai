@@ -1,11 +1,13 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
+import '/backend/api_requests/api_streaming.dart';
 import '/backend/backend.dart';
 import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import 'dart:async';
+import 'dart:convert';
 import '/backend/schema/structs/index.dart';
 import '/flutter_flow/custom_functions.dart' as functions;
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -47,7 +49,7 @@ class _CreateProductLoadingWidgetState
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       _model.apiResultmga = await CreateProductsGroup.createBlocksCall.call(
         question: functions.stringToAPI(
-            'title ${widget.document?.title}, description: ${widget.document?.description}, price: ${widget.document?.price?.toString()}, questions and answers: ${functions.stringToAPI(functions.jsonListToText(widget.answers?.toList()))}'),
+            'title ${widget!.document?.title}, description: ${widget!.document?.description}, price: ${widget!.document?.price?.toString()}, questions and answers: ${functions.stringToAPI(functions.jsonListToText(widget!.answers?.toList(), null))}'),
       );
 
       if ((_model.apiResultmga?.succeeded ?? true)) {
@@ -55,23 +57,23 @@ class _CreateProductLoadingWidgetState
           (_model.apiResultmga?.jsonBody ?? ''),
           r'''$.text''',
         ).toString().toString();
-        setState(() {});
+        safeSetState(() {});
         _model.upsert = await UpsertVectorsNeightnCall.call(
           upsertText: functions.stringToAPI(
-              'firebase_id:${widget.document?.customId}, type: product, title: ${widget.document?.title}, description: ${widget.document?.description}, price (dollars): ${widget.document?.price?.toString()}, additional informational blocks: ${functions.jsonListToText(functions.cleanJson(getJsonField(
+              'firebase_id:${widget!.document?.customId}, type: product, title: ${widget!.document?.title}, description: ${widget!.document?.description}, price (dollars): ${widget!.document?.price?.toString()}, additional informational blocks: ${functions.jsonListToText(functions.cleanJson(getJsonField(
                     (_model.apiResultmga?.jsonBody ?? ''),
                     r'''$.text''',
-                  ).toString().toString()).toList())}'),
+                  ).toString().toString()).toList(), null)}'),
           ownerType:
-              widget.document?.ownerPerson != null ? 'person' : 'company',
+              widget!.document?.ownerPerson != null ? 'person' : 'company',
           owner: valueOrDefault<String>(
-            widget.document?.ownerPerson != null
-                ? widget.document?.ownerPerson?.id
-                : widget.document?.ownerCompany?.id,
+            widget!.document?.ownerPerson != null
+                ? widget!.document?.ownerPerson?.id
+                : widget!.document?.ownerCompany?.id,
             'tst',
           ),
           documentId: valueOrDefault<String>(
-            widget.document?.customId,
+            widget!.document?.customId,
             '345435fds',
           ),
         );
@@ -81,21 +83,21 @@ class _CreateProductLoadingWidgetState
           () async {
             await DocumentsTable().update(
               data: {
-                'firebase_id': widget.document?.customId,
+                'firebase_id': widget!.document?.customId,
               },
               matchingRows: (rows) => rows.eq(
                 'content',
                 functions.stringToAPI(
-                    'title: ${widget.document?.title}, description: ${widget.document?.description}, price (dollars): ${widget.document?.price?.toString()}, additional informational blocks: ${functions.jsonListToText(functions.cleanJson(getJsonField(
+                    'title: ${widget!.document?.title}, description: ${widget!.document?.description}, price (dollars): ${widget!.document?.price?.toString()}, additional informational blocks: ${functions.jsonListToText(functions.cleanJson(getJsonField(
                           (_model.apiResultmga?.jsonBody ?? ''),
                           r'''$.text''',
-                        ).toString().toString()).toList())}'),
+                        ).toString().toString()).toList(), null)}'),
               ),
             );
           }(),
         );
 
-        await widget.document!.reference.update({
+        await widget!.document!.reference.update({
           ...mapToFirestore(
             {
               'product_info': getProductInfoAIListFirestoreData(
@@ -112,7 +114,7 @@ class _CreateProductLoadingWidgetState
           ),
         });
         _model.updated =
-            await ProductsRecord.getDocumentOnce(widget.document!.reference);
+            await ProductsRecord.getDocumentOnce(widget!.document!.reference);
 
         context.pushNamed(
           'product_page',
@@ -133,7 +135,7 @@ class _CreateProductLoadingWidgetState
       }
     });
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -146,9 +148,7 @@ class _CreateProductLoadingWidgetState
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => _model.unfocusNode.canRequestFocus
-          ? FocusScope.of(context).requestFocus(_model.unfocusNode)
-          : FocusScope.of(context).unfocus(),
+      onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,

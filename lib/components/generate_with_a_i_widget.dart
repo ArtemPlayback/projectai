@@ -28,7 +28,7 @@ class _GenerateWithAIWidgetState extends State<GenerateWithAIWidget> {
     super.initState();
     _model = createModel(context, () => GenerateWithAIModel());
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override

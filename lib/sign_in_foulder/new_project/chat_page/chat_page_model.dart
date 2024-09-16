@@ -1,17 +1,22 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
+import '/backend/api_requests/api_streaming.dart';
 import '/backend/backend.dart';
-import '/backend/firebase_storage/storage.dart';
 import '/backend/push_notifications/push_notifications_util.dart';
 import '/backend/schema/structs/index.dart';
+import '/components/a_i_message_options_widget.dart';
+import '/components/attach_options_widget.dart';
 import '/components/image_slider_widget.dart';
 import '/components/message_options_widget.dart';
+import '/components/video_expand_widget.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
+import '/flutter_flow/flutter_flow_video_player.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
-import '/flutter_flow/upload_data.dart';
 import 'dart:async';
+import 'dart:convert';
+import 'dart:ui';
 import '/custom_code/actions/index.dart' as actions;
 import '/custom_code/widgets/index.dart' as custom_widgets;
 import '/flutter_flow/custom_functions.dart' as functions;
@@ -26,6 +31,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
 class ChatPageModel extends FlutterFlowModel<ChatPageWidget> {
@@ -76,9 +82,39 @@ class ChatPageModel extends FlutterFlowModel<ChatPageWidget> {
 
   bool showMic = false;
 
+  String? messageAI;
+
+  bool aiIstyping = false;
+
+  bool showMessages = false;
+
+  List<MediaStruct> media = [];
+  void addToMedia(MediaStruct item) => media.add(item);
+  void removeFromMedia(MediaStruct item) => media.remove(item);
+  void removeAtIndexFromMedia(int index) => media.removeAt(index);
+  void insertAtIndexInMedia(int index, MediaStruct item) =>
+      media.insert(index, item);
+  void updateMediaAtIndex(int index, Function(MediaStruct) updateFn) =>
+      media[index] = updateFn(media[index]);
+
+  List<dynamic> aiMessages = [];
+  void addToAiMessages(dynamic item) => aiMessages.add(item);
+  void removeFromAiMessages(dynamic item) => aiMessages.remove(item);
+  void removeAtIndexFromAiMessages(int index) => aiMessages.removeAt(index);
+  void insertAtIndexInAiMessages(int index, dynamic item) =>
+      aiMessages.insert(index, item);
+  void updateAiMessagesAtIndex(int index, Function(dynamic) updateFn) =>
+      aiMessages[index] = updateFn(aiMessages[index]);
+
+  String? partialtext;
+
+  AichatStruct? aiChat;
+  void updateAiChatStruct(Function(AichatStruct) updateFn) {
+    updateFn(aiChat ??= AichatStruct());
+  }
+
   ///  State fields for stateful widgets in this page.
 
-  final unfocusNode = FocusNode();
   // Stores action output result for [Firestore Query - Query a collection] action in chat_page widget.
   ChatsRecord? querried;
   // Stores action output result for [Backend Call - Create Document] action in chat_page widget.
@@ -91,43 +127,40 @@ class ChatPageModel extends FlutterFlowModel<ChatPageWidget> {
   ChatsRecord? newDoc;
   // Stores action output result for [Backend Call - Read Document] action in chat_page widget.
   ChatsRecord? query;
+  ChatsRecord? containerPreviousSnapshot1;
   // State field(s) for chat_column widget.
   ScrollController? chatColumn;
   // State field(s) for Row widget.
   ScrollController? rowController;
-  bool isDataUploading = false;
-  List<FFUploadedFile> uploadedLocalFiles = [];
-  List<String> uploadedFileUrls = [];
-
   // State field(s) for TextField widget.
   FocusNode? textFieldFocusNode1;
   TextEditingController? textController1;
   String? Function(BuildContext, String?)? textController1Validator;
-  // State field(s) for Column widget.
-  ScrollController? columnController;
+  ChatsRecord? containerPreviousSnapshot2;
+  // State field(s) for ColumnAI widget.
+  ScrollController? columnAI;
   // State field(s) for TextField widget.
   FocusNode? textFieldFocusNode2;
   TextEditingController? textController2;
   String? Function(BuildContext, String?)? textController2Validator;
-  // Stores action output result for [Backend Call - API (smart search messages)] action in IconButton widget.
-  ApiCallResponse? aiapi;
+  // Stores action output result for [Backend Call - API (OpenAI gpt big)] action in IconButton widget.
+  ApiCallResponse? aiMessage;
 
   @override
   void initState(BuildContext context) {
     chatColumn = ScrollController();
     rowController = ScrollController();
-    columnController = ScrollController();
+    columnAI = ScrollController();
   }
 
   @override
   void dispose() {
-    unfocusNode.dispose();
     chatColumn?.dispose();
     rowController?.dispose();
     textFieldFocusNode1?.dispose();
     textController1?.dispose();
 
-    columnController?.dispose();
+    columnAI?.dispose();
     textFieldFocusNode2?.dispose();
     textController2?.dispose();
   }

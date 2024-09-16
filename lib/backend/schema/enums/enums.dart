@@ -12,6 +12,19 @@ enum TeamMemberStatus {
   Declined,
 }
 
+enum MediaType {
+  image,
+  video,
+  document,
+}
+
+enum SearchItemType {
+  people,
+  company,
+  product,
+  event,
+}
+
 extension FFEnumExtensions<T extends Enum> on T {
   String serialize() => name;
 }
@@ -27,6 +40,10 @@ T? deserializeEnum<T>(String? value) {
       return NotificationTypes.values.deserialize(value) as T?;
     case (TeamMemberStatus):
       return TeamMemberStatus.values.deserialize(value) as T?;
+    case (MediaType):
+      return MediaType.values.deserialize(value) as T?;
+    case (SearchItemType):
+      return SearchItemType.values.deserialize(value) as T?;
     default:
       return null;
   }

@@ -1,5 +1,6 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
+import '/backend/api_requests/api_streaming.dart';
 import '/backend/backend.dart';
 import '/backend/schema/structs/index.dart';
 import '/flutter_flow/flutter_flow_animations.dart';
@@ -7,6 +8,7 @@ import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
+import 'dart:convert';
 import 'dart:math';
 import 'dart:ui';
 import '/flutter_flow/custom_functions.dart' as functions;
@@ -58,46 +60,46 @@ class _MarketSizeChatWidgetState extends State<MarketSizeChatWidget>
 
     // On component load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
-      if (widget.comeFrom == 'market size') {
-        if (widget.textField != null && widget.textField != '') {
+      if (widget!.comeFrom == 'market size') {
+        if (widget!.textField != null && widget!.textField != '') {
           _model.addToChat(ChatStruct(
             who: 'AI',
             text:
                 'Hi, I am your personal business-assistant. I will help you in writing \"Market Size\"',
           ));
-          setState(() {});
+          safeSetState(() {});
           _model.addToChat(ChatStruct(
             who: 'AI',
             text: 'Your market size: ',
           ));
-          setState(() {});
+          safeSetState(() {});
           _model.addToChat(ChatStruct(
             who: 'AI',
-            text: widget.textField,
+            text: widget!.textField,
           ));
-          setState(() {});
+          safeSetState(() {});
           _model.addToChat(ChatStruct(
             who: 'AI',
             text:
                 'How would you like to adjust your market size? Share your thoughts, and I\'ll follow up with a few questions to understand your project better.',
           ));
-          setState(() {});
+          safeSetState(() {});
         } else {
           _model.addToChat(ChatStruct(
             who: 'AI',
             text:
                 'Hi, I am your personal business-assistant. I will help you in writing \"Market Size\"',
           ));
-          setState(() {});
+          safeSetState(() {});
           _model.addToChat(ChatStruct(
             who: 'AI',
             text:
                 'I will ask you several questions so I can assist in calculating the market size for your product or service. Please, wait until I generate questions',
           ));
-          setState(() {});
+          safeSetState(() {});
           _model.marketSizeOld = await MarketSizeCall.call(
             question: functions.stringToAPI(
-                'Project\'s title: ${widget.project?.title}, project\'s description:${widget.project?.projectInformation?.description}, existing market size: ${widget.textField}'),
+                'Project\'s title: ${widget!.project?.title}, project\'s description:${widget!.project?.projectInformation?.description}, existing market size: ${widget!.textField}'),
           );
 
           if ((_model.marketSizeOld?.succeeded ?? true)) {
@@ -108,55 +110,55 @@ class _MarketSizeChatWidgetState extends State<MarketSizeChatWidget>
                 r'''$.text''',
               ).toString().toString(),
             ));
-            setState(() {});
+            safeSetState(() {});
           } else {
             _model.addToChat(ChatStruct(
               who: 'AI',
               text: 'Something went wrong. Please, try again later.',
             ));
-            setState(() {});
+            safeSetState(() {});
           }
         }
-      } else if (widget.comeFrom == 'monetization') {
-        if (widget.textField != null && widget.textField != '') {
+      } else if (widget!.comeFrom == 'monetization') {
+        if (widget!.textField != null && widget!.textField != '') {
           _model.addToChat(ChatStruct(
             who: 'AI',
             text:
                 'Hi, I am your personal business-assistant. I will help you in writing \"Monetization\"',
           ));
-          setState(() {});
+          safeSetState(() {});
           _model.addToChat(ChatStruct(
             who: 'AI',
             text: 'Your Monetization: ',
           ));
-          setState(() {});
+          safeSetState(() {});
           _model.addToChat(ChatStruct(
             who: 'AI',
-            text: widget.textField,
+            text: widget!.textField,
           ));
-          setState(() {});
+          safeSetState(() {});
           _model.addToChat(ChatStruct(
             who: 'AI',
             text:
                 'How would you like to adjust your Monetization? Share your thoughts, and I\'ll follow up with a few questions to understand your project better.',
           ));
-          setState(() {});
+          safeSetState(() {});
         } else {
           _model.addToChat(ChatStruct(
             who: 'AI',
             text:
                 'Hi, I am your personal business-assistant. I will help you in writing \"Monetization\"',
           ));
-          setState(() {});
+          safeSetState(() {});
           _model.addToChat(ChatStruct(
             who: 'AI',
             text:
                 'I will ask you several questions so I can assist in calculating the monetization for your product or service. Please, wait until I generate questions',
           ));
-          setState(() {});
+          safeSetState(() {});
           _model.monetizationOld = await MonetizationCall.call(
             question: functions.stringToAPI(
-                'Project\'s title: ${widget.project?.title}, project\'s description:${widget.project?.projectInformation?.description}, existing monetization: ${widget.textField}'),
+                'Project\'s title: ${widget!.project?.title}, project\'s description:${widget!.project?.projectInformation?.description}, existing monetization: ${widget!.textField}'),
           );
 
           if ((_model.monetizationOld?.succeeded ?? true)) {
@@ -167,55 +169,55 @@ class _MarketSizeChatWidgetState extends State<MarketSizeChatWidget>
                 r'''$.text''',
               ).toString().toString(),
             ));
-            setState(() {});
+            safeSetState(() {});
           } else {
             _model.addToChat(ChatStruct(
               who: 'AI',
               text: 'Something went wrong. Please, try again later.',
             ));
-            setState(() {});
+            safeSetState(() {});
           }
         }
-      } else if (widget.comeFrom == 'marketing plan') {
-        if (widget.textField != null && widget.textField != '') {
+      } else if (widget!.comeFrom == 'marketing plan') {
+        if (widget!.textField != null && widget!.textField != '') {
           _model.addToChat(ChatStruct(
             who: 'AI',
             text:
                 'Hi, I am your personal business-assistant. I will help you in writing \"Marketing plan\"',
           ));
-          setState(() {});
+          safeSetState(() {});
           _model.addToChat(ChatStruct(
             who: 'AI',
             text: 'Your Marketing plan: ',
           ));
-          setState(() {});
+          safeSetState(() {});
           _model.addToChat(ChatStruct(
             who: 'AI',
-            text: widget.textField,
+            text: widget!.textField,
           ));
-          setState(() {});
+          safeSetState(() {});
           _model.addToChat(ChatStruct(
             who: 'AI',
             text:
                 'How would you like to adjust your Marketing plan? Share your thoughts, and I\'ll follow up with a few questions to understand your project better.',
           ));
-          setState(() {});
+          safeSetState(() {});
         } else {
           _model.addToChat(ChatStruct(
             who: 'AI',
             text:
                 'Hi, I am your personal business-assistant. I will help you in writing \"Marketing plan\"',
           ));
-          setState(() {});
+          safeSetState(() {});
           _model.addToChat(ChatStruct(
             who: 'AI',
             text:
                 'I will ask you several questions so I can assist in calculating the market size for your product or service. Please, wait until I generate questions',
           ));
-          setState(() {});
+          safeSetState(() {});
           _model.marketingPlanOld = await MarketingPlanCall.call(
             question: functions.stringToAPI(
-                'Project\'s title: ${widget.project?.title}, project\'s description:${widget.project?.projectInformation?.description}, existing marketing plan: ${widget.textField}'),
+                'Project\'s title: ${widget!.project?.title}, project\'s description:${widget!.project?.projectInformation?.description}, existing marketing plan: ${widget!.textField}'),
           );
 
           if ((_model.marketingPlanOld?.succeeded ?? true)) {
@@ -226,55 +228,55 @@ class _MarketSizeChatWidgetState extends State<MarketSizeChatWidget>
                 r'''$.text''',
               ).toString().toString(),
             ));
-            setState(() {});
+            safeSetState(() {});
           } else {
             _model.addToChat(ChatStruct(
               who: 'AI',
               text: 'Something went wrong. Please, try again later.',
             ));
-            setState(() {});
+            safeSetState(() {});
           }
         }
-      } else if (widget.comeFrom == 'financial plan') {
-        if (widget.textField != null && widget.textField != '') {
+      } else if (widget!.comeFrom == 'financial plan') {
+        if (widget!.textField != null && widget!.textField != '') {
           _model.addToChat(ChatStruct(
             who: 'AI',
             text:
                 'Hi, I am your personal business-assistant. I will help you in writing \"Financial plan\"',
           ));
-          setState(() {});
+          safeSetState(() {});
           _model.addToChat(ChatStruct(
             who: 'AI',
             text: 'Your Financial plan: ',
           ));
-          setState(() {});
+          safeSetState(() {});
           _model.addToChat(ChatStruct(
             who: 'AI',
-            text: widget.textField,
+            text: widget!.textField,
           ));
-          setState(() {});
+          safeSetState(() {});
           _model.addToChat(ChatStruct(
             who: 'AI',
             text:
                 'How would you like to adjust your Financial plan? Share your thoughts, and I\'ll follow up with a few questions to understand your project better.',
           ));
-          setState(() {});
+          safeSetState(() {});
         } else {
           _model.addToChat(ChatStruct(
             who: 'AI',
             text:
                 'Hi, I am your personal business-assistant. I will help you in writing \"Financial plan\"',
           ));
-          setState(() {});
+          safeSetState(() {});
           _model.addToChat(ChatStruct(
             who: 'AI',
             text:
                 'I will ask you several questions so I can assist in calculating the market size for your product or service. Please, wait until I generate questions',
           ));
-          setState(() {});
+          safeSetState(() {});
           _model.financialplanold = await FinancialPlanCall.call(
             question: functions.stringToAPI(
-                'Project\'s title: ${widget.project?.title}, project\'s description:${widget.project?.projectInformation?.description}, existing financial plan:${widget.textField}'),
+                'Project\'s title: ${widget!.project?.title}, project\'s description:${widget!.project?.projectInformation?.description}, existing financial plan:${widget!.textField}'),
           );
 
           if ((_model.financialplanold?.succeeded ?? true)) {
@@ -285,55 +287,55 @@ class _MarketSizeChatWidgetState extends State<MarketSizeChatWidget>
                 r'''$.text''',
               ).toString().toString(),
             ));
-            setState(() {});
+            safeSetState(() {});
           } else {
             _model.addToChat(ChatStruct(
               who: 'AI',
               text: 'Something went wrong. Please, try again later.',
             ));
-            setState(() {});
+            safeSetState(() {});
           }
         }
       } else {
-        if (widget.textField != null && widget.textField != '') {
+        if (widget!.textField != null && widget!.textField != '') {
           _model.addToChat(ChatStruct(
             who: 'AI',
             text:
                 'Hi, I am your personal business-assistant. I will help you in writing \"Production plan\"',
           ));
-          setState(() {});
+          safeSetState(() {});
           _model.addToChat(ChatStruct(
             who: 'AI',
             text: 'Your Production Plan:  ',
           ));
-          setState(() {});
+          safeSetState(() {});
           _model.addToChat(ChatStruct(
             who: 'AI',
-            text: widget.textField,
+            text: widget!.textField,
           ));
-          setState(() {});
+          safeSetState(() {});
           _model.addToChat(ChatStruct(
             who: 'AI',
             text:
                 'How would you like to adjust your production plan? Share your thoughts, and I\'ll follow up with a few questions to understand your project better.',
           ));
-          setState(() {});
+          safeSetState(() {});
         } else {
           _model.addToChat(ChatStruct(
             who: 'AI',
             text:
                 'Hi, I am your personal business-assistant. I will help you in writing \"Production plan\"',
           ));
-          setState(() {});
+          safeSetState(() {});
           _model.addToChat(ChatStruct(
             who: 'AI',
             text:
                 'I will ask you several questions so I can assist in calculating the market size for your product or service. Please, wait until I generate questions',
           ));
-          setState(() {});
+          safeSetState(() {});
           _model.productionplanold = await ProductionPlanCall.call(
             question: functions.stringToAPI(
-                'Project\'s title: ${widget.project?.title}, project\'s description:${widget.project?.projectInformation?.description}, existing production plan: ${widget.textField}'),
+                'Project\'s title: ${widget!.project?.title}, project\'s description:${widget!.project?.projectInformation?.description}, existing production plan: ${widget!.textField}'),
           );
 
           if ((_model.productionplanold?.succeeded ?? true)) {
@@ -344,13 +346,13 @@ class _MarketSizeChatWidgetState extends State<MarketSizeChatWidget>
                 r'''$.text''',
               ).toString().toString(),
             ));
-            setState(() {});
+            safeSetState(() {});
           } else {
             _model.addToChat(ChatStruct(
               who: 'AI',
               text: 'Something went wrong. Please, try again later.',
             ));
-            setState(() {});
+            safeSetState(() {});
           }
         }
       }
@@ -381,7 +383,7 @@ class _MarketSizeChatWidgetState extends State<MarketSizeChatWidget>
       ),
     });
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -420,6 +422,7 @@ class _MarketSizeChatWidgetState extends State<MarketSizeChatWidget>
               child: Builder(
                 builder: (context) {
                   final messages = _model.chat.toList();
+
                   return SingleChildScrollView(
                     primary: false,
                     controller: _model.columnController,
@@ -591,7 +594,7 @@ class _MarketSizeChatWidgetState extends State<MarketSizeChatWidget>
                                     () async {
                                       _model.message =
                                           _model.textController.text;
-                                      setState(() {});
+                                      safeSetState(() {});
                                     },
                                   ),
                                   autofocus: true,
@@ -643,15 +646,15 @@ class _MarketSizeChatWidgetState extends State<MarketSizeChatWidget>
                                     size: 18.0,
                                   ),
                                   onPressed: () async {
-                                    if (widget.comeFrom == 'market size') {
-                                      setState(() {
+                                    if (widget!.comeFrom == 'market size') {
+                                      safeSetState(() {
                                         _model.textController?.clear();
                                       });
                                       _model.addToChat(ChatStruct(
                                         who: 'User',
                                         text: _model.message,
                                       ));
-                                      setState(() {});
+                                      safeSetState(() {});
                                       await Future.delayed(
                                           const Duration(milliseconds: 100));
                                       await _model.columnController?.animateTo(
@@ -660,8 +663,8 @@ class _MarketSizeChatWidgetState extends State<MarketSizeChatWidget>
                                         duration: Duration(milliseconds: 10),
                                         curve: Curves.ease,
                                       );
-                                      if (widget.textField != null &&
-                                          widget.textField != '') {
+                                      if (widget!.textField != null &&
+                                          widget!.textField != '') {
                                         if (_model.chat
                                                 .where((e) => e.who == 'User')
                                                 .toList()
@@ -670,7 +673,7 @@ class _MarketSizeChatWidgetState extends State<MarketSizeChatWidget>
                                           _model.marketSizeOld35 =
                                               await MarketSizeCall.call(
                                             question: functions.stringToAPI(
-                                                'Project\'s title: ${widget.project?.title}, project\'s description:${widget.project?.projectInformation?.description}, existing market size: ${widget.textField}, user\'s thought about existing market size: ${_model.message}'),
+                                                'Project\'s title: ${widget!.project?.title}, project\'s description:${widget!.project?.projectInformation?.description}, existing market size: ${widget!.textField}, user\'s thought about existing market size: ${_model.message}'),
                                           );
 
                                           if ((_model
@@ -685,14 +688,14 @@ class _MarketSizeChatWidgetState extends State<MarketSizeChatWidget>
                                                 r'''$.text''',
                                               ).toString(),
                                             ));
-                                            setState(() {});
+                                            safeSetState(() {});
                                           } else {
                                             _model.addToChat(ChatStruct(
                                               who: 'AI',
                                               text:
                                                   'Something went wrong. Please, try again later.',
                                             ));
-                                            setState(() {});
+                                            safeSetState(() {});
                                           }
                                         } else {
                                           _model.marketSizOld56 =
@@ -713,7 +716,7 @@ class _MarketSizeChatWidgetState extends State<MarketSizeChatWidget>
                                                 r'''$.text''',
                                               ).toString(),
                                             ));
-                                            setState(() {});
+                                            safeSetState(() {});
                                             await Future.delayed(const Duration(
                                                 milliseconds: 100));
                                             await _model.columnController
@@ -730,7 +733,7 @@ class _MarketSizeChatWidgetState extends State<MarketSizeChatWidget>
                                               text:
                                                   'Something went wrong. Please, try again later.',
                                             ));
-                                            setState(() {});
+                                            safeSetState(() {});
                                           }
                                         }
                                       } else {
@@ -752,7 +755,7 @@ class _MarketSizeChatWidgetState extends State<MarketSizeChatWidget>
                                               r'''$.text''',
                                             ).toString(),
                                           ));
-                                          setState(() {});
+                                          safeSetState(() {});
                                           await Future.delayed(const Duration(
                                               milliseconds: 100));
                                           await _model.columnController
@@ -769,19 +772,19 @@ class _MarketSizeChatWidgetState extends State<MarketSizeChatWidget>
                                             text:
                                                 'Something went wrong. Please, try again later.',
                                           ));
-                                          setState(() {});
+                                          safeSetState(() {});
                                         }
                                       }
-                                    } else if (widget.comeFrom ==
+                                    } else if (widget!.comeFrom ==
                                         'monetization') {
-                                      setState(() {
+                                      safeSetState(() {
                                         _model.textController?.clear();
                                       });
                                       _model.addToChat(ChatStruct(
                                         who: 'User',
                                         text: _model.message,
                                       ));
-                                      setState(() {});
+                                      safeSetState(() {});
                                       await Future.delayed(
                                           const Duration(milliseconds: 100));
                                       await _model.columnController?.animateTo(
@@ -790,8 +793,8 @@ class _MarketSizeChatWidgetState extends State<MarketSizeChatWidget>
                                         duration: Duration(milliseconds: 10),
                                         curve: Curves.ease,
                                       );
-                                      if (widget.textField != null &&
-                                          widget.textField != '') {
+                                      if (widget!.textField != null &&
+                                          widget!.textField != '') {
                                         if (_model.chat
                                                 .where((e) => e.who == 'User')
                                                 .toList()
@@ -800,7 +803,7 @@ class _MarketSizeChatWidgetState extends State<MarketSizeChatWidget>
                                           _model.monetizationChat =
                                               await MonetizationCall.call(
                                             question: functions.stringToAPI(
-                                                'Project\'s title: ${widget.project?.title}, project\'s description:${widget.project?.projectInformation?.description}, existing market size: ${widget.textField}, user\'s thought about existing market size: ${_model.message}'),
+                                                'Project\'s title: ${widget!.project?.title}, project\'s description:${widget!.project?.projectInformation?.description}, existing market size: ${widget!.textField}, user\'s thought about existing market size: ${_model.message}'),
                                           );
 
                                           if ((_model.monetizationChat
@@ -815,14 +818,14 @@ class _MarketSizeChatWidgetState extends State<MarketSizeChatWidget>
                                                 r'''$.text''',
                                               ).toString(),
                                             ));
-                                            setState(() {});
+                                            safeSetState(() {});
                                           } else {
                                             _model.addToChat(ChatStruct(
                                               who: 'AI',
                                               text:
                                                   'Something went wrong. Please, try again later.',
                                             ));
-                                            setState(() {});
+                                            safeSetState(() {});
                                           }
                                         } else {
                                           _model.monetizationChat4 =
@@ -843,7 +846,7 @@ class _MarketSizeChatWidgetState extends State<MarketSizeChatWidget>
                                                 r'''$.text''',
                                               ).toString(),
                                             ));
-                                            setState(() {});
+                                            safeSetState(() {});
                                             await Future.delayed(const Duration(
                                                 milliseconds: 100));
                                             await _model.columnController
@@ -860,7 +863,7 @@ class _MarketSizeChatWidgetState extends State<MarketSizeChatWidget>
                                               text:
                                                   'Something went wrong. Please, try again later.',
                                             ));
-                                            setState(() {});
+                                            safeSetState(() {});
                                           }
                                         }
                                       } else {
@@ -882,7 +885,7 @@ class _MarketSizeChatWidgetState extends State<MarketSizeChatWidget>
                                               r'''$.text''',
                                             ).toString(),
                                           ));
-                                          setState(() {});
+                                          safeSetState(() {});
                                           await Future.delayed(const Duration(
                                               milliseconds: 100));
                                           await _model.columnController
@@ -899,19 +902,19 @@ class _MarketSizeChatWidgetState extends State<MarketSizeChatWidget>
                                             text:
                                                 'Something went wrong. Please, try again later.',
                                           ));
-                                          setState(() {});
+                                          safeSetState(() {});
                                         }
                                       }
-                                    } else if (widget.comeFrom ==
+                                    } else if (widget!.comeFrom ==
                                         'marketing plan') {
-                                      setState(() {
+                                      safeSetState(() {
                                         _model.textController?.clear();
                                       });
                                       _model.addToChat(ChatStruct(
                                         who: 'User',
                                         text: _model.message,
                                       ));
-                                      setState(() {});
+                                      safeSetState(() {});
                                       await Future.delayed(
                                           const Duration(milliseconds: 100));
                                       await _model.columnController?.animateTo(
@@ -920,8 +923,8 @@ class _MarketSizeChatWidgetState extends State<MarketSizeChatWidget>
                                         duration: Duration(milliseconds: 10),
                                         curve: Curves.ease,
                                       );
-                                      if (widget.textField != null &&
-                                          widget.textField != '') {
+                                      if (widget!.textField != null &&
+                                          widget!.textField != '') {
                                         if (_model.chat
                                                 .where((e) => e.who == 'User')
                                                 .toList()
@@ -945,14 +948,14 @@ class _MarketSizeChatWidgetState extends State<MarketSizeChatWidget>
                                                 r'''$.text''',
                                               ).toString(),
                                             ));
-                                            setState(() {});
+                                            safeSetState(() {});
                                           } else {
                                             _model.addToChat(ChatStruct(
                                               who: 'AI',
                                               text:
                                                   'Something went wrong. Please, try again later.',
                                             ));
-                                            setState(() {});
+                                            safeSetState(() {});
                                           }
                                         } else {
                                           _model.marketingplan5 =
@@ -973,7 +976,7 @@ class _MarketSizeChatWidgetState extends State<MarketSizeChatWidget>
                                                 r'''$.text''',
                                               ).toString(),
                                             ));
-                                            setState(() {});
+                                            safeSetState(() {});
                                             await Future.delayed(const Duration(
                                                 milliseconds: 100));
                                             await _model.columnController
@@ -990,7 +993,7 @@ class _MarketSizeChatWidgetState extends State<MarketSizeChatWidget>
                                               text:
                                                   'Something went wrong. Please, try again later.',
                                             ));
-                                            setState(() {});
+                                            safeSetState(() {});
                                           }
                                         }
                                       } else {
@@ -1011,7 +1014,7 @@ class _MarketSizeChatWidgetState extends State<MarketSizeChatWidget>
                                               r'''$.text''',
                                             ).toString(),
                                           ));
-                                          setState(() {});
+                                          safeSetState(() {});
                                           await Future.delayed(const Duration(
                                               milliseconds: 100));
                                           await _model.columnController
@@ -1028,19 +1031,19 @@ class _MarketSizeChatWidgetState extends State<MarketSizeChatWidget>
                                             text:
                                                 'Something went wrong. Please, try again later.',
                                           ));
-                                          setState(() {});
+                                          safeSetState(() {});
                                         }
                                       }
-                                    } else if (widget.comeFrom ==
+                                    } else if (widget!.comeFrom ==
                                         'financial plan') {
-                                      setState(() {
+                                      safeSetState(() {
                                         _model.textController?.clear();
                                       });
                                       _model.addToChat(ChatStruct(
                                         who: 'User',
                                         text: _model.message,
                                       ));
-                                      setState(() {});
+                                      safeSetState(() {});
                                       await Future.delayed(
                                           const Duration(milliseconds: 100));
                                       await _model.columnController?.animateTo(
@@ -1049,8 +1052,8 @@ class _MarketSizeChatWidgetState extends State<MarketSizeChatWidget>
                                         duration: Duration(milliseconds: 10),
                                         curve: Curves.ease,
                                       );
-                                      if (widget.textField != null &&
-                                          widget.textField != '') {
+                                      if (widget!.textField != null &&
+                                          widget!.textField != '') {
                                         if (_model.chat
                                                 .where((e) => e.who == 'User')
                                                 .toList()
@@ -1074,14 +1077,14 @@ class _MarketSizeChatWidgetState extends State<MarketSizeChatWidget>
                                                 r'''$.text''',
                                               ).toString(),
                                             ));
-                                            setState(() {});
+                                            safeSetState(() {});
                                           } else {
                                             _model.addToChat(ChatStruct(
                                               who: 'AI',
                                               text:
                                                   'Something went wrong. Please, try again later.',
                                             ));
-                                            setState(() {});
+                                            safeSetState(() {});
                                           }
                                         } else {
                                           _model.financialplan4 =
@@ -1102,7 +1105,7 @@ class _MarketSizeChatWidgetState extends State<MarketSizeChatWidget>
                                                 r'''$.text''',
                                               ).toString(),
                                             ));
-                                            setState(() {});
+                                            safeSetState(() {});
                                             await Future.delayed(const Duration(
                                                 milliseconds: 100));
                                             await _model.columnController
@@ -1119,7 +1122,7 @@ class _MarketSizeChatWidgetState extends State<MarketSizeChatWidget>
                                               text:
                                                   'Something went wrong. Please, try again later.',
                                             ));
-                                            setState(() {});
+                                            safeSetState(() {});
                                           }
                                         }
                                       } else {
@@ -1140,7 +1143,7 @@ class _MarketSizeChatWidgetState extends State<MarketSizeChatWidget>
                                               r'''$.text''',
                                             ).toString(),
                                           ));
-                                          setState(() {});
+                                          safeSetState(() {});
                                           await Future.delayed(const Duration(
                                               milliseconds: 100));
                                           await _model.columnController
@@ -1157,18 +1160,18 @@ class _MarketSizeChatWidgetState extends State<MarketSizeChatWidget>
                                             text:
                                                 'Something went wrong. Please, try again later.',
                                           ));
-                                          setState(() {});
+                                          safeSetState(() {});
                                         }
                                       }
                                     } else {
-                                      setState(() {
+                                      safeSetState(() {
                                         _model.textController?.clear();
                                       });
                                       _model.addToChat(ChatStruct(
                                         who: 'User',
                                         text: _model.message,
                                       ));
-                                      setState(() {});
+                                      safeSetState(() {});
                                       await Future.delayed(
                                           const Duration(milliseconds: 100));
                                       await _model.columnController?.animateTo(
@@ -1177,8 +1180,8 @@ class _MarketSizeChatWidgetState extends State<MarketSizeChatWidget>
                                         duration: Duration(milliseconds: 10),
                                         curve: Curves.ease,
                                       );
-                                      if (widget.textField != null &&
-                                          widget.textField != '') {
+                                      if (widget!.textField != null &&
+                                          widget!.textField != '') {
                                         if (_model.chat
                                                 .where((e) => e.who == 'User')
                                                 .toList()
@@ -1202,14 +1205,14 @@ class _MarketSizeChatWidgetState extends State<MarketSizeChatWidget>
                                                 r'''$.text''',
                                               ).toString(),
                                             ));
-                                            setState(() {});
+                                            safeSetState(() {});
                                           } else {
                                             _model.addToChat(ChatStruct(
                                               who: 'AI',
                                               text:
                                                   'Something went wrong. Please, try again later.',
                                             ));
-                                            setState(() {});
+                                            safeSetState(() {});
                                           }
                                         } else {
                                           _model.productionPlan4 =
@@ -1230,7 +1233,7 @@ class _MarketSizeChatWidgetState extends State<MarketSizeChatWidget>
                                                 r'''$.text''',
                                               ).toString(),
                                             ));
-                                            setState(() {});
+                                            safeSetState(() {});
                                             await Future.delayed(const Duration(
                                                 milliseconds: 100));
                                             await _model.columnController
@@ -1247,7 +1250,7 @@ class _MarketSizeChatWidgetState extends State<MarketSizeChatWidget>
                                               text:
                                                   'Something went wrong. Please, try again later.',
                                             ));
-                                            setState(() {});
+                                            safeSetState(() {});
                                           }
                                         }
                                       } else {
@@ -1269,7 +1272,7 @@ class _MarketSizeChatWidgetState extends State<MarketSizeChatWidget>
                                               r'''$.text''',
                                             ).toString(),
                                           ));
-                                          setState(() {});
+                                          safeSetState(() {});
                                           await Future.delayed(const Duration(
                                               milliseconds: 100));
                                           await _model.columnController
@@ -1286,12 +1289,12 @@ class _MarketSizeChatWidgetState extends State<MarketSizeChatWidget>
                                             text:
                                                 'Something went wrong. Please, try again later.',
                                           ));
-                                          setState(() {});
+                                          safeSetState(() {});
                                         }
                                       }
                                     }
 
-                                    setState(() {});
+                                    safeSetState(() {});
                                   },
                                 ).animateOnPageLoad(animationsMap[
                                     'iconButtonOnPageLoadAnimation']!),
@@ -1353,8 +1356,8 @@ class _MarketSizeChatWidgetState extends State<MarketSizeChatWidget>
                           ),
                           FFButtonWidget(
                             onPressed: () async {
-                              if (widget.comeFrom == 'market size') {
-                                await widget.project!.reference
+                              if (widget!.comeFrom == 'market size') {
+                                await widget!.project!.reference
                                     .update(createProjectsRecordData(
                                   businessPlan: createProjectBusinessPlanStruct(
                                     marketSize: _model.chat.last.text,
@@ -1363,7 +1366,7 @@ class _MarketSizeChatWidgetState extends State<MarketSizeChatWidget>
                                 ));
                                 _model.marketSize =
                                     await ProjectsRecord.getDocumentOnce(
-                                        widget.project!.reference);
+                                        widget!.project!.reference);
 
                                 context.pushNamed(
                                   'createBusinessPlan',
@@ -1377,7 +1380,7 @@ class _MarketSizeChatWidgetState extends State<MarketSizeChatWidget>
                                       ParamType.int,
                                     ),
                                     'isUpdate': serializeParam(
-                                      widget.isUpdate,
+                                      widget!.isUpdate,
                                       ParamType.bool,
                                     ),
                                   }.withoutNulls,
@@ -1385,8 +1388,8 @@ class _MarketSizeChatWidgetState extends State<MarketSizeChatWidget>
                                     'project': _model.marketSize,
                                   },
                                 );
-                              } else if (widget.comeFrom == 'monetization') {
-                                await widget.project!.reference
+                              } else if (widget!.comeFrom == 'monetization') {
+                                await widget!.project!.reference
                                     .update(createProjectsRecordData(
                                   businessPlan: createProjectBusinessPlanStruct(
                                     monetization: _model.chat.last.text,
@@ -1395,7 +1398,7 @@ class _MarketSizeChatWidgetState extends State<MarketSizeChatWidget>
                                 ));
                                 _model.marketSize2 =
                                     await ProjectsRecord.getDocumentOnce(
-                                        widget.project!.reference);
+                                        widget!.project!.reference);
 
                                 context.pushNamed(
                                   'createBusinessPlan',
@@ -1409,7 +1412,7 @@ class _MarketSizeChatWidgetState extends State<MarketSizeChatWidget>
                                       ParamType.int,
                                     ),
                                     'isUpdate': serializeParam(
-                                      widget.isUpdate,
+                                      widget!.isUpdate,
                                       ParamType.bool,
                                     ),
                                   }.withoutNulls,
@@ -1417,8 +1420,8 @@ class _MarketSizeChatWidgetState extends State<MarketSizeChatWidget>
                                     'project': _model.marketSize2,
                                   },
                                 );
-                              } else if (widget.comeFrom == 'marketing plan') {
-                                await widget.project!.reference
+                              } else if (widget!.comeFrom == 'marketing plan') {
+                                await widget!.project!.reference
                                     .update(createProjectsRecordData(
                                   businessPlan: createProjectBusinessPlanStruct(
                                     marketingPlan: _model.chat.last.text,
@@ -1427,7 +1430,7 @@ class _MarketSizeChatWidgetState extends State<MarketSizeChatWidget>
                                 ));
                                 _model.marketSize3 =
                                     await ProjectsRecord.getDocumentOnce(
-                                        widget.project!.reference);
+                                        widget!.project!.reference);
 
                                 context.pushNamed(
                                   'createBusinessPlan',
@@ -1441,7 +1444,7 @@ class _MarketSizeChatWidgetState extends State<MarketSizeChatWidget>
                                       ParamType.int,
                                     ),
                                     'isUpdate': serializeParam(
-                                      widget.isUpdate,
+                                      widget!.isUpdate,
                                       ParamType.bool,
                                     ),
                                   }.withoutNulls,
@@ -1449,8 +1452,8 @@ class _MarketSizeChatWidgetState extends State<MarketSizeChatWidget>
                                     'project': _model.marketSize3,
                                   },
                                 );
-                              } else if (widget.comeFrom == 'financial plan') {
-                                await widget.project!.reference
+                              } else if (widget!.comeFrom == 'financial plan') {
+                                await widget!.project!.reference
                                     .update(createProjectsRecordData(
                                   businessPlan: createProjectBusinessPlanStruct(
                                     financialPlan: _model.chat.last.text,
@@ -1459,7 +1462,7 @@ class _MarketSizeChatWidgetState extends State<MarketSizeChatWidget>
                                 ));
                                 _model.marketSize4 =
                                     await ProjectsRecord.getDocumentOnce(
-                                        widget.project!.reference);
+                                        widget!.project!.reference);
 
                                 context.pushNamed(
                                   'createBusinessPlan',
@@ -1473,7 +1476,7 @@ class _MarketSizeChatWidgetState extends State<MarketSizeChatWidget>
                                       ParamType.int,
                                     ),
                                     'isUpdate': serializeParam(
-                                      widget.isUpdate,
+                                      widget!.isUpdate,
                                       ParamType.bool,
                                     ),
                                   }.withoutNulls,
@@ -1482,7 +1485,7 @@ class _MarketSizeChatWidgetState extends State<MarketSizeChatWidget>
                                   },
                                 );
                               } else {
-                                await widget.project!.reference
+                                await widget!.project!.reference
                                     .update(createProjectsRecordData(
                                   businessPlan: createProjectBusinessPlanStruct(
                                     productionPlan: _model.chat.last.text,
@@ -1491,7 +1494,7 @@ class _MarketSizeChatWidgetState extends State<MarketSizeChatWidget>
                                 ));
                                 _model.marketSize5 =
                                     await ProjectsRecord.getDocumentOnce(
-                                        widget.project!.reference);
+                                        widget!.project!.reference);
 
                                 context.pushNamed(
                                   'createBusinessPlan',
@@ -1505,7 +1508,7 @@ class _MarketSizeChatWidgetState extends State<MarketSizeChatWidget>
                                       ParamType.int,
                                     ),
                                     'isUpdate': serializeParam(
-                                      widget.isUpdate,
+                                      widget!.isUpdate,
                                       ParamType.bool,
                                     ),
                                   }.withoutNulls,
@@ -1515,7 +1518,7 @@ class _MarketSizeChatWidgetState extends State<MarketSizeChatWidget>
                                 );
                               }
 
-                              setState(() {});
+                              safeSetState(() {});
                             },
                             text: 'Save',
                             options: FFButtonOptions(

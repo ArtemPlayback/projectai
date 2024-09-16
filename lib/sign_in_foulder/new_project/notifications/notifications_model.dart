@@ -34,7 +34,6 @@ class NotificationsModel extends FlutterFlowModel<NotificationsWidget> {
 
   ///  State fields for stateful widgets in this page.
 
-  final unfocusNode = FocusNode();
   // Model for button_fixed_size component.
   late ButtonFixedSizeModel buttonFixedSizeModel;
 
@@ -45,7 +44,6 @@ class NotificationsModel extends FlutterFlowModel<NotificationsWidget> {
 
   @override
   void dispose() {
-    unfocusNode.dispose();
     buttonFixedSizeModel.dispose();
   }
 }

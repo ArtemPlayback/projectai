@@ -36,7 +36,7 @@ class _RegenerateDescriptionWidgetState
     super.initState();
     _model = createModel(context, () => RegenerateDescriptionModel());
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override

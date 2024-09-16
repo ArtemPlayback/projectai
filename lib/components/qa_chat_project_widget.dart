@@ -1,5 +1,6 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
+import '/backend/api_requests/api_streaming.dart';
 import '/backend/backend.dart';
 import '/backend/schema/structs/index.dart';
 import '/flutter_flow/flutter_flow_animations.dart';
@@ -7,6 +8,7 @@ import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'dart:async';
+import 'dart:convert';
 import 'dart:math';
 import 'dart:ui';
 import '/flutter_flow/custom_functions.dart' as functions;
@@ -68,7 +70,7 @@ class _QaChatProjectWidgetState extends State<QaChatProjectWidget>
       ),
     });
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -108,6 +110,7 @@ class _QaChatProjectWidgetState extends State<QaChatProjectWidget>
                 child: Builder(
                   builder: (context) {
                     final messages = _model.chatmessages.toList();
+
                     return SingleChildScrollView(
                       primary: false,
                       controller: _model.columnController,
@@ -180,7 +183,7 @@ class _QaChatProjectWidgetState extends State<QaChatProjectWidget>
                                                         0.0, 0.0, 10.0, 6.0),
                                                 child: Text(
                                                   dateTimeFormat(
-                                                      'jm', messagesItem.when!),
+                                                      "jm", messagesItem.when!),
                                                   style: FlutterFlowTheme.of(
                                                           context)
                                                       .bodyMedium
@@ -292,7 +295,7 @@ class _QaChatProjectWidgetState extends State<QaChatProjectWidget>
                                                                     6.0),
                                                         child: Text(
                                                           dateTimeFormat(
-                                                              'jm',
+                                                              "jm",
                                                               messagesItem
                                                                   .when!),
                                                           style: FlutterFlowTheme
@@ -377,7 +380,7 @@ class _QaChatProjectWidgetState extends State<QaChatProjectWidget>
                                                             .fromSTEB(0.0, 0.0,
                                                                 10.0, 8.0),
                                                     child: Text(
-                                                      dateTimeFormat('Hm',
+                                                      dateTimeFormat("Hm",
                                                           messagesItem.when!),
                                                       style: FlutterFlowTheme
                                                               .of(context)
@@ -506,7 +509,7 @@ class _QaChatProjectWidgetState extends State<QaChatProjectWidget>
                                                   () async {
                                                     _model.message = _model
                                                         .textController.text;
-                                                    setState(() {});
+                                                    safeSetState(() {});
                                                   },
                                                 ),
                                                 autofocus: false,
@@ -587,7 +590,7 @@ class _QaChatProjectWidgetState extends State<QaChatProjectWidget>
                                             size: 21.0,
                                           ),
                                           onPressed: () async {
-                                            setState(() {
+                                            safeSetState(() {
                                               _model.textController?.clear();
                                             });
                                             _model.addToChatmessages(
@@ -595,7 +598,7 @@ class _QaChatProjectWidgetState extends State<QaChatProjectWidget>
                                               text: _model.message,
                                               type: 'User',
                                             ));
-                                            setState(() {});
+                                            safeSetState(() {});
                                             _model.qa = await QABotCall.call(
                                               text: functions
                                                   .stringToAPI(_model.message),
@@ -612,7 +615,7 @@ class _QaChatProjectWidgetState extends State<QaChatProjectWidget>
                                                 when: getCurrentTimestamp,
                                                 type: 'AI',
                                               ));
-                                              setState(() {});
+                                              safeSetState(() {});
                                               unawaited(
                                                 () async {
                                                   await _model.docref!.update({
@@ -643,10 +646,10 @@ class _QaChatProjectWidgetState extends State<QaChatProjectWidget>
                                                 when: getCurrentTimestamp,
                                                 type: 'AI',
                                               ));
-                                              setState(() {});
+                                              safeSetState(() {});
                                             }
 
-                                            setState(() {});
+                                            safeSetState(() {});
                                           },
                                         ).animateOnPageLoad(animationsMap[
                                             'iconButtonOnPageLoadAnimation']!),

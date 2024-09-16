@@ -5,8 +5,8 @@ import '../base_auth_user_provider.dart';
 
 export '../base_auth_user_provider.dart';
 
-class ProjectAIFirebaseUser extends BaseAuthUser {
-  ProjectAIFirebaseUser(this.user);
+class OmnisAIFirebaseUser extends BaseAuthUser {
+  OmnisAIFirebaseUser(this.user);
   User? user;
   bool get loggedIn => user != null;
 
@@ -53,18 +53,17 @@ class ProjectAIFirebaseUser extends BaseAuthUser {
 
   static BaseAuthUser fromUserCredential(UserCredential userCredential) =>
       fromFirebaseUser(userCredential.user);
-  static BaseAuthUser fromFirebaseUser(User? user) =>
-      ProjectAIFirebaseUser(user);
+  static BaseAuthUser fromFirebaseUser(User? user) => OmnisAIFirebaseUser(user);
 }
 
-Stream<BaseAuthUser> projectAIFirebaseUserStream() => FirebaseAuth.instance
+Stream<BaseAuthUser> omnisAIFirebaseUserStream() => FirebaseAuth.instance
         .authStateChanges()
         .debounce((user) => user == null && !loggedIn
             ? TimerStream(true, const Duration(seconds: 1))
             : Stream.value(user))
         .map<BaseAuthUser>(
       (user) {
-        currentUser = ProjectAIFirebaseUser(user);
+        currentUser = OmnisAIFirebaseUser(user);
         return currentUser!;
       },
     );

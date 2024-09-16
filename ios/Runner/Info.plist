@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>ProjectAI</string>
+	<string>OmnisAI</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -13,7 +13,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>ProjectAI</string>
+	<string>OmnisAI</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 
@@ -28,7 +28,7 @@
             <string>Editor</string>
             <key>CFBundleURLSchemes</key>
             <array>
-                <string>com.googleusercontent.apps.991574124918-ce2uppo55ggk8lsgmiqm7gi63oq21tnv</string>
+                <string>com.googleusercontent.apps.323852889773-4k0tbv7dsktgplfa1vul9cra8sni18nr</string>
                 
             </array>
         </dict>
@@ -40,7 +40,7 @@
         <string>project.ai</string>
         <key>CFBundleURLSchemes</key>
         <array>
-        <string>projectai</string>
+        <string>omnisai</string>
         </array>
         </dict>
     </array>
@@ -54,13 +54,17 @@
 	<true/>
 
 	<key>NSCameraUsageDescription</key>
-    <string>In order to take a picture or video, this app requires permission to access the camera.</string>
+    <string>In order to take pictures, we require permission to access to photo library</string>
+	<key>NSMicrophoneUsageDescription</key>
+    <string>In order to record audio for video, this app requires permission to access the microphone.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-    <string>In order to upload media, this app requires permission to access the camera</string>
+    <string>In order to upload data, we require permission to access to photo library</string>
 	<key>NSMicrophoneUsageDescription</key>
     <string>Access to the microphone is required to record voice messages that the user can send to other participants within the app</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
     <string>Location data is used to recommend nearby events and activities that may be of interest to the user based on their current location</string>
+	<key>PermissionGroupNotification</key>
+    <string>In order to recieve messages, we require permission to access to notifications</string>
     <key>UIBackgroundModes</key>
     <array>
         <string>fetch</string>

@@ -3,23 +3,23 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>991574124918-ce2uppo55ggk8lsgmiqm7gi63oq21tnv.apps.googleusercontent.com</string>
+	<string>323852889773-4k0tbv7dsktgplfa1vul9cra8sni18nr.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.991574124918-ce2uppo55ggk8lsgmiqm7gi63oq21tnv</string>
+	<string>com.googleusercontent.apps.323852889773-4k0tbv7dsktgplfa1vul9cra8sni18nr</string>
 	<key>ANDROID_CLIENT_ID</key>
-	<string>991574124918-21eumgoobf4gnue94eq017kt5pldf36k.apps.googleusercontent.com</string>
+	<string>323852889773-2lm7kdj0poav060vnpaoagm7e5inelnb.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
-	<string>AIzaSyCBtpZrPcAqji_tZWGFZvrXY7q2DHrC5yk</string>
+	<string>AIzaSyBLUeLaXAmrIWujDifMUyE2390UTA7Dcbo</string>
 	<key>GCM_SENDER_ID</key>
-	<string>991574124918</string>
+	<string>323852889773</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.mycompany.projectai</string>
 	<key>PROJECT_ID</key>
-	<string>project-e33e5</string>
+	<string>project-t9rgzl</string>
 	<key>STORAGE_BUCKET</key>
-	<string>project-e33e5.appspot.com</string>
+	<string>project-t9rgzl.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -31,6 +31,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:991574124918:ios:c6f32632c3ba0324467257</string>
+	<string>1:323852889773:ios:ab06ef0e199e2fff316024</string>
 </dict>
 </plist>

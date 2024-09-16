@@ -1,7 +1,6 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/backend/schema/structs/index.dart';
-import '/components/expandable_text_widget.dart';
 import '/components/image_slider_widget.dart';
 import '/components/map_widget.dart';
 import '/components/toggle_widget.dart';
@@ -48,20 +47,20 @@ class _ProductPageWidgetState extends State<ProductPageWidget> {
 
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
-      if (widget.product?.ownerPerson != null) {
+      if (widget!.product?.ownerPerson != null) {
         _model.ownerUser =
-            await UsersRecord.getDocumentOnce(widget.product!.ownerPerson!);
+            await UsersRecord.getDocumentOnce(widget!.product!.ownerPerson!);
         _model.isOwnerUser = true;
-        setState(() {});
+        safeSetState(() {});
       } else {
-        _model.ownerCompany =
-            await ProjectsRecord.getDocumentOnce(widget.product!.ownerCompany!);
+        _model.ownerCompany = await ProjectsRecord.getDocumentOnce(
+            widget!.product!.ownerCompany!);
         _model.isOwnerUser = false;
-        setState(() {});
+        safeSetState(() {});
       }
     });
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -74,9 +73,7 @@ class _ProductPageWidgetState extends State<ProductPageWidget> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => _model.unfocusNode.canRequestFocus
-          ? FocusScope.of(context).requestFocus(_model.unfocusNode)
-          : FocusScope.of(context).unfocus(),
+      onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
@@ -92,7 +89,8 @@ class _ProductPageWidgetState extends State<ProductPageWidget> {
                   children: [
                     Builder(
                       builder: (context) {
-                        final images = widget.product?.images?.toList() ?? [];
+                        final images = widget!.product?.images?.toList() ?? [];
+
                         return Container(
                           width: double.infinity,
                           height: 380.0,
@@ -128,34 +126,35 @@ class _ProductPageWidgetState extends State<ProductPageWidget> {
                                                           Directionality.of(
                                                               context)),
                                               child: GestureDetector(
-                                                onTap: () => _model.unfocusNode
-                                                        .canRequestFocus
-                                                    ? FocusScope.of(context)
-                                                        .requestFocus(
-                                                            _model.unfocusNode)
-                                                    : FocusScope.of(context)
+                                                onTap: () =>
+                                                    FocusScope.of(dialogContext)
                                                         .unfocus(),
                                                 child: Container(
                                                   height: double.infinity,
                                                   width: double.infinity,
                                                   child: ImageSliderWidget(
                                                     images:
-                                                        widget.product!.images,
+                                                        widget!.product!.images,
                                                     initialindex: imagesIndex,
                                                     isThisYours: false,
-                                                    product: widget.product,
+                                                    product: widget!.product,
+                                                    actionDelete:
+                                                        (images) async {},
                                                   ),
                                                 ),
                                               ),
                                             );
                                           },
-                                        ).then((value) => setState(() {}));
+                                        );
                                       },
                                       child: ClipRRect(
                                         borderRadius:
                                             BorderRadius.circular(0.0),
                                         child: Image.network(
-                                          imagesItem,
+                                          valueOrDefault<String>(
+                                            imagesItem,
+                                            'https://st.depositphotos.com/1734074/5127/v/450/depositphotos_51276369-stock-illustration-vector-opened-carton-box-flat.jpg',
+                                          ),
                                           width: 300.0,
                                           height: 380.0,
                                           fit: BoxFit.cover,
@@ -185,7 +184,7 @@ class _ProductPageWidgetState extends State<ProductPageWidget> {
                                         duration: Duration(milliseconds: 500),
                                         curve: Curves.ease,
                                       );
-                                      setState(() {});
+                                      safeSetState(() {});
                                     },
                                     effect: smooth_page_indicator
                                         .ExpandingDotsEffect(
@@ -227,7 +226,7 @@ class _ProductPageWidgetState extends State<ProductPageWidget> {
                                         0.0, 0.0, 42.0, 0.0),
                                     child: Text(
                                       valueOrDefault<String>(
-                                        widget.product?.title,
+                                        widget!.product?.title,
                                         'title',
                                       ),
                                       style: FlutterFlowTheme.of(context)
@@ -238,6 +237,7 @@ class _ProductPageWidgetState extends State<ProductPageWidget> {
                                             letterSpacing: 0.0,
                                             fontWeight: FontWeight.w600,
                                             useGoogleFonts: false,
+                                            lineHeight: 1.1,
                                           ),
                                     ),
                                   ),
@@ -245,14 +245,22 @@ class _ProductPageWidgetState extends State<ProductPageWidget> {
                               ],
                             ),
                           ),
-                          wrapWithModel(
-                            model: _model.expandableTextModel,
-                            updateCallback: () => setState(() {}),
-                            child: ExpandableTextWidget(
-                              parameter1: valueOrDefault<String>(
-                                widget.product?.description,
-                                'info',
+                          Padding(
+                            padding: EdgeInsetsDirectional.fromSTEB(
+                                0.0, 10.0, 0.0, 0.0),
+                            child: Text(
+                              valueOrDefault<String>(
+                                widget!.product?.description,
+                                'description',
                               ),
+                              style: FlutterFlowTheme.of(context)
+                                  .bodyMedium
+                                  .override(
+                                    fontFamily: 'LTSuperior',
+                                    color: Color(0xBF1D1D20),
+                                    letterSpacing: 0.0,
+                                    useGoogleFonts: false,
+                                  ),
                             ),
                           ),
                         ],
@@ -309,7 +317,10 @@ class _ProductPageWidgetState extends State<ProductPageWidget> {
                                         borderRadius:
                                             BorderRadius.circular(360.0),
                                         child: Image.network(
-                                          _model.ownerUser!.photoUrl,
+                                          valueOrDefault<String>(
+                                            _model.ownerUser?.photoUrl,
+                                            'https://t4.ftcdn.net/jpg/02/17/34/67/360_F_217346796_TSg5VcYjsFxZtIDK6Qdctg3yqAapG7Xa.jpg',
+                                          ),
                                           width: 47.0,
                                           height: 47.0,
                                           fit: BoxFit.cover,
@@ -364,7 +375,10 @@ class _ProductPageWidgetState extends State<ProductPageWidget> {
                                         borderRadius:
                                             BorderRadius.circular(360.0),
                                         child: Image.network(
-                                          _model.ownerCompany!.mainImage,
+                                          valueOrDefault<String>(
+                                            _model.ownerCompany?.mainImage,
+                                            'https://t4.ftcdn.net/jpg/02/17/34/67/360_F_217346796_TSg5VcYjsFxZtIDK6Qdctg3yqAapG7Xa.jpg',
+                                          ),
                                           width: 47.0,
                                           height: 47.0,
                                           fit: BoxFit.cover,
@@ -615,7 +629,7 @@ class _ProductPageWidgetState extends State<ProductPageWidget> {
                                                   model: _model
                                                       .buttonFixedSizeModel1,
                                                   updateCallback: () =>
-                                                      setState(() {}),
+                                                      safeSetState(() {}),
                                                   child: ButtonFixedSizeWidget(
                                                     width: 220.0,
                                                     height: 40.0,
@@ -653,8 +667,8 @@ class _ProductPageWidgetState extends State<ProductPageWidget> {
                                 ),
                               ),
                             ),
-                          if ((widget.product?.colors != null &&
-                                  (widget.product?.colors)!.isNotEmpty) ==
+                          if ((widget!.product?.colors != null &&
+                                  (widget!.product?.colors)!.isNotEmpty) ==
                               true)
                             Padding(
                               padding: EdgeInsetsDirectional.fromSTEB(
@@ -681,8 +695,9 @@ class _ProductPageWidgetState extends State<ProductPageWidget> {
                                     child: Builder(
                                       builder: (context) {
                                         final colors =
-                                            widget.product?.colors?.toList() ??
+                                            widget!.product?.colors?.toList() ??
                                                 [];
+
                                         return Row(
                                           mainAxisSize: MainAxisSize.max,
                                           children: List.generate(colors.length,
@@ -716,7 +731,8 @@ class _ProductPageWidgetState extends State<ProductPageWidget> {
                       child: Builder(
                         builder: (context) {
                           final blocks =
-                              widget.product?.productInfo?.toList() ?? [];
+                              widget!.product?.productInfo?.toList() ?? [];
+
                           return Column(
                             mainAxisSize: MainAxisSize.max,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -802,6 +818,7 @@ class _ProductPageWidgetState extends State<ProductPageWidget> {
                                                 builder: (context) {
                                                   final list =
                                                       blocksItem.list.toList();
+
                                                   return Column(
                                                     mainAxisSize:
                                                         MainAxisSize.min,
@@ -903,6 +920,7 @@ class _ProductPageWidgetState extends State<ProductPageWidget> {
                                               builder: (context) {
                                                 final options =
                                                     blocksItem.options.toList();
+
                                                 return Wrap(
                                                   spacing: 8.0,
                                                   runSpacing: 8.0,
@@ -1070,18 +1088,19 @@ class _ProductPageWidgetState extends State<ProductPageWidget> {
                         sigmaY: 10.0,
                       ),
                       child: FlutterFlowIconButton(
-                        borderColor: Colors.transparent,
+                        borderColor: FlutterFlowTheme.of(context).textAndStroke,
                         borderRadius: 10.0,
                         borderWidth: 1.0,
                         buttonSize: 40.0,
-                        fillColor: Color(0x67000000),
                         icon: Icon(
                           Icons.chevron_left,
-                          color: Colors.white,
+                          color: FlutterFlowTheme.of(context).secondaryText,
                           size: 24.0,
                         ),
                         onPressed: () async {
-                          if (widget.isFrom == 'create') {
+                          if (widget!.isFrom == 'create') {
+                            context.pushNamed('profile');
+                          } else if (widget!.isFrom == 'Settings') {
                             context.pushNamed('profile');
                           } else {
                             context.safePop();
@@ -1093,7 +1112,8 @@ class _ProductPageWidgetState extends State<ProductPageWidget> {
                 ),
                 Builder(
                   builder: (context) {
-                    if ((widget.product?.ownerPerson == currentUserReference) ||
+                    if ((widget!.product?.ownerPerson ==
+                            currentUserReference) ||
                         (currentUserReference == _model.ownerCompany?.user)) {
                       return Padding(
                         padding: EdgeInsetsDirectional.fromSTEB(
@@ -1106,7 +1126,7 @@ class _ProductPageWidgetState extends State<ProductPageWidget> {
                               sigmaY: 10.0,
                             ),
                             child: Visibility(
-                              visible: (widget.product?.ownerPerson ==
+                              visible: (widget!.product?.ownerPerson ==
                                       currentUserReference) ||
                                   (currentUserReference ==
                                       _model.ownerCompany?.user),
@@ -1126,12 +1146,12 @@ class _ProductPageWidgetState extends State<ProductPageWidget> {
                                     'product_settings',
                                     queryParameters: {
                                       'product': serializeParam(
-                                        widget.product,
+                                        widget!.product,
                                         ParamType.Document,
                                       ),
                                     }.withoutNulls,
                                     extra: <String, dynamic>{
-                                      'product': widget.product,
+                                      'product': widget!.product,
                                     },
                                   );
                                 },
@@ -1147,14 +1167,14 @@ class _ProductPageWidgetState extends State<ProductPageWidget> {
                         child: AuthUserStreamWidget(
                           builder: (context) => wrapWithModel(
                             model: _model.toggleModel,
-                            updateCallback: () => setState(() {}),
+                            updateCallback: () => safeSetState(() {}),
                             updateOnChange: true,
                             child: ToggleWidget(
                               boolean:
                                   (currentUserDocument?.saved?.toList() ?? [])
                                           .where((e) =>
                                               e.products ==
-                                              widget.product?.reference)
+                                              widget!.product?.reference)
                                           .toList()
                                           .length >
                                       0,
@@ -1168,8 +1188,8 @@ class _ProductPageWidgetState extends State<ProductPageWidget> {
                                             getSavedFirestoreData(
                                               updateSavedStruct(
                                                 SavedStruct(
-                                                  products:
-                                                      widget.product?.reference,
+                                                  products: widget!
+                                                      .product?.reference,
                                                 ),
                                                 clearUnsetFields: false,
                                               ),
@@ -1192,8 +1212,8 @@ class _ProductPageWidgetState extends State<ProductPageWidget> {
                                             getSavedFirestoreData(
                                               updateSavedStruct(
                                                 SavedStruct(
-                                                  products:
-                                                      widget.product?.reference,
+                                                  products: widget!
+                                                      .product?.reference,
                                                 ),
                                                 clearUnsetFields: false,
                                               ),
@@ -1255,14 +1275,18 @@ class _ProductPageWidgetState extends State<ProductPageWidget> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    '\$${widget.product?.price?.toString()}',
+                                    '\$${formatNumber(
+                                      widget!.product?.price,
+                                      formatType: FormatType.decimal,
+                                      decimalType: DecimalType.automatic,
+                                    )}',
                                     style: FlutterFlowTheme.of(context)
                                         .bodyMedium
                                         .override(
                                           fontFamily: 'LTSuperior',
                                           fontSize: 20.0,
                                           letterSpacing: 0.0,
-                                          fontWeight: FontWeight.bold,
+                                          fontWeight: FontWeight.w600,
                                           useGoogleFonts: false,
                                         ),
                                   ),
@@ -1287,13 +1311,13 @@ class _ProductPageWidgetState extends State<ProductPageWidget> {
                                 children: [
                                   wrapWithModel(
                                     model: _model.buttonFixedSizeModel2,
-                                    updateCallback: () => setState(() {}),
+                                    updateCallback: () => safeSetState(() {}),
                                     child: ButtonFixedSizeWidget(
                                       width: 150.0,
                                       height: 40.0,
                                       buttonColor:
                                           FlutterFlowTheme.of(context).primary,
-                                      text: (widget.product?.ownerPerson ==
+                                      text: (widget!.product?.ownerPerson ==
                                                   currentUserReference) ||
                                               (currentUserReference ==
                                                   _model.ownerCompany?.user)
@@ -1304,7 +1328,7 @@ class _ProductPageWidgetState extends State<ProductPageWidget> {
                                           FlutterFlowTheme.of(context).info,
                                       showLoadingIndicator: false,
                                       action: () async {
-                                        if ((widget.product?.ownerPerson ==
+                                        if ((widget!.product?.ownerPerson ==
                                                 currentUserReference) ||
                                             (currentUserReference ==
                                                 _model.ownerCompany?.user)) {
@@ -1312,16 +1336,16 @@ class _ProductPageWidgetState extends State<ProductPageWidget> {
                                             'product_settings',
                                             queryParameters: {
                                               'product': serializeParam(
-                                                widget.product,
+                                                widget!.product,
                                                 ParamType.Document,
                                               ),
                                             }.withoutNulls,
                                             extra: <String, dynamic>{
-                                              'product': widget.product,
+                                              'product': widget!.product,
                                             },
                                           );
                                         } else {
-                                          if (widget.product?.ownerPerson !=
+                                          if (widget!.product?.ownerPerson !=
                                               null) {
                                             context.pushNamed(
                                               'chat_page',
@@ -1331,13 +1355,13 @@ class _ProductPageWidgetState extends State<ProductPageWidget> {
                                                   ParamType.Document,
                                                 ),
                                                 'product': serializeParam(
-                                                  widget.product,
+                                                  widget!.product,
                                                   ParamType.Document,
                                                 ),
                                               }.withoutNulls,
                                               extra: <String, dynamic>{
                                                 'user': _model.ownerUser,
-                                                'product': widget.product,
+                                                'product': widget!.product,
                                               },
                                             );
                                           } else {
@@ -1345,7 +1369,7 @@ class _ProductPageWidgetState extends State<ProductPageWidget> {
                                               'chat_page',
                                               queryParameters: {
                                                 'product': serializeParam(
-                                                  widget.product,
+                                                  widget!.product,
                                                   ParamType.Document,
                                                 ),
                                                 'company': serializeParam(
@@ -1354,7 +1378,7 @@ class _ProductPageWidgetState extends State<ProductPageWidget> {
                                                 ),
                                               }.withoutNulls,
                                               extra: <String, dynamic>{
-                                                'product': widget.product,
+                                                'product': widget!.product,
                                                 'company': _model.ownerCompany,
                                               },
                                             );

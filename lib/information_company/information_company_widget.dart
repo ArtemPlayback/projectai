@@ -1,13 +1,19 @@
 import '/auth/firebase_auth/auth_util.dart';
+import '/backend/api_requests/api_calls.dart';
+import '/backend/api_requests/api_streaming.dart';
 import '/backend/backend.dart';
 import '/backend/schema/structs/index.dart';
+import '/backend/supabase/supabase.dart';
 import '/components/section_widget.dart';
 import '/flutter_flow/flutter_flow_animations.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
+import 'dart:async';
+import 'dart:convert';
 import 'dart:math';
+import '/flutter_flow/custom_functions.dart' as functions;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -47,28 +53,28 @@ class _InformationCompanyWidgetState extends State<InformationCompanyWidget>
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       FFAppState().sections =
-          widget.company!.sections.toList().cast<SectionStruct>();
-      setState(() {});
+          widget!.company!.sections.toList().cast<SectionStruct>();
+      safeSetState(() {});
     });
 
     _model.textController1 ??=
-        TextEditingController(text: widget.company?.title);
+        TextEditingController(text: widget!.company?.title);
     _model.textFieldFocusNode1 ??= FocusNode();
 
     _model.textController2 ??= TextEditingController(
-        text: widget.company?.projectInformation?.shortDescription);
+        text: widget!.company?.projectInformation?.description);
     _model.textFieldFocusNode2 ??= FocusNode();
 
     _model.textController3 ??=
-        TextEditingController(text: widget.company?.socialmedia?.email);
+        TextEditingController(text: widget!.company?.socialmedia?.email);
     _model.textFieldFocusNode3 ??= FocusNode();
 
     _model.textController4 ??=
-        TextEditingController(text: widget.company?.socialmedia?.instagram);
+        TextEditingController(text: widget!.company?.socialmedia?.instagram);
     _model.textFieldFocusNode4 ??= FocusNode();
 
     _model.textController5 ??=
-        TextEditingController(text: widget.company?.socialmedia?.telegram);
+        TextEditingController(text: widget!.company?.socialmedia?.telegram);
     _model.textFieldFocusNode5 ??= FocusNode();
 
     animationsMap.addAll({
@@ -93,7 +99,7 @@ class _InformationCompanyWidgetState extends State<InformationCompanyWidget>
       this,
     );
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -108,9 +114,7 @@ class _InformationCompanyWidgetState extends State<InformationCompanyWidget>
     context.watch<FFAppState>();
 
     return GestureDetector(
-      onTap: () => _model.unfocusNode.canRequestFocus
-          ? FocusScope.of(context).requestFocus(_model.unfocusNode)
-          : FocusScope.of(context).unfocus(),
+      onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
@@ -139,7 +143,7 @@ class _InformationCompanyWidgetState extends State<InformationCompanyWidget>
                                   fontFamily: 'LTSuperior',
                                   fontSize: 20.0,
                                   letterSpacing: 0.0,
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight: FontWeight.w600,
                                   useGoogleFonts: false,
                                 ),
                           ),
@@ -241,14 +245,14 @@ class _InformationCompanyWidgetState extends State<InformationCompanyWidget>
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Short information',
+                            'Company description',
                             style: FlutterFlowTheme.of(context)
                                 .bodyMedium
                                 .override(
                                   fontFamily: 'LTSuperior',
                                   fontSize: 20.0,
                                   letterSpacing: 0.0,
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight: FontWeight.w600,
                                   useGoogleFonts: false,
                                 ),
                           ),
@@ -256,7 +260,7 @@ class _InformationCompanyWidgetState extends State<InformationCompanyWidget>
                             padding: EdgeInsetsDirectional.fromSTEB(
                                 0.0, 4.0, 0.0, 0.0),
                             child: Text(
-                              'Tell about yourserlf in 10 words',
+                              'Tell everything about your company',
                               style: FlutterFlowTheme.of(context)
                                   .bodyMedium
                                   .override(
@@ -337,13 +341,8 @@ class _InformationCompanyWidgetState extends State<InformationCompanyWidget>
                                       fontWeight: FontWeight.normal,
                                       useGoogleFonts: false,
                                     ),
-                                maxLines: 3,
-                                maxLength: 60,
-                                buildCounter: (context,
-                                        {required currentLength,
-                                        required isFocused,
-                                        maxLength}) =>
-                                    null,
+                                maxLines: null,
+                                minLines: 3,
                                 validator: _model.textController2Validator
                                     .asValidator(context),
                               ),
@@ -372,7 +371,7 @@ class _InformationCompanyWidgetState extends State<InformationCompanyWidget>
                               fontFamily: 'LTSuperior',
                               fontSize: 20.0,
                               letterSpacing: 0.0,
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.w600,
                               useGoogleFonts: false,
                             ),
                       ),
@@ -698,7 +697,7 @@ class _InformationCompanyWidgetState extends State<InformationCompanyWidget>
                                   fontFamily: 'LTSuperior',
                                   fontSize: 20.0,
                                   letterSpacing: 0.0,
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight: FontWeight.w600,
                                   useGoogleFonts: false,
                                 ),
                           ),
@@ -722,6 +721,7 @@ class _InformationCompanyWidgetState extends State<InformationCompanyWidget>
                     Builder(
                       builder: (context) {
                         final sections = FFAppState().sections.toList();
+
                         return ListView.separated(
                           padding: EdgeInsets.fromLTRB(
                             0,
@@ -765,7 +765,7 @@ class _InformationCompanyWidgetState extends State<InformationCompanyWidget>
                             title: '',
                             text: '',
                           ));
-                          setState(() {});
+                          safeSetState(() {});
                         },
                         child: Container(
                           width: double.infinity,
@@ -833,12 +833,12 @@ class _InformationCompanyWidgetState extends State<InformationCompanyWidget>
             ),
             Container(
               width: double.infinity,
-              height: 75.0,
+              height: 100.0,
               decoration: BoxDecoration(
                 color: FlutterFlowTheme.of(context).secondaryBackground,
               ),
               child: Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 15.0),
+                padding: EdgeInsetsDirectional.fromSTEB(0.0, 50.0, 0.0, 15.0),
                 child: Row(
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -858,22 +858,22 @@ class _InformationCompanyWidgetState extends State<InformationCompanyWidget>
                         ),
                         onPressed: () async {
                           _model.company = await ProjectsRecord.getDocumentOnce(
-                              widget.company!.reference);
+                              widget!.company!.reference);
 
                           context.pushNamed(
                             'company_settings',
                             queryParameters: {
                               'company': serializeParam(
-                                widget.company,
+                                widget!.company,
                                 ParamType.Document,
                               ),
                             }.withoutNulls,
                             extra: <String, dynamic>{
-                              'company': widget.company,
+                              'company': widget!.company,
                             },
                           );
 
-                          setState(() {});
+                          safeSetState(() {});
                         },
                       ),
                     ),
@@ -915,7 +915,13 @@ class _InformationCompanyWidgetState extends State<InformationCompanyWidget>
                       EdgeInsetsDirectional.fromSTEB(20.0, 13.0, 20.0, 20.0),
                   child: FFButtonWidget(
                     onPressed: () async {
-                      await widget.company!.reference.update({
+                      _model.descrioptionCompany =
+                          await ShortDescriptionCompanyCall.call(
+                        question:
+                            functions.stringToAPI(_model.textController2.text),
+                      );
+
+                      await widget!.company!.reference.update({
                         ...createProjectsRecordData(
                           socialmedia: createSocialmediaStruct(
                             instagram: _model.textController4.text,
@@ -923,9 +929,13 @@ class _InformationCompanyWidgetState extends State<InformationCompanyWidget>
                             email: _model.textController3.text,
                             clearUnsetFields: false,
                           ),
-                          title: widget.company?.title,
+                          title: widget!.company?.title,
                           projectInformation: createProjectInformationStruct(
-                            shortDescription: _model.textController2.text,
+                            description: _model.textController2.text,
+                            shortDescription: getJsonField(
+                              (_model.descrioptionCompany?.jsonBody ?? ''),
+                              r'''$.text''',
+                            ).toString(),
                             clearUnsetFields: false,
                           ),
                         ),
@@ -937,25 +947,64 @@ class _InformationCompanyWidgetState extends State<InformationCompanyWidget>
                           },
                         ),
                       });
+                      unawaited(
+                        () async {
+                          await DocumentsTable().delete(
+                            matchingRows: (rows) => rows.eq(
+                              'firebase_id',
+                              widget!.company?.customId,
+                            ),
+                          );
+                        }(),
+                      );
+                      await UpsertVectorsNeightnCall.call(
+                        upsertText: functions.stringToAPI(
+                            'firebase_id: ${widget!.company?.customId}, title: , short description:${getJsonField(
+                          (_model.descrioptionCompany?.jsonBody ?? ''),
+                          r'''$.text''',
+                        ).toString()}, description: ${_model.textController2.text}, sections: ${functions.jsonListToText(FFAppState().sections.map((e) => e.toMap()).toList(), null)}, email: ${_model.textController3.text}, instagram: ${_model.textController4.text}, telegram: ${_model.textController5.text}'),
+                        ownerType: 'person',
+                        owner: currentUserUid,
+                        documentId: widget!.company?.customId,
+                      );
+
+                      await Future.delayed(const Duration(milliseconds: 400));
+                      unawaited(
+                        () async {
+                          await DocumentsTable().update(
+                            data: {
+                              'firebase_id': widget!.company?.customId,
+                            },
+                            matchingRows: (rows) => rows.eq(
+                              'content',
+                              functions.stringToAPI(
+                                  'firebase_id: ${widget!.company?.customId}, title: , short description:${getJsonField(
+                                (_model.descrioptionCompany?.jsonBody ?? ''),
+                                r'''$.text''',
+                              ).toString()}, description: ${_model.textController2.text}, sections: ${functions.jsonListToText(FFAppState().sections.map((e) => e.toMap()).toList(), null)}, email: ${_model.textController3.text}, instagram: ${_model.textController4.text}, telegram: ${_model.textController5.text}'),
+                            ),
+                          );
+                        }(),
+                      );
                       FFAppState().sections = [];
-                      setState(() {});
+                      safeSetState(() {});
                       _model.saved = await ProjectsRecord.getDocumentOnce(
-                          widget.company!.reference);
+                          widget!.company!.reference);
 
                       context.pushNamed(
                         'company_settings',
                         queryParameters: {
                           'company': serializeParam(
-                            _model.company,
+                            _model.saved,
                             ParamType.Document,
                           ),
                         }.withoutNulls,
                         extra: <String, dynamic>{
-                          'company': _model.company,
+                          'company': _model.saved,
                         },
                       );
 
-                      setState(() {});
+                      safeSetState(() {});
                     },
                     text: 'Save changes',
                     options: FFButtonOptions(
@@ -973,6 +1022,7 @@ class _InformationCompanyWidgetState extends State<InformationCompanyWidget>
                                 letterSpacing: 0.0,
                                 useGoogleFonts: false,
                               ),
+                      elevation: 0.0,
                       borderSide: BorderSide(
                         color: Colors.transparent,
                         width: 1.0,

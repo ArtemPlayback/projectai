@@ -36,7 +36,7 @@ class _BlockUserWidgetState extends State<BlockUserWidget> {
     super.initState();
     _model = createModel(context, () => BlockUserModel());
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -96,7 +96,7 @@ class _BlockUserWidgetState extends State<BlockUserWidget> {
                             ...mapToFirestore(
                               {
                                 'blockedUsers':
-                                    FieldValue.arrayUnion([widget.user]),
+                                    FieldValue.arrayUnion([widget!.user]),
                               },
                             ),
                           });

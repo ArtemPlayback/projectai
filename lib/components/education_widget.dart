@@ -35,7 +35,7 @@ class _EducationWidgetState extends State<EducationWidget> {
     super.initState();
     _model = createModel(context, () => EducationModel());
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -81,7 +81,7 @@ class _EducationWidgetState extends State<EducationWidget> {
                 padding: EdgeInsetsDirectional.fromSTEB(0.0, 32.0, 0.0, 0.0),
                 child: Builder(
                   builder: (context) {
-                    if (widget.education?.length != 0) {
+                    if (widget!.education?.length != 0) {
                       return Row(
                         mainAxisSize: MainAxisSize.max,
                         children: [
@@ -143,13 +143,14 @@ class _EducationWidgetState extends State<EducationWidget> {
                 alignment: AlignmentDirectional(-1.0, 0.0),
                 child: Builder(
                   builder: (context) {
-                    if (widget.education?.length != 0) {
+                    if (widget!.education?.length != 0) {
                       return Padding(
                         padding:
                             EdgeInsetsDirectional.fromSTEB(0.0, 40.0, 0.0, 0.0),
                         child: Builder(
                           builder: (context) {
-                            final education = widget.education?.toList() ?? [];
+                            final education = widget!.education?.toList() ?? [];
+
                             return Column(
                               mainAxisSize: MainAxisSize.max,
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -204,7 +205,8 @@ class _EducationWidgetState extends State<EducationWidget> {
                             EdgeInsetsDirectional.fromSTEB(0.0, 40.0, 0.0, 0.0),
                         child: Builder(
                           builder: (context) {
-                            final exp = widget.experience?.toList() ?? [];
+                            final exp = widget!.experience?.toList() ?? [];
+
                             return Column(
                               mainAxisSize: MainAxisSize.max,
                               crossAxisAlignment: CrossAxisAlignment.start,

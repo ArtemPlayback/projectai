@@ -1,8 +1,10 @@
+import '/backend/backend.dart';
+import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
+import 'dart:async';
 import 'dart:ui';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -15,7 +17,7 @@ class DeleteCompanyWidget extends StatefulWidget {
     required this.company,
   });
 
-  final DocumentReference? company;
+  final ProjectsRecord? company;
 
   @override
   State<DeleteCompanyWidget> createState() => _DeleteCompanyWidgetState();
@@ -35,7 +37,7 @@ class _DeleteCompanyWidgetState extends State<DeleteCompanyWidget> {
     super.initState();
     _model = createModel(context, () => DeleteCompanyModel());
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -98,7 +100,32 @@ class _DeleteCompanyWidgetState extends State<DeleteCompanyWidget> {
                     Expanded(
                       child: FFButtonWidget(
                         onPressed: () async {
-                          await widget.company!.delete();
+                          unawaited(
+                            () async {
+                              await widget!.company!.reference.delete();
+                            }(),
+                          );
+                          unawaited(
+                            () async {
+                              await DocumentsTable().delete(
+                                matchingRows: (rows) => rows.eq(
+                                  'firebase_id',
+                                  widget!.company?.customId,
+                                ),
+                              );
+                            }(),
+                          );
+                          Navigator.pop(context);
+
+                          context.pushNamed(
+                            'profile',
+                            queryParameters: {
+                              'chosen': serializeParam(
+                                'Companies',
+                                ParamType.String,
+                              ),
+                            }.withoutNulls,
+                          );
                         },
                         text: 'Delete',
                         options: FFButtonOptions(

@@ -38,10 +38,10 @@ class _CompetitorNameWidgetState extends State<CompetitorNameWidget> {
     super.initState();
     _model = createModel(context, () => CompetitorNameModel());
 
-    _model.textController ??= TextEditingController(text: widget.parameter1);
+    _model.textController ??= TextEditingController(text: widget!.parameter1);
     _model.textFieldFocusNode ??= FocusNode();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -77,7 +77,7 @@ class _CompetitorNameWidgetState extends State<CompetitorNameWidget> {
                     await actions.updateCompetitors(
                       FFAppState().competitors.toList(),
                       FFAppState().comparisonOptions.toList(),
-                      widget.index,
+                      widget!.index,
                       null,
                       null,
                       false,
@@ -87,7 +87,7 @@ class _CompetitorNameWidgetState extends State<CompetitorNameWidget> {
                 autofocus: false,
                 obscureText: false,
                 decoration: InputDecoration(
-                  labelText: widget.index?.toString(),
+                  labelText: widget!.index?.toString(),
                   labelStyle: FlutterFlowTheme.of(context).labelMedium.override(
                         fontFamily: 'Montserrat',
                         color: Color(0x5C000000),
@@ -152,7 +152,7 @@ class _CompetitorNameWidgetState extends State<CompetitorNameWidget> {
                   size: 24.0,
                 ),
                 onPressed: () async {
-                  FFAppState().removeAtIndexFromCompetitors(widget.index!);
+                  FFAppState().removeAtIndexFromCompetitors(widget!.index!);
                   FFAppState().update(() {});
                 },
               ),

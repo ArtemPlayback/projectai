@@ -16,12 +16,7 @@ import 'notifications_model.dart';
 export 'notifications_model.dart';
 
 class NotificationsWidget extends StatefulWidget {
-  const NotificationsWidget({
-    super.key,
-    this.chat,
-  });
-
-  final ChatsRecord? chat;
+  const NotificationsWidget({super.key});
 
   @override
   State<NotificationsWidget> createState() => _NotificationsWidgetState();
@@ -37,7 +32,7 @@ class _NotificationsWidgetState extends State<NotificationsWidget> {
     super.initState();
     _model = createModel(context, () => NotificationsModel());
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -50,9 +45,7 @@ class _NotificationsWidgetState extends State<NotificationsWidget> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => _model.unfocusNode.canRequestFocus
-          ? FocusScope.of(context).requestFocus(_model.unfocusNode)
-          : FocusScope.of(context).unfocus(),
+      onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
@@ -60,61 +53,69 @@ class _NotificationsWidgetState extends State<NotificationsWidget> {
           children: [
             Align(
               alignment: AlignmentDirectional(0.0, 1.0),
-              child: StreamBuilder<ChatsRecord>(
-                stream: ChatsRecord.getDocument(widget.chat!.reference),
-                builder: (context, snapshot) {
-                  // Customize what your widget looks like when it's loading.
-                  if (!snapshot.hasData) {
-                    return Center(
-                      child: SizedBox(
-                        width: 50.0,
-                        height: 50.0,
-                        child: CircularProgressIndicator(
-                          valueColor: AlwaysStoppedAnimation<Color>(
-                            FlutterFlowTheme.of(context).primary,
+              child: AuthUserStreamWidget(
+                builder: (context) => StreamBuilder<ChatsRecord>(
+                  stream: ChatsRecord.getDocument(
+                      currentUserDocument!.notificationChat!),
+                  builder: (context, snapshot) {
+                    // Customize what your widget looks like when it's loading.
+                    if (!snapshot.hasData) {
+                      return Center(
+                        child: SizedBox(
+                          width: 50.0,
+                          height: 50.0,
+                          child: CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              FlutterFlowTheme.of(context).primary,
+                            ),
                           ),
+                        ),
+                      );
+                    }
+
+                    final containerChatsRecord = snapshot.data!;
+
+                    return Container(
+                      decoration: BoxDecoration(),
+                      child: Align(
+                        alignment: AlignmentDirectional(0.0, 1.0),
+                        child: Builder(
+                          builder: (context) {
+                            final notifications =
+                                containerChatsRecord.notifications.toList();
+
+                            return ListView.separated(
+                              padding: EdgeInsets.fromLTRB(
+                                0,
+                                120.0,
+                                0,
+                                120.0,
+                              ),
+                              primary: false,
+                              scrollDirection: Axis.vertical,
+                              itemCount: notifications.length,
+                              separatorBuilder: (_, __) =>
+                                  SizedBox(height: 10.0),
+                              itemBuilder: (context, notificationsIndex) {
+                                final notificationsItem =
+                                    notifications[notificationsIndex];
+                                return NotificationCardWidget(
+                                  key: Key(
+                                      'Keywm1_${notificationsIndex}_of_${notifications.length}'),
+                                  notificationChat: containerChatsRecord,
+                                  index: notificationsIndex,
+                                  currentNotification: notificationsItem,
+                                  notifications:
+                                      containerChatsRecord.notifications,
+                                );
+                              },
+                            );
+                          },
                         ),
                       ),
                     );
-                  }
-                  final containerChatsRecord = snapshot.data!;
-                  return Container(
-                    decoration: BoxDecoration(),
-                    child: Align(
-                      alignment: AlignmentDirectional(0.0, 1.0),
-                      child: Builder(
-                        builder: (context) {
-                          final notifications =
-                              containerChatsRecord.notifications.toList();
-                          return ListView.separated(
-                            padding: EdgeInsets.fromLTRB(
-                              0,
-                              120.0,
-                              0,
-                              0,
-                            ),
-                            scrollDirection: Axis.vertical,
-                            itemCount: notifications.length,
-                            separatorBuilder: (_, __) => SizedBox(height: 10.0),
-                            itemBuilder: (context, notificationsIndex) {
-                              final notificationsItem =
-                                  notifications[notificationsIndex];
-                              return NotificationCardWidget(
-                                key: Key(
-                                    'Keywm1_${notificationsIndex}_of_${notifications.length}'),
-                                notificationChat: containerChatsRecord,
-                                index: notificationsIndex,
-                                currentNotification: notificationsItem,
-                                notifications:
-                                    containerChatsRecord.notifications,
-                              );
-                            },
-                          );
-                        },
-                      ),
-                    ),
-                  );
-                },
+                  },
+                ),
               ),
             ),
             Align(
@@ -129,7 +130,7 @@ class _NotificationsWidgetState extends State<NotificationsWidget> {
                   children: [
                     Padding(
                       padding:
-                          EdgeInsetsDirectional.fromSTEB(0.0, 22.0, 0.0, 10.0),
+                          EdgeInsetsDirectional.fromSTEB(0.0, 50.0, 0.0, 10.0),
                       child: Row(
                         mainAxisSize: MainAxisSize.max,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -220,7 +221,7 @@ class _NotificationsWidgetState extends State<NotificationsWidget> {
               alignment: AlignmentDirectional(0.0, 1.0),
               child: Container(
                 width: double.infinity,
-                height: 80.0,
+                height: 105.0,
                 decoration: BoxDecoration(
                   color: FlutterFlowTheme.of(context).secondaryBackground,
                 ),
@@ -228,12 +229,12 @@ class _NotificationsWidgetState extends State<NotificationsWidget> {
                   mainAxisSize: MainAxisSize.max,
                   children: [
                     Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(20.0, 20.0, 20.0, 0.0),
+                      padding: EdgeInsetsDirectional.fromSTEB(
+                          20.0, 20.0, 20.0, 20.0),
                       child: AuthUserStreamWidget(
                         builder: (context) => wrapWithModel(
                           model: _model.buttonFixedSizeModel,
-                          updateCallback: () => setState(() {}),
+                          updateCallback: () => safeSetState(() {}),
                           child: ButtonFixedSizeWidget(
                             width: 450.0,
                             height: 50.0,
@@ -247,7 +248,7 @@ class _NotificationsWidgetState extends State<NotificationsWidget> {
                                     false)
                                 ? 'Unmute notifications'
                                 : 'Mute notifications',
-                            fontsize: 14,
+                            fontsize: 16,
                             textcolor: Colors.white,
                             showLoadingIndicator: false,
                             action: () async {

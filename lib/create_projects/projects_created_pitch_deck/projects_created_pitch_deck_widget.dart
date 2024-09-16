@@ -39,7 +39,7 @@ class _ProjectsCreatedPitchDeckWidgetState
     super.initState();
     _model = createModel(context, () => ProjectsCreatedPitchDeckModel());
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -105,7 +105,7 @@ class _ProjectsCreatedPitchDeckWidgetState
                 child: FFButtonWidget(
                   onPressed: () async {
                     _model.sdf = await ProjectsRecord.getDocumentOnce(
-                        widget.project!.reference);
+                        widget!.project!.reference);
 
                     context.pushNamed(
                       'createPitchDeck',
@@ -124,7 +124,7 @@ class _ProjectsCreatedPitchDeckWidgetState
                       },
                     );
 
-                    setState(() {});
+                    safeSetState(() {});
                   },
                   text: 'Create pitch deck',
                   options: FFButtonOptions(
@@ -154,9 +154,9 @@ class _ProjectsCreatedPitchDeckWidgetState
                 child: FFButtonWidget(
                   onPressed: () async {
                     _model.vfd = await ProjectsRecord.getDocumentOnce(
-                        widget.project!.reference);
+                        widget!.project!.reference);
 
-                    setState(() {});
+                    safeSetState(() {});
                   },
                   text: 'Go to project',
                   options: FFButtonOptions(

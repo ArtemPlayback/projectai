@@ -36,7 +36,7 @@ class _OptionWidgetState extends State<OptionWidget> {
     super.initState();
     _model = createModel(context, () => OptionModel());
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -59,14 +59,14 @@ class _OptionWidgetState extends State<OptionWidget> {
           onTap: () async {
             if (_model.boolean) {
               _model.boolean = false;
-              setState(() {});
+              safeSetState(() {});
             } else {
               _model.boolean = true;
-              setState(() {});
+              safeSetState(() {});
             }
 
             FFAppState().updateProjectOptionsAtIndex(
-              widget.index!,
+              widget!.index!,
               (e) => e..presence = _model.boolean,
             );
             FFAppState().update(() {});
@@ -97,7 +97,7 @@ class _OptionWidgetState extends State<OptionWidget> {
         Padding(
           padding: EdgeInsetsDirectional.fromSTEB(12.0, 0.0, 0.0, 0.0),
           child: Text(
-            widget.text!,
+            widget!.text!,
             style: FlutterFlowTheme.of(context).bodyMedium.override(
                   fontFamily: 'Montserrat',
                   color: FlutterFlowTheme.of(context).primaryText,

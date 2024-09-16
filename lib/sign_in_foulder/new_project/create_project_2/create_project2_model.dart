@@ -37,7 +37,6 @@ class CreateProject2Model extends FlutterFlowModel<CreateProject2Widget> {
 
   ///  State fields for stateful widgets in this page.
 
-  final unfocusNode = FocusNode();
   // State field(s) for PageView widget.
   PageController? pageViewController;
 
@@ -72,7 +71,6 @@ class CreateProject2Model extends FlutterFlowModel<CreateProject2Widget> {
 
   @override
   void dispose() {
-    unfocusNode.dispose();
     textFieldFocusNode1?.dispose();
     textController1?.dispose();
 

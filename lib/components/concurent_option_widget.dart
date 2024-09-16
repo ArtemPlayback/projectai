@@ -39,7 +39,7 @@ class _ConcurentOptionWidgetState extends State<ConcurentOptionWidget> {
     super.initState();
     _model = createModel(context, () => ConcurentOptionModel());
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -64,18 +64,18 @@ class _ConcurentOptionWidgetState extends State<ConcurentOptionWidget> {
           onTap: () async {
             if (_model.boolean) {
               _model.boolean = false;
-              setState(() {});
+              safeSetState(() {});
             } else {
               _model.boolean = true;
-              setState(() {});
+              safeSetState(() {});
             }
 
             FFAppState().competitors = functions
                 .competitors(
                     FFAppState().competitors.toList(),
                     FFAppState().comparisonOptions.toList(),
-                    widget.competitorIndex,
-                    widget.indexOption,
+                    widget!.competitorIndex,
+                    widget!.indexOption,
                     null,
                     _model.boolean,
                     null)!
@@ -109,7 +109,7 @@ class _ConcurentOptionWidgetState extends State<ConcurentOptionWidget> {
         Padding(
           padding: EdgeInsetsDirectional.fromSTEB(12.0, 0.0, 0.0, 0.0),
           child: Text(
-            widget.text!,
+            widget!.text!,
             style: FlutterFlowTheme.of(context).bodyMedium.override(
                   fontFamily: 'Montserrat',
                   color: FlutterFlowTheme.of(context).primaryText,

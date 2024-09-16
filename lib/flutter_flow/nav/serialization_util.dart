@@ -189,6 +189,7 @@ enum ParamType {
   FFPlace,
   FFUploadedFile,
   JSON,
+
   Document,
   DocumentReference,
   DataStruct,
@@ -258,16 +259,22 @@ dynamic deserializeParam<T>(
       case ParamType.SupabaseRow:
         final data = json.decode(param) as Map<String, dynamic>;
         switch (T) {
-          case ProjectsSearchRow:
-            return ProjectsSearchRow(data);
-          case SmartSearchRecommendationsRow:
-            return SmartSearchRecommendationsRow(data);
+          case SpatialRefSysRow:
+            return SpatialRefSysRow(data);
+          case GeometryColumnsRow:
+            return GeometryColumnsRow(data);
+          case ServicesRow:
+            return ServicesRow(data);
+          case GeographyColumnsRow:
+            return GeographyColumnsRow(data);
+          case EventsRow:
+            return EventsRow(data);
           case DocumentsRow:
             return DocumentsRow(data);
-          case UserActivityRow:
-            return UserActivityRow(data);
-          case PeopleRow:
-            return PeopleRow(data);
+          case UsersRow:
+            return UsersRow(data);
+          case ReviewsRow:
+            return ReviewsRow(data);
           default:
             return null;
         }

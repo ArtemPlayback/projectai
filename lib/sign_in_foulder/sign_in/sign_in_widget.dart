@@ -45,7 +45,7 @@ class _SignInWidgetState extends State<SignInWidget>
     if (!isWeb) {
       _keyboardVisibilitySubscription =
           KeyboardVisibilityController().onChange.listen((bool visible) {
-        setState(() {
+        safeSetState(() {
           _isKeyboardVisible = visible;
         });
       });
@@ -92,7 +92,7 @@ class _SignInWidgetState extends State<SignInWidget>
       this,
     );
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -108,9 +108,7 @@ class _SignInWidgetState extends State<SignInWidget>
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => _model.unfocusNode.canRequestFocus
-          ? FocusScope.of(context).requestFocus(_model.unfocusNode)
-          : FocusScope.of(context).unfocus(),
+      onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
@@ -147,28 +145,37 @@ class _SignInWidgetState extends State<SignInWidget>
                             sigmaX: 6.0,
                             sigmaY: 6.0,
                           ),
-                          child: Container(
-                            width: 78.0,
-                            height: 78.0,
-                            decoration: BoxDecoration(
-                              color: FlutterFlowTheme.of(context).whiteBlur,
-                              borderRadius: BorderRadius.circular(10.0),
-                            ),
-                            child: Align(
-                              alignment: AlignmentDirectional(0.0, 0.0),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(8.0),
-                                    child: Image.asset(
-                                      'assets/images/omnis_logo.png',
-                                      width: 43.0,
-                                      height: 45.0,
-                                      fit: BoxFit.contain,
+                          child: InkWell(
+                            splashColor: Colors.transparent,
+                            focusColor: Colors.transparent,
+                            hoverColor: Colors.transparent,
+                            highlightColor: Colors.transparent,
+                            onTap: () async {
+                              context.pushNamed('ttest');
+                            },
+                            child: Container(
+                              width: 78.0,
+                              height: 78.0,
+                              decoration: BoxDecoration(
+                                color: FlutterFlowTheme.of(context).whiteBlur,
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              child: Align(
+                                alignment: AlignmentDirectional(0.0, 0.0),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(8.0),
+                                      child: Image.asset(
+                                        'assets/images/omnis_logo.png',
+                                        width: 43.0,
+                                        height: 45.0,
+                                        fit: BoxFit.contain,
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
                           ),
@@ -256,7 +263,8 @@ class _SignInWidgetState extends State<SignInWidget>
                             controller: _model.emailTextController,
                             focusNode: _model.textFieldFocusNode1,
                             autofocus: false,
-                            textInputAction: TextInputAction.done,
+                            textCapitalization: TextCapitalization.sentences,
+                            textInputAction: TextInputAction.next,
                             obscureText: false,
                             decoration: InputDecoration(
                               hintText: 'Enter your email',
@@ -398,7 +406,7 @@ class _SignInWidgetState extends State<SignInWidget>
                               contentPadding: EdgeInsetsDirectional.fromSTEB(
                                   18.0, 15.0, 18.0, 15.0),
                               suffixIcon: InkWell(
-                                onTap: () => setState(
+                                onTap: () => safeSetState(
                                   () => _model.passwordVisibility =
                                       !_model.passwordVisibility,
                                 ),
@@ -462,7 +470,7 @@ class _SignInWidgetState extends State<SignInWidget>
                           }
 
                           context.goNamedAuth(
-                              'smart_search_all', context.mounted);
+                              'smart_search_all_2', context.mounted);
                         },
                         text: 'Sign In',
                         options: FFButtonOptions(
@@ -577,6 +585,7 @@ class _SignInWidgetState extends State<SignInWidget>
                                   await currentUserReference!
                                       .update(createUsersRecordData(
                                     notificationChat: _model.chat3?.reference,
+                                    photoUrl: '',
                                   ));
                                 }(),
                               );
@@ -585,7 +594,7 @@ class _SignInWidgetState extends State<SignInWidget>
                                   'smart_search_all', context.mounted);
                             }
 
-                            setState(() {});
+                            safeSetState(() {});
                           },
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(10.0),
@@ -634,7 +643,7 @@ class _SignInWidgetState extends State<SignInWidget>
                             }
 
                             context.goNamedAuth(
-                                'smart_search_all', context.mounted);
+                                'smart_search_all_2', context.mounted);
                           },
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(10.0),
@@ -670,7 +679,7 @@ class _SignInWidgetState extends State<SignInWidget>
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 80.0),
+                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 40.0),
                   child: InkWell(
                     splashColor: Colors.transparent,
                     focusColor: Colors.transparent,

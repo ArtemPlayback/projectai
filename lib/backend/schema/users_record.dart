@@ -77,12 +77,6 @@ class UsersRecord extends FirestoreRecord {
   List<DocumentReference> get blockedUsers => _blockedUsers ?? const [];
   bool hasBlockedUsers() => _blockedUsers != null;
 
-  // "smartSearchHistory" field.
-  List<SmartSearchStruct>? _smartSearchHistory;
-  List<SmartSearchStruct> get smartSearchHistory =>
-      _smartSearchHistory ?? const [];
-  bool hasSmartSearchHistory() => _smartSearchHistory != null;
-
   // "images" field.
   List<String>? _images;
   List<String> get images => _images ?? const [];
@@ -154,6 +148,17 @@ class UsersRecord extends FirestoreRecord {
       _projectOptions ?? const [];
   bool hasProjectOptions() => _projectOptions != null;
 
+  // "short_description" field.
+  String? _shortDescription;
+  String get shortDescription => _shortDescription ?? '';
+  bool hasShortDescription() => _shortDescription != null;
+
+  // "smartSearchHistory" field.
+  List<SmartsearchSessionStruct>? _smartSearchHistory;
+  List<SmartsearchSessionStruct> get smartSearchHistory =>
+      _smartSearchHistory ?? const [];
+  bool hasSmartSearchHistory() => _smartSearchHistory != null;
+
   void _initializeFields() {
     _email = snapshotData['email'] as String?;
     _displayName = snapshotData['display_name'] as String?;
@@ -170,10 +175,6 @@ class UsersRecord extends FirestoreRecord {
     _haveChatWith = getDataList(snapshotData['haveChatWith']);
     _cover = snapshotData['cover'] as String?;
     _blockedUsers = getDataList(snapshotData['blockedUsers']);
-    _smartSearchHistory = getStructList(
-      snapshotData['smartSearchHistory'],
-      SmartSearchStruct.fromMap,
-    );
     _images = getDataList(snapshotData['images']);
     _products = getDataList(snapshotData['products']);
     _events = getDataList(snapshotData['events']);
@@ -206,6 +207,11 @@ class UsersRecord extends FirestoreRecord {
     _projectOptions = getStructList(
       snapshotData['projectOptions'],
       CompetitorOptionsStruct.fromMap,
+    );
+    _shortDescription = snapshotData['short_description'] as String?;
+    _smartSearchHistory = getStructList(
+      snapshotData['smartSearchHistory'],
+      SmartsearchSessionStruct.fromMap,
     );
   }
 
@@ -256,6 +262,7 @@ Map<String, dynamic> createUsersRecordData({
   SocialmediaStruct? socialmedia,
   DocumentReference? notificationChat,
   bool? muteNotifications,
+  String? shortDescription,
 }) {
   final firestoreData = mapToFirestore(
     <String, dynamic>{
@@ -272,6 +279,7 @@ Map<String, dynamic> createUsersRecordData({
       'socialmedia': SocialmediaStruct().toMap(),
       'notification_chat': notificationChat,
       'mute_notifications': muteNotifications,
+      'short_description': shortDescription,
     }.withoutNulls,
   );
 
@@ -299,7 +307,6 @@ class UsersRecordDocumentEquality implements Equality<UsersRecord> {
         listEquality.equals(e1?.haveChatWith, e2?.haveChatWith) &&
         e1?.cover == e2?.cover &&
         listEquality.equals(e1?.blockedUsers, e2?.blockedUsers) &&
-        listEquality.equals(e1?.smartSearchHistory, e2?.smartSearchHistory) &&
         listEquality.equals(e1?.images, e2?.images) &&
         listEquality.equals(e1?.products, e2?.products) &&
         listEquality.equals(e1?.events, e2?.events) &&
@@ -313,7 +320,9 @@ class UsersRecordDocumentEquality implements Equality<UsersRecord> {
         e1?.notificationChat == e2?.notificationChat &&
         e1?.muteNotifications == e2?.muteNotifications &&
         listEquality.equals(e1?.saved, e2?.saved) &&
-        listEquality.equals(e1?.projectOptions, e2?.projectOptions);
+        listEquality.equals(e1?.projectOptions, e2?.projectOptions) &&
+        e1?.shortDescription == e2?.shortDescription &&
+        listEquality.equals(e1?.smartSearchHistory, e2?.smartSearchHistory);
   }
 
   @override
@@ -330,7 +339,6 @@ class UsersRecordDocumentEquality implements Equality<UsersRecord> {
         e?.haveChatWith,
         e?.cover,
         e?.blockedUsers,
-        e?.smartSearchHistory,
         e?.images,
         e?.products,
         e?.events,
@@ -344,7 +352,9 @@ class UsersRecordDocumentEquality implements Equality<UsersRecord> {
         e?.notificationChat,
         e?.muteNotifications,
         e?.saved,
-        e?.projectOptions
+        e?.projectOptions,
+        e?.shortDescription,
+        e?.smartSearchHistory
       ]);
 
   @override

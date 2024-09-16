@@ -11,25 +11,24 @@ import '/flutter_flow/flutter_flow_util.dart';
 
 class SmartSearchStruct extends FFFirebaseStruct {
   SmartSearchStruct({
-    String? type,
     DateTime? when,
     String? result,
     String? queryStr,
     List<SearchItemStruct>? searchResults,
+    String? text,
+    bool? isDone,
+    List<PlanItemStruct>? plan,
+    bool? planOpen,
     FirestoreUtilData firestoreUtilData = const FirestoreUtilData(),
-  })  : _type = type,
-        _when = when,
+  })  : _when = when,
         _result = result,
         _queryStr = queryStr,
         _searchResults = searchResults,
+        _text = text,
+        _isDone = isDone,
+        _plan = plan,
+        _planOpen = planOpen,
         super(firestoreUtilData);
-
-  // "type" field.
-  String? _type;
-  String get type => _type ?? '';
-  set type(String? val) => _type = val;
-
-  bool hasType() => _type != null;
 
   // "when" field.
   DateTime? _when;
@@ -58,14 +57,45 @@ class SmartSearchStruct extends FFFirebaseStruct {
   set searchResults(List<SearchItemStruct>? val) => _searchResults = val;
 
   void updateSearchResults(Function(List<SearchItemStruct>) updateFn) {
-    updateFn(searchResults ??= []);
+    updateFn(_searchResults ??= []);
   }
 
   bool hasSearchResults() => _searchResults != null;
 
+  // "text" field.
+  String? _text;
+  String get text => _text ?? '';
+  set text(String? val) => _text = val;
+
+  bool hasText() => _text != null;
+
+  // "isDone" field.
+  bool? _isDone;
+  bool get isDone => _isDone ?? false;
+  set isDone(bool? val) => _isDone = val;
+
+  bool hasIsDone() => _isDone != null;
+
+  // "plan" field.
+  List<PlanItemStruct>? _plan;
+  List<PlanItemStruct> get plan => _plan ?? const [];
+  set plan(List<PlanItemStruct>? val) => _plan = val;
+
+  void updatePlan(Function(List<PlanItemStruct>) updateFn) {
+    updateFn(_plan ??= []);
+  }
+
+  bool hasPlan() => _plan != null;
+
+  // "planOpen" field.
+  bool? _planOpen;
+  bool get planOpen => _planOpen ?? false;
+  set planOpen(bool? val) => _planOpen = val;
+
+  bool hasPlanOpen() => _planOpen != null;
+
   static SmartSearchStruct fromMap(Map<String, dynamic> data) =>
       SmartSearchStruct(
-        type: data['type'] as String?,
         when: data['when'] as DateTime?,
         result: data['result'] as String?,
         queryStr: data['query_str'] as String?,
@@ -73,6 +103,13 @@ class SmartSearchStruct extends FFFirebaseStruct {
           data['searchResults'],
           SearchItemStruct.fromMap,
         ),
+        text: data['text'] as String?,
+        isDone: data['isDone'] as bool?,
+        plan: getStructList(
+          data['plan'],
+          PlanItemStruct.fromMap,
+        ),
+        planOpen: data['planOpen'] as bool?,
       );
 
   static SmartSearchStruct? maybeFromMap(dynamic data) => data is Map
@@ -80,19 +117,18 @@ class SmartSearchStruct extends FFFirebaseStruct {
       : null;
 
   Map<String, dynamic> toMap() => {
-        'type': _type,
         'when': _when,
         'result': _result,
         'query_str': _queryStr,
         'searchResults': _searchResults?.map((e) => e.toMap()).toList(),
+        'text': _text,
+        'isDone': _isDone,
+        'plan': _plan?.map((e) => e.toMap()).toList(),
+        'planOpen': _planOpen,
       }.withoutNulls;
 
   @override
   Map<String, dynamic> toSerializableMap() => {
-        'type': serializeParam(
-          _type,
-          ParamType.String,
-        ),
         'when': serializeParam(
           _when,
           ParamType.DateTime,
@@ -110,15 +146,27 @@ class SmartSearchStruct extends FFFirebaseStruct {
           ParamType.DataStruct,
           isList: true,
         ),
+        'text': serializeParam(
+          _text,
+          ParamType.String,
+        ),
+        'isDone': serializeParam(
+          _isDone,
+          ParamType.bool,
+        ),
+        'plan': serializeParam(
+          _plan,
+          ParamType.DataStruct,
+          isList: true,
+        ),
+        'planOpen': serializeParam(
+          _planOpen,
+          ParamType.bool,
+        ),
       }.withoutNulls;
 
   static SmartSearchStruct fromSerializableMap(Map<String, dynamic> data) =>
       SmartSearchStruct(
-        type: deserializeParam(
-          data['type'],
-          ParamType.String,
-          false,
-        ),
         when: deserializeParam(
           data['when'],
           ParamType.DateTime,
@@ -140,6 +188,27 @@ class SmartSearchStruct extends FFFirebaseStruct {
           true,
           structBuilder: SearchItemStruct.fromSerializableMap,
         ),
+        text: deserializeParam(
+          data['text'],
+          ParamType.String,
+          false,
+        ),
+        isDone: deserializeParam(
+          data['isDone'],
+          ParamType.bool,
+          false,
+        ),
+        plan: deserializeStructParam<PlanItemStruct>(
+          data['plan'],
+          ParamType.DataStruct,
+          true,
+          structBuilder: PlanItemStruct.fromSerializableMap,
+        ),
+        planOpen: deserializeParam(
+          data['planOpen'],
+          ParamType.bool,
+          false,
+        ),
       );
 
   @override
@@ -149,33 +218,40 @@ class SmartSearchStruct extends FFFirebaseStruct {
   bool operator ==(Object other) {
     const listEquality = ListEquality();
     return other is SmartSearchStruct &&
-        type == other.type &&
         when == other.when &&
         result == other.result &&
         queryStr == other.queryStr &&
-        listEquality.equals(searchResults, other.searchResults);
+        listEquality.equals(searchResults, other.searchResults) &&
+        text == other.text &&
+        isDone == other.isDone &&
+        listEquality.equals(plan, other.plan) &&
+        planOpen == other.planOpen;
   }
 
   @override
-  int get hashCode =>
-      const ListEquality().hash([type, when, result, queryStr, searchResults]);
+  int get hashCode => const ListEquality().hash(
+      [when, result, queryStr, searchResults, text, isDone, plan, planOpen]);
 }
 
 SmartSearchStruct createSmartSearchStruct({
-  String? type,
   DateTime? when,
   String? result,
   String? queryStr,
+  String? text,
+  bool? isDone,
+  bool? planOpen,
   Map<String, dynamic> fieldValues = const {},
   bool clearUnsetFields = true,
   bool create = false,
   bool delete = false,
 }) =>
     SmartSearchStruct(
-      type: type,
       when: when,
       result: result,
       queryStr: queryStr,
+      text: text,
+      isDone: isDone,
+      planOpen: planOpen,
       firestoreUtilData: FirestoreUtilData(
         clearUnsetFields: clearUnsetFields,
         create: create,

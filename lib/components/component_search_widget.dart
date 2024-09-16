@@ -27,7 +27,7 @@ class _ComponentSearchWidgetState extends State<ComponentSearchWidget> {
     super.initState();
     _model = createModel(context, () => ComponentSearchModel());
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override

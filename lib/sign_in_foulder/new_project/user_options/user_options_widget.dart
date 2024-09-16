@@ -46,14 +46,14 @@ class _UserOptionsWidgetState extends State<UserOptionsWidget> {
     // On component load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       _model.blocked = (currentUserDocument?.blockedUsers?.toList() ?? [])
-          .contains(widget.user?.reference);
-      setState(() {});
+          .contains(widget!.user?.reference);
+      safeSetState(() {});
     });
 
     _model.textController ??= TextEditingController();
     _model.textFieldFocusNode ??= FocusNode();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -70,7 +70,7 @@ class _UserOptionsWidgetState extends State<UserOptionsWidget> {
       child: Container(
         height: _model.pageViewCurrentIndex == 0
             ? 200.0
-            : (_model.pageViewCurrentIndex == 1 ? 300.0 : 300.0),
+            : (_model.pageViewCurrentIndex == 1 ? 450.0 : 300.0),
         decoration: BoxDecoration(
           color: FlutterFlowTheme.of(context).secondaryBackground,
           borderRadius: BorderRadius.only(
@@ -83,13 +83,14 @@ class _UserOptionsWidgetState extends State<UserOptionsWidget> {
         child: Container(
           width: double.infinity,
           child: PageView(
+            physics: const NeverScrollableScrollPhysics(),
             controller: _model.pageViewController ??=
                 PageController(initialPage: 0),
-            onPageChanged: (_) => setState(() {}),
+            onPageChanged: (_) => safeSetState(() {}),
             scrollDirection: Axis.horizontal,
             children: [
               Container(
-                height: 150.0,
+                height: 160.0,
                 decoration: BoxDecoration(
                   color: Color(0xF3FFFFFF),
                   borderRadius: BorderRadius.only(
@@ -103,7 +104,7 @@ class _UserOptionsWidgetState extends State<UserOptionsWidget> {
                   alignment: AlignmentDirectional(-1.0, -1.0),
                   child: Padding(
                     padding:
-                        EdgeInsetsDirectional.fromSTEB(20.0, 20.0, 20.0, 20.0),
+                        EdgeInsetsDirectional.fromSTEB(20.0, 20.0, 20.0, 30.0),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -112,82 +113,110 @@ class _UserOptionsWidgetState extends State<UserOptionsWidget> {
                         Padding(
                           padding: EdgeInsetsDirectional.fromSTEB(
                               0.0, 0.0, 0.0, 15.0),
-                          child: Text(
-                            'New publication',
-                            style: FlutterFlowTheme.of(context)
-                                .bodyMedium
-                                .override(
-                                  fontFamily: 'LTSuperior',
-                                  fontSize: 18.0,
-                                  letterSpacing: 0.0,
-                                  fontWeight: FontWeight.w600,
-                                  useGoogleFonts: false,
+                          child: Row(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Options',
+                                style: FlutterFlowTheme.of(context)
+                                    .bodyMedium
+                                    .override(
+                                      fontFamily: 'LTSuperior',
+                                      fontSize: 18.0,
+                                      letterSpacing: 0.0,
+                                      fontWeight: FontWeight.w600,
+                                      useGoogleFonts: false,
+                                    ),
+                              ),
+                              FlutterFlowIconButton(
+                                borderColor:
+                                    FlutterFlowTheme.of(context).textAndStroke,
+                                borderRadius: 10.0,
+                                borderWidth: 1.0,
+                                buttonSize: 40.0,
+                                icon: Icon(
+                                  Icons.close_rounded,
+                                  color:
+                                      FlutterFlowTheme.of(context).primaryText,
+                                  size: 20.0,
                                 ),
+                                onPressed: () async {
+                                  Navigator.pop(context);
+                                },
+                              ),
+                            ],
                           ),
                         ),
-                        Flexible(
-                          child: InkWell(
-                            splashColor: Colors.transparent,
-                            focusColor: Colors.transparent,
-                            hoverColor: Colors.transparent,
-                            highlightColor: Colors.transparent,
-                            onTap: () async {
-                              await _model.pageViewController?.nextPage(
-                                duration: Duration(milliseconds: 300),
-                                curve: Curves.ease,
-                              );
-                            },
-                            child: Container(
-                              width: double.infinity,
-                              height: 50.0,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                              child: Align(
-                                alignment: AlignmentDirectional(0.0, 0.0),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.max,
-                                  children: [
-                                    Container(
-                                      width: 45.0,
-                                      height: 45.0,
-                                      decoration: BoxDecoration(
-                                        color:
-                                            FlutterFlowTheme.of(context).orange,
-                                        borderRadius:
-                                            BorderRadius.circular(6.0),
-                                      ),
-                                      child: Icon(
-                                        FFIcons.kprojectsW,
-                                        color: Colors.white,
-                                        size: 20.0,
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          12.0, 6.0, 0.0, 0.0),
-                                      child: Text(
-                                        'Add to company',
-                                        style: FlutterFlowTheme.of(context)
-                                            .bodyMedium
-                                            .override(
-                                              fontFamily: 'LTSuperior',
-                                              color:
-                                                  FlutterFlowTheme.of(context)
+                        if (((currentUserDocument?.projects?.toList() ?? [])
+                                .isNotEmpty) ==
+                            true)
+                          Flexible(
+                            child: AuthUserStreamWidget(
+                              builder: (context) => InkWell(
+                                splashColor: Colors.transparent,
+                                focusColor: Colors.transparent,
+                                hoverColor: Colors.transparent,
+                                highlightColor: Colors.transparent,
+                                onTap: () async {
+                                  await _model.pageViewController?.nextPage(
+                                    duration: Duration(milliseconds: 300),
+                                    curve: Curves.ease,
+                                  );
+                                },
+                                child: Container(
+                                  width: double.infinity,
+                                  height: 50.0,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                  child: Align(
+                                    alignment: AlignmentDirectional(0.0, 0.0),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.max,
+                                      children: [
+                                        Container(
+                                          width: 45.0,
+                                          height: 45.0,
+                                          decoration: BoxDecoration(
+                                            color: FlutterFlowTheme.of(context)
+                                                .orange,
+                                            borderRadius:
+                                                BorderRadius.circular(6.0),
+                                          ),
+                                          child: Icon(
+                                            FFIcons.kprojectsW,
+                                            color: Colors.white,
+                                            size: 20.0,
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding:
+                                              EdgeInsetsDirectional.fromSTEB(
+                                                  12.0, 6.0, 0.0, 0.0),
+                                          child: Text(
+                                            'Add to company',
+                                            style: FlutterFlowTheme.of(context)
+                                                .bodyMedium
+                                                .override(
+                                                  fontFamily: 'LTSuperior',
+                                                  color: FlutterFlowTheme.of(
+                                                          context)
                                                       .secondaryText,
-                                              fontSize: 16.0,
-                                              letterSpacing: 0.0,
-                                              fontWeight: FontWeight.w600,
-                                              useGoogleFonts: false,
-                                            ),
-                                      ),
+                                                  fontSize: 16.0,
+                                                  letterSpacing: 0.0,
+                                                  fontWeight: FontWeight.w600,
+                                                  useGoogleFonts: false,
+                                                ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ],
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
                         Flexible(
                           child: Builder(
                             builder: (context) {
@@ -202,7 +231,7 @@ class _UserOptionsWidgetState extends State<UserOptionsWidget> {
                                     highlightColor: Colors.transparent,
                                     onTap: () async {
                                       _model.blocked = true;
-                                      setState(() {});
+                                      safeSetState(() {});
                                       unawaited(
                                         () async {
                                           await currentUserReference!.update({
@@ -210,7 +239,7 @@ class _UserOptionsWidgetState extends State<UserOptionsWidget> {
                                               {
                                                 'blockedUsers':
                                                     FieldValue.arrayUnion([
-                                                  widget.user?.reference
+                                                  widget!.user?.reference
                                                 ]),
                                               },
                                             ),
@@ -285,7 +314,7 @@ class _UserOptionsWidgetState extends State<UserOptionsWidget> {
                                     highlightColor: Colors.transparent,
                                     onTap: () async {
                                       _model.blocked = false;
-                                      setState(() {});
+                                      safeSetState(() {});
                                       unawaited(
                                         () async {
                                           await currentUserReference!.update({
@@ -293,7 +322,7 @@ class _UserOptionsWidgetState extends State<UserOptionsWidget> {
                                               {
                                                 'blockedUsers':
                                                     FieldValue.arrayRemove([
-                                                  widget.user?.reference
+                                                  widget!.user?.reference
                                                 ]),
                                               },
                                             ),
@@ -368,48 +397,19 @@ class _UserOptionsWidgetState extends State<UserOptionsWidget> {
                   ),
                 ),
               ),
-              Column(
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  Padding(
-                    padding:
-                        EdgeInsetsDirectional.fromSTEB(20.0, 20.0, 20.0, 0.0),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        FlutterFlowIconButton(
-                          borderColor:
-                              FlutterFlowTheme.of(context).textAndStroke,
-                          borderRadius: 10.0,
-                          borderWidth: 1.0,
-                          buttonSize: 40.0,
-                          icon: Icon(
-                            Icons.chevron_left_outlined,
-                            color: FlutterFlowTheme.of(context).primaryText,
-                            size: 24.0,
-                          ),
-                          onPressed: () async {
-                            await _model.pageViewController?.previousPage(
-                              duration: Duration(milliseconds: 300),
-                              curve: Curves.ease,
-                            );
-                          },
-                        ),
-                        Text(
-                          'Choose a company',
-                          style:
-                              FlutterFlowTheme.of(context).bodyMedium.override(
-                                    fontFamily: 'LTSuperior',
-                                    fontSize: 16.0,
-                                    letterSpacing: 0.0,
-                                    fontWeight: FontWeight.w500,
-                                    useGoogleFonts: false,
-                                  ),
-                        ),
-                        Opacity(
-                          opacity: 0.001,
-                          child: FlutterFlowIconButton(
+              SingleChildScrollView(
+                primary: false,
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Padding(
+                      padding:
+                          EdgeInsetsDirectional.fromSTEB(20.0, 20.0, 20.0, 0.0),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          FlutterFlowIconButton(
                             borderColor:
                                 FlutterFlowTheme.of(context).textAndStroke,
                             borderRadius: 10.0,
@@ -420,127 +420,224 @@ class _UserOptionsWidgetState extends State<UserOptionsWidget> {
                               color: FlutterFlowTheme.of(context).primaryText,
                               size: 24.0,
                             ),
-                            onPressed: () {
-                              print('IconButton pressed ...');
+                            onPressed: () async {
+                              await _model.pageViewController?.previousPage(
+                                duration: Duration(milliseconds: 300),
+                                curve: Curves.ease,
+                              );
                             },
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding:
-                        EdgeInsetsDirectional.fromSTEB(20.0, 20.0, 20.0, 0.0),
-                    child: StreamBuilder<List<ProjectsRecord>>(
-                      stream: queryProjectsRecord(
-                        queryBuilder: (projectsRecord) => projectsRecord.where(
-                          'user',
-                          isEqualTo: currentUserReference,
-                        ),
+                          Text(
+                            'Choose a company',
+                            style: FlutterFlowTheme.of(context)
+                                .bodyMedium
+                                .override(
+                                  fontFamily: 'LTSuperior',
+                                  fontSize: 16.0,
+                                  letterSpacing: 0.0,
+                                  fontWeight: FontWeight.w500,
+                                  useGoogleFonts: false,
+                                ),
+                          ),
+                          FlutterFlowIconButton(
+                            borderColor:
+                                FlutterFlowTheme.of(context).textAndStroke,
+                            borderRadius: 10.0,
+                            borderWidth: 1.0,
+                            buttonSize: 40.0,
+                            icon: Icon(
+                              Icons.close_rounded,
+                              color: FlutterFlowTheme.of(context).primaryText,
+                              size: 20.0,
+                            ),
+                            onPressed: () async {
+                              Navigator.pop(context);
+                            },
+                          ),
+                        ],
                       ),
-                      builder: (context, snapshot) {
-                        // Customize what your widget looks like when it's loading.
-                        if (!snapshot.hasData) {
-                          return Center(
-                            child: SizedBox(
-                              width: 50.0,
-                              height: 50.0,
-                              child: CircularProgressIndicator(
-                                valueColor: AlwaysStoppedAnimation<Color>(
-                                  FlutterFlowTheme.of(context).primary,
+                    ),
+                    Padding(
+                      padding:
+                          EdgeInsetsDirectional.fromSTEB(20.0, 20.0, 20.0, 0.0),
+                      child: StreamBuilder<List<ProjectsRecord>>(
+                        stream: queryProjectsRecord(
+                          queryBuilder: (projectsRecord) =>
+                              projectsRecord.where(
+                            'user',
+                            isEqualTo: currentUserReference,
+                          ),
+                        ),
+                        builder: (context, snapshot) {
+                          // Customize what your widget looks like when it's loading.
+                          if (!snapshot.hasData) {
+                            return Center(
+                              child: SizedBox(
+                                width: 50.0,
+                                height: 50.0,
+                                child: CircularProgressIndicator(
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                    FlutterFlowTheme.of(context).primary,
+                                  ),
                                 ),
                               ),
-                            ),
-                          );
-                        }
-                        List<ProjectsRecord> listViewProjectsRecordList =
-                            snapshot.data!;
-                        return ListView.separated(
-                          padding: EdgeInsets.zero,
-                          primary: false,
-                          shrinkWrap: true,
-                          scrollDirection: Axis.vertical,
-                          itemCount: listViewProjectsRecordList.length,
-                          separatorBuilder: (_, __) => SizedBox(height: 9.0),
-                          itemBuilder: (context, listViewIndex) {
-                            final listViewProjectsRecord =
-                                listViewProjectsRecordList[listViewIndex];
-                            return InkWell(
-                              splashColor: Colors.transparent,
-                              focusColor: Colors.transparent,
-                              hoverColor: Colors.transparent,
-                              highlightColor: Colors.transparent,
-                              onTap: () async {
-                                _model.chosencompany = listViewProjectsRecord;
-                                setState(() {});
-                                await _model.pageViewController?.nextPage(
-                                  duration: Duration(milliseconds: 300),
-                                  curve: Curves.ease,
-                                );
-                              },
-                              child: Row(
+                            );
+                          }
+                          List<ProjectsRecord> listViewProjectsRecordList =
+                              snapshot.data!;
+
+                          return ListView.separated(
+                            padding: EdgeInsets.zero,
+                            primary: false,
+                            shrinkWrap: true,
+                            scrollDirection: Axis.vertical,
+                            itemCount: listViewProjectsRecordList.length,
+                            separatorBuilder: (_, __) => SizedBox(height: 9.0),
+                            itemBuilder: (context, listViewIndex) {
+                              final listViewProjectsRecord =
+                                  listViewProjectsRecordList[listViewIndex];
+                              return Row(
                                 mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(6.0),
-                                    child: Image.network(
-                                      listViewProjectsRecord.mainImage,
-                                      width: 60.0,
-                                      height: 60.0,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        15.0, 0.0, 0.0, 0.0),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.max,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          listViewProjectsRecord.title,
-                                          style: FlutterFlowTheme.of(context)
-                                              .bodyMedium
-                                              .override(
-                                                fontFamily: 'LTSuperior',
-                                                fontSize: 18.0,
-                                                letterSpacing: 0.0,
-                                                fontWeight: FontWeight.w600,
-                                                useGoogleFonts: false,
-                                              ),
-                                        ),
-                                        Padding(
-                                          padding:
-                                              EdgeInsetsDirectional.fromSTEB(
-                                                  0.0, 2.0, 0.0, 0.0),
-                                          child: Text(
-                                            '${listViewProjectsRecord.team.length.toString()} team members',
-                                            style: FlutterFlowTheme.of(context)
-                                                .bodyMedium
-                                                .override(
-                                                  fontFamily: 'LTSuperior',
-                                                  color: FlutterFlowTheme.of(
-                                                          context)
-                                                      .secondaryText,
-                                                  letterSpacing: 0.0,
-                                                  useGoogleFonts: false,
-                                                ),
+                                  Opacity(
+                                    opacity: listViewProjectsRecord.teamMembers
+                                                .where((e) =>
+                                                    e.user ==
+                                                    widget!.user?.reference)
+                                                .toList()
+                                                .length ==
+                                            0
+                                        ? 1.0
+                                        : 0.5,
+                                    child: InkWell(
+                                      splashColor: Colors.transparent,
+                                      focusColor: Colors.transparent,
+                                      hoverColor: Colors.transparent,
+                                      highlightColor: Colors.transparent,
+                                      onTap: () async {
+                                        if (listViewProjectsRecord.teamMembers
+                                                .where((e) =>
+                                                    e.user ==
+                                                    widget!.user?.reference)
+                                                .toList()
+                                                .length ==
+                                            0) {
+                                          _model.chosencompany =
+                                              listViewProjectsRecord;
+                                          safeSetState(() {});
+                                          await _model.pageViewController
+                                              ?.nextPage(
+                                            duration:
+                                                Duration(milliseconds: 300),
+                                            curve: Curves.ease,
+                                          );
+                                        }
+                                      },
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(6.0),
+                                            child: Image.network(
+                                              listViewProjectsRecord.mainImage,
+                                              width: 60.0,
+                                              height: 60.0,
+                                              fit: BoxFit.cover,
+                                            ),
                                           ),
-                                        ),
-                                      ],
+                                          Padding(
+                                            padding:
+                                                EdgeInsetsDirectional.fromSTEB(
+                                                    15.0, 0.0, 0.0, 0.0),
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.max,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  listViewProjectsRecord.title
+                                                      .maybeHandleOverflow(
+                                                    maxChars: 20,
+                                                    replacement: '…',
+                                                  ),
+                                                  style: FlutterFlowTheme.of(
+                                                          context)
+                                                      .bodyMedium
+                                                      .override(
+                                                        fontFamily:
+                                                            'LTSuperior',
+                                                        fontSize: 18.0,
+                                                        letterSpacing: 0.0,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        useGoogleFonts: false,
+                                                      ),
+                                                ),
+                                                Padding(
+                                                  padding: EdgeInsetsDirectional
+                                                      .fromSTEB(
+                                                          0.0, 2.0, 0.0, 0.0),
+                                                  child: Text(
+                                                    '${listViewProjectsRecord.team.length.toString()} team members',
+                                                    style: FlutterFlowTheme.of(
+                                                            context)
+                                                        .bodyMedium
+                                                        .override(
+                                                          fontFamily:
+                                                              'LTSuperior',
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .secondaryText,
+                                                          letterSpacing: 0.0,
+                                                          useGoogleFonts: false,
+                                                        ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
+                                  if (listViewProjectsRecord.teamMembers
+                                          .where((e) =>
+                                              e.user == widget!.user?.reference)
+                                          .toList()
+                                          .length !=
+                                      0)
+                                    Padding(
+                                      padding: EdgeInsetsDirectional.fromSTEB(
+                                          0.0, 0.0, 0.0, 18.0),
+                                      child: Text(
+                                        'Invite sent',
+                                        style: FlutterFlowTheme.of(context)
+                                            .bodyMedium
+                                            .override(
+                                              fontFamily: 'LTSuperior',
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .secondaryText,
+                                              letterSpacing: 0.0,
+                                              useGoogleFonts: false,
+                                            ),
+                                      ),
+                                    ),
                                 ],
-                              ),
-                            );
-                          },
-                        );
-                      },
+                              );
+                            },
+                          );
+                        },
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
               Align(
                 alignment: AlignmentDirectional(0.0, 1.0),
@@ -584,23 +681,20 @@ class _UserOptionsWidgetState extends State<UserOptionsWidget> {
                                   useGoogleFonts: false,
                                 ),
                           ),
-                          Opacity(
-                            opacity: 0.001,
-                            child: FlutterFlowIconButton(
-                              borderColor:
-                                  FlutterFlowTheme.of(context).textAndStroke,
-                              borderRadius: 10.0,
-                              borderWidth: 1.0,
-                              buttonSize: 40.0,
-                              icon: Icon(
-                                Icons.chevron_left_outlined,
-                                color: FlutterFlowTheme.of(context).primaryText,
-                                size: 24.0,
-                              ),
-                              onPressed: () {
-                                print('IconButton pressed ...');
-                              },
+                          FlutterFlowIconButton(
+                            borderColor:
+                                FlutterFlowTheme.of(context).textAndStroke,
+                            borderRadius: 10.0,
+                            borderWidth: 1.0,
+                            buttonSize: 40.0,
+                            icon: Icon(
+                              Icons.close_rounded,
+                              color: FlutterFlowTheme.of(context).primaryText,
+                              size: 20.0,
                             ),
+                            onPressed: () async {
+                              Navigator.pop(context);
+                            },
                           ),
                         ],
                       ),
@@ -615,7 +709,7 @@ class _UserOptionsWidgetState extends State<UserOptionsWidget> {
                           ClipRRect(
                             borderRadius: BorderRadius.circular(360.0),
                             child: Image.network(
-                              widget.user!.photoUrl,
+                              widget!.user!.photoUrl,
                               width: 60.0,
                               height: 60.0,
                               fit: BoxFit.cover,
@@ -630,7 +724,7 @@ class _UserOptionsWidgetState extends State<UserOptionsWidget> {
                               children: [
                                 Text(
                                   valueOrDefault<String>(
-                                    widget.user?.displayName,
+                                    widget!.user?.displayName,
                                     'name',
                                   ),
                                   style: FlutterFlowTheme.of(context)
@@ -676,7 +770,7 @@ class _UserOptionsWidgetState extends State<UserOptionsWidget> {
                         onChanged: (_) => EasyDebounce.debounce(
                           '_model.textController',
                           Duration(milliseconds: 10),
-                          () => setState(() {}),
+                          () => safeSetState(() {}),
                         ),
                         autofocus: false,
                         textCapitalization: TextCapitalization.sentences,
@@ -750,7 +844,7 @@ class _UserOptionsWidgetState extends State<UserOptionsWidget> {
                           EdgeInsetsDirectional.fromSTEB(20.0, 20.0, 20.0, 0.0),
                       child: wrapWithModel(
                         model: _model.buttonInfinityModel,
-                        updateCallback: () => setState(() {}),
+                        updateCallback: () => safeSetState(() {}),
                         child: ButtonInfinityWidget(
                           width: 450.0,
                           height: 40.0,
@@ -779,14 +873,32 @@ class _UserOptionsWidgetState extends State<UserOptionsWidget> {
                                           true,
                                         )
                                       ]),
+                                      'team_members': FieldValue.arrayUnion([
+                                        getTeamMemberFirestoreData(
+                                          updateTeamMemberStruct(
+                                            TeamMemberStruct(
+                                              role: _model.textController.text,
+                                              teamMember:
+                                                  TeamMemberStatus.isWaiting,
+                                              user: widget!.user?.reference,
+                                            ),
+                                            clearUnsetFields: false,
+                                          ),
+                                          true,
+                                        )
+                                      ]),
                                     },
                                   ),
                                 });
                               }(),
                             );
+                            FFAppState().clearProductsProfileCache();
                             unawaited(
                               () async {
-                                await widget.user!.notificationChat!.update({
+                                await widget!.user!.notificationChat!.update({
+                                  ...createChatsRecordData(
+                                    lastMessageTime: getCurrentTimestamp,
+                                  ),
                                   ...mapToFirestore(
                                     {
                                       'notifications': FieldValue.arrayUnion([
@@ -807,6 +919,18 @@ class _UserOptionsWidgetState extends State<UserOptionsWidget> {
                                               type:
                                                   NotificationTypes.team_invite,
                                               isSeen: false,
+                                              invite: InvitesStruct(
+                                                who: currentUserReference,
+                                                where: _model
+                                                    .chosencompany?.reference,
+                                                role:
+                                                    _model.textController.text,
+                                                when: getCurrentTimestamp,
+                                                inviterName:
+                                                    currentUserDisplayName,
+                                                status:
+                                                    TeamMemberStatus.isWaiting,
+                                              ),
                                             ),
                                             clearUnsetFields: false,
                                           ),
@@ -819,6 +943,21 @@ class _UserOptionsWidgetState extends State<UserOptionsWidget> {
                               }(),
                             );
                             Navigator.pop(context);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  'The invitation has been sent. The user will receive a notification.',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16.0,
+                                    height: 1.25,
+                                  ),
+                                ),
+                                duration: Duration(milliseconds: 4000),
+                                backgroundColor:
+                                    FlutterFlowTheme.of(context).primaryText,
+                              ),
+                            );
                           },
                         ),
                       ),

@@ -39,9 +39,17 @@ class CreateGroupChatModel extends FlutterFlowModel<CreateGroupChatWidget> {
   void updateQueryAtIndex(int index, Function(UsersRecord) updateFn) =>
       query[index] = updateFn(query[index]);
 
+  List<DocumentReference> nullRefs = [];
+  void addToNullRefs(DocumentReference item) => nullRefs.add(item);
+  void removeFromNullRefs(DocumentReference item) => nullRefs.remove(item);
+  void removeAtIndexFromNullRefs(int index) => nullRefs.removeAt(index);
+  void insertAtIndexInNullRefs(int index, DocumentReference item) =>
+      nullRefs.insert(index, item);
+  void updateNullRefsAtIndex(int index, Function(DocumentReference) updateFn) =>
+      nullRefs[index] = updateFn(nullRefs[index]);
+
   ///  State fields for stateful widgets in this page.
 
-  final unfocusNode = FocusNode();
   // Stores action output result for [Custom Action - queryUsers] action in create_group_chat widget.
   List<DocumentReference>? usersAction;
   // Stores action output result for [Firestore Query - Query a collection] action in create_group_chat widget.
@@ -61,7 +69,6 @@ class CreateGroupChatModel extends FlutterFlowModel<CreateGroupChatWidget> {
 
   @override
   void dispose() {
-    unfocusNode.dispose();
     textFieldFocusNode?.dispose();
     textController?.dispose();
 

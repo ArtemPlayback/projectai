@@ -36,7 +36,7 @@ class _CreateNewPublicationWidgetState
     super.initState();
     _model = createModel(context, () => CreateNewPublicationModel());
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -74,7 +74,7 @@ class _CreateNewPublicationWidgetState
                 alignment: AlignmentDirectional(0.0, 1.0),
                 child: Padding(
                   padding:
-                      EdgeInsetsDirectional.fromSTEB(20.0, 20.0, 20.0, 20.0),
+                      EdgeInsetsDirectional.fromSTEB(20.0, 20.0, 20.0, 40.0),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -109,12 +109,12 @@ class _CreateNewPublicationWidgetState
                                 'create_product',
                                 queryParameters: {
                                   'company': serializeParam(
-                                    widget.company,
+                                    widget!.company,
                                     ParamType.Document,
                                   ),
                                 }.withoutNulls,
                                 extra: <String, dynamic>{
-                                  'company': widget.company,
+                                  'company': widget!.company,
                                 },
                               );
                             },
@@ -184,12 +184,12 @@ class _CreateNewPublicationWidgetState
                                 'create_event',
                                 queryParameters: {
                                   'company': serializeParam(
-                                    widget.company,
+                                    widget!.company,
                                     ParamType.Document,
                                   ),
                                 }.withoutNulls,
                                 extra: <String, dynamic>{
-                                  'company': widget.company,
+                                  'company': widget!.company,
                                 },
                               );
                             },
@@ -262,12 +262,12 @@ class _CreateNewPublicationWidgetState
                                   ParamType.bool,
                                 ),
                                 'project': serializeParam(
-                                  widget.company,
+                                  widget!.company,
                                   ParamType.Document,
                                 ),
                               }.withoutNulls,
                               extra: <String, dynamic>{
-                                'project': widget.company,
+                                'project': widget!.company,
                               },
                             );
                           },

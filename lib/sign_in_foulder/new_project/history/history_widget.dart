@@ -1,9 +1,9 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/backend/schema/structs/index.dart';
+import '/components/company_small_card_widget.dart';
 import '/components/event_card_small_widget.dart';
 import '/components/navigationbar_widget.dart';
-import '/components/project_small_card_widget.dart';
 import '/components/usercard_small_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -55,7 +55,7 @@ class _HistoryWidgetState extends State<HistoryWidget> {
       );
     });
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -68,9 +68,7 @@ class _HistoryWidgetState extends State<HistoryWidget> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => _model.unfocusNode.canRequestFocus
-          ? FocusScope.of(context).requestFocus(_model.unfocusNode)
-          : FocusScope.of(context).unfocus(),
+      onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
@@ -159,6 +157,7 @@ class _HistoryWidgetState extends State<HistoryWidget> {
                                                                     e.events !=
                                                                     null)
                                                                 .toList();
+
                                                         return ListView
                                                             .separated(
                                                           padding: EdgeInsets
@@ -214,9 +213,11 @@ class _HistoryWidgetState extends State<HistoryWidget> {
                                                                       ),
                                                                     );
                                                                   }
+
                                                                   final eventCardSmallEventsRecord =
                                                                       snapshot
                                                                           .data!;
+
                                                                   return InkWell(
                                                                     splashColor:
                                                                         Colors
@@ -347,6 +348,7 @@ class _HistoryWidgetState extends State<HistoryWidget> {
                                                                       e.products !=
                                                                       null)
                                                                   .toList();
+
                                                           return ListView
                                                               .separated(
                                                             padding: EdgeInsets
@@ -402,9 +404,11 @@ class _HistoryWidgetState extends State<HistoryWidget> {
                                                                         ),
                                                                       );
                                                                     }
+
                                                                     final columnProductsRecord =
                                                                         snapshot
                                                                             .data!;
+
                                                                     return InkWell(
                                                                       splashColor:
                                                                           Colors
@@ -587,6 +591,7 @@ class _HistoryWidgetState extends State<HistoryWidget> {
                                                                       e.people !=
                                                                       null)
                                                                   .toList();
+
                                                           return ListView
                                                               .separated(
                                                             padding: EdgeInsets
@@ -640,9 +645,11 @@ class _HistoryWidgetState extends State<HistoryWidget> {
                                                                       ),
                                                                     );
                                                                   }
+
                                                                   final usercardSmallUsersRecord =
                                                                       snapshot
                                                                           .data!;
+
                                                                   return InkWell(
                                                                     splashColor:
                                                                         Colors
@@ -770,6 +777,7 @@ class _HistoryWidgetState extends State<HistoryWidget> {
                                                                       e.company !=
                                                                       null)
                                                                   .toList();
+
                                                           return ListView
                                                               .separated(
                                                             padding: EdgeInsets
@@ -829,17 +837,19 @@ class _HistoryWidgetState extends State<HistoryWidget> {
                                                                           ),
                                                                         );
                                                                       }
-                                                                      final projectSmallCardProjectsRecord =
+
+                                                                      final companySmallCardProjectsRecord =
                                                                           snapshot
                                                                               .data!;
-                                                                      return ProjectSmallCardWidget(
+
+                                                                      return CompanySmallCardWidget(
                                                                         key: Key(
                                                                             'Keyjpt_${companiesIndex}_of_${companies.length}'),
-                                                                        parameter2: projectSmallCardProjectsRecord
+                                                                        parameter2: companySmallCardProjectsRecord
                                                                             .projectInformation
                                                                             .shortDescription,
                                                                         companyRef:
-                                                                            projectSmallCardProjectsRecord,
+                                                                            companySmallCardProjectsRecord,
                                                                       );
                                                                     },
                                                                   ),
@@ -891,6 +901,7 @@ class _HistoryWidgetState extends State<HistoryWidget> {
                                                 ?.toList() ??
                                             [])
                                         .toList();
+
                                     return Column(
                                       mainAxisSize: MainAxisSize.min,
                                       children: List.generate(
@@ -928,8 +939,10 @@ class _HistoryWidgetState extends State<HistoryWidget> {
                                                       ),
                                                     );
                                                   }
+
                                                   final rowProjectsRecord =
                                                       snapshot.data!;
+
                                                   return InkWell(
                                                     splashColor:
                                                         Colors.transparent,
@@ -1063,8 +1076,10 @@ class _HistoryWidgetState extends State<HistoryWidget> {
                                                       ),
                                                     );
                                                   }
+
                                                   final rowUsersRecord =
                                                       snapshot.data!;
+
                                                   return InkWell(
                                                     splashColor:
                                                         Colors.transparent,
@@ -1200,6 +1215,7 @@ class _HistoryWidgetState extends State<HistoryWidget> {
                               builder: (context) {
                                 final eventsParticipated =
                                     _model.events?.toList() ?? [];
+
                                 return Column(
                                   mainAxisSize: MainAxisSize.max,
                                   children:
@@ -1234,7 +1250,7 @@ class _HistoryWidgetState extends State<HistoryWidget> {
               alignment: AlignmentDirectional(0.0, 1.0),
               child: wrapWithModel(
                 model: _model.navigationbarModel,
-                updateCallback: () => setState(() {}),
+                updateCallback: () => safeSetState(() {}),
                 child: NavigationbarWidget(),
               ),
             ),
@@ -1352,7 +1368,7 @@ class _HistoryWidgetState extends State<HistoryWidget> {
                                       highlightColor: Colors.transparent,
                                       onTap: () async {
                                         _model.chosenState = 'Saved';
-                                        setState(() {});
+                                        safeSetState(() {});
                                       },
                                       child: Container(
                                         width: 100.0,
@@ -1396,7 +1412,7 @@ class _HistoryWidgetState extends State<HistoryWidget> {
                                       highlightColor: Colors.transparent,
                                       onTap: () async {
                                         _model.chosenState = 'Subscriptions';
-                                        setState(() {});
+                                        safeSetState(() {});
                                       },
                                       child: Container(
                                         width: 100.0,
@@ -1441,7 +1457,7 @@ class _HistoryWidgetState extends State<HistoryWidget> {
                                       highlightColor: Colors.transparent,
                                       onTap: () async {
                                         _model.chosenState = 'Events';
-                                        setState(() {});
+                                        safeSetState(() {});
                                       },
                                       child: Container(
                                         width: 100.0,

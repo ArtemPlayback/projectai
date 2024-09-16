@@ -78,8 +78,8 @@ class _TextVisibleState extends State<TextVisible> {
                   : TextDecoration
                       .none, // Использование параметра для подчеркивания
               fontFamily: 'LTSuperior',
-              fontWeight: FontWeight.w400,
-              fontSize: 14,
+              fontWeight: FontWeight.w600,
+              fontSize: 15,
             ),
             recognizer: TapGestureRecognizer()
               ..onTap = () async {
@@ -96,8 +96,8 @@ class _TextVisibleState extends State<TextVisible> {
             style: TextStyle(
               color: widget.textColor,
               fontFamily: 'LTSuperior',
-              fontWeight: FontWeight.w400,
-              fontSize: 14,
+              fontWeight: FontWeight.w500,
+              fontSize: 16,
             ),
           ),
         );

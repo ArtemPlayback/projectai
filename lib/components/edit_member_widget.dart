@@ -44,14 +44,14 @@ class _EditMemberWidgetState extends State<EditMemberWidget> {
     _model = createModel(context, () => EditMemberModel());
 
     _model.textController ??= TextEditingController(
-        text: widget.company?.teamMembers
-            ?.where((e) => e.userReference == widget.user?.reference)
+        text: widget!.company?.teamMembers
+            ?.where((e) => e.user == widget!.user?.reference)
             .toList()
             ?.first
             ?.role);
     _model.textFieldFocusNode ??= FocusNode();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -96,7 +96,7 @@ class _EditMemberWidgetState extends State<EditMemberWidget> {
                           borderRadius: BorderRadius.circular(360.0),
                           child: Image.network(
                             valueOrDefault<String>(
-                              widget.user?.photoUrl,
+                              widget!.user?.photoUrl,
                               'name',
                             ),
                             width: 60.0,
@@ -113,7 +113,7 @@ class _EditMemberWidgetState extends State<EditMemberWidget> {
                             children: [
                               Text(
                                 valueOrDefault<String>(
-                                  widget.user?.displayName,
+                                  widget!.user?.displayName,
                                   'name',
                                 ),
                                 style: FlutterFlowTheme.of(context)
@@ -159,7 +159,7 @@ class _EditMemberWidgetState extends State<EditMemberWidget> {
                       onChanged: (_) => EasyDebounce.debounce(
                         '_model.textController',
                         Duration(milliseconds: 10),
-                        () => setState(() {}),
+                        () => safeSetState(() {}),
                       ),
                       autofocus: false,
                       textCapitalization: TextCapitalization.sentences,
@@ -232,7 +232,7 @@ class _EditMemberWidgetState extends State<EditMemberWidget> {
                         EdgeInsetsDirectional.fromSTEB(20.0, 20.0, 20.0, 0.0),
                     child: wrapWithModel(
                       model: _model.buttonInfinityModel,
-                      updateCallback: () => setState(() {}),
+                      updateCallback: () => safeSetState(() {}),
                       child: ButtonInfinityWidget(
                         width: 450.0,
                         height: 40.0,
@@ -241,25 +241,24 @@ class _EditMemberWidgetState extends State<EditMemberWidget> {
                         fontsize: 14,
                         textcolor: Colors.white,
                         action: () async {
-                          _model.team = widget.company!.teamMembers
+                          _model.team = widget!.company!.teamMembers
                               .toList()
                               .cast<TeamMemberStruct>();
-                          _model.member = widget.company?.teamMembers
-                              ?.where((e) =>
-                                  e.userReference == widget.user?.reference)
+                          _model.member = widget!.company?.teamMembers
+                              ?.where((e) => e.user == widget!.user?.reference)
                               .toList()
                               ?.first;
-                          setState(() {});
+                          safeSetState(() {});
                           _model.updateMemberStruct(
                             (e) => e..role = _model.textController.text,
                           );
                           _model.updateTeamAtIndex(
-                            widget.index!,
+                            widget!.index!,
                             (_) => _model.member!,
                           );
-                          setState(() {});
+                          safeSetState(() {});
 
-                          await widget.company!.reference.update({
+                          await widget!.company!.reference.update({
                             ...mapToFirestore(
                               {
                                 'team': getTeamMemberListFirestoreData(

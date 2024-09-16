@@ -38,14 +38,14 @@ class _InvestmentsCopyWidgetState extends State<InvestmentsCopyWidget> {
     _model = createModel(context, () => InvestmentsCopyModel());
 
     _model.textController1 ??=
-        TextEditingController(text: widget.invstmentsFrom);
+        TextEditingController(text: widget!.invstmentsFrom);
     _model.textFieldFocusNode1 ??= FocusNode();
 
     _model.textController2 ??=
-        TextEditingController(text: widget.investmentsTo);
+        TextEditingController(text: widget!.investmentsTo);
     _model.textFieldFocusNode2 ??= FocusNode();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -147,7 +147,7 @@ class _InvestmentsCopyWidgetState extends State<InvestmentsCopyWidget> {
                   onChanged: (_) => EasyDebounce.debounce(
                     '_model.textController1',
                     Duration(milliseconds: 200),
-                    () => setState(() {}),
+                    () => safeSetState(() {}),
                   ),
                   autofocus: true,
                   obscureText: false,
@@ -239,7 +239,7 @@ class _InvestmentsCopyWidgetState extends State<InvestmentsCopyWidget> {
                   onChanged: (_) => EasyDebounce.debounce(
                     '_model.textController2',
                     Duration(milliseconds: 200),
-                    () => setState(() {}),
+                    () => safeSetState(() {}),
                   ),
                   autofocus: false,
                   obscureText: false,

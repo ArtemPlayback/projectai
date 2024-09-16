@@ -43,40 +43,40 @@ class _BusinessPlanCopyWidgetState extends State<BusinessPlanCopyWidget> {
 
     _model.textController1 ??= TextEditingController(
         text: valueOrDefault<String>(
-      widget.businessPlan?.monetization,
+      widget!.businessPlan?.monetization,
       'Q',
     ));
     _model.textFieldFocusNode1 ??= FocusNode();
 
     _model.textController2 ??= TextEditingController(
         text: valueOrDefault<String>(
-      widget.businessPlan?.financialPlan,
+      widget!.businessPlan?.financialPlan,
       'Q',
     ));
     _model.textFieldFocusNode2 ??= FocusNode();
 
     _model.textController3 ??= TextEditingController(
         text: valueOrDefault<String>(
-      widget.businessPlan?.productionPlan,
+      widget!.businessPlan?.productionPlan,
       'Q',
     ));
     _model.textFieldFocusNode3 ??= FocusNode();
 
     _model.textController4 ??= TextEditingController(
         text: valueOrDefault<String>(
-      widget.businessPlan?.marketingPlan,
+      widget!.businessPlan?.marketingPlan,
       'Q',
     ));
     _model.textFieldFocusNode4 ??= FocusNode();
 
     _model.textController5 ??= TextEditingController(
         text: valueOrDefault<String>(
-      widget.businessPlan?.marketSize,
+      widget!.businessPlan?.marketSize,
       'Q',
     ));
     _model.textFieldFocusNode5 ??= FocusNode();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -977,9 +977,9 @@ class _BusinessPlanCopyWidgetState extends State<BusinessPlanCopyWidget> {
                     ),
                     onPressed: () async {
                       _model.zxc1 =
-                          await ProjectsRecord.getDocumentOnce(widget.ref!);
+                          await ProjectsRecord.getDocumentOnce(widget!.ref!);
 
-                      setState(() {});
+                      safeSetState(() {});
                     },
                   ),
                 ),
@@ -1046,7 +1046,7 @@ class _BusinessPlanCopyWidgetState extends State<BusinessPlanCopyWidget> {
                             20.0, 0.0, 20.0, 0.0),
                         child: FFButtonWidget(
                           onPressed: () async {
-                            await widget.ref!.update(createProjectsRecordData(
+                            await widget!.ref!.update(createProjectsRecordData(
                               businessPlan: updateProjectBusinessPlanStruct(
                                 ProjectBusinessPlanStruct(
                                   monetization: _model.textController1.text,
@@ -1059,9 +1059,9 @@ class _BusinessPlanCopyWidgetState extends State<BusinessPlanCopyWidget> {
                               ),
                             ));
                             _model.zxc = await ProjectsRecord.getDocumentOnce(
-                                widget.ref!);
+                                widget!.ref!);
 
-                            setState(() {});
+                            safeSetState(() {});
                           },
                           text: 'SAVE',
                           options: FFButtonOptions(

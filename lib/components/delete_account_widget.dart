@@ -1,8 +1,13 @@
 import '/auth/firebase_auth/auth_util.dart';
+import '/backend/backend.dart';
+import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
+import 'dart:async';
 import 'dart:ui';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -30,7 +35,7 @@ class _DeleteAccountWidgetState extends State<DeleteAccountWidget> {
     super.initState();
     _model = createModel(context, () => DeleteAccountModel());
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -90,7 +95,7 @@ class _DeleteAccountWidgetState extends State<DeleteAccountWidget> {
                 Padding(
                   padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 18.0),
                   child: Text(
-                    'Are you sure you want to delete your account? This action cannot be undone.',
+                    'Are you sure you want to delete your account? All your evens and products will be deleted as well',
                     textAlign: TextAlign.center,
                     style: FlutterFlowTheme.of(context).bodyMedium.override(
                           fontFamily: 'LTSuperior',
@@ -106,10 +111,183 @@ class _DeleteAccountWidgetState extends State<DeleteAccountWidget> {
                     Expanded(
                       child: FFButtonWidget(
                         onPressed: () async {
+                          unawaited(
+                            () async {
+                              await DocumentsTable().delete(
+                                matchingRows: (rows) => rows.eq(
+                                  'firebase_id',
+                                  currentUserUid,
+                                ),
+                              );
+                            }(),
+                          );
+                          _model.test = 'qwe2';
+                          safeSetState(() {});
+                          _model.test = 'qwe3';
+                          safeSetState(() {});
+                          await Future.wait([
+                            Future(() async {
+                              _model.chats = await queryChatsRecordOnce(
+                                queryBuilder: (chatsRecord) => chatsRecord
+                                    .where(
+                                      'type',
+                                      isEqualTo: 'single chat',
+                                    )
+                                    .where(
+                                      'users',
+                                      arrayContains: currentUserReference,
+                                    ),
+                              );
+                              if (_model.chats!.length >= 1) {
+                                while (
+                                    _model.chatCounter < _model.chats!.length) {
+                                  if (_model.chats?[_model.chatCounter]
+                                          ?.chatType ==
+                                      'single chat') {
+                                    unawaited(
+                                      () async {
+                                        await _model.chats![_model.chatCounter]
+                                            .reference
+                                            .delete();
+                                      }(),
+                                    );
+                                    _model.chatCounter = _model.chatCounter + 1;
+                                    safeSetState(() {});
+                                  } else {
+                                    unawaited(
+                                      () async {
+                                        await _model.chats![_model.chatCounter]
+                                            .reference
+                                            .update({
+                                          ...createChatsRecordData(
+                                            groupChatOwner: _model
+                                                        .chats![
+                                                            _model.chatCounter]
+                                                        .users
+                                                        .length >=
+                                                    2
+                                                ? (_model
+                                                    .chats?[_model.chatCounter]
+                                                    ?.users
+                                                    ?.last)
+                                                : currentUserReference,
+                                          ),
+                                          ...mapToFirestore(
+                                            {
+                                              'users': FieldValue.arrayRemove(
+                                                  [currentUserReference]),
+                                            },
+                                          ),
+                                        });
+                                      }(),
+                                    );
+                                    _model.chatCounter = _model.chatCounter + 1;
+                                    safeSetState(() {});
+                                  }
+                                }
+                              }
+                            }),
+                            Future(() async {
+                              _model.events = await queryEventsRecordOnce(
+                                queryBuilder: (eventsRecord) =>
+                                    eventsRecord.where(
+                                  'user',
+                                  isEqualTo: currentUserReference,
+                                ),
+                              );
+                              if (_model.events!.length >= 1) {
+                                while (_model.eventsCounter <
+                                    _model.events!.length) {
+                                  unawaited(
+                                    () async {
+                                      await _model.events![_model.eventsCounter]
+                                          .reference
+                                          .delete();
+                                    }(),
+                                  );
+                                  _model.eventsCounter =
+                                      _model.eventsCounter + 1;
+                                  safeSetState(() {});
+                                }
+                              }
+                            }),
+                            Future(() async {
+                              _model.products = await queryProductsRecordOnce(
+                                queryBuilder: (productsRecord) =>
+                                    productsRecord.where(
+                                  'owner_person',
+                                  isEqualTo: currentUserReference,
+                                ),
+                              );
+                              if (_model.products!.length >= 1) {
+                                while (_model.productsCounter <
+                                    _model.products!.length) {
+                                  unawaited(
+                                    () async {
+                                      await _model
+                                          .products![_model.productsCounter]
+                                          .reference
+                                          .delete();
+                                    }(),
+                                  );
+                                  _model.productsCounter =
+                                      _model.productsCounter + 1;
+                                  safeSetState(() {});
+                                }
+                              }
+                            }),
+                            Future(() async {
+                              _model.test = 'не ищу!!!';
+                              safeSetState(() {});
+                              FFAppState().test = _model.test;
+                              safeSetState(() {});
+                              _model.companies = await queryProjectsRecordOnce(
+                                queryBuilder: (projectsRecord) =>
+                                    projectsRecord.where(
+                                  'user',
+                                  isEqualTo: currentUserReference,
+                                ),
+                              );
+                              FFAppState().test = _model.test;
+                              safeSetState(() {});
+                              _model.test = 'ищу!!!';
+                              safeSetState(() {});
+                              FFAppState().test =
+                                  _model.companies!.length.toString();
+                              safeSetState(() {});
+                              if (_model.companies!.length >= 1) {
+                                while (_model.companyCounter! <
+                                    _model.companies!.length) {
+                                  unawaited(
+                                    () async {
+                                      await _model
+                                          .companies![_model.companyCounter!]
+                                          .reference
+                                          .delete();
+                                    }(),
+                                  );
+                                  _model.test =
+                                      'лол${_model.companyCounter?.toString()}';
+                                  safeSetState(() {});
+                                  FFAppState().test = _model.test;
+                                  safeSetState(() {});
+                                  _model.companyCounter =
+                                      _model.companyCounter! + 1;
+                                  safeSetState(() {});
+                                }
+                              }
+                            }),
+                          ]);
+                          await currentUserReference!.delete();
+                          FFAppState().test = 'deleted doc ';
+                          safeSetState(() {});
                           await authManager.deleteUser(context);
+                          FFAppState().test = 'deleted acc';
+                          safeSetState(() {});
 
-                          context.goNamedAuth(
-                              'smart_search_all', context.mounted);
+                          context.pushNamed('sign_in');
+
+                          safeSetState(() {});
                         },
                         text: 'Delete',
                         options: FFButtonOptions(

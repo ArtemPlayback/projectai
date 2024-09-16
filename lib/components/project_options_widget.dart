@@ -40,13 +40,13 @@ class _ProjectOptionsWidgetState extends State<ProjectOptionsWidget> {
     // On component load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       FFAppState().addToProjectOptions(CompetitorOptionsStruct(
-        option: widget.optionText,
+        option: widget!.optionText,
         presence: _model.boolean,
       ));
       FFAppState().update(() {});
     });
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -71,14 +71,14 @@ class _ProjectOptionsWidgetState extends State<ProjectOptionsWidget> {
           onTap: () async {
             if (_model.boolean) {
               _model.boolean = false;
-              setState(() {});
+              safeSetState(() {});
             } else {
               _model.boolean = true;
-              setState(() {});
+              safeSetState(() {});
             }
 
             FFAppState().updateProjectOptionsAtIndex(
-              widget.index!,
+              widget!.index!,
               (e) => e..presence = _model.boolean,
             );
             FFAppState().update(() {});
@@ -109,7 +109,7 @@ class _ProjectOptionsWidgetState extends State<ProjectOptionsWidget> {
         Padding(
           padding: EdgeInsetsDirectional.fromSTEB(12.0, 0.0, 0.0, 0.0),
           child: Text(
-            widget.optionText!,
+            widget!.optionText!,
             style: FlutterFlowTheme.of(context).bodyMedium.override(
                   fontFamily: 'Montserrat',
                   color: FlutterFlowTheme.of(context).primaryText,

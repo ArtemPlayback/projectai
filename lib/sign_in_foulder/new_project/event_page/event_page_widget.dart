@@ -2,7 +2,6 @@ import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/backend/schema/structs/index.dart';
 import '/components/image_slider_widget.dart';
-import '/components/navigate_back_widget.dart';
 import '/components/toggle_widget.dart';
 import '/flutter_flow/flutter_flow_google_map.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
@@ -58,35 +57,36 @@ class _EventPageWidgetState extends State<EventPageWidget> {
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       _model.participants =
-          widget.events!.participantUsers.toList().cast<ParticipantsStruct>();
-      _model.appliedToJoin =
-          widget.events!.usersAppliedToJoin.toList().cast<ParticipantsStruct>();
-      setState(() {});
+          widget!.events!.participantUsers.toList().cast<ParticipantsStruct>();
+      _model.appliedToJoin = widget!.events!.usersAppliedToJoin
+          .toList()
+          .cast<ParticipantsStruct>();
+      safeSetState(() {});
       unawaited(
         () async {
           await _model.googleMapsController.future.then(
             (c) => c.animateCamera(
               CameraUpdate.newLatLng(
-                  widget.events!.eventInfo.location!.toGoogleMaps()),
+                  widget!.events!.eventInfo.location!.toGoogleMaps()),
             ),
           );
         }(),
       );
-      if (widget.events?.user != null) {
+      if (widget!.events?.user != null) {
         _model.isOwnerUser = true;
-        setState(() {});
-        _model.owner = await UsersRecord.getDocumentOnce(widget.events!.user!);
+        safeSetState(() {});
+        _model.owner = await UsersRecord.getDocumentOnce(widget!.events!.user!);
       } else {
         _model.isOwnerUser = false;
-        setState(() {});
+        safeSetState(() {});
         _model.company =
-            await ProjectsRecord.getDocumentOnce(widget.events!.project!);
+            await ProjectsRecord.getDocumentOnce(widget!.events!.project!);
         _model.companyowner = _model.company?.user;
-        setState(() {});
+        safeSetState(() {});
       }
     });
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -99,7 +99,7 @@ class _EventPageWidgetState extends State<EventPageWidget> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<EventsRecord>(
-      stream: EventsRecord.getDocument(widget.events!.reference),
+      stream: EventsRecord.getDocument(widget!.events!.reference),
       builder: (context, snapshot) {
         // Customize what your widget looks like when it's loading.
         if (!snapshot.hasData) {
@@ -118,11 +118,11 @@ class _EventPageWidgetState extends State<EventPageWidget> {
             ),
           );
         }
+
         final eventPageEventsRecord = snapshot.data!;
+
         return GestureDetector(
-          onTap: () => _model.unfocusNode.canRequestFocus
-              ? FocusScope.of(context).requestFocus(_model.unfocusNode)
-              : FocusScope.of(context).unfocus(),
+          onTap: () => FocusScope.of(context).unfocus(),
           child: WillPopScope(
             onWillPop: () async => false,
             child: Scaffold(
@@ -140,8 +140,9 @@ class _EventPageWidgetState extends State<EventPageWidget> {
                         Builder(
                           builder: (context) {
                             final images =
-                                widget.events?.eventInfo?.images?.toList() ??
+                                widget!.events?.eventInfo?.images?.toList() ??
                                     [];
+
                             return Container(
                               width: double.infinity,
                               height: 380.0,
@@ -178,30 +179,27 @@ class _EventPageWidgetState extends State<EventPageWidget> {
                                                               Directionality.of(
                                                                   context)),
                                                   child: GestureDetector(
-                                                    onTap: () => _model
-                                                            .unfocusNode
-                                                            .canRequestFocus
-                                                        ? FocusScope.of(context)
-                                                            .requestFocus(_model
-                                                                .unfocusNode)
-                                                        : FocusScope.of(context)
-                                                            .unfocus(),
+                                                    onTap: () => FocusScope.of(
+                                                            dialogContext)
+                                                        .unfocus(),
                                                     child: Container(
                                                       height: double.infinity,
                                                       width: double.infinity,
                                                       child: ImageSliderWidget(
-                                                        images: widget.events!
+                                                        images: widget!.events!
                                                             .eventInfo.images,
                                                         initialindex:
                                                             imagesIndex,
-                                                        event: widget.events,
+                                                        event: widget!.events,
                                                         isThisYours: false,
+                                                        actionDelete:
+                                                            (images) async {},
                                                       ),
                                                     ),
                                                   ),
                                                 );
                                               },
-                                            ).then((value) => setState(() {}));
+                                            );
                                           },
                                           child: ClipRRect(
                                             borderRadius:
@@ -242,7 +240,7 @@ class _EventPageWidgetState extends State<EventPageWidget> {
                                                 Duration(milliseconds: 500),
                                             curve: Curves.ease,
                                           );
-                                          setState(() {});
+                                          safeSetState(() {});
                                         },
                                         effect: smooth_page_indicator
                                             .ExpandingDotsEffect(
@@ -277,7 +275,7 @@ class _EventPageWidgetState extends State<EventPageWidget> {
                                       0.0, 0.0, 42.0, 0.0),
                                   child: Text(
                                     valueOrDefault<String>(
-                                      widget.events?.eventInfo?.title,
+                                      widget!.events?.eventInfo?.title,
                                       'title',
                                     ),
                                     style: FlutterFlowTheme.of(context)
@@ -308,210 +306,228 @@ class _EventPageWidgetState extends State<EventPageWidget> {
                                   child: Builder(
                                     builder: (context) {
                                       if (_model.isOwnerUser == true) {
-                                        return Padding(
-                                          padding:
-                                              EdgeInsetsDirectional.fromSTEB(
-                                                  0.0, 0.0, 10.0, 0.0),
-                                          child: InkWell(
-                                            splashColor: Colors.transparent,
-                                            focusColor: Colors.transparent,
-                                            hoverColor: Colors.transparent,
-                                            highlightColor: Colors.transparent,
-                                            onTap: () async {
-                                              context.pushNamed(
-                                                'user_page',
-                                                queryParameters: {
-                                                  'user': serializeParam(
-                                                    _model.owner,
-                                                    ParamType.Document,
-                                                  ),
-                                                }.withoutNulls,
-                                                extra: <String, dynamic>{
-                                                  'user': _model.owner,
-                                                },
-                                              );
-                                            },
-                                            child: Row(
-                                              mainAxisSize: MainAxisSize.max,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          360.0),
-                                                  child: Image.network(
-                                                    valueOrDefault<String>(
-                                                      _model.owner?.photoUrl,
-                                                      'https://picsum.photos/seed/594/600',
+                                        return Visibility(
+                                          visible: _model.owner != null,
+                                          child: Padding(
+                                            padding:
+                                                EdgeInsetsDirectional.fromSTEB(
+                                                    0.0, 0.0, 10.0, 0.0),
+                                            child: InkWell(
+                                              splashColor: Colors.transparent,
+                                              focusColor: Colors.transparent,
+                                              hoverColor: Colors.transparent,
+                                              highlightColor:
+                                                  Colors.transparent,
+                                              onTap: () async {
+                                                context.pushNamed(
+                                                  'user_page',
+                                                  queryParameters: {
+                                                    'user': serializeParam(
+                                                      _model.owner,
+                                                      ParamType.Document,
                                                     ),
-                                                    width: 47.0,
-                                                    height: 47.0,
-                                                    fit: BoxFit.cover,
+                                                  }.withoutNulls,
+                                                  extra: <String, dynamic>{
+                                                    'user': _model.owner,
+                                                  },
+                                                );
+                                              },
+                                              child: Row(
+                                                mainAxisSize: MainAxisSize.max,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            360.0),
+                                                    child: Image.network(
+                                                      valueOrDefault<String>(
+                                                        _model.owner?.photoUrl,
+                                                        'https://t4.ftcdn.net/jpg/02/17/34/67/360_F_217346796_TSg5VcYjsFxZtIDK6Qdctg3yqAapG7Xa.jpg',
+                                                      ),
+                                                      width: 47.0,
+                                                      height: 47.0,
+                                                      fit: BoxFit.cover,
+                                                    ),
                                                   ),
-                                                ),
-                                                Flexible(
-                                                  child: Padding(
-                                                    padding:
-                                                        EdgeInsetsDirectional
-                                                            .fromSTEB(11.0, 0.0,
-                                                                0.0, 0.0),
-                                                    child: Column(
-                                                      mainAxisSize:
-                                                          MainAxisSize.max,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Text(
-                                                          valueOrDefault<
-                                                              String>(
-                                                            _model.owner
-                                                                ?.displayName,
-                                                            'f',
+                                                  Flexible(
+                                                    child: Padding(
+                                                      padding:
+                                                          EdgeInsetsDirectional
+                                                              .fromSTEB(
+                                                                  11.0,
+                                                                  0.0,
+                                                                  0.0,
+                                                                  0.0),
+                                                      child: Column(
+                                                        mainAxisSize:
+                                                            MainAxisSize.max,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Text(
+                                                            valueOrDefault<
+                                                                String>(
+                                                              _model.owner
+                                                                  ?.displayName,
+                                                              'Name',
+                                                            ),
+                                                            style: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .bodyMedium
+                                                                .override(
+                                                                  fontFamily:
+                                                                      'LTSuperior',
+                                                                  fontSize:
+                                                                      16.0,
+                                                                  letterSpacing:
+                                                                      0.0,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600,
+                                                                  useGoogleFonts:
+                                                                      false,
+                                                                ),
                                                           ),
-                                                          style: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .bodyMedium
-                                                              .override(
-                                                                fontFamily:
-                                                                    'LTSuperior',
-                                                                fontSize: 16.0,
-                                                                letterSpacing:
-                                                                    0.0,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w600,
-                                                                useGoogleFonts:
-                                                                    false,
-                                                              ),
-                                                        ),
-                                                        Text(
-                                                          'Event owner ',
-                                                          style: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .bodyMedium
-                                                              .override(
-                                                                fontFamily:
-                                                                    'LTSuperior',
-                                                                color: Color(
-                                                                    0x89000000),
-                                                                letterSpacing:
-                                                                    0.0,
-                                                                useGoogleFonts:
-                                                                    false,
-                                                              ),
-                                                        ),
-                                                      ].divide(SizedBox(
-                                                          height: 1.0)),
+                                                          Text(
+                                                            'Event owner ',
+                                                            style: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .bodyMedium
+                                                                .override(
+                                                                  fontFamily:
+                                                                      'LTSuperior',
+                                                                  color: Color(
+                                                                      0x89000000),
+                                                                  letterSpacing:
+                                                                      0.0,
+                                                                  useGoogleFonts:
+                                                                      false,
+                                                                ),
+                                                          ),
+                                                        ].divide(SizedBox(
+                                                            height: 1.0)),
+                                                      ),
                                                     ),
                                                   ),
-                                                ),
-                                              ],
+                                                ],
+                                              ),
                                             ),
                                           ),
                                         );
                                       } else {
-                                        return Padding(
-                                          padding:
-                                              EdgeInsetsDirectional.fromSTEB(
-                                                  0.0, 0.0, 10.0, 0.0),
-                                          child: InkWell(
-                                            splashColor: Colors.transparent,
-                                            focusColor: Colors.transparent,
-                                            hoverColor: Colors.transparent,
-                                            highlightColor: Colors.transparent,
-                                            onTap: () async {
-                                              context.pushNamed(
-                                                'company_page',
-                                                queryParameters: {
-                                                  'company': serializeParam(
-                                                    _model.company,
-                                                    ParamType.Document,
-                                                  ),
-                                                }.withoutNulls,
-                                                extra: <String, dynamic>{
-                                                  'company': _model.company,
-                                                },
-                                              );
-                                            },
-                                            child: Row(
-                                              mainAxisSize: MainAxisSize.max,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              children: [
-                                                ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          360.0),
-                                                  child: Image.network(
-                                                    valueOrDefault<String>(
-                                                      _model.company?.mainImage,
-                                                      'https://t4.ftcdn.net/jpg/02/17/34/67/360_F_217346796_TSg5VcYjsFxZtIDK6Qdctg3yqAapG7Xa.jpg',
+                                        return Visibility(
+                                          visible:
+                                              (_model.company != null) == true,
+                                          child: Padding(
+                                            padding:
+                                                EdgeInsetsDirectional.fromSTEB(
+                                                    0.0, 0.0, 10.0, 0.0),
+                                            child: InkWell(
+                                              splashColor: Colors.transparent,
+                                              focusColor: Colors.transparent,
+                                              hoverColor: Colors.transparent,
+                                              highlightColor:
+                                                  Colors.transparent,
+                                              onTap: () async {
+                                                context.pushNamed(
+                                                  'company_page',
+                                                  queryParameters: {
+                                                    'company': serializeParam(
+                                                      _model.company,
+                                                      ParamType.Document,
                                                     ),
-                                                    width: 60.0,
-                                                    height: 60.0,
-                                                    fit: BoxFit.cover,
+                                                  }.withoutNulls,
+                                                  extra: <String, dynamic>{
+                                                    'company': _model.company,
+                                                  },
+                                                );
+                                              },
+                                              child: Row(
+                                                mainAxisSize: MainAxisSize.max,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: [
+                                                  ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            360.0),
+                                                    child: Image.network(
+                                                      valueOrDefault<String>(
+                                                        _model
+                                                            .company?.mainImage,
+                                                        'https://t4.ftcdn.net/jpg/02/17/34/67/360_F_217346796_TSg5VcYjsFxZtIDK6Qdctg3yqAapG7Xa.jpg',
+                                                      ),
+                                                      width: 60.0,
+                                                      height: 60.0,
+                                                      fit: BoxFit.cover,
+                                                    ),
                                                   ),
-                                                ),
-                                                Flexible(
-                                                  child: Padding(
-                                                    padding:
-                                                        EdgeInsetsDirectional
-                                                            .fromSTEB(11.0, 0.0,
-                                                                0.0, 0.0),
-                                                    child: Column(
-                                                      mainAxisSize:
-                                                          MainAxisSize.max,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Text(
-                                                          valueOrDefault<
-                                                              String>(
-                                                            _model
-                                                                .company?.title,
-                                                            'few',
+                                                  Flexible(
+                                                    child: Padding(
+                                                      padding:
+                                                          EdgeInsetsDirectional
+                                                              .fromSTEB(
+                                                                  11.0,
+                                                                  0.0,
+                                                                  0.0,
+                                                                  0.0),
+                                                      child: Column(
+                                                        mainAxisSize:
+                                                            MainAxisSize.max,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Text(
+                                                            valueOrDefault<
+                                                                String>(
+                                                              _model.company
+                                                                  ?.title,
+                                                              'Company name',
+                                                            ),
+                                                            style: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .bodyMedium
+                                                                .override(
+                                                                  fontFamily:
+                                                                      'LTSuperior',
+                                                                  fontSize:
+                                                                      16.0,
+                                                                  letterSpacing:
+                                                                      0.0,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600,
+                                                                  useGoogleFonts:
+                                                                      false,
+                                                                ),
                                                           ),
-                                                          style: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .bodyMedium
-                                                              .override(
-                                                                fontFamily:
-                                                                    'LTSuperior',
-                                                                fontSize: 16.0,
-                                                                letterSpacing:
-                                                                    0.0,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w600,
-                                                                useGoogleFonts:
-                                                                    false,
-                                                              ),
-                                                        ),
-                                                        Text(
-                                                          'Event owner ',
-                                                          style: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .bodyMedium
-                                                              .override(
-                                                                fontFamily:
-                                                                    'LTSuperior',
-                                                                color: Color(
-                                                                    0x89000000),
-                                                                letterSpacing:
-                                                                    0.0,
-                                                                useGoogleFonts:
-                                                                    false,
-                                                              ),
-                                                        ),
-                                                      ].divide(SizedBox(
-                                                          height: 1.0)),
+                                                          Text(
+                                                            'Event owner ',
+                                                            style: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .bodyMedium
+                                                                .override(
+                                                                  fontFamily:
+                                                                      'LTSuperior',
+                                                                  color: Color(
+                                                                      0x89000000),
+                                                                  letterSpacing:
+                                                                      0.0,
+                                                                  useGoogleFonts:
+                                                                      false,
+                                                                ),
+                                                          ),
+                                                        ].divide(SizedBox(
+                                                            height: 1.0)),
+                                                      ),
                                                     ),
                                                   ),
-                                                ),
-                                              ],
+                                                ],
+                                              ),
                                             ),
                                           ),
                                         );
@@ -525,85 +541,296 @@ class _EventPageWidgetState extends State<EventPageWidget> {
                         Padding(
                           padding: EdgeInsetsDirectional.fromSTEB(
                               20.0, 20.0, 20.0, 0.0),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              StreamBuilder<List<UsersRecord>>(
-                                stream: queryUsersRecord(
-                                  queryBuilder: (usersRecord) =>
-                                      usersRecord.whereIn(
-                                          'uid',
-                                          widget.events?.participants
-                                              ?.map((e) => e.id)
-                                              .toList()),
-                                ),
-                                builder: (context, snapshot) {
-                                  // Customize what your widget looks like when it's loading.
-                                  if (!snapshot.hasData) {
-                                    return Center(
-                                      child: SizedBox(
-                                        width: 50.0,
-                                        height: 50.0,
-                                        child: CircularProgressIndicator(
-                                          valueColor:
-                                              AlwaysStoppedAnimation<Color>(
-                                            FlutterFlowTheme.of(context)
-                                                .primary,
+                          child: InkWell(
+                            splashColor: Colors.transparent,
+                            focusColor: Colors.transparent,
+                            hoverColor: Colors.transparent,
+                            highlightColor: Colors.transparent,
+                            onTap: () async {
+                              context.pushNamed(
+                                'eventParticipants',
+                                queryParameters: {
+                                  'event': serializeParam(
+                                    eventPageEventsRecord,
+                                    ParamType.Document,
+                                  ),
+                                }.withoutNulls,
+                                extra: <String, dynamic>{
+                                  'event': eventPageEventsRecord,
+                                },
+                              );
+                            },
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                StreamBuilder<List<UsersRecord>>(
+                                  stream: queryUsersRecord(
+                                    queryBuilder: (usersRecord) =>
+                                        usersRecord.whereIn(
+                                            'uid',
+                                            widget!.events?.participants
+                                                ?.map((e) => e.id)
+                                                .toList()),
+                                  ),
+                                  builder: (context, snapshot) {
+                                    // Customize what your widget looks like when it's loading.
+                                    if (!snapshot.hasData) {
+                                      return Center(
+                                        child: SizedBox(
+                                          width: 50.0,
+                                          height: 50.0,
+                                          child: CircularProgressIndicator(
+                                            valueColor:
+                                                AlwaysStoppedAnimation<Color>(
+                                              FlutterFlowTheme.of(context)
+                                                  .primary,
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                    );
-                                  }
-                                  List<UsersRecord> containerUsersRecordList =
-                                      snapshot.data!;
-                                  return Container(
-                                    width: 100.0,
-                                    decoration: BoxDecoration(),
-                                    child: Container(
-                                      width: 64.0,
-                                      child: Stack(
-                                        children: [
-                                          if (containerUsersRecordList.length >=
-                                              3)
-                                            Align(
+                                      );
+                                    }
+                                    List<UsersRecord> containerUsersRecordList =
+                                        snapshot.data!;
+
+                                    return Container(
+                                      width:
+                                          widget!.events!.participants.length >=
+                                                  3
+                                              ? 100.0
+                                              : (widget!.events?.participants
+                                                          ?.length ==
+                                                      2
+                                                  ? 75.0
+                                                  : 50.0),
+                                      decoration: BoxDecoration(),
+                                      child: Builder(
+                                        builder: (context) {
+                                          if (widget!.events!.participants
+                                                  .length >=
+                                              3) {
+                                            return Stack(
+                                              children: [
+                                                if (containerUsersRecordList
+                                                        .length >=
+                                                    3)
+                                                  Align(
+                                                    alignment:
+                                                        AlignmentDirectional(
+                                                            -1.0, 0.0),
+                                                    child: Container(
+                                                      width: 50.0,
+                                                      height: 50.0,
+                                                      decoration: BoxDecoration(
+                                                        shape: BoxShape.circle,
+                                                        border: Border.all(
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .secondaryBackground,
+                                                          width: 2.0,
+                                                        ),
+                                                      ),
+                                                      child: Container(
+                                                        width: 50.0,
+                                                        height: 50.0,
+                                                        clipBehavior:
+                                                            Clip.antiAlias,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          shape:
+                                                              BoxShape.circle,
+                                                        ),
+                                                        child: Image.network(
+                                                          valueOrDefault<
+                                                              String>(
+                                                            containerUsersRecordList[
+                                                                    2]
+                                                                .photoUrl,
+                                                            'https://t4.ftcdn.net/jpg/02/17/34/67/360_F_217346796_TSg5VcYjsFxZtIDK6Qdctg3yqAapG7Xa.jpg',
+                                                          ),
+                                                          fit: BoxFit.cover,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                if (containerUsersRecordList
+                                                        .length >=
+                                                    2)
+                                                  Align(
+                                                    alignment:
+                                                        AlignmentDirectional(
+                                                            0.0, 0.0),
+                                                    child: Container(
+                                                      width: 50.0,
+                                                      height: 50.0,
+                                                      decoration: BoxDecoration(
+                                                        shape: BoxShape.circle,
+                                                        border: Border.all(
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .secondaryBackground,
+                                                          width: 2.0,
+                                                        ),
+                                                      ),
+                                                      child: Container(
+                                                        width: 32.0,
+                                                        height: 32.0,
+                                                        clipBehavior:
+                                                            Clip.antiAlias,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          shape:
+                                                              BoxShape.circle,
+                                                        ),
+                                                        child: Image.network(
+                                                          valueOrDefault<
+                                                              String>(
+                                                            containerUsersRecordList[
+                                                                    1]
+                                                                .photoUrl,
+                                                            'https://t4.ftcdn.net/jpg/02/17/34/67/360_F_217346796_TSg5VcYjsFxZtIDK6Qdctg3yqAapG7Xa.jpg',
+                                                          ),
+                                                          fit: BoxFit.cover,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                Align(
+                                                  alignment:
+                                                      AlignmentDirectional(
+                                                          1.0, 0.0),
+                                                  child: Container(
+                                                    width: 50.0,
+                                                    height: 50.0,
+                                                    decoration: BoxDecoration(
+                                                      shape: BoxShape.circle,
+                                                      border: Border.all(
+                                                        color: FlutterFlowTheme
+                                                                .of(context)
+                                                            .secondaryBackground,
+                                                        width: 2.0,
+                                                      ),
+                                                    ),
+                                                    child: Container(
+                                                      width: 32.0,
+                                                      height: 32.0,
+                                                      clipBehavior:
+                                                          Clip.antiAlias,
+                                                      decoration: BoxDecoration(
+                                                        shape: BoxShape.circle,
+                                                      ),
+                                                      child: Image.network(
+                                                        valueOrDefault<String>(
+                                                          containerUsersRecordList[
+                                                                  0]
+                                                              .photoUrl,
+                                                          'https://t4.ftcdn.net/jpg/02/17/34/67/360_F_217346796_TSg5VcYjsFxZtIDK6Qdctg3yqAapG7Xa.jpg',
+                                                        ),
+                                                        fit: BoxFit.cover,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            );
+                                          } else if (widget!.events
+                                                  ?.participants?.length ==
+                                              2) {
+                                            return Container(
+                                              width: 75.0,
+                                              child: Stack(
+                                                alignment: AlignmentDirectional(
+                                                    -1.0, 0.0),
+                                                children: [
+                                                  if (containerUsersRecordList
+                                                          .length >=
+                                                      2)
+                                                    Align(
+                                                      alignment:
+                                                          AlignmentDirectional(
+                                                              -1.0, 0.0),
+                                                      child: Container(
+                                                        width: 50.0,
+                                                        height: 50.0,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          shape:
+                                                              BoxShape.circle,
+                                                          border: Border.all(
+                                                            color: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .secondaryBackground,
+                                                            width: 2.0,
+                                                          ),
+                                                        ),
+                                                        child: Container(
+                                                          width: 32.0,
+                                                          height: 32.0,
+                                                          clipBehavior:
+                                                              Clip.antiAlias,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            shape:
+                                                                BoxShape.circle,
+                                                          ),
+                                                          child: Image.network(
+                                                            valueOrDefault<
+                                                                String>(
+                                                              containerUsersRecordList[
+                                                                      1]
+                                                                  .photoUrl,
+                                                              'https://t4.ftcdn.net/jpg/02/17/34/67/360_F_217346796_TSg5VcYjsFxZtIDK6Qdctg3yqAapG7Xa.jpg',
+                                                            ),
+                                                            fit: BoxFit.cover,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  Align(
+                                                    alignment:
+                                                        AlignmentDirectional(
+                                                            1.0, 0.0),
+                                                    child: Container(
+                                                      width: 50.0,
+                                                      height: 50.0,
+                                                      decoration: BoxDecoration(
+                                                        shape: BoxShape.circle,
+                                                        border: Border.all(
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .secondaryBackground,
+                                                          width: 2.0,
+                                                        ),
+                                                      ),
+                                                      child: Container(
+                                                        width: 32.0,
+                                                        height: 32.0,
+                                                        clipBehavior:
+                                                            Clip.antiAlias,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          shape:
+                                                              BoxShape.circle,
+                                                        ),
+                                                        child: Image.network(
+                                                          valueOrDefault<
+                                                              String>(
+                                                            containerUsersRecordList[
+                                                                    0]
+                                                                .photoUrl,
+                                                            'https://t4.ftcdn.net/jpg/02/17/34/67/360_F_217346796_TSg5VcYjsFxZtIDK6Qdctg3yqAapG7Xa.jpg',
+                                                          ),
+                                                          fit: BoxFit.cover,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            );
+                                          } else {
+                                            return Align(
                                               alignment: AlignmentDirectional(
                                                   -1.0, 0.0),
-                                              child: Container(
-                                                width: 50.0,
-                                                height: 50.0,
-                                                decoration: BoxDecoration(
-                                                  shape: BoxShape.circle,
-                                                  border: Border.all(
-                                                    color: FlutterFlowTheme.of(
-                                                            context)
-                                                        .secondaryBackground,
-                                                    width: 2.0,
-                                                  ),
-                                                ),
-                                                child: Container(
-                                                  width: 50.0,
-                                                  height: 50.0,
-                                                  clipBehavior: Clip.antiAlias,
-                                                  decoration: BoxDecoration(
-                                                    shape: BoxShape.circle,
-                                                  ),
-                                                  child: Image.network(
-                                                    valueOrDefault<String>(
-                                                      containerUsersRecordList[
-                                                              2]
-                                                          .photoUrl,
-                                                      'https://t4.ftcdn.net/jpg/02/17/34/67/360_F_217346796_TSg5VcYjsFxZtIDK6Qdctg3yqAapG7Xa.jpg',
-                                                    ),
-                                                    fit: BoxFit.cover,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          if (containerUsersRecordList.length >=
-                                              2)
-                                            Align(
-                                              alignment: AlignmentDirectional(
-                                                  0.0, 0.0),
                                               child: Container(
                                                 width: 50.0,
                                                 height: 50.0,
@@ -626,7 +853,7 @@ class _EventPageWidgetState extends State<EventPageWidget> {
                                                   child: Image.network(
                                                     valueOrDefault<String>(
                                                       containerUsersRecordList[
-                                                              1]
+                                                              0]
                                                           .photoUrl,
                                                       'https://t4.ftcdn.net/jpg/02/17/34/67/360_F_217346796_TSg5VcYjsFxZtIDK6Qdctg3yqAapG7Xa.jpg',
                                                     ),
@@ -634,91 +861,61 @@ class _EventPageWidgetState extends State<EventPageWidget> {
                                                   ),
                                                 ),
                                               ),
+                                            );
+                                          }
+                                        },
+                                      ),
+                                    );
+                                  },
+                                ),
+                                Column(
+                                  mainAxisSize: MainAxisSize.max,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsetsDirectional.fromSTEB(
+                                          6.0, 0.0, 0.0, 0.0),
+                                      child: Text(
+                                        eventPageEventsRecord
+                                            .participants.length
+                                            .toString(),
+                                        style: FlutterFlowTheme.of(context)
+                                            .bodyMedium
+                                            .override(
+                                              fontFamily: 'LTSuperior',
+                                              fontSize: 15.0,
+                                              letterSpacing: 0.0,
+                                              fontWeight: FontWeight.w500,
+                                              useGoogleFonts: false,
                                             ),
-                                          Align(
-                                            alignment:
-                                                AlignmentDirectional(1.0, 0.0),
-                                            child: Container(
-                                              width: 50.0,
-                                              height: 50.0,
-                                              decoration: BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                border: Border.all(
-                                                  color: FlutterFlowTheme.of(
-                                                          context)
-                                                      .secondaryBackground,
-                                                  width: 2.0,
-                                                ),
-                                              ),
-                                              child: Container(
-                                                width: 32.0,
-                                                height: 32.0,
-                                                clipBehavior: Clip.antiAlias,
-                                                decoration: BoxDecoration(
-                                                  shape: BoxShape.circle,
-                                                ),
-                                                child: Image.network(
-                                                  valueOrDefault<String>(
-                                                    containerUsersRecordList[0]
-                                                        .photoUrl,
-                                                    'https://t4.ftcdn.net/jpg/02/17/34/67/360_F_217346796_TSg5VcYjsFxZtIDK6Qdctg3yqAapG7Xa.jpg',
-                                                  ),
-                                                  fit: BoxFit.cover,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
                                       ),
                                     ),
-                                  );
-                                },
-                              ),
-                              Column(
-                                mainAxisSize: MainAxisSize.max,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        6.0, 0.0, 0.0, 0.0),
-                                    child: Text(
-                                      eventPageEventsRecord.participants.length
-                                          .toString(),
-                                      style: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .override(
-                                            fontFamily: 'LTSuperior',
-                                            fontSize: 15.0,
-                                            letterSpacing: 0.0,
-                                            fontWeight: FontWeight.w500,
-                                            useGoogleFonts: false,
-                                          ),
+                                    Padding(
+                                      padding: EdgeInsetsDirectional.fromSTEB(
+                                          6.0, 0.0, 0.0, 0.0),
+                                      child: Text(
+                                        'Participants',
+                                        style: FlutterFlowTheme.of(context)
+                                            .bodyMedium
+                                            .override(
+                                              fontFamily: 'LTSuperior',
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .secondaryText,
+                                              fontSize: 14.0,
+                                              letterSpacing: 0.0,
+                                              fontWeight: FontWeight.normal,
+                                              useGoogleFonts: false,
+                                            ),
+                                      ),
                                     ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        6.0, 0.0, 0.0, 0.0),
-                                    child: Text(
-                                      'Participants',
-                                      style: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .override(
-                                            fontFamily: 'LTSuperior',
-                                            color: FlutterFlowTheme.of(context)
-                                                .secondaryText,
-                                            fontSize: 14.0,
-                                            letterSpacing: 0.0,
-                                            fontWeight: FontWeight.normal,
-                                            useGoogleFonts: false,
-                                          ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                        if (widget.text != null)
+                        if (widget!.text != null)
                           Padding(
                             padding: EdgeInsetsDirectional.fromSTEB(
                                 20.0, 30.0, 20.0, 0.0),
@@ -786,7 +983,7 @@ class _EventPageWidgetState extends State<EventPageWidget> {
                                                       17.0, 0.0, 17.0, 0.0),
                                               child: Text(
                                                 '${getJsonField(
-                                                  widget.text,
+                                                  widget!.text,
                                                   r'''$.percent''',
                                                 ).toString()}%',
                                                 style:
@@ -816,7 +1013,7 @@ class _EventPageWidgetState extends State<EventPageWidget> {
                                       0.0, 10.0, 0.0, 0.0),
                                   child: Text(
                                     getJsonField(
-                                      widget.text,
+                                      widget!.text,
                                       r'''$.explanation''',
                                     ).toString(),
                                     style: FlutterFlowTheme.of(context)
@@ -856,17 +1053,17 @@ class _EventPageWidgetState extends State<EventPageWidget> {
                                                 fontFamily: 'LTSuperior',
                                                 fontSize: 18.0,
                                                 letterSpacing: 0.0,
-                                                fontWeight: FontWeight.w800,
+                                                fontWeight: FontWeight.w600,
                                                 useGoogleFonts: false,
                                               ),
                                         ),
                                         Padding(
                                           padding:
                                               EdgeInsetsDirectional.fromSTEB(
-                                                  0.0, 8.0, 0.0, 0.0),
+                                                  0.0, 2.0, 0.0, 0.0),
                                           child: Text(
                                             valueOrDefault<String>(
-                                              widget.events?.eventInfo
+                                              widget!.events?.eventInfo
                                                   ?.description,
                                               'info',
                                             ),
@@ -875,7 +1072,9 @@ class _EventPageWidgetState extends State<EventPageWidget> {
                                                 .override(
                                                   fontFamily: 'LTSuperior',
                                                   color: Color(0xBF1D1D20),
+                                                  fontSize: 15.0,
                                                   letterSpacing: 0.0,
+                                                  fontWeight: FontWeight.w500,
                                                   useGoogleFonts: false,
                                                 ),
                                           ),
@@ -883,7 +1082,7 @@ class _EventPageWidgetState extends State<EventPageWidget> {
                                         Padding(
                                           padding:
                                               EdgeInsetsDirectional.fromSTEB(
-                                                  0.0, 26.0, 0.0, 0.0),
+                                                  0.0, 35.0, 0.0, 0.0),
                                           child: Column(
                                             mainAxisSize: MainAxisSize.max,
                                             children: [
@@ -929,8 +1128,8 @@ class _EventPageWidgetState extends State<EventPageWidget> {
                                                               valueOrDefault<
                                                                   String>(
                                                                 dateTimeFormat(
-                                                                    'yMMMd',
-                                                                    widget
+                                                                    "yMMMd",
+                                                                    widget!
                                                                         .events
                                                                         ?.eventInfo
                                                                         ?.startDate),
@@ -963,8 +1162,8 @@ class _EventPageWidgetState extends State<EventPageWidget> {
                                                           child: Text(
                                                             '${valueOrDefault<String>(
                                                               dateTimeFormat(
-                                                                  'Hm',
-                                                                  widget
+                                                                  "Hm",
+                                                                  widget!
                                                                       .events
                                                                       ?.eventInfo
                                                                       ?.startTime),
@@ -993,7 +1192,7 @@ class _EventPageWidgetState extends State<EventPageWidget> {
                                                   ),
                                                 ],
                                               ),
-                                              if (widget.events?.eventInfo
+                                              if (widget!.events?.eventInfo
                                                       ?.location !=
                                                   null)
                                                 Padding(
@@ -1074,7 +1273,7 @@ class _EventPageWidgetState extends State<EventPageWidget> {
                                                               child: Text(
                                                                 valueOrDefault<
                                                                     String>(
-                                                                  widget
+                                                                  widget!
                                                                       .events
                                                                       ?.eventInfo
                                                                       ?.locationTitle,
@@ -1119,7 +1318,7 @@ class _EventPageWidgetState extends State<EventPageWidget> {
                                             onTap: () async {
                                               await launchMap(
                                                 mapType: $ml.MapType.google,
-                                                address: widget.events
+                                                address: widget!.events
                                                     ?.eventInfo?.locationTitle,
                                                 title: '',
                                               );
@@ -1140,14 +1339,14 @@ class _EventPageWidgetState extends State<EventPageWidget> {
                                                         fontSize: 18.0,
                                                         letterSpacing: 0.0,
                                                         fontWeight:
-                                                            FontWeight.w800,
+                                                            FontWeight.w600,
                                                         useGoogleFonts: false,
                                                       ),
                                                 ),
-                                                if (widget.events?.eventInfo
+                                                if (widget!.events?.eventInfo
                                                             ?.additionalInfoLocation !=
                                                         null &&
-                                                    widget.events?.eventInfo
+                                                    widget!.events?.eventInfo
                                                             ?.additionalInfoLocation !=
                                                         '')
                                                   Padding(
@@ -1157,7 +1356,9 @@ class _EventPageWidgetState extends State<EventPageWidget> {
                                                                 0.0, 0.0),
                                                     child: Text(
                                                       valueOrDefault<String>(
-                                                        widget.events?.eventInfo
+                                                        widget!
+                                                            .events
+                                                            ?.eventInfo
                                                             ?.additionalInfoLocation,
                                                         'info',
                                                       ),
@@ -1175,7 +1376,7 @@ class _EventPageWidgetState extends State<EventPageWidget> {
                                                           ),
                                                     ),
                                                   ),
-                                                if (widget.events?.eventInfo
+                                                if (widget!.events?.eventInfo
                                                         ?.location !=
                                                     null)
                                                   Padding(
@@ -1205,7 +1406,7 @@ class _EventPageWidgetState extends State<EventPageWidget> {
                                                             Builder(builder:
                                                                 (context) {
                                                               final _googleMapMarker =
-                                                                  widget
+                                                                  widget!
                                                                       .events
                                                                       ?.eventInfo
                                                                       ?.location;
@@ -1281,7 +1482,7 @@ class _EventPageWidgetState extends State<EventPageWidget> {
                                                                       mapType: $ml
                                                                           .MapType
                                                                           .google,
-                                                                      address: widget
+                                                                      address: widget!
                                                                           .events
                                                                           ?.eventInfo
                                                                           ?.locationTitle,
@@ -1387,12 +1588,12 @@ class _EventPageWidgetState extends State<EventPageWidget> {
                                                     model: _model
                                                         .buttonFixedSizeModel1,
                                                     updateCallback: () =>
-                                                        setState(() {}),
+                                                        safeSetState(() {}),
                                                     child:
                                                         ButtonFixedSizeWidget(
                                                       width: 150.0,
                                                       height: 40.0,
-                                                      buttonColor: widget
+                                                      buttonColor: widget!
                                                               .events!
                                                               .eventInfo
                                                               .isOpen
@@ -1410,7 +1611,7 @@ class _EventPageWidgetState extends State<EventPageWidget> {
                                                               : FlutterFlowTheme
                                                                       .of(context)
                                                                   .primary),
-                                                      text: widget.events!
+                                                      text: widget!.events!
                                                               .eventInfo.isOpen
                                                           ? (_model
                                                                   .userParticipating
@@ -1431,7 +1632,7 @@ class _EventPageWidgetState extends State<EventPageWidget> {
                                                       showLoadingIndicator:
                                                           false,
                                                       action: () async {
-                                                        if (widget
+                                                        if (widget!
                                                                 .events
                                                                 ?.eventInfo
                                                                 ?.isOpen ==
@@ -1447,10 +1648,10 @@ class _EventPageWidgetState extends State<EventPageWidget> {
                                                                     currentUserReference)
                                                                 .toList()
                                                                 .first);
-                                                            setState(() {});
+                                                            safeSetState(() {});
                                                             unawaited(
                                                               () async {
-                                                                await widget
+                                                                await widget!
                                                                     .events!
                                                                     .reference
                                                                     .update({
@@ -1476,10 +1677,10 @@ class _EventPageWidgetState extends State<EventPageWidget> {
                                                               when:
                                                                   getCurrentTimestamp,
                                                             ));
-                                                            setState(() {});
+                                                            safeSetState(() {});
                                                             unawaited(
                                                               () async {
-                                                                await widget
+                                                                await widget!
                                                                     .events!
                                                                     .reference
                                                                     .update({
@@ -1508,10 +1709,10 @@ class _EventPageWidgetState extends State<EventPageWidget> {
                                                                 .first);
                                                             _model.userApplied =
                                                                 false;
-                                                            setState(() {});
+                                                            safeSetState(() {});
                                                             unawaited(
                                                               () async {
-                                                                await widget
+                                                                await widget!
                                                                     .events!
                                                                     .reference
                                                                     .update({
@@ -1536,10 +1737,10 @@ class _EventPageWidgetState extends State<EventPageWidget> {
                                                             ));
                                                             _model.userApplied =
                                                                 true;
-                                                            setState(() {});
+                                                            safeSetState(() {});
                                                             unawaited(
                                                               () async {
-                                                                await widget
+                                                                await widget!
                                                                     .events!
                                                                     .reference
                                                                     .update({
@@ -1594,11 +1795,51 @@ class _EventPageWidgetState extends State<EventPageWidget> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        wrapWithModel(
-                          model: _model.navigateBackModel,
-                          updateCallback: () => setState(() {}),
-                          child: NavigateBackWidget(
-                            parameter1: widget.isFrom!,
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(10.0),
+                          child: BackdropFilter(
+                            filter: ImageFilter.blur(
+                              sigmaX: 7.0,
+                              sigmaY: 7.0,
+                            ),
+                            child: FlutterFlowIconButton(
+                              borderColor:
+                                  FlutterFlowTheme.of(context).textAndStroke,
+                              borderRadius: 10.0,
+                              borderWidth: 1.0,
+                              buttonSize: 40.0,
+                              icon: Icon(
+                                Icons.chevron_left,
+                                color:
+                                    FlutterFlowTheme.of(context).secondaryText,
+                                size: 23.0,
+                              ),
+                              onPressed: () async {
+                                if (widget!.isFrom == 'create') {
+                                  context.pushNamed(
+                                    'profile',
+                                    queryParameters: {
+                                      'chosen': serializeParam(
+                                        'Events',
+                                        ParamType.String,
+                                      ),
+                                    }.withoutNulls,
+                                  );
+                                } else if (widget!.isFrom == 'Settings') {
+                                  context.pushNamed(
+                                    'profile',
+                                    queryParameters: {
+                                      'chosen': serializeParam(
+                                        'Events',
+                                        ParamType.String,
+                                      ),
+                                    }.withoutNulls,
+                                  );
+                                } else {
+                                  context.safePop();
+                                }
+                              },
+                            ),
                           ),
                         ),
                         Row(
@@ -1621,14 +1862,16 @@ class _EventPageWidgetState extends State<EventPageWidget> {
                                           sigmaY: 7.0,
                                         ),
                                         child: FlutterFlowIconButton(
-                                          borderColor: Colors.transparent,
+                                          borderColor:
+                                              FlutterFlowTheme.of(context)
+                                                  .textAndStroke,
                                           borderRadius: 10.0,
                                           borderWidth: 1.0,
                                           buttonSize: 40.0,
-                                          fillColor: Color(0x34000000),
                                           icon: Icon(
                                             Icons.keyboard_control,
-                                            color: Colors.white,
+                                            color: FlutterFlowTheme.of(context)
+                                                .secondaryText,
                                             size: 20.0,
                                           ),
                                           onPressed: () async {
@@ -1636,12 +1879,12 @@ class _EventPageWidgetState extends State<EventPageWidget> {
                                               'event_settings',
                                               queryParameters: {
                                                 'event': serializeParam(
-                                                  widget.events,
+                                                  widget!.events,
                                                   ParamType.Document,
                                                 ),
                                               }.withoutNulls,
                                               extra: <String, dynamic>{
-                                                'event': widget.events,
+                                                'event': widget!.events,
                                               },
                                             );
                                           },
@@ -1653,7 +1896,7 @@ class _EventPageWidgetState extends State<EventPageWidget> {
                                   return AuthUserStreamWidget(
                                     builder: (context) => wrapWithModel(
                                       model: _model.toggleModel,
-                                      updateCallback: () => setState(() {}),
+                                      updateCallback: () => safeSetState(() {}),
                                       updateOnChange: true,
                                       child: ToggleWidget(
                                         boolean: (currentUserDocument?.saved
@@ -1661,7 +1904,7 @@ class _EventPageWidgetState extends State<EventPageWidget> {
                                                     [])
                                                 .where((e) =>
                                                     e.events ==
-                                                    widget.events?.reference)
+                                                    widget!.events?.reference)
                                                 .toList()
                                                 .length >
                                             0,
@@ -1677,7 +1920,7 @@ class _EventPageWidgetState extends State<EventPageWidget> {
                                                       getSavedFirestoreData(
                                                         updateSavedStruct(
                                                           SavedStruct(
-                                                            events: widget
+                                                            events: widget!
                                                                 .events
                                                                 ?.reference,
                                                           ),
@@ -1705,7 +1948,7 @@ class _EventPageWidgetState extends State<EventPageWidget> {
                                                       getSavedFirestoreData(
                                                         updateSavedStruct(
                                                           SavedStruct(
-                                                            events: widget
+                                                            events: widget!
                                                                 .events
                                                                 ?.reference,
                                                           ),
@@ -1743,7 +1986,7 @@ class _EventPageWidgetState extends State<EventPageWidget> {
                         ),
                         child: Container(
                           width: double.infinity,
-                          height: isiOS ? 100.0 : 90.0,
+                          height: isiOS ? 120.0 : 90.0,
                           decoration: BoxDecoration(
                             color: FlutterFlowTheme.of(context).mainThemeBlur,
                           ),
@@ -1767,7 +2010,7 @@ class _EventPageWidgetState extends State<EventPageWidget> {
                                     20.0,
                                     20.0,
                                     valueOrDefault<double>(
-                                      isiOS ? 10.0 : 0.0,
+                                      isiOS ? 15.0 : 0.0,
                                       0.0,
                                     )),
                                 child: Row(
@@ -1782,9 +2025,16 @@ class _EventPageWidgetState extends State<EventPageWidget> {
                                       children: [
                                         Text(
                                           valueOrDefault<String>(
-                                            widget.events!.eventInfo.isFree
+                                            widget!.events!.eventInfo.isFree
                                                 ? 'Free'
-                                                : '${'\$${widget.events?.eventInfo?.price?.toString()}'}',
+                                                : '${'\$${formatNumber(
+                                                    widget!.events?.eventInfo
+                                                        ?.price,
+                                                    formatType:
+                                                        FormatType.decimal,
+                                                    decimalType:
+                                                        DecimalType.automatic,
+                                                  )}'}',
                                             'zxc',
                                           ),
                                           style: FlutterFlowTheme.of(context)
@@ -1793,7 +2043,7 @@ class _EventPageWidgetState extends State<EventPageWidget> {
                                                 fontFamily: 'LTSuperior',
                                                 fontSize: 20.0,
                                                 letterSpacing: 0.0,
-                                                fontWeight: FontWeight.bold,
+                                                fontWeight: FontWeight.w600,
                                                 useGoogleFonts: false,
                                               ),
                                         ),
@@ -1804,14 +2054,14 @@ class _EventPageWidgetState extends State<EventPageWidget> {
                                           child: Text(
                                             '${valueOrDefault<String>(
                                               dateTimeFormat(
-                                                  'yMMMd',
-                                                  widget.events?.eventInfo
+                                                  "yMMMd",
+                                                  widget!.events?.eventInfo
                                                       ?.startDate),
                                               'info',
                                             )} ${valueOrDefault<String>(
                                               dateTimeFormat(
-                                                  'Hm',
-                                                  widget.events?.eventInfo
+                                                  "Hm",
+                                                  widget!.events?.eventInfo
                                                       ?.startTime),
                                               'info',
                                             )}',
@@ -1832,269 +2082,342 @@ class _EventPageWidgetState extends State<EventPageWidget> {
                                     Row(
                                       mainAxisSize: MainAxisSize.max,
                                       children: [
-                                        wrapWithModel(
-                                          model: _model.buttonFixedSizeModel2,
-                                          updateCallback: () => setState(() {}),
-                                          child: ButtonFixedSizeWidget(
-                                            width: 150.0,
-                                            height: 40.0,
-                                            buttonColor: widget
-                                                    .events!.eventInfo.isOpen
-                                                ? (eventPageEventsRecord
-                                                            .participantUsers
-                                                            .where((e) =>
-                                                                e.user ==
-                                                                currentUserReference)
-                                                            .toList()
-                                                            .length >
-                                                        0
-                                                    ? Color(0xFFD01F2A)
-                                                    : FlutterFlowTheme.of(
-                                                            context)
-                                                        .primary)
-                                                : (eventPageEventsRecord
-                                                            .usersAppliedToJoin
-                                                            .where((e) =>
-                                                                e.user ==
-                                                                currentUserReference)
-                                                            .toList()
-                                                            .length >
-                                                        0
-                                                    ? Color(0xFFDD2A34)
-                                                    : FlutterFlowTheme.of(
-                                                            context)
-                                                        .primary),
-                                            text: eventPageEventsRecord
-                                                    .eventInfo.isOpen
-                                                ? (eventPageEventsRecord
-                                                            .participantUsers
-                                                            .where((e) =>
-                                                                e.user ==
-                                                                currentUserReference)
-                                                            .toList()
-                                                            .length >
-                                                        0
-                                                    ? 'Abandon'
-                                                    : 'Join')
-                                                : (eventPageEventsRecord
-                                                        .participants
-                                                        .contains(
+                                        Builder(
+                                          builder: (context) {
+                                            if (!((_model.owner?.reference ==
+                                                    currentUserReference) ||
+                                                (_model.company!.teamMembers
+                                                        .where((e) =>
+                                                            e.user ==
                                                             currentUserReference)
-                                                    ? 'Abandon'
-                                                    : (eventPageEventsRecord
-                                                                .usersAppliedToJoin
+                                                        .toList()
+                                                        .length >=
+                                                    1))) {
+                                              return wrapWithModel(
+                                                model: _model
+                                                    .buttonFixedSizeModel2,
+                                                updateCallback: () =>
+                                                    safeSetState(() {}),
+                                                child: ButtonFixedSizeWidget(
+                                                  width: 150.0,
+                                                  height: 40.0,
+                                                  buttonColor: widget!.events!
+                                                          .eventInfo.isOpen
+                                                      ? (eventPageEventsRecord
+                                                                  .participantUsers
+                                                                  .where((e) =>
+                                                                      e.user ==
+                                                                      currentUserReference)
+                                                                  .toList()
+                                                                  .length >
+                                                              0
+                                                          ? Color(0xFFD01F2A)
+                                                          : FlutterFlowTheme.of(
+                                                                  context)
+                                                              .primary)
+                                                      : (eventPageEventsRecord
+                                                                  .usersAppliedToJoin
+                                                                  .where((e) =>
+                                                                      e.user ==
+                                                                      currentUserReference)
+                                                                  .toList()
+                                                                  .length >
+                                                              0
+                                                          ? Color(0xFFDD2A34)
+                                                          : FlutterFlowTheme.of(
+                                                                  context)
+                                                              .primary),
+                                                  text: eventPageEventsRecord
+                                                          .eventInfo.isOpen
+                                                      ? (eventPageEventsRecord
+                                                                  .participantUsers
+                                                                  .where((e) =>
+                                                                      e.user ==
+                                                                      currentUserReference)
+                                                                  .toList()
+                                                                  .length >
+                                                              0
+                                                          ? 'Abandon'
+                                                          : 'Join')
+                                                      : (eventPageEventsRecord
+                                                              .participants
+                                                              .contains(
+                                                                  currentUserReference)
+                                                          ? 'Abandon'
+                                                          : (eventPageEventsRecord
+                                                                      .usersAppliedToJoin
+                                                                      .where((e) =>
+                                                                          e.user ==
+                                                                          currentUserReference)
+                                                                      .toList()
+                                                                      .length >
+                                                                  0
+                                                              ? 'Cancel'
+                                                              : 'Apply to Join')),
+                                                  fontsize: 16,
+                                                  textcolor:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .info,
+                                                  showLoadingIndicator: true,
+                                                  action: () async {
+                                                    if (widget!
+                                                            .events
+                                                            ?.eventInfo
+                                                            ?.isOpen ==
+                                                        true) {
+                                                      if (eventPageEventsRecord
+                                                              .participantUsers
+                                                              .where((e) =>
+                                                                  e.user ==
+                                                                  currentUserReference)
+                                                              .toList()
+                                                              .length >
+                                                          0) {
+                                                        _model.removeFromParticipants(
+                                                            _model.participants
                                                                 .where((e) =>
                                                                     e.user ==
                                                                     currentUserReference)
                                                                 .toList()
-                                                                .length >
-                                                            0
-                                                        ? 'Cancel'
-                                                        : 'Apply to Join')),
-                                            fontsize: 16,
-                                            textcolor:
-                                                FlutterFlowTheme.of(context)
-                                                    .info,
-                                            showLoadingIndicator: false,
-                                            action: () async {
-                                              if (widget.events?.eventInfo
-                                                      ?.isOpen ==
-                                                  true) {
-                                                if (eventPageEventsRecord
-                                                        .participantUsers
-                                                        .where((e) =>
-                                                            e.user ==
-                                                            currentUserReference)
-                                                        .toList()
-                                                        .length >
-                                                    0) {
-                                                  _model.removeFromParticipants(
-                                                      _model.participants
-                                                          .where((e) =>
-                                                              e.user ==
-                                                              currentUserReference)
-                                                          .toList()
-                                                          .first);
-                                                  setState(() {});
-                                                  unawaited(
-                                                    () async {
-                                                      await widget
-                                                          .events!.reference
-                                                          .update({
-                                                        ...mapToFirestore(
-                                                          {
-                                                            'participants':
-                                                                FieldValue
-                                                                    .arrayRemove([
-                                                              currentUserReference
-                                                            ]),
-                                                            'participant_users':
-                                                                FieldValue
-                                                                    .arrayRemove([
-                                                              getParticipantsFirestoreData(
-                                                                updateParticipantsStruct(
-                                                                  ParticipantsStruct(
-                                                                    user:
-                                                                        currentUserReference,
+                                                                .first);
+                                                        safeSetState(() {});
+                                                        unawaited(
+                                                          () async {
+                                                            await widget!
+                                                                .events!
+                                                                .reference
+                                                                .update({
+                                                              ...mapToFirestore(
+                                                                {
+                                                                  'participants':
+                                                                      FieldValue
+                                                                          .arrayRemove([
+                                                                    currentUserReference
+                                                                  ]),
+                                                                  'participant_users':
+                                                                      FieldValue
+                                                                          .arrayRemove([
+                                                                    getParticipantsFirestoreData(
+                                                                      updateParticipantsStruct(
+                                                                        ParticipantsStruct(
+                                                                          user:
+                                                                              currentUserReference,
+                                                                        ),
+                                                                        clearUnsetFields:
+                                                                            false,
+                                                                      ),
+                                                                      true,
+                                                                    )
+                                                                  ]),
+                                                                },
+                                                              ),
+                                                            });
+                                                          }(),
+                                                        );
+                                                      } else {
+                                                        _model.addToParticipants(
+                                                            ParticipantsStruct(
+                                                          user:
+                                                              currentUserReference,
+                                                          when:
+                                                              getCurrentTimestamp,
+                                                        ));
+                                                        safeSetState(() {});
+                                                        unawaited(
+                                                          () async {
+                                                            await widget!
+                                                                .events!
+                                                                .reference
+                                                                .update({
+                                                              ...mapToFirestore(
+                                                                {
+                                                                  'participants':
+                                                                      FieldValue
+                                                                          .arrayUnion([
+                                                                    currentUserReference
+                                                                  ]),
+                                                                  'participant_users':
+                                                                      FieldValue
+                                                                          .arrayUnion([
+                                                                    getParticipantsFirestoreData(
+                                                                      updateParticipantsStruct(
+                                                                        ParticipantsStruct(
+                                                                          user:
+                                                                              currentUserReference,
+                                                                        ),
+                                                                        clearUnsetFields:
+                                                                            false,
+                                                                      ),
+                                                                      true,
+                                                                    )
+                                                                  ]),
+                                                                },
+                                                              ),
+                                                            });
+                                                          }(),
+                                                        );
+                                                      }
+                                                    } else {
+                                                      if (eventPageEventsRecord
+                                                              .usersAppliedToJoin
+                                                              .where((e) =>
+                                                                  e.user ==
+                                                                  currentUserReference)
+                                                              .toList()
+                                                              .length >
+                                                          0) {
+                                                        _model.removeFromAppliedToJoin(
+                                                            _model.appliedToJoin
+                                                                .where((e) =>
+                                                                    e.user ==
+                                                                    currentUserReference)
+                                                                .toList()
+                                                                .first);
+                                                        safeSetState(() {});
+                                                        unawaited(
+                                                          () async {
+                                                            await widget!
+                                                                .events!
+                                                                .reference
+                                                                .update({
+                                                              ...mapToFirestore(
+                                                                {
+                                                                  'users_applied_to_join':
+                                                                      getParticipantsListFirestoreData(
+                                                                    _model
+                                                                        .appliedToJoin,
                                                                   ),
-                                                                  clearUnsetFields:
-                                                                      false,
-                                                                ),
-                                                                true,
-                                                              )
-                                                            ]),
-                                                          },
-                                                        ),
-                                                      });
-                                                    }(),
-                                                  );
-                                                } else {
-                                                  _model.addToParticipants(
-                                                      ParticipantsStruct(
-                                                    user: currentUserReference,
-                                                    when: getCurrentTimestamp,
-                                                  ));
-                                                  setState(() {});
-                                                  unawaited(
-                                                    () async {
-                                                      await widget
-                                                          .events!.reference
-                                                          .update({
-                                                        ...mapToFirestore(
-                                                          {
-                                                            'participants':
-                                                                FieldValue
-                                                                    .arrayUnion([
-                                                              currentUserReference
-                                                            ]),
-                                                            'participant_users':
-                                                                FieldValue
-                                                                    .arrayUnion([
-                                                              getParticipantsFirestoreData(
-                                                                updateParticipantsStruct(
-                                                                  ParticipantsStruct(
-                                                                    user:
-                                                                        currentUserReference,
+                                                                },
+                                                              ),
+                                                            });
+                                                          }(),
+                                                        );
+                                                      } else {
+                                                        _model.addToAppliedToJoin(
+                                                            ParticipantsStruct(
+                                                          user:
+                                                              currentUserReference,
+                                                          applied: true,
+                                                        ));
+                                                        safeSetState(() {});
+                                                        unawaited(
+                                                          () async {
+                                                            await widget!
+                                                                .events!
+                                                                .reference
+                                                                .update({
+                                                              ...mapToFirestore(
+                                                                {
+                                                                  'users_applied_to_join':
+                                                                      getParticipantsListFirestoreData(
+                                                                    _model
+                                                                        .appliedToJoin,
                                                                   ),
-                                                                  clearUnsetFields:
-                                                                      false,
-                                                                ),
-                                                                true,
-                                                              )
-                                                            ]),
-                                                          },
+                                                                },
+                                                              ),
+                                                            });
+                                                          }(),
+                                                        );
+                                                      }
+                                                    }
+                                                  },
+                                                ),
+                                              );
+                                            } else {
+                                              return wrapWithModel(
+                                                model: _model
+                                                    .buttonFixedSizeModel3,
+                                                updateCallback: () =>
+                                                    safeSetState(() {}),
+                                                child: ButtonFixedSizeWidget(
+                                                  width: 150.0,
+                                                  height: 40.0,
+                                                  buttonColor:
+                                                      Color(0x03000000),
+                                                  text: 'Settings',
+                                                  borderColor:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .primary,
+                                                  fontsize: 16,
+                                                  textcolor:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .primary,
+                                                  showLoadingIndicator: true,
+                                                  action: () async {
+                                                    context.pushNamed(
+                                                      'event_settings',
+                                                      queryParameters: {
+                                                        'event': serializeParam(
+                                                          widget!.events,
+                                                          ParamType.Document,
                                                         ),
-                                                      });
-                                                    }(),
-                                                  );
-                                                }
-                                              } else {
-                                                if (eventPageEventsRecord
-                                                        .usersAppliedToJoin
-                                                        .where((e) =>
-                                                            e.user ==
-                                                            currentUserReference)
-                                                        .toList()
-                                                        .length >
-                                                    0) {
-                                                  _model.removeFromAppliedToJoin(
-                                                      _model.appliedToJoin
-                                                          .where((e) =>
-                                                              e.user ==
-                                                              currentUserReference)
-                                                          .toList()
-                                                          .first);
-                                                  setState(() {});
-                                                  unawaited(
-                                                    () async {
-                                                      await widget
-                                                          .events!.reference
-                                                          .update({
-                                                        ...mapToFirestore(
-                                                          {
-                                                            'users_applied_to_join':
-                                                                getParticipantsListFirestoreData(
-                                                              _model
-                                                                  .appliedToJoin,
-                                                            ),
-                                                          },
-                                                        ),
-                                                      });
-                                                    }(),
-                                                  );
-                                                } else {
-                                                  _model.addToAppliedToJoin(
-                                                      ParticipantsStruct(
-                                                    user: currentUserReference,
-                                                    applied: true,
-                                                  ));
-                                                  setState(() {});
-                                                  unawaited(
-                                                    () async {
-                                                      await widget
-                                                          .events!.reference
-                                                          .update({
-                                                        ...mapToFirestore(
-                                                          {
-                                                            'users_applied_to_join':
-                                                                getParticipantsListFirestoreData(
-                                                              _model
-                                                                  .appliedToJoin,
-                                                            ),
-                                                          },
-                                                        ),
-                                                      });
-                                                    }(),
-                                                  );
-                                                }
-                                              }
-                                            },
-                                          ),
+                                                      }.withoutNulls,
+                                                      extra: <String, dynamic>{
+                                                        'event': widget!.events,
+                                                      },
+                                                    );
+                                                  },
+                                                ),
+                                              );
+                                            }
+                                          },
                                         ),
-                                        Padding(
-                                          padding:
-                                              EdgeInsetsDirectional.fromSTEB(
-                                                  5.0, 0.0, 0.0, 0.0),
-                                          child: FlutterFlowIconButton(
-                                            borderColor:
-                                                FlutterFlowTheme.of(context)
-                                                    .primary,
-                                            borderRadius: 10.0,
-                                            borderWidth: 1.0,
-                                            buttonSize: 40.0,
-                                            icon: Icon(
-                                              FFIcons.kmessages,
-                                              color:
+                                        if ((_model.owner?.reference !=
+                                                currentUserReference) ||
+                                            (_model.company?.teamMembers
+                                                    ?.where((e) =>
+                                                        e.user ==
+                                                        currentUserReference)
+                                                    .toList()
+                                                    ?.length ==
+                                                0))
+                                          Padding(
+                                            padding:
+                                                EdgeInsetsDirectional.fromSTEB(
+                                                    5.0, 0.0, 0.0, 0.0),
+                                            child: FlutterFlowIconButton(
+                                              borderColor:
                                                   FlutterFlowTheme.of(context)
                                                       .primary,
-                                              size: 16.0,
+                                              borderRadius: 10.0,
+                                              borderWidth: 1.0,
+                                              buttonSize: 40.0,
+                                              icon: Icon(
+                                                FFIcons.kmessages,
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .primary,
+                                                size: 16.0,
+                                              ),
+                                              onPressed: () async {
+                                                context.pushNamed(
+                                                  'chat_page',
+                                                  queryParameters: {
+                                                    'user': serializeParam(
+                                                      _model.owner,
+                                                      ParamType.Document,
+                                                    ),
+                                                    'company': serializeParam(
+                                                      _model.company,
+                                                      ParamType.Document,
+                                                    ),
+                                                    'event': serializeParam(
+                                                      widget!.events,
+                                                      ParamType.Document,
+                                                    ),
+                                                  }.withoutNulls,
+                                                  extra: <String, dynamic>{
+                                                    'user': _model.owner,
+                                                    'company': _model.company,
+                                                    'event': widget!.events,
+                                                  },
+                                                );
+                                              },
                                             ),
-                                            onPressed: () async {
-                                              context.pushNamed(
-                                                'chat_page',
-                                                queryParameters: {
-                                                  'user': serializeParam(
-                                                    _model.owner,
-                                                    ParamType.Document,
-                                                  ),
-                                                  'company': serializeParam(
-                                                    _model.company,
-                                                    ParamType.Document,
-                                                  ),
-                                                  'event': serializeParam(
-                                                    widget.events,
-                                                    ParamType.Document,
-                                                  ),
-                                                }.withoutNulls,
-                                                extra: <String, dynamic>{
-                                                  'user': _model.owner,
-                                                  'company': _model.company,
-                                                  'event': widget.events,
-                                                },
-                                              );
-                                            },
                                           ),
-                                        ),
                                       ],
                                     ),
                                   ],

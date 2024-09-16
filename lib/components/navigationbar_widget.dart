@@ -2,6 +2,7 @@ import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'dart:ui';
+import '/flutter_flow/permissions_util.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -34,7 +35,7 @@ class _NavigationbarWidgetState extends State<NavigationbarWidget> {
     super.initState();
     _model = createModel(context, () => NavigationbarModel());
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -73,65 +74,94 @@ class _NavigationbarWidgetState extends State<NavigationbarWidget> {
                     hoverColor: Colors.transparent,
                     highlightColor: Colors.transparent,
                     onTap: () async {
-                      context.pushNamed(
-                        'smart_search_all',
-                        extra: <String, dynamic>{
-                          kTransitionInfoKey: TransitionInfo(
-                            hasTransition: true,
-                            transitionType: PageTransitionType.fade,
-                            duration: Duration(milliseconds: 0),
-                          ),
-                        },
-                      );
+                      if (widget!.chosen != 'Smart Search') {
+                        context.pushNamed(
+                          'smart_search_all_2',
+                          extra: <String, dynamic>{
+                            kTransitionInfoKey: TransitionInfo(
+                              hasTransition: true,
+                              transitionType: PageTransitionType.fade,
+                              duration: Duration(milliseconds: 0),
+                            ),
+                          },
+                        );
+                      }
                     },
                     child: Container(
                       decoration: BoxDecoration(),
                       child: Column(
                         mainAxisSize: MainAxisSize.max,
                         children: [
-                          Stack(
-                            alignment: AlignmentDirectional(0.0, -1.0),
-                            children: [
-                              Align(
-                                alignment: AlignmentDirectional(0.0, -1.0),
-                                child: FlutterFlowIconButton(
-                                  borderRadius: 20.0,
-                                  borderWidth: 1.0,
-                                  buttonSize: 40.0,
-                                  icon: Icon(
-                                    FFIcons.kprojectsW,
-                                    color: widget.chosen != 'Smart Search'
-                                        ? Color(0x80A3A3B3)
-                                        : FlutterFlowTheme.of(context).primary,
-                                    size: 22.0,
+                          Align(
+                            alignment: AlignmentDirectional(0.0, 0.0),
+                            child: Stack(
+                              alignment: AlignmentDirectional(0.0, 0.0),
+                              children: [
+                                Padding(
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      0.0, 39.0, 0.0, 0.0),
+                                  child: Text(
+                                    'Smart Search',
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .override(
+                                          fontFamily: 'LTSuperior',
+                                          color:
+                                              widget!.chosen != 'Smart Search'
+                                                  ? Color(0x80A3A3B3)
+                                                  : FlutterFlowTheme.of(context)
+                                                      .primary,
+                                          fontSize: 12.0,
+                                          letterSpacing: 0.0,
+                                          useGoogleFonts: false,
+                                        ),
                                   ),
-                                  onPressed: true
-                                      ? null
-                                      : () {
-                                          print('IconButton pressed ...');
-                                        },
                                 ),
-                              ),
-                              Padding(
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    0.0, 39.0, 0.0, 0.0),
-                                child: Text(
-                                  'Smart Search',
-                                  style: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .override(
-                                        fontFamily: 'LTSuperior',
-                                        color: widget.chosen != 'Smart Search'
-                                            ? Color(0x80A3A3B3)
-                                            : FlutterFlowTheme.of(context)
-                                                .primary,
-                                        fontSize: 12.0,
-                                        letterSpacing: 0.0,
-                                        useGoogleFonts: false,
-                                      ),
+                                Builder(
+                                  builder: (context) {
+                                    if (widget!.chosen != 'Smart Search') {
+                                      return Align(
+                                        alignment:
+                                            AlignmentDirectional(0.0, 0.0),
+                                        child: Padding(
+                                          padding:
+                                              EdgeInsetsDirectional.fromSTEB(
+                                                  0.0, 0.0, 0.0, 14.0),
+                                          child: ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(0.0),
+                                            child: Image.asset(
+                                              'assets/images/logo_inactive.png',
+                                              height: 20.0,
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    } else {
+                                      return Align(
+                                        alignment:
+                                            AlignmentDirectional(0.0, 0.0),
+                                        child: Padding(
+                                          padding:
+                                              EdgeInsetsDirectional.fromSTEB(
+                                                  0.0, 0.0, 0.0, 14.0),
+                                          child: ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(0.0),
+                                            child: Image.asset(
+                                              'assets/images/logo_active.png',
+                                              height: 20.0,
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                  },
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ],
                       ),
@@ -145,16 +175,19 @@ class _NavigationbarWidgetState extends State<NavigationbarWidget> {
                     hoverColor: Colors.transparent,
                     highlightColor: Colors.transparent,
                     onTap: () async {
-                      context.pushNamed(
-                        'chats',
-                        extra: <String, dynamic>{
-                          kTransitionInfoKey: TransitionInfo(
-                            hasTransition: true,
-                            transitionType: PageTransitionType.fade,
-                            duration: Duration(milliseconds: 0),
-                          ),
-                        },
-                      );
+                      if (widget!.chosen != 'Messages') {
+                        context.pushNamed(
+                          'chats',
+                          extra: <String, dynamic>{
+                            kTransitionInfoKey: TransitionInfo(
+                              hasTransition: true,
+                              transitionType: PageTransitionType.fade,
+                              duration: Duration(milliseconds: 0),
+                            ),
+                          },
+                        );
+                      }
+                      await requestPermission(notificationsPermission);
                     },
                     child: Container(
                       decoration: BoxDecoration(),
@@ -172,11 +205,11 @@ class _NavigationbarWidgetState extends State<NavigationbarWidget> {
                                   borderWidth: 1.0,
                                   buttonSize: 40.0,
                                   icon: Icon(
-                                    FFIcons.kmessages,
-                                    color: widget.chosen != 'Messages'
+                                    FFIcons.kchatMessages,
+                                    color: widget!.chosen != 'Messages'
                                         ? Color(0x80A3A3B3)
                                         : FlutterFlowTheme.of(context).primary,
-                                    size: 20.0,
+                                    size: 24.0,
                                   ),
                                   onPressed: true
                                       ? null
@@ -196,7 +229,7 @@ class _NavigationbarWidgetState extends State<NavigationbarWidget> {
                                         .bodyMedium
                                         .override(
                                           fontFamily: 'LTSuperior',
-                                          color: widget.chosen != 'Messages'
+                                          color: widget!.chosen != 'Messages'
                                               ? Color(0x80A3A3B3)
                                               : FlutterFlowTheme.of(context)
                                                   .primary,
@@ -221,16 +254,18 @@ class _NavigationbarWidgetState extends State<NavigationbarWidget> {
                     hoverColor: Colors.transparent,
                     highlightColor: Colors.transparent,
                     onTap: () async {
-                      context.pushNamed(
-                        'profile',
-                        extra: <String, dynamic>{
-                          kTransitionInfoKey: TransitionInfo(
-                            hasTransition: true,
-                            transitionType: PageTransitionType.fade,
-                            duration: Duration(milliseconds: 0),
-                          ),
-                        },
-                      );
+                      if (widget!.chosen != 'Profile') {
+                        context.pushNamed(
+                          'profile',
+                          extra: <String, dynamic>{
+                            kTransitionInfoKey: TransitionInfo(
+                              hasTransition: true,
+                              transitionType: PageTransitionType.fade,
+                              duration: Duration(milliseconds: 0),
+                            ),
+                          },
+                        );
+                      }
                     },
                     child: Container(
                       decoration: BoxDecoration(),
@@ -246,8 +281,8 @@ class _NavigationbarWidgetState extends State<NavigationbarWidget> {
                                 borderWidth: 1.0,
                                 buttonSize: 40.0,
                                 icon: Icon(
-                                  FFIcons.kuser,
-                                  color: widget.chosen != 'Profile'
+                                  FFIcons.kuserProfileIcon3,
+                                  color: widget!.chosen != 'Profile'
                                       ? Color(0x80A3A3B3)
                                       : FlutterFlowTheme.of(context).primary,
                                   size: 22.0,
@@ -267,7 +302,7 @@ class _NavigationbarWidgetState extends State<NavigationbarWidget> {
                                       .bodyMedium
                                       .override(
                                         fontFamily: 'LTSuperior',
-                                        color: widget.chosen != 'Profile'
+                                        color: widget!.chosen != 'Profile'
                                             ? Color(0x80A3A3B3)
                                             : FlutterFlowTheme.of(context)
                                                 .primary,

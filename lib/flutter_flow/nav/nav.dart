@@ -84,13 +84,13 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
       debugLogDiagnostics: true,
       refreshListenable: appStateNotifier,
       errorBuilder: (context, state) =>
-          appStateNotifier.loggedIn ? SmartSearchAllWidget() : SignInWidget(),
+          appStateNotifier.loggedIn ? SmartSearchAll2Widget() : SignInWidget(),
       routes: [
         FFRoute(
           name: '_initialize',
           path: '/',
           builder: (context, _) => appStateNotifier.loggedIn
-              ? SmartSearchAllWidget()
+              ? SmartSearchAll2Widget()
               : SignInWidget(),
         ),
         FFRoute(
@@ -101,7 +101,12 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
         FFRoute(
           name: 'profile',
           path: '/profile',
-          builder: (context, params) => ProfileWidget(),
+          builder: (context, params) => ProfileWidget(
+            chosen: params.getParam(
+              'chosen',
+              ParamType.String,
+            ),
+          ),
         ),
         FFRoute(
           name: 'pitchdeck',
@@ -347,6 +352,12 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
               'firstSearch',
               ParamType.String,
             ),
+            smartSearchSession: params.getParam(
+              'smartSearchSession',
+              ParamType.DataStruct,
+              isList: false,
+              structBuilder: SmartsearchSessionStruct.fromSerializableMap,
+            ),
           ),
         ),
         FFRoute(
@@ -450,6 +461,10 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
             company: params.getParam(
               'company',
               ParamType.Document,
+            ),
+            isFrom: params.getParam(
+              'isFrom',
+              ParamType.String,
             ),
           ),
         ),
@@ -587,20 +602,16 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
               'chat',
               ParamType.Document,
             ),
+            isFrom: params.getParam(
+              'isFrom',
+              ParamType.String,
+            ),
           ),
         ),
         FFRoute(
           name: 'notifications',
           path: '/notifications',
-          asyncParams: {
-            'chat': getDoc(['chats'], ChatsRecord.fromSnapshot),
-          },
-          builder: (context, params) => NotificationsWidget(
-            chat: params.getParam(
-              'chat',
-              ParamType.Document,
-            ),
-          ),
+          builder: (context, params) => NotificationsWidget(),
         ),
         FFRoute(
           name: 'wishlist',
@@ -628,16 +639,94 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           ),
         ),
         FFRoute(
-          name: 'history_item',
-          path: '/historyItem',
-          builder: (context, params) => HistoryItemWidget(
-            chosen: params.getParam(
-              'chosen',
+          name: 'eventParticipants',
+          path: '/eventParticipants',
+          asyncParams: {
+            'event': getDoc(['events'], EventsRecord.fromSnapshot),
+          },
+          builder: (context, params) => EventParticipantsWidget(
+            event: params.getParam(
+              'event',
+              ParamType.Document,
+            ),
+          ),
+        ),
+        FFRoute(
+          name: 'event_information',
+          path: '/eventInformation',
+          asyncParams: {
+            'event': getDoc(['events'], EventsRecord.fromSnapshot),
+          },
+          builder: (context, params) => EventInformationWidget(
+            event: params.getParam(
+              'event',
+              ParamType.Document,
+            ),
+          ),
+        ),
+        FFRoute(
+          name: 'smart_search_all_3',
+          path: '/smartSearchAll3',
+          builder: (context, params) => SmartSearchAll3Widget(),
+        ),
+        FFRoute(
+          name: 'subscribers',
+          path: '/subscribers',
+          asyncParams: {
+            'user': getDoc(['users'], UsersRecord.fromSnapshot),
+            'company': getDoc(['projects'], ProjectsRecord.fromSnapshot),
+          },
+          builder: (context, params) => SubscribersWidget(
+            user: params.getParam(
+              'user',
+              ParamType.Document,
+            ),
+            company: params.getParam(
+              'company',
+              ParamType.Document,
+            ),
+          ),
+        ),
+        FFRoute(
+          name: 'group_chat_settings',
+          path: '/groupChatSettings',
+          asyncParams: {
+            'chat': getDoc(['chats'], ChatsRecord.fromSnapshot),
+          },
+          builder: (context, params) => GroupChatSettingsWidget(
+            chat: params.getParam(
+              'chat',
+              ParamType.Document,
+            ),
+            isFrom: params.getParam(
+              'isFrom',
               ParamType.String,
             ),
-            indexItem: params.getParam(
-              'indexItem',
-              ParamType.int,
+          ),
+        ),
+        FFRoute(
+          name: 'group_settings_edit',
+          path: '/groupSettingsEdit',
+          asyncParams: {
+            'chat': getDoc(['chats'], ChatsRecord.fromSnapshot),
+          },
+          builder: (context, params) => GroupSettingsEditWidget(
+            chat: params.getParam(
+              'chat',
+              ParamType.Document,
+            ),
+          ),
+        ),
+        FFRoute(
+          name: 'add_users_groupchat',
+          path: '/addUsersGroupchat',
+          asyncParams: {
+            'chat': getDoc(['chats'], ChatsRecord.fromSnapshot),
+          },
+          builder: (context, params) => AddUsersGroupchatWidget(
+            chat: params.getParam(
+              'chat',
+              ParamType.Document,
             ),
           ),
         )
@@ -827,15 +916,11 @@ class FFRoute {
                 )
               : builder(context, ffParams);
           final child = appStateNotifier.loading
-              ? Center(
-                  child: SizedBox(
-                    width: 50.0,
-                    height: 50.0,
-                    child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                        FlutterFlowTheme.of(context).primary,
-                      ),
-                    ),
+              ? Container(
+                  color: Colors.transparent,
+                  child: Image.asset(
+                    'assets/images/splash_screen_omnis.png',
+                    fit: BoxFit.cover,
                   ),
                 )
               : PushNotificationsHandler(child: page);

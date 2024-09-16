@@ -28,7 +28,7 @@ class AichatStruct extends FFFirebaseStruct {
   set messages(List<ChatMessagesStruct>? val) => _messages = val;
 
   void updateMessages(Function(List<ChatMessagesStruct>) updateFn) {
-    updateFn(messages ??= []);
+    updateFn(_messages ??= []);
   }
 
   bool hasMessages() => _messages != null;

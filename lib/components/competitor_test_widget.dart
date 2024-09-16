@@ -41,16 +41,17 @@ class _CompetitorTestWidgetState extends State<CompetitorTestWidget> {
     super.initState();
     _model = createModel(context, () => CompetitorTestModel());
 
-    _model.textController1 ??= TextEditingController(text: widget.title);
+    _model.textController1 ??= TextEditingController(text: widget!.title);
     _model.textFieldFocusNode1 ??= FocusNode();
 
-    _model.textController2 ??= TextEditingController(text: widget.advantage);
+    _model.textController2 ??= TextEditingController(text: widget!.advantage);
     _model.textFieldFocusNode2 ??= FocusNode();
 
-    _model.textController3 ??= TextEditingController(text: widget.disadvantage);
+    _model.textController3 ??=
+        TextEditingController(text: widget!.disadvantage);
     _model.textFieldFocusNode3 ??= FocusNode();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -82,7 +83,7 @@ class _CompetitorTestWidgetState extends State<CompetitorTestWidget> {
                 Padding(
                   padding: EdgeInsetsDirectional.fromSTEB(20.0, 0.0, 0.0, 0.0),
                   child: Text(
-                    'Competitor ${((widget.parameter1!) + 1).toString()}',
+                    'Competitor ${((widget!.parameter1!) + 1).toString()}',
                     style: FlutterFlowTheme.of(context).bodyMedium.override(
                           fontFamily: 'Montserrat',
                           color: FlutterFlowTheme.of(context).primary,
@@ -104,9 +105,9 @@ class _CompetitorTestWidgetState extends State<CompetitorTestWidget> {
                       size: 24.0,
                     ),
                     onPressed: () async {
-                      FFAppState()
-                          .removeAtIndexFromTestCompetitors(widget.parameter1!);
-                      setState(() {});
+                      FFAppState().removeAtIndexFromTestCompetitors(
+                          widget!.parameter1!);
+                      safeSetState(() {});
                     },
                   ),
                 ),
@@ -127,7 +128,7 @@ class _CompetitorTestWidgetState extends State<CompetitorTestWidget> {
                       Duration(milliseconds: 100),
                       () async {
                         FFAppState().updateTestCompetitorsAtIndex(
-                          widget.parameter1!,
+                          widget!.parameter1!,
                           (_) => TestCompetitorsStruct(
                             title: _model.textController1.text,
                             advantages: _model.textController2.text,
@@ -227,7 +228,7 @@ class _CompetitorTestWidgetState extends State<CompetitorTestWidget> {
                       Duration(milliseconds: 100),
                       () async {
                         FFAppState().updateTestCompetitorsAtIndex(
-                          widget.parameter1!,
+                          widget!.parameter1!,
                           (_) => TestCompetitorsStruct(
                             title: _model.textController1.text,
                             advantages: _model.textController2.text,
@@ -314,7 +315,7 @@ class _CompetitorTestWidgetState extends State<CompetitorTestWidget> {
                       Duration(milliseconds: 100),
                       () async {
                         FFAppState().updateTestCompetitorsAtIndex(
-                          widget.parameter1!,
+                          widget!.parameter1!,
                           (_) => TestCompetitorsStruct(
                             title: _model.textController1.text,
                             advantages: _model.textController2.text,

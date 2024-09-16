@@ -73,7 +73,7 @@ class NotificationsStruct extends FFFirebaseStruct {
   set invite(InvitesStruct? val) => _invite = val;
 
   void updateInvite(Function(InvitesStruct) updateFn) {
-    updateFn(invite ??= InvitesStruct());
+    updateFn(_invite ??= InvitesStruct());
   }
 
   bool hasInvite() => _invite != null;

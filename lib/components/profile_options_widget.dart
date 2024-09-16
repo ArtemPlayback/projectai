@@ -28,7 +28,7 @@ class _ProfileOptionsWidgetState extends State<ProfileOptionsWidget> {
     super.initState();
     _model = createModel(context, () => ProfileOptionsModel());
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -58,6 +58,10 @@ class _ProfileOptionsWidgetState extends State<ProfileOptionsWidget> {
             )
           ],
           borderRadius: BorderRadius.circular(20.0),
+          border: Border.all(
+            color: FlutterFlowTheme.of(context).textAndStroke,
+            width: 1.0,
+          ),
         ),
         child: Padding(
           padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 12.0),

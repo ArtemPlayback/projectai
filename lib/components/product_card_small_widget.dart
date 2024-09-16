@@ -43,7 +43,7 @@ class _ProductCardSmallWidgetState extends State<ProductCardSmallWidget> {
     super.initState();
     _model = createModel(context, () => ProductCardSmallModel());
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -68,7 +68,7 @@ class _ProductCardSmallWidgetState extends State<ProductCardSmallWidget> {
               'product_page',
               queryParameters: {
                 'product': serializeParam(
-                  widget.parameter4,
+                  widget!.parameter4,
                   ParamType.Document,
                 ),
                 'isFrom': serializeParam(
@@ -77,7 +77,7 @@ class _ProductCardSmallWidgetState extends State<ProductCardSmallWidget> {
                 ),
               }.withoutNulls,
               extra: <String, dynamic>{
-                'product': widget.parameter4,
+                'product': widget!.parameter4,
               },
             );
           },
@@ -85,21 +85,45 @@ class _ProductCardSmallWidgetState extends State<ProductCardSmallWidget> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(10.0),
-                child: Image.network(
-                  widget.parameter1!,
-                  width: 200.0,
-                  height: 200.0,
-                  fit: BoxFit.cover,
-                ),
+              Builder(
+                builder: (context) {
+                  if ((widget!.parameter4?.images != null &&
+                          (widget!.parameter4?.images)!.isNotEmpty) ==
+                      true) {
+                    return ClipRRect(
+                      borderRadius: BorderRadius.circular(10.0),
+                      child: Image.network(
+                        valueOrDefault<String>(
+                          widget!.parameter4?.images?.first,
+                          'https://st.depositphotos.com/1734074/5127/v/450/depositphotos_51276369-stock-illustration-vector-opened-carton-box-flat.jpg',
+                        ),
+                        width: 200.0,
+                        height: 200.0,
+                        fit: BoxFit.cover,
+                      ),
+                    );
+                  } else {
+                    return ClipRRect(
+                      borderRadius: BorderRadius.circular(10.0),
+                      child: Image.network(
+                        'https://st.depositphotos.com/1734074/5127/v/450/depositphotos_51276369-stock-illustration-vector-opened-carton-box-flat.jpg',
+                        width: 200.0,
+                        height: 200.0,
+                        fit: BoxFit.cover,
+                      ),
+                    );
+                  }
+                },
               ),
               Align(
                 alignment: AlignmentDirectional(-1.0, 0.0),
                 child: Padding(
                   padding: EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 0.0),
                   child: Text(
-                    widget.parameter2!,
+                    widget!.parameter2!.maybeHandleOverflow(
+                      maxChars: 25,
+                      replacement: '…',
+                    ),
                     textAlign: TextAlign.start,
                     maxLines: 1,
                     style: FlutterFlowTheme.of(context).bodyMedium.override(
@@ -115,7 +139,11 @@ class _ProductCardSmallWidgetState extends State<ProductCardSmallWidget> {
               Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(0.0, 1.0, 0.0, 0.0),
                 child: Text(
-                  '${widget.parameter3?.toString()}\$',
+                  '${formatNumber(
+                    widget!.parameter3,
+                    formatType: FormatType.decimal,
+                    decimalType: DecimalType.automatic,
+                  )}\$',
                   style: FlutterFlowTheme.of(context).bodyMedium.override(
                         fontFamily: 'LTSuperior',
                         fontSize: 18.0,
@@ -135,11 +163,11 @@ class _ProductCardSmallWidgetState extends State<ProductCardSmallWidget> {
             child: AuthUserStreamWidget(
               builder: (context) => wrapWithModel(
                 model: _model.toggleModel,
-                updateCallback: () => setState(() {}),
+                updateCallback: () => safeSetState(() {}),
                 child: ToggleWidget(
                   boolean: (currentUserDocument?.saved?.toList() ?? [])
-                          .where(
-                              (e) => e.products == widget.parameter4?.reference)
+                          .where((e) =>
+                              e.products == widget!.parameter4?.reference)
                           .toList()
                           .length >
                       0,
@@ -151,7 +179,7 @@ class _ProductCardSmallWidgetState extends State<ProductCardSmallWidget> {
                             getSavedFirestoreData(
                               updateSavedStruct(
                                 SavedStruct(
-                                  products: widget.parameter4?.reference,
+                                  products: widget!.parameter4?.reference,
                                 ),
                                 clearUnsetFields: false,
                               ),
@@ -170,7 +198,7 @@ class _ProductCardSmallWidgetState extends State<ProductCardSmallWidget> {
                             getSavedFirestoreData(
                               updateSavedStruct(
                                 SavedStruct(
-                                  products: widget.parameter4?.reference,
+                                  products: widget!.parameter4?.reference,
                                 ),
                                 clearUnsetFields: false,
                               ),

@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 // Begin custom action code
 // DO NOT REMOVE OR MODIFY THE CODE ABOVE!
 
-Future machineEffect() async {
+Future<void> machineEffect() async {
   // List of texts to be displayed
   List<String> texts = [
     "What are the best places with russian food in Bali?",
@@ -21,7 +21,8 @@ Future machineEffect() async {
     "Нужна или микроволновка, или электрическая плита, или духовка. Помоги мне это найти"
   ];
 
-  while (true) {
+  // Repeat the action 10 times
+  for (int repeat = 0; repeat < 10; repeat++) {
     for (String text in texts) {
       // Typing effect
       for (int i = 0; i <= text.length; i++) {

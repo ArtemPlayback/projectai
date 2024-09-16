@@ -14,6 +14,7 @@ import 'package:flutter/material.dart';
 Future<List<DocumentReference>> queryUsers(
   DocumentReference authuser,
   List<ChatsRecord> chats,
+  List<DocumentReference>? dontInclude, // Теперь аргумент nullable
 ) async {
   // Initialize a list to hold user references
   List<DocumentReference> userRefs = [];
@@ -29,6 +30,13 @@ Future<List<DocumentReference>> queryUsers(
   // Filter out the authuser reference
   uniqueUserRefs.remove(authuser);
 
-  // Return the list of DocumentReferences, excluding the authuser
+  // Remove any references from the dontInclude list if it is not null
+  if (dontInclude != null) {
+    for (var ref in dontInclude) {
+      uniqueUserRefs.remove(ref);
+    }
+  }
+
+  // Return the list of DocumentReferences, excluding the authuser and dontInclude references
   return uniqueUserRefs.toList();
 }

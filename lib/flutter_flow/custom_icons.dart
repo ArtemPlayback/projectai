@@ -19,6 +19,11 @@ class FFIcons {
   static const String _settingsIconsFamily = 'SettingsIcons';
   static const String _starsFamily = 'Stars';
   static const String _aiFamily = 'Ai';
+  static const String _profileIconUser3Family = 'ProfileIconUser3';
+  static const String _smartSearchIconFamily = 'SmartSearchIcon';
+  static const String _chatMessageIconFamily = 'ChatMessageIcon';
+  static const String _svgOmnisLogoFamily = 'SvgOmnisLogo';
+  static const String _svgOmnisLogo32Family = 'SvgOmnisLogo32';
 
   // pitchdeck
   static const IconData kchartPie11 =
@@ -227,4 +232,24 @@ class FFIcons {
   static const IconData kvector = IconData(0xe900, fontFamily: _starsFamily);
 
   // AI
+
+  // profile-icon-user-3
+  static const IconData kuserProfileIcon3 =
+      IconData(0xe900, fontFamily: _profileIconUser3Family);
+
+  // smart-search-icon
+  static const IconData ksmartSearchIcon =
+      IconData(0xe900, fontFamily: _smartSearchIconFamily);
+
+  // chat-message-icon
+  static const IconData kchatMessages =
+      IconData(0xe900, fontFamily: _chatMessageIconFamily);
+
+  // svg-omnis-logo
+  static const IconData komnisLogoSvg =
+      IconData(0xe900, fontFamily: _svgOmnisLogoFamily);
+
+  // svg-omnis-logo32
+  static const IconData klogoTest =
+      IconData(0xe900, fontFamily: _svgOmnisLogo32Family);
 }

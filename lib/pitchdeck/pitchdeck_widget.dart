@@ -37,7 +37,7 @@ class _PitchdeckWidgetState extends State<PitchdeckWidget> {
     super.initState();
     _model = createModel(context, () => PitchdeckModel());
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -50,9 +50,7 @@ class _PitchdeckWidgetState extends State<PitchdeckWidget> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => _model.unfocusNode.canRequestFocus
-          ? FocusScope.of(context).requestFocus(_model.unfocusNode)
-          : FocusScope.of(context).unfocus(),
+      onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: Color(0xFFEFEFEF),
@@ -66,7 +64,7 @@ class _PitchdeckWidgetState extends State<PitchdeckWidget> {
                 child: PageView(
                   controller: _model.pageViewController ??=
                       PageController(initialPage: 0),
-                  onPageChanged: (_) => setState(() {}),
+                  onPageChanged: (_) => safeSetState(() {}),
                   scrollDirection: Axis.horizontal,
                   children: [
                     SingleChildScrollView(
@@ -96,7 +94,7 @@ class _PitchdeckWidgetState extends State<PitchdeckWidget> {
                                         0.0, 40.0, 20.0, 0.0),
                                     child: Text(
                                       valueOrDefault<String>(
-                                        widget.project?.title,
+                                        widget!.project?.title,
                                         'f',
                                       ),
                                       style: FlutterFlowTheme.of(context)
@@ -116,7 +114,7 @@ class _PitchdeckWidgetState extends State<PitchdeckWidget> {
                                       0.0, 40.0, 0.0, 0.0),
                                   child: Text(
                                     valueOrDefault<String>(
-                                      widget.project?.title,
+                                      widget!.project?.title,
                                       'q',
                                     ),
                                     textAlign: TextAlign.center,
@@ -138,15 +136,16 @@ class _PitchdeckWidgetState extends State<PitchdeckWidget> {
                                       0.0, 18.0, 0.0, 15.0),
                                   child: Builder(
                                     builder: (context) {
-                                      if (widget.project?.pitchDeck
+                                      if (widget!.project?.pitchDeck
                                               ?.firstImageType ==
                                           'mobile screens') {
                                         return Builder(
                                           builder: (context) {
-                                            final firstImages = widget.project
+                                            final firstImages = widget!.project
                                                     ?.pitchDeck?.firstImages
                                                     ?.toList() ??
                                                 [];
+
                                             return SingleChildScrollView(
                                               scrollDirection: Axis.horizontal,
                                               child: Row(
@@ -239,15 +238,16 @@ class _PitchdeckWidgetState extends State<PitchdeckWidget> {
                                             );
                                           },
                                         );
-                                      } else if (widget.project?.pitchDeck
+                                      } else if (widget!.project?.pitchDeck
                                               ?.firstImageType ==
                                           'gallery') {
                                         return Builder(
                                           builder: (context) {
-                                            final firstImages2 = widget.project
+                                            final firstImages2 = widget!.project
                                                     ?.pitchDeck?.firstImages
                                                     ?.toList() ??
                                                 [];
+
                                             return SingleChildScrollView(
                                               scrollDirection: Axis.horizontal,
                                               child: Row(
@@ -291,7 +291,7 @@ class _PitchdeckWidgetState extends State<PitchdeckWidget> {
                                             borderRadius:
                                                 BorderRadius.circular(8.0),
                                             child: Image.network(
-                                              widget.project!.pitchDeck
+                                              widget!.project!.pitchDeck
                                                   .firstImage,
                                               width: double.infinity,
                                               fit: BoxFit.cover,
@@ -332,7 +332,7 @@ class _PitchdeckWidgetState extends State<PitchdeckWidget> {
                                                                   60.0),
                                                       child: Text(
                                                         valueOrDefault<String>(
-                                                          widget
+                                                          widget!
                                                               .project
                                                               ?.pitchDeck
                                                               ?.shortDescription,
@@ -373,10 +373,10 @@ class _PitchdeckWidgetState extends State<PitchdeckWidget> {
                                                         onPressed: () async {
                                                           if (_model.open) {
                                                             _model.open = false;
-                                                            setState(() {});
+                                                            safeSetState(() {});
                                                           } else {
                                                             _model.open = true;
-                                                            setState(() {});
+                                                            safeSetState(() {});
                                                           }
                                                         },
                                                         text: _model.open
@@ -465,7 +465,7 @@ class _PitchdeckWidgetState extends State<PitchdeckWidget> {
                                                           child: Text(
                                                             valueOrDefault<
                                                                 String>(
-                                                              widget
+                                                              widget!
                                                                   .project
                                                                   ?.pitchDeck
                                                                   ?.shortDescription,
@@ -532,10 +532,10 @@ class _PitchdeckWidgetState extends State<PitchdeckWidget> {
                                                         onPressed: () async {
                                                           if (_model.open) {
                                                             _model.open = false;
-                                                            setState(() {});
+                                                            safeSetState(() {});
                                                           } else {
                                                             _model.open = true;
-                                                            setState(() {});
+                                                            safeSetState(() {});
                                                           }
                                                         },
                                                         text: _model.open
@@ -673,7 +673,7 @@ class _PitchdeckWidgetState extends State<PitchdeckWidget> {
                                                           0.0, 6.0, 0.0, 0.0),
                                                   child: Text(
                                                     valueOrDefault<String>(
-                                                      widget.project?.pitchDeck
+                                                      widget!.project?.pitchDeck
                                                           ?.operatingIndustry,
                                                       'not stated',
                                                     ),
@@ -753,7 +753,7 @@ class _PitchdeckWidgetState extends State<PitchdeckWidget> {
                                                           0.0, 6.0, 0.0, 0.0),
                                                   child: Text(
                                                     valueOrDefault<String>(
-                                                      widget.project?.pitchDeck
+                                                      widget!.project?.pitchDeck
                                                           ?.potentialMarket,
                                                       '0',
                                                     ),
@@ -834,7 +834,7 @@ class _PitchdeckWidgetState extends State<PitchdeckWidget> {
                                                   child: Text(
                                                     valueOrDefault<String>(
                                                       formatNumber(
-                                                        widget
+                                                        widget!
                                                             .project
                                                             ?.pitchDeck
                                                             ?.fiveYearProfit,
@@ -922,7 +922,7 @@ class _PitchdeckWidgetState extends State<PitchdeckWidget> {
                                                           0.0, 6.0, 0.0, 0.0),
                                                   child: Text(
                                                     valueOrDefault<String>(
-                                                      widget.project?.pitchDeck
+                                                      widget!.project?.pitchDeck
                                                           ?.investorShare,
                                                       '0',
                                                     ),
@@ -1003,7 +1003,7 @@ class _PitchdeckWidgetState extends State<PitchdeckWidget> {
                                                   child: Text(
                                                     valueOrDefault<String>(
                                                       formatNumber(
-                                                        widget
+                                                        widget!
                                                             .project
                                                             ?.pitchDeck
                                                             ?.neededInvestment,
@@ -1068,7 +1068,7 @@ class _PitchdeckWidgetState extends State<PitchdeckWidget> {
                                         0.0, 40.0, 20.0, 0.0),
                                     child: Text(
                                       valueOrDefault<String>(
-                                        widget.project?.title,
+                                        widget!.project?.title,
                                         'f',
                                       ),
                                       style: FlutterFlowTheme.of(context)
@@ -1110,7 +1110,8 @@ class _PitchdeckWidgetState extends State<PitchdeckWidget> {
                                     borderRadius: BorderRadius.circular(8.0),
                                     child: Image.network(
                                       valueOrDefault<String>(
-                                        widget.project?.pitchDeck?.problemImage,
+                                        widget!
+                                            .project?.pitchDeck?.problemImage,
                                         'q',
                                       ),
                                       fit: BoxFit.cover,
@@ -1145,7 +1146,7 @@ class _PitchdeckWidgetState extends State<PitchdeckWidget> {
                                         20.0, 10.0, 20.0, 32.0),
                                     child: Text(
                                       valueOrDefault<String>(
-                                        widget.project?.pitchDeck
+                                        widget!.project?.pitchDeck
                                             ?.problemDefinintion,
                                         'q',
                                       ),
@@ -1204,10 +1205,11 @@ class _PitchdeckWidgetState extends State<PitchdeckWidget> {
                                         20.0, 24.0, 20.0, 35.0),
                                     child: Builder(
                                       builder: (context) {
-                                        final solutions = widget
+                                        final solutions = widget!
                                                 .project?.pitchDeck?.solutions
                                                 ?.toList() ??
                                             [];
+
                                         return Column(
                                           mainAxisSize: MainAxisSize.max,
                                           children:
@@ -1364,7 +1366,7 @@ class _PitchdeckWidgetState extends State<PitchdeckWidget> {
                                         0.0, 40.0, 20.0, 0.0),
                                     child: Text(
                                       valueOrDefault<String>(
-                                        widget.project?.title,
+                                        widget!.project?.title,
                                         'f',
                                       ),
                                       style: FlutterFlowTheme.of(context)
@@ -1426,7 +1428,7 @@ class _PitchdeckWidgetState extends State<PitchdeckWidget> {
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(8.0),
                                     child: Image.network(
-                                      widget.project!.pitchDeck
+                                      widget!.project!.pitchDeck
                                           .businessModelChart,
                                       fit: BoxFit.cover,
                                     ),
@@ -1439,7 +1441,7 @@ class _PitchdeckWidgetState extends State<PitchdeckWidget> {
                                         20.0, 24.0, 0.0, 0.0),
                                     child: Text(
                                       valueOrDefault<String>(
-                                        widget.project?.pitchDeck
+                                        widget!.project?.pitchDeck
                                             ?.businessModelName,
                                         'q',
                                       ),
@@ -1465,7 +1467,7 @@ class _PitchdeckWidgetState extends State<PitchdeckWidget> {
                                         20.0, 10.0, 20.0, 32.0),
                                     child: Text(
                                       valueOrDefault<String>(
-                                        widget.project?.pitchDeck
+                                        widget!.project?.pitchDeck
                                             ?.businessModelDescription,
                                         'q',
                                       ),
@@ -1487,10 +1489,11 @@ class _PitchdeckWidgetState extends State<PitchdeckWidget> {
                                       0.0, 0.0, 0.0, 32.0),
                                   child: Builder(
                                     builder: (context) {
-                                      final cashflows = widget
+                                      final cashflows = widget!
                                               .project?.pitchDeck?.cashFlows
                                               ?.toList() ??
                                           [];
+
                                       return Column(
                                         mainAxisSize: MainAxisSize.max,
                                         children: List.generate(
@@ -1643,7 +1646,7 @@ class _PitchdeckWidgetState extends State<PitchdeckWidget> {
                                       borderRadius: BorderRadius.circular(8.0),
                                       child: Image.network(
                                         valueOrDefault<String>(
-                                          widget
+                                          widget!
                                               .project?.pitchDeck?.financeChart,
                                           'q',
                                         ),
@@ -1658,7 +1661,7 @@ class _PitchdeckWidgetState extends State<PitchdeckWidget> {
                                             0.0, 24.0, 0.0, 0.0),
                                         child: Text(
                                           valueOrDefault<String>(
-                                            widget.project?.pitchDeck
+                                            widget!.project?.pitchDeck
                                                 ?.financialGrowth,
                                             'q',
                                           ),
@@ -1710,7 +1713,7 @@ class _PitchdeckWidgetState extends State<PitchdeckWidget> {
                                         0.0, 40.0, 20.0, 0.0),
                                     child: Text(
                                       valueOrDefault<String>(
-                                        widget.project?.title,
+                                        widget!.project?.title,
                                         'f',
                                       ),
                                       style: FlutterFlowTheme.of(context)
@@ -1752,7 +1755,7 @@ class _PitchdeckWidgetState extends State<PitchdeckWidget> {
                                         20.0, 24.0, 0.0, 0.0),
                                     child: Text(
                                       valueOrDefault<String>(
-                                        widget.project?.pitchDeck?.marketName,
+                                        widget!.project?.pitchDeck?.marketName,
                                         'q',
                                       ),
                                       style: FlutterFlowTheme.of(context)
@@ -1775,7 +1778,7 @@ class _PitchdeckWidgetState extends State<PitchdeckWidget> {
                                         20.0, 10.0, 20.0, 18.0),
                                     child: Text(
                                       valueOrDefault<String>(
-                                        widget.project?.pitchDeck
+                                        widget!.project?.pitchDeck
                                             ?.marketDescription,
                                         'q',
                                       ),
@@ -1799,7 +1802,7 @@ class _PitchdeckWidgetState extends State<PitchdeckWidget> {
                                     borderRadius: BorderRadius.circular(8.0),
                                     child: Image.network(
                                       valueOrDefault<String>(
-                                        widget.project?.pitchDeck?.marketChart,
+                                        widget!.project?.pitchDeck?.marketChart,
                                         'q',
                                       ),
                                       fit: BoxFit.cover,
@@ -1813,7 +1816,7 @@ class _PitchdeckWidgetState extends State<PitchdeckWidget> {
                                         20.0, 18.0, 20.0, 32.0),
                                     child: Text(
                                       valueOrDefault<String>(
-                                        widget.project?.pitchDeck
+                                        widget!.project?.pitchDeck
                                             ?.marketChartDescription,
                                         'q',
                                       ),
@@ -1935,7 +1938,8 @@ class _PitchdeckWidgetState extends State<PitchdeckWidget> {
                                                                   0.0),
                                                       child: Text(
                                                         valueOrDefault<String>(
-                                                          widget.project?.title,
+                                                          widget!
+                                                              .project?.title,
                                                           'q',
                                                         ),
                                                         style:
@@ -2521,7 +2525,7 @@ class _PitchdeckWidgetState extends State<PitchdeckWidget> {
                                     0.0, 40.0, 20.0, 0.0),
                                 child: Text(
                                   valueOrDefault<String>(
-                                    widget.project?.title,
+                                    widget!.project?.title,
                                     'f',
                                   ),
                                   style: FlutterFlowTheme.of(context)
@@ -2694,7 +2698,7 @@ class _PitchdeckWidgetState extends State<PitchdeckWidget> {
                                         0.0, 40.0, 20.0, 0.0),
                                     child: Text(
                                       valueOrDefault<String>(
-                                        widget.project?.title,
+                                        widget!.project?.title,
                                         'f',
                                       ),
                                       style: FlutterFlowTheme.of(context)
@@ -2752,10 +2756,11 @@ class _PitchdeckWidgetState extends State<PitchdeckWidget> {
                                 ),
                                 Builder(
                                   builder: (context) {
-                                    final status = widget
+                                    final status = widget!
                                             .project?.pitchDeck?.statusAndPlans
                                             ?.toList() ??
                                         [];
+
                                     return SingleChildScrollView(
                                       scrollDirection: Axis.horizontal,
                                       child: Row(
@@ -2794,7 +2799,7 @@ class _PitchdeckWidgetState extends State<PitchdeckWidget> {
                                         20.0, 24.0, 20.0, 32.0),
                                     child: Text(
                                       valueOrDefault<String>(
-                                        widget.project?.pitchDeck
+                                        widget!.project?.pitchDeck
                                             ?.statusDescription,
                                         'q',
                                       ),
@@ -2903,7 +2908,7 @@ class _PitchdeckWidgetState extends State<PitchdeckWidget> {
                                                   0.0, 30.0, 0.0, 0.0),
                                           child: Builder(
                                             builder: (context) {
-                                              final firstYearDone = widget
+                                              final firstYearDone = widget!
                                                       .project
                                                       ?.pitchDeck
                                                       ?.fiveYearsPlan
@@ -2913,6 +2918,7 @@ class _PitchdeckWidgetState extends State<PitchdeckWidget> {
                                                       .toList()
                                                       ?.toList() ??
                                                   [];
+
                                               return Column(
                                                 mainAxisSize: MainAxisSize.max,
                                                 children: List.generate(
@@ -2985,7 +2991,7 @@ class _PitchdeckWidgetState extends State<PitchdeckWidget> {
                                         ),
                                         Builder(
                                           builder: (context) {
-                                            final firstYearNotDone = widget
+                                            final firstYearNotDone = widget!
                                                     .project
                                                     ?.pitchDeck
                                                     ?.fiveYearsPlan
@@ -2995,6 +3001,7 @@ class _PitchdeckWidgetState extends State<PitchdeckWidget> {
                                                     .toList()
                                                     ?.toList() ??
                                                 [];
+
                                             return Column(
                                               mainAxisSize: MainAxisSize.max,
                                               children: List.generate(
@@ -3123,7 +3130,7 @@ class _PitchdeckWidgetState extends State<PitchdeckWidget> {
                                                     0.0, 30.0, 0.0, 0.0),
                                             child: Builder(
                                               builder: (context) {
-                                                final twoYearDone = widget
+                                                final twoYearDone = widget!
                                                         .project
                                                         ?.pitchDeck
                                                         ?.fiveYearsPlan
@@ -3133,6 +3140,7 @@ class _PitchdeckWidgetState extends State<PitchdeckWidget> {
                                                         .toList()
                                                         ?.toList() ??
                                                     [];
+
                                                 return Column(
                                                   mainAxisSize:
                                                       MainAxisSize.max,
@@ -3209,7 +3217,7 @@ class _PitchdeckWidgetState extends State<PitchdeckWidget> {
                                           ),
                                           Builder(
                                             builder: (context) {
-                                              final twoYearNotDone = widget
+                                              final twoYearNotDone = widget!
                                                       .project
                                                       ?.pitchDeck
                                                       ?.fiveYearsPlan
@@ -3219,6 +3227,7 @@ class _PitchdeckWidgetState extends State<PitchdeckWidget> {
                                                       .toList()
                                                       ?.toList() ??
                                                   [];
+
                                               return Column(
                                                 mainAxisSize: MainAxisSize.max,
                                                 children: List.generate(
@@ -3349,7 +3358,7 @@ class _PitchdeckWidgetState extends State<PitchdeckWidget> {
                                                     0.0, 30.0, 0.0, 0.0),
                                             child: Builder(
                                               builder: (context) {
-                                                final threeYearDone = widget
+                                                final threeYearDone = widget!
                                                         .project
                                                         ?.pitchDeck
                                                         ?.fiveYearsPlan
@@ -3359,6 +3368,7 @@ class _PitchdeckWidgetState extends State<PitchdeckWidget> {
                                                         .toList()
                                                         ?.toList() ??
                                                     [];
+
                                                 return Column(
                                                   mainAxisSize:
                                                       MainAxisSize.max,
@@ -3435,7 +3445,7 @@ class _PitchdeckWidgetState extends State<PitchdeckWidget> {
                                           ),
                                           Builder(
                                             builder: (context) {
-                                              final threeYearNotDone = widget
+                                              final threeYearNotDone = widget!
                                                       .project
                                                       ?.pitchDeck
                                                       ?.fiveYearsPlan
@@ -3445,6 +3455,7 @@ class _PitchdeckWidgetState extends State<PitchdeckWidget> {
                                                       .toList()
                                                       ?.toList() ??
                                                   [];
+
                                               return Column(
                                                 mainAxisSize: MainAxisSize.max,
                                                 children: List.generate(
@@ -3575,7 +3586,7 @@ class _PitchdeckWidgetState extends State<PitchdeckWidget> {
                                                     0.0, 30.0, 0.0, 0.0),
                                             child: Builder(
                                               builder: (context) {
-                                                final fourYearDone = widget
+                                                final fourYearDone = widget!
                                                         .project
                                                         ?.pitchDeck
                                                         ?.fiveYearsPlan
@@ -3585,6 +3596,7 @@ class _PitchdeckWidgetState extends State<PitchdeckWidget> {
                                                         .toList()
                                                         ?.toList() ??
                                                     [];
+
                                                 return Column(
                                                   mainAxisSize:
                                                       MainAxisSize.max,
@@ -3661,7 +3673,7 @@ class _PitchdeckWidgetState extends State<PitchdeckWidget> {
                                           ),
                                           Builder(
                                             builder: (context) {
-                                              final fourYearNotDone = widget
+                                              final fourYearNotDone = widget!
                                                       .project
                                                       ?.pitchDeck
                                                       ?.fiveYearsPlan
@@ -3671,6 +3683,7 @@ class _PitchdeckWidgetState extends State<PitchdeckWidget> {
                                                       .toList()
                                                       ?.toList() ??
                                                   [];
+
                                               return Column(
                                                 mainAxisSize: MainAxisSize.max,
                                                 children: List.generate(
@@ -3801,7 +3814,7 @@ class _PitchdeckWidgetState extends State<PitchdeckWidget> {
                                                     0.0, 30.0, 0.0, 0.0),
                                             child: Builder(
                                               builder: (context) {
-                                                final fiveYearDone = widget
+                                                final fiveYearDone = widget!
                                                         .project
                                                         ?.pitchDeck
                                                         ?.fiveYearsPlan
@@ -3811,6 +3824,7 @@ class _PitchdeckWidgetState extends State<PitchdeckWidget> {
                                                         .toList()
                                                         ?.toList() ??
                                                     [];
+
                                                 return Column(
                                                   mainAxisSize:
                                                       MainAxisSize.max,
@@ -3887,7 +3901,7 @@ class _PitchdeckWidgetState extends State<PitchdeckWidget> {
                                           ),
                                           Builder(
                                             builder: (context) {
-                                              final fiveYearNotDone = widget
+                                              final fiveYearNotDone = widget!
                                                       .project
                                                       ?.pitchDeck
                                                       ?.fiveYearsPlan
@@ -3897,6 +3911,7 @@ class _PitchdeckWidgetState extends State<PitchdeckWidget> {
                                                       .toList()
                                                       ?.toList() ??
                                                   [];
+
                                               return Column(
                                                 mainAxisSize: MainAxisSize.max,
                                                 children: List.generate(
@@ -3988,7 +4003,7 @@ class _PitchdeckWidgetState extends State<PitchdeckWidget> {
                           ClipRRect(
                             borderRadius: BorderRadius.circular(0.0),
                             child: Image.network(
-                              widget.project!.cover,
+                              widget!.project!.cover,
                               width: double.infinity,
                               height: 330.0,
                               fit: BoxFit.cover,
@@ -4019,7 +4034,7 @@ class _PitchdeckWidgetState extends State<PitchdeckWidget> {
                                     20.0, 15.0, 20.0, 0.0),
                                 child: Text(
                                   valueOrDefault<String>(
-                                    widget
+                                    widget!
                                         .project?.pitchDeck?.messageToInvestor,
                                     'Q',
                                   ),
@@ -4041,7 +4056,7 @@ class _PitchdeckWidgetState extends State<PitchdeckWidget> {
                                   20.0, 45.0, 20.0, 0.0),
                               child: FFButtonWidget(
                                 onPressed: () async {
-                                  await launchURL(widget
+                                  await launchURL(widget!
                                       .project!.pitchDeck.linkToPrototype);
                                 },
                                 text: 'LAUNCH & EXPLORE APP',
@@ -4089,12 +4104,8 @@ class _PitchdeckWidgetState extends State<PitchdeckWidget> {
                                     context: context,
                                     builder: (context) {
                                       return GestureDetector(
-                                        onTap: () => _model
-                                                .unfocusNode.canRequestFocus
-                                            ? FocusScope.of(context)
-                                                .requestFocus(
-                                                    _model.unfocusNode)
-                                            : FocusScope.of(context).unfocus(),
+                                        onTap: () =>
+                                            FocusScope.of(context).unfocus(),
                                         child: Padding(
                                           padding:
                                               MediaQuery.viewInsetsOf(context),
@@ -4104,7 +4115,7 @@ class _PitchdeckWidgetState extends State<PitchdeckWidget> {
                                                 0.95,
                                             child: BusinessPlanWidget(
                                               businessPlan:
-                                                  widget.project!.businessPlan,
+                                                  widget!.project!.businessPlan,
                                             ),
                                           ),
                                         ),
@@ -4150,7 +4161,7 @@ class _PitchdeckWidgetState extends State<PitchdeckWidget> {
                               child: FFButtonWidget(
                                 onPressed: () async {
                                   await Clipboard.setData(ClipboardData(
-                                      text: widget.project!.pitchDeck.email));
+                                      text: widget!.project!.pitchDeck.email));
                                 },
                                 text: 'COPY EMAIL TO CLIPBOARD',
                                 options: FFButtonOptions(
@@ -4189,7 +4200,7 @@ class _PitchdeckWidgetState extends State<PitchdeckWidget> {
                               child: FFButtonWidget(
                                 onPressed: () async {
                                   await Clipboard.setData(ClipboardData(
-                                      text: widget
+                                      text: widget!
                                           .project!.pitchDeck.phoneNumber));
                                 },
                                 text: 'COPY PHONE NUMBER TO CLIPBOARD',

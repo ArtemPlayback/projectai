@@ -112,6 +112,87 @@ class ShortDescriptionCall {
   }
 }
 
+class CreateNameForUsersQueryCall {
+  static Future<ApiCallResponse> call({
+    String? question = '',
+  }) async {
+    final ffApiRequestBody = '''
+{
+  "question": "${question}"
+}''';
+    return ApiManager.instance.makeApiCall(
+      callName: 'create name for users query',
+      apiUrl:
+          'https://project-s2vh.onrender.com/api/v1/prediction/360964d4-4fba-441c-9b52-d2b51eff3de5',
+      callType: ApiCallType.POST,
+      headers: {},
+      params: {},
+      body: ffApiRequestBody,
+      bodyType: BodyType.JSON,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+      isStreamingApi: false,
+      alwaysAllowBody: false,
+    );
+  }
+}
+
+class ShortDescriptionUserCall {
+  static Future<ApiCallResponse> call({
+    String? question = '',
+  }) async {
+    final ffApiRequestBody = '''
+{
+  "question": "${question}"
+}''';
+    return ApiManager.instance.makeApiCall(
+      callName: 'short description user',
+      apiUrl:
+          'https://project-s2vh.onrender.com/api/v1/prediction/48e2fdb3-1e1b-4830-91f0-09f16053716f',
+      callType: ApiCallType.POST,
+      headers: {},
+      params: {},
+      body: ffApiRequestBody,
+      bodyType: BodyType.JSON,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+      isStreamingApi: false,
+      alwaysAllowBody: false,
+    );
+  }
+}
+
+class ShortDescriptionCompanyCall {
+  static Future<ApiCallResponse> call({
+    String? question = '',
+  }) async {
+    final ffApiRequestBody = '''
+{
+  "question": "${question}"
+}''';
+    return ApiManager.instance.makeApiCall(
+      callName: 'short description company',
+      apiUrl:
+          'https://project-s2vh.onrender.com/api/v1/prediction/b2e4c4c2-4c6a-475a-94b5-d0bc4a7307dd',
+      callType: ApiCallType.POST,
+      headers: {},
+      params: {},
+      body: ffApiRequestBody,
+      bodyType: BodyType.JSON,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+      isStreamingApi: false,
+      alwaysAllowBody: false,
+    );
+  }
+}
+
 class SynonimsCall {
   static Future<ApiCallResponse> call({
     String? question = '',
@@ -151,101 +232,6 @@ class ShortDescriptionCopyCall {
       callName: 'short description Copy',
       apiUrl:
           'https://project-s2vh.onrender.com/api/v1/prediction/dbb8de2e-ba90-4ed0-982a-4cb4a3d1a1b7',
-      callType: ApiCallType.POST,
-      headers: {},
-      params: {},
-      body: ffApiRequestBody,
-      bodyType: BodyType.JSON,
-      returnBody: true,
-      encodeBodyUtf8: false,
-      decodeUtf8: false,
-      cache: false,
-      isStreamingApi: false,
-      alwaysAllowBody: false,
-    );
-  }
-}
-
-class AskCurrentProjCall {
-  static Future<ApiCallResponse> call({
-    String? text = '',
-    String? question = '',
-  }) async {
-    final ffApiRequestBody = '''
-{
-  "question": "${question}",
-  "overrideConfig": {
-    "text": "${text}"
-  }
-}''';
-    return ApiManager.instance.makeApiCall(
-      callName: 'askCurrentProj',
-      apiUrl:
-          'https://ava-ai-3vni.onrender.com/api/v1/prediction/84be1a2b-9bef-46f3-ab53-8ac22bd085c0',
-      callType: ApiCallType.POST,
-      headers: {},
-      params: {},
-      body: ffApiRequestBody,
-      bodyType: BodyType.JSON,
-      returnBody: true,
-      encodeBodyUtf8: false,
-      decodeUtf8: false,
-      cache: false,
-      isStreamingApi: false,
-      alwaysAllowBody: false,
-    );
-  }
-}
-
-class SmartSearchUpsertProjectCall {
-  static Future<ApiCallResponse> call({
-    String? text = '',
-    String? projectName = '',
-    String? firestoreId = '',
-  }) async {
-    final ffApiRequestBody = '''
-{
-  "question": "What's my name?",
-  "overrideConfig": {
-    "text": "${text}"
-  }
-}''';
-    return ApiManager.instance.makeApiCall(
-      callName: 'smart search upsert project',
-      apiUrl:
-          'https://project-s2vh.onrender.com/api/v1/prediction/8aa35bd7-877a-4fa9-a484-7fa89180cf2b',
-      callType: ApiCallType.POST,
-      headers: {},
-      params: {},
-      body: ffApiRequestBody,
-      bodyType: BodyType.JSON,
-      returnBody: true,
-      encodeBodyUtf8: false,
-      decodeUtf8: false,
-      cache: false,
-      isStreamingApi: false,
-      alwaysAllowBody: false,
-    );
-  }
-}
-
-class SmartSearchUpsertNewsCall {
-  static Future<ApiCallResponse> call({
-    String? text = '',
-    String? projectName = '',
-    String? firestoreId = '',
-  }) async {
-    final ffApiRequestBody = '''
-{
-  "question": "What's my name?",
-  "overrideConfig": {
-    "text": "${text}"
-  }
-}''';
-    return ApiManager.instance.makeApiCall(
-      callName: 'smart search upsert news',
-      apiUrl:
-          'https://project-s2vh.onrender.com/api/v1/prediction/8aa35bd7-877a-4fa9-a484-7fa89180cf2b',
       callType: ApiCallType.POST,
       headers: {},
       params: {},
@@ -732,72 +718,6 @@ class MarketingPlanCall {
   }
 }
 
-class GeminiTestCall {
-  static Future<ApiCallResponse> call() async {
-    final ffApiRequestBody = '''
-{
-  "contents": [
-    {
-      "parts": [
-        {
-          "text": "who are you?"
-        }
-      ]
-    }
-  ]
-}''';
-    return ApiManager.instance.makeApiCall(
-      callName: 'gemini test',
-      apiUrl:
-          'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=AIzaSyDULAgRzAL7OhCW9WXQC8n1WckDdG207C8',
-      callType: ApiCallType.POST,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      params: {},
-      body: ffApiRequestBody,
-      bodyType: BodyType.JSON,
-      returnBody: true,
-      encodeBodyUtf8: false,
-      decodeUtf8: false,
-      cache: false,
-      isStreamingApi: false,
-      alwaysAllowBody: false,
-    );
-  }
-}
-
-class LlamaTestCall {
-  static Future<ApiCallResponse> call({
-    String? replicateApiToken = '',
-  }) async {
-    final ffApiRequestBody = '''
-{
-  "input": {
-    "prompt": "Can you write a poem about open source machine learning?"
-  }
-}''';
-    return ApiManager.instance.makeApiCall(
-      callName: 'llama test',
-      apiUrl:
-          'https://api.replicate.com/v1/models/meta/meta-llama-3-70b-instruct/predictions',
-      callType: ApiCallType.POST,
-      headers: {
-        'Authorization': 'Bearer ${replicateApiToken}',
-      },
-      params: {},
-      body: ffApiRequestBody,
-      bodyType: BodyType.JSON,
-      returnBody: true,
-      encodeBodyUtf8: false,
-      decodeUtf8: false,
-      cache: false,
-      isStreamingApi: false,
-      alwaysAllowBody: false,
-    );
-  }
-}
-
 class MakeHookCall {
   static Future<ApiCallResponse> call({
     String? email = '',
@@ -810,7 +730,8 @@ class MakeHookCall {
 }''';
     return ApiManager.instance.makeApiCall(
       callName: 'make hook',
-      apiUrl: 'https://hook.eu1.make.com/c4ye1734k90qtczw08b0x4v6o7ifkpy5',
+      apiUrl:
+          'https://primary-production-c4b7.up.railway.app/webhook/abee0f8d-cebe-4711-b072-5f80523cea2a',
       callType: ApiCallType.POST,
       headers: {},
       params: {},
@@ -843,7 +764,40 @@ class UpsertVectorsNeightnCall {
     return ApiManager.instance.makeApiCall(
       callName: 'upsert vectors neightn',
       apiUrl:
-          'https://primary-production-c4b7.up.railway.app/webhook/a9d58931-b35b-4ee5-a538-da7d171ce782',
+          'https://primary-production-c4b7.up.railway.app/webhook/210fba4c-acdb-449b-86ac-7da935210af4',
+      callType: ApiCallType.POST,
+      headers: {},
+      params: {},
+      body: ffApiRequestBody,
+      bodyType: BodyType.JSON,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+      isStreamingApi: false,
+      alwaysAllowBody: false,
+    );
+  }
+}
+
+class UpsertVectorsTestsCall {
+  static Future<ApiCallResponse> call({
+    String? upsertText = '',
+    String? ownerType = '',
+    String? owner = '',
+    String? documentId = '',
+  }) async {
+    final ffApiRequestBody = '''
+{
+  "upsert_text": "${upsertText}",
+  "owner_type": "${ownerType}",
+  "document_id": "${documentId}",
+  "owner": "${owner}"
+}''';
+    return ApiManager.instance.makeApiCall(
+      callName: 'upsert vectors tests',
+      apiUrl:
+          'https://primary-production-c4b7.up.railway.app/webhook/210fba4c-acdb-449b-86ac-7da935210af4',
       callType: ApiCallType.POST,
       headers: {},
       params: {},
@@ -866,15 +820,13 @@ class UpsertVectorsMessagesCall {
   }) async {
     final ffApiRequestBody = '''
 {
-  "upsert_text": "<upsert_text>",
-  "owner_type": "<owner_type>",
-  "document_id": "<document_id>",
-  "owner": "<owner>"
+  "chat_id": "${chatId}",
+  "text": "${text}"
 }''';
     return ApiManager.instance.makeApiCall(
       callName: 'upsert vectors messages',
       apiUrl:
-          'https://primary-production-c4b7.up.railway.app/webhook-test/ff067384-5035-45d2-a535-b94283e69c1d',
+          'https://primary-production-c4b7.up.railway.app/webhook/ff067384-5035-45d2-a535-b94283e69c1d',
       callType: ApiCallType.POST,
       headers: {},
       params: {},
@@ -890,20 +842,100 @@ class UpsertVectorsMessagesCall {
   }
 }
 
-class SmartSearchNeightnCall {
+class SmartSearchRetrieveVectorsCall {
   static Future<ApiCallResponse> call({
     String? text = '',
     String? userInfo = '',
+    String? currentTime = '',
+    String? images = '',
+    String? messages = '',
   }) async {
     final ffApiRequestBody = '''
 {
   "text": "${text}",
-  "user_info": "${userInfo}"
+  "user_info": "${userInfo}",
+  "messages": "${messages}",
+  "images": "${images}",
+  "current_time": "${currentTime}"
+}''';
+    return ApiManager.instance.makeApiCall(
+      callName: 'smart search retrieve vectors',
+      apiUrl:
+          'https://primary-production-c4b7.up.railway.app/webhook-test/f10d2a34-25bf-408c-9e6f-25002aa43e4f',
+      callType: ApiCallType.POST,
+      headers: {},
+      params: {},
+      body: ffApiRequestBody,
+      bodyType: BodyType.JSON,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+      isStreamingApi: true,
+      alwaysAllowBody: false,
+    );
+  }
+}
+
+class SmartSearchNeightnCall {
+  static Future<ApiCallResponse> call({
+    String? text = '',
+    String? userInfo = '',
+    String? currentTime = '',
+    String? images = '',
+    String? messages = '',
+  }) async {
+    final ffApiRequestBody = '''
+{
+  "text": "${text}",
+  "user_info": "${userInfo}",
+  "images": "${images}",
+  "messages": "${messages}",
+  "current_time": "${currentTime}"
 }''';
     return ApiManager.instance.makeApiCall(
       callName: 'smart search neightn',
       apiUrl:
-          'https://primary-production-c4b7.up.railway.app/webhook/4f914872-79fc-4d3a-afc0-02b39729ccdc',
+          'https://primary-production-c4b7.up.railway.app/webhook/f10d2a34-25bf-408c-9e6f-25002aa43e4f',
+      callType: ApiCallType.POST,
+      headers: {},
+      params: {},
+      body: ffApiRequestBody,
+      bodyType: BodyType.JSON,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+      isStreamingApi: false,
+      alwaysAllowBody: false,
+    );
+  }
+}
+
+class SingleSmartSearchCall {
+  static Future<ApiCallResponse> call({
+    String? text = '',
+    String? userInfo = '',
+    String? currentTime = '',
+    String? images = '',
+    String? messages = '',
+    String? promptsPlan = '',
+    String? currentPrompt = '',
+  }) async {
+    final ffApiRequestBody = '''
+{
+  "text": "${text}",
+  "user_info": "${userInfo}",
+  "images": "${images}",
+  "messages": "${messages}",
+  "prompts_plan": "${promptsPlan}",
+  "current_prompt": "${currentPrompt}",
+  "current_time": "${currentTime}"
+}''';
+    return ApiManager.instance.makeApiCall(
+      callName: 'single smart search',
+      apiUrl:
+          'https://primary-production-c4b7.up.railway.app/webhook/4e6e5838-e1de-4228-9b9a-27cf431c87b0',
       callType: ApiCallType.POST,
       headers: {},
       params: {},
@@ -926,18 +958,21 @@ class SmartSearchMessagesCall {
     String? userId = '',
     String? chatMessages = '',
     String? userInformation = '',
+    dynamic? supabaseMetadataFilterJson,
   }) async {
+    final supabaseMetadataFilter = _serializeJson(supabaseMetadataFilterJson);
     final ffApiRequestBody = '''
 {
-  "question": "${text}",
+  "question": "${text}, your user's id is ${userId}, you need to answer to him",
   "overrideConfig": {
-    "user_id": "${userId}"
+    "user_id": "${userId}",
+    "sessionId": "${chatId}"
   }
 }''';
     return ApiManager.instance.makeApiCall(
       callName: 'smart search messages',
       apiUrl:
-          'https://flowiseai-railway-production-ef1c.up.railway.app/api/v1/prediction/a14b14ac-ac51-4202-ab86-08d4372391b9',
+          'https://project-s2vh.onrender.com/api/v1/prediction/6c3f0a46-da88-4c57-8251-d2cd4ee611c6',
       callType: ApiCallType.POST,
       headers: {},
       params: {},
@@ -978,6 +1013,92 @@ class QABotCall {
       returnBody: true,
       encodeBodyUtf8: false,
       decodeUtf8: false,
+      cache: false,
+      isStreamingApi: false,
+      alwaysAllowBody: false,
+    );
+  }
+}
+
+class OpenAIGptBigCall {
+  static Future<ApiCallResponse> call({
+    dynamic? messagesJson,
+  }) async {
+    final messages = _serializeJson(messagesJson, true);
+    final ffApiRequestBody = '''
+{
+  "model": "gpt-4o",
+  "temperature": 0.6,
+  "stream": true,
+  "messages": ${messages}
+}''';
+    return ApiManager.instance.makeApiCall(
+      callName: 'OpenAI gpt big',
+      apiUrl: 'https://api.openai.com/v1/chat/completions',
+      callType: ApiCallType.POST,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization':
+            'Bearer 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',
+      },
+      params: {},
+      body: ffApiRequestBody,
+      bodyType: BodyType.JSON,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: true,
+      cache: false,
+      isStreamingApi: true,
+      alwaysAllowBody: false,
+    );
+  }
+}
+
+class OpenAIComplexityDefinitionCall {
+  static Future<ApiCallResponse> call({
+    dynamic? messagesJson,
+  }) async {
+    final messages = _serializeJson(messagesJson, true);
+    final ffApiRequestBody = '''
+{
+  "model": "gpt-4o-mini-2024-07-18",
+  "messages": ${messages},
+  "response_format": {
+    "type": "json_schema",
+    "json_schema": {
+      "name": "complexity definition",
+      "description": "defines wether user's request is complex or not",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "complexity": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "complexity"
+        ],
+        "additionalProperties": false
+      },
+      "strict": true
+    }
+  }
+}''';
+    return ApiManager.instance.makeApiCall(
+      callName: 'OpenAI complexity definition',
+      apiUrl: 'https://api.openai.com/v1/chat/completions',
+      callType: ApiCallType.POST,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization':
+            'Bearer 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',
+      },
+      params: {},
+      body: ffApiRequestBody,
+      bodyType: BodyType.JSON,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: true,
       cache: false,
       isStreamingApi: false,
       alwaysAllowBody: false,

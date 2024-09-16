@@ -3,10 +3,11 @@ import 'dart:convert';
 
 import 'serialization_util.dart';
 import '../backend.dart';
-import '../../flutter_flow/flutter_flow_theme.dart';
+import '/flutter_flow/flutter_flow_theme.dart';
 import '../../flutter_flow/flutter_flow_util.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 
 import '../../index.dart';
 import '../../main.dart';
@@ -45,9 +46,7 @@ class _PushNotificationsHandlerState extends State<PushNotificationsHandler> {
     }
     _handledMessageIds.add(message.messageId);
 
-    if (mounted) {
-      setState(() => _loading = true);
-    }
+    safeSetState(() => _loading = true);
     try {
       final initialPageName = message.data['initialPageName'] as String;
       final initialParameterData = getInitialParameterData(message.data);
@@ -63,29 +62,25 @@ class _PushNotificationsHandlerState extends State<PushNotificationsHandler> {
     } catch (e) {
       print('Error: $e');
     } finally {
-      if (mounted) {
-        setState(() => _loading = false);
-      }
+      safeSetState(() => _loading = false);
     }
   }
 
   @override
   void initState() {
     super.initState();
-    handleOpenedPushNotification();
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      handleOpenedPushNotification();
+    });
   }
 
   @override
   Widget build(BuildContext context) => _loading
-      ? Center(
-          child: SizedBox(
-            width: 50.0,
-            height: 50.0,
-            child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(
-                FlutterFlowTheme.of(context).primary,
-              ),
-            ),
+      ? Container(
+          color: Colors.transparent,
+          child: Image.asset(
+            'assets/images/splash_screen_omnis.png',
+            fit: BoxFit.cover,
           ),
         )
       : widget.child;
@@ -113,7 +108,11 @@ class ParameterData {
 final parametersBuilderMap =
     <String, Future<ParameterData> Function(Map<String, dynamic>)>{
   'sign_in': ParameterData.none(),
-  'profile': ParameterData.none(),
+  'profile': (data) async => ParameterData(
+        allParams: {
+          'chosen': getParameter<String>(data, 'chosen'),
+        },
+      ),
   'pitchdeck': (data) async => ParameterData(
         allParams: {
           'project': await getDocumentParameter<ProjectsRecord>(
@@ -242,6 +241,7 @@ final parametersBuilderMap =
         allParams: {
           'company': await getDocumentParameter<ProjectsRecord>(
               data, 'company', ProjectsRecord.fromSnapshot),
+          'isFrom': getParameter<String>(data, 'isFrom'),
         },
       ),
   'information': ParameterData.none(),
@@ -294,14 +294,10 @@ final parametersBuilderMap =
         allParams: {
           'chat': await getDocumentParameter<ChatsRecord>(
               data, 'chat', ChatsRecord.fromSnapshot),
+          'isFrom': getParameter<String>(data, 'isFrom'),
         },
       ),
-  'notifications': (data) async => ParameterData(
-        allParams: {
-          'chat': await getDocumentParameter<ChatsRecord>(
-              data, 'chat', ChatsRecord.fromSnapshot),
-        },
-      ),
+  'notifications': ParameterData.none(),
   'wishlist': (data) async => ParameterData(
         allParams: {
           'chosen': getParameter<String>(data, 'chosen'),
@@ -313,10 +309,44 @@ final parametersBuilderMap =
           'chosen': getParameter<String>(data, 'chosen'),
         },
       ),
-  'history_item': (data) async => ParameterData(
+  'eventParticipants': (data) async => ParameterData(
         allParams: {
-          'chosen': getParameter<String>(data, 'chosen'),
-          'indexItem': getParameter<int>(data, 'indexItem'),
+          'event': await getDocumentParameter<EventsRecord>(
+              data, 'event', EventsRecord.fromSnapshot),
+        },
+      ),
+  'event_information': (data) async => ParameterData(
+        allParams: {
+          'event': await getDocumentParameter<EventsRecord>(
+              data, 'event', EventsRecord.fromSnapshot),
+        },
+      ),
+  'smart_search_all_3': ParameterData.none(),
+  'subscribers': (data) async => ParameterData(
+        allParams: {
+          'user': await getDocumentParameter<UsersRecord>(
+              data, 'user', UsersRecord.fromSnapshot),
+          'company': await getDocumentParameter<ProjectsRecord>(
+              data, 'company', ProjectsRecord.fromSnapshot),
+        },
+      ),
+  'group_chat_settings': (data) async => ParameterData(
+        allParams: {
+          'chat': await getDocumentParameter<ChatsRecord>(
+              data, 'chat', ChatsRecord.fromSnapshot),
+          'isFrom': getParameter<String>(data, 'isFrom'),
+        },
+      ),
+  'group_settings_edit': (data) async => ParameterData(
+        allParams: {
+          'chat': await getDocumentParameter<ChatsRecord>(
+              data, 'chat', ChatsRecord.fromSnapshot),
+        },
+      ),
+  'add_users_groupchat': (data) async => ParameterData(
+        allParams: {
+          'chat': await getDocumentParameter<ChatsRecord>(
+              data, 'chat', ChatsRecord.fromSnapshot),
         },
       ),
 };

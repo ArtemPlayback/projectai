@@ -2,6 +2,7 @@ import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'dart:ui';
+import '/flutter_flow/permissions_util.dart';
 import 'navigationbar_widget.dart' show NavigationbarWidget;
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';

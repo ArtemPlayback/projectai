@@ -42,18 +42,18 @@ class _ParticipantsWidgetState extends State<ParticipantsWidget>
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       _model.participants =
-          widget.event!.participantUsers.toList().cast<ParticipantsStruct>();
+          widget!.event!.participantUsers.toList().cast<ParticipantsStruct>();
       _model.appliedToJoin =
-          widget.event!.usersAppliedToJoin.toList().cast<ParticipantsStruct>();
-      setState(() {});
+          widget!.event!.usersAppliedToJoin.toList().cast<ParticipantsStruct>();
+      safeSetState(() {});
     });
 
     _model.tabBarController = TabController(
       vsync: this,
       length: 2,
       initialIndex: 0,
-    )..addListener(() => setState(() {}));
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    )..addListener(() => safeSetState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -66,7 +66,7 @@ class _ParticipantsWidgetState extends State<ParticipantsWidget>
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<EventsRecord>(
-      stream: EventsRecord.getDocument(widget.event!.reference),
+      stream: EventsRecord.getDocument(widget!.event!.reference),
       builder: (context, snapshot) {
         // Customize what your widget looks like when it's loading.
         if (!snapshot.hasData) {
@@ -85,11 +85,11 @@ class _ParticipantsWidgetState extends State<ParticipantsWidget>
             ),
           );
         }
+
         final participantsEventsRecord = snapshot.data!;
+
         return GestureDetector(
-          onTap: () => _model.unfocusNode.canRequestFocus
-              ? FocusScope.of(context).requestFocus(_model.unfocusNode)
-              : FocusScope.of(context).unfocus(),
+          onTap: () => FocusScope.of(context).unfocus(),
           child: Scaffold(
             key: scaffoldKey,
             backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
@@ -97,13 +97,13 @@ class _ParticipantsWidgetState extends State<ParticipantsWidget>
               children: [
                 Container(
                   width: double.infinity,
-                  height: 75.0,
+                  height: 100.0,
                   decoration: BoxDecoration(
                     color: FlutterFlowTheme.of(context).secondaryBackground,
                   ),
                   child: Padding(
                     padding:
-                        EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 15.0),
+                        EdgeInsetsDirectional.fromSTEB(0.0, 50.0, 0.0, 15.0),
                     child: Row(
                       mainAxisSize: MainAxisSize.max,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -156,7 +156,7 @@ class _ParticipantsWidgetState extends State<ParticipantsWidget>
                 ),
                 Padding(
                   padding:
-                      EdgeInsetsDirectional.fromSTEB(20.0, 80.0, 20.0, 0.0),
+                      EdgeInsetsDirectional.fromSTEB(20.0, 100.0, 20.0, 0.0),
                   child: Column(
                     children: [
                       Align(
@@ -229,6 +229,7 @@ class _ParticipantsWidgetState extends State<ParticipantsWidget>
                                       ),
                                     );
                                   }
+
                                   return ListView.separated(
                                     padding: EdgeInsets.fromLTRB(
                                       0,
@@ -266,7 +267,9 @@ class _ParticipantsWidgetState extends State<ParticipantsWidget>
                                               ),
                                             );
                                           }
+
                                           final rowUsersRecord = snapshot.data!;
+
                                           return Row(
                                             mainAxisSize: MainAxisSize.max,
                                             mainAxisAlignment:
@@ -280,7 +283,10 @@ class _ParticipantsWidgetState extends State<ParticipantsWidget>
                                                         BorderRadius.circular(
                                                             10.0),
                                                     child: Image.network(
-                                                      'https://picsum.photos/seed/100/600',
+                                                      valueOrDefault<String>(
+                                                        rowUsersRecord.photoUrl,
+                                                        'https://firebasestorage.googleapis.com/v0/b/avaai-c0e27.appspot.com/o/dimageenko_Flat_medium_gray_silhouette_of_a_person_from_the_sho_2f244edd-3317-46aa-80ca-f9b06476d361.png?alt=media&token=e63ae723-a3a6-4e0b-a7f1-51e6ffbf866f',
+                                                      ),
                                                       width: 53.0,
                                                       height: 53.0,
                                                       fit: BoxFit.cover,
@@ -318,7 +324,7 @@ class _ParticipantsWidgetState extends State<ParticipantsWidget>
                                                               ),
                                                         ),
                                                         Text(
-                                                          'Applied to Join ${dateTimeFormat('M/d h:mm a', participants2Item.when)}',
+                                                          'Applied to Join ${dateTimeFormat("M/d h:mm a", participants2Item.when)}',
                                                           style: FlutterFlowTheme
                                                                   .of(context)
                                                               .bodyMedium
@@ -363,10 +369,10 @@ class _ParticipantsWidgetState extends State<ParticipantsWidget>
                                                       onPressed: () async {
                                                         _model.removeFromAppliedToJoin(
                                                             participants2Item);
-                                                        setState(() {});
+                                                        safeSetState(() {});
                                                         unawaited(
                                                           () async {
-                                                            await widget.event!
+                                                            await widget!.event!
                                                                 .reference
                                                                 .update({
                                                               ...mapToFirestore(
@@ -407,7 +413,7 @@ class _ParticipantsWidgetState extends State<ParticipantsWidget>
                                                             participants2Item);
                                                         _model.addToParticipants(
                                                             participants2Item);
-                                                        setState(() {});
+                                                        safeSetState(() {});
                                                         _model
                                                             .updateParticipantsAtIndex(
                                                           participants2Index,
@@ -415,10 +421,10 @@ class _ParticipantsWidgetState extends State<ParticipantsWidget>
                                                             ..when =
                                                                 getCurrentTimestamp,
                                                         );
-                                                        setState(() {});
+                                                        safeSetState(() {});
                                                         unawaited(
                                                           () async {
-                                                            await widget.event!
+                                                            await widget!.event!
                                                                 .reference
                                                                 .update({
                                                               ...mapToFirestore(
@@ -469,6 +475,7 @@ class _ParticipantsWidgetState extends State<ParticipantsWidget>
                                       ),
                                     );
                                   }
+
                                   return ListView.separated(
                                     padding: EdgeInsets.fromLTRB(
                                       0,
@@ -506,7 +513,9 @@ class _ParticipantsWidgetState extends State<ParticipantsWidget>
                                               ),
                                             );
                                           }
+
                                           final rowUsersRecord = snapshot.data!;
+
                                           return Row(
                                             mainAxisSize: MainAxisSize.max,
                                             mainAxisAlignment:
@@ -520,7 +529,10 @@ class _ParticipantsWidgetState extends State<ParticipantsWidget>
                                                         BorderRadius.circular(
                                                             10.0),
                                                     child: Image.network(
-                                                      'https://picsum.photos/seed/100/600',
+                                                      valueOrDefault<String>(
+                                                        rowUsersRecord.photoUrl,
+                                                        'https://firebasestorage.googleapis.com/v0/b/avaai-c0e27.appspot.com/o/dimageenko_Flat_medium_gray_silhouette_of_a_person_from_the_sho_2f244edd-3317-46aa-80ca-f9b06476d361.png?alt=media&token=e63ae723-a3a6-4e0b-a7f1-51e6ffbf866f',
+                                                      ),
                                                       width: 53.0,
                                                       height: 53.0,
                                                       fit: BoxFit.cover,
@@ -558,7 +570,7 @@ class _ParticipantsWidgetState extends State<ParticipantsWidget>
                                                               ),
                                                         ),
                                                         Text(
-                                                          'Applied to Join ${dateTimeFormat('M/d h:mm a', participants2Item.when)}',
+                                                          'Applied to Join ${dateTimeFormat("M/d h:mm a", participants2Item.when)}',
                                                           style: FlutterFlowTheme
                                                                   .of(context)
                                                               .bodyMedium
@@ -605,9 +617,9 @@ class _ParticipantsWidgetState extends State<ParticipantsWidget>
                                                       onPressed: () async {
                                                         _model.removeFromParticipants(
                                                             participants2Item);
-                                                        setState(() {});
+                                                        safeSetState(() {});
 
-                                                        await widget
+                                                        await widget!
                                                             .event!.reference
                                                             .update({
                                                           ...mapToFirestore(

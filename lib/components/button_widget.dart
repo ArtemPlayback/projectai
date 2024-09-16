@@ -40,7 +40,7 @@ class _ButtonWidgetState extends State<ButtonWidget> {
     super.initState();
     _model = createModel(context, () => ButtonModel());
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -56,16 +56,16 @@ class _ButtonWidgetState extends State<ButtonWidget> {
       onPressed: () async {
         await widget.action?.call();
       },
-      text: widget.text!,
+      text: widget!.text!,
       options: FFButtonOptions(
         width: double.infinity,
         height: 45.0,
         padding: EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
         iconPadding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-        color: widget.backgroundColor,
+        color: widget!.backgroundColor,
         textStyle: FlutterFlowTheme.of(context).titleSmall.override(
               fontFamily: 'Manrope',
-              color: widget.textColor,
+              color: widget!.textColor,
               fontSize: 16.0,
               letterSpacing: 0.0,
               fontWeight: FontWeight.bold,

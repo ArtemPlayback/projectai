@@ -1,3 +1,4 @@
+import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/backend/schema/structs/index.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
@@ -38,7 +39,7 @@ class _InformationModalWidgetState extends State<InformationModalWidget> {
     super.initState();
     _model = createModel(context, () => InformationModalModel());
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -62,7 +63,7 @@ class _InformationModalWidgetState extends State<InformationModalWidget> {
         child: Container(
           width: double.infinity,
           constraints: BoxConstraints(
-            maxHeight: MediaQuery.sizeOf(context).height * 0.8,
+            maxHeight: MediaQuery.sizeOf(context).height * 0.85,
           ),
           decoration: BoxDecoration(
             color: FlutterFlowTheme.of(context).secondaryBackground,
@@ -79,15 +80,16 @@ class _InformationModalWidgetState extends State<InformationModalWidget> {
                 alignment: AlignmentDirectional(0.0, 1.0),
                 child: Builder(
                   builder: (context) {
-                    if ((widget.user?.description != null &&
-                            widget.user?.description != '') ||
-                        ((widget.user?.sections != null &&
-                                (widget.user?.sections)!.isNotEmpty) ==
+                    if ((widget!.user?.description != null &&
+                            widget!.user?.description != '') ||
+                        ((widget!.user?.sections != null &&
+                                (widget!.user?.sections)!.isNotEmpty) ==
                             true) ||
-                        (widget.user?.professionalInformation != null &&
-                            widget.user?.professionalInformation != '')) {
+                        (widget!.user?.professionalInformation != null &&
+                            widget!.user?.professionalInformation != '') ||
+                        (widget!.user?.socialmedia != null)) {
                       return Align(
-                        alignment: AlignmentDirectional(0.0, 1.0),
+                        alignment: AlignmentDirectional(0.0, -1.0),
                         child: Padding(
                           padding: EdgeInsetsDirectional.fromSTEB(
                               20.0, 0.0, 20.0, 0.0),
@@ -98,8 +100,8 @@ class _InformationModalWidgetState extends State<InformationModalWidget> {
                               mainAxisAlignment: MainAxisAlignment.end,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                if (widget.user?.description != null &&
-                                    widget.user?.description != '')
+                                if (widget!.user?.description != null &&
+                                    widget!.user?.description != '')
                                   Row(
                                     mainAxisSize: MainAxisSize.max,
                                     children: [
@@ -125,7 +127,7 @@ class _InformationModalWidgetState extends State<InformationModalWidget> {
                                                   15.0, 0.0, 0.0, 0.0),
                                           child: Text(
                                             valueOrDefault<String>(
-                                              widget.user?.description,
+                                              widget!.user?.description,
                                               'x',
                                             ),
                                             style: FlutterFlowTheme.of(context)
@@ -141,68 +143,64 @@ class _InformationModalWidgetState extends State<InformationModalWidget> {
                                       ),
                                     ],
                                   ),
-                                if ((widget.user!.subscriptions.isNotEmpty) &&
-                                    (widget.user!.subscribers.isNotEmpty))
-                                  Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        0.0, 30.0, 0.0, 0.0),
-                                    child: Container(
-                                      width: double.infinity,
-                                      height: 1.0,
-                                      decoration: BoxDecoration(
-                                        color: Color(0xFFECECEC),
-                                      ),
+                                Padding(
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      0.0, 30.0, 0.0, 30.0),
+                                  child: Container(
+                                    width: double.infinity,
+                                    height: 1.0,
+                                    decoration: BoxDecoration(
+                                      color: Color(0xFFECECEC),
                                     ),
                                   ),
+                                ),
                                 Column(
                                   mainAxisSize: MainAxisSize.max,
                                   children: [
-                                    StreamBuilder<List<UsersRecord>>(
-                                      stream: queryUsersRecord(
-                                        queryBuilder: (usersRecord) =>
-                                            usersRecord.where(
-                                          'subscriptions',
-                                          arrayContains:
-                                              getSubscriptionsFirestoreData(
-                                            SubscriptionsStruct(
-                                              type: 'user',
-                                              user: widget.user?.reference,
-                                            ),
-                                            true,
-                                          ),
-                                        ),
-                                      ),
-                                      builder: (context, snapshot) {
-                                        // Customize what your widget looks like when it's loading.
-                                        if (!snapshot.hasData) {
-                                          return Center(
-                                            child: SizedBox(
-                                              width: 50.0,
-                                              height: 50.0,
-                                              child: CircularProgressIndicator(
-                                                valueColor:
-                                                    AlwaysStoppedAnimation<
-                                                        Color>(
-                                                  FlutterFlowTheme.of(context)
-                                                      .primary,
+                                    Column(
+                                      mainAxisSize: MainAxisSize.max,
+                                      children: [
+                                        StreamBuilder<List<UsersRecord>>(
+                                          stream: queryUsersRecord(
+                                            queryBuilder: (usersRecord) =>
+                                                usersRecord.where(
+                                              'subscriptions',
+                                              arrayContains:
+                                                  getSubscriptionsFirestoreData(
+                                                SubscriptionsStruct(
+                                                  type: 'user',
+                                                  user: widget!.user?.reference,
                                                 ),
+                                                true,
                                               ),
                                             ),
-                                          );
-                                        }
-                                        List<UsersRecord>
-                                            containerUsersRecordList =
-                                            snapshot.data!;
-                                        return Container(
-                                          decoration: BoxDecoration(),
-                                          child: Visibility(
-                                            visible: (containerUsersRecordList
-                                                    .isNotEmpty) ==
-                                                true,
-                                            child: Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(
-                                                      0.0, 30.0, 0.0, 0.0),
+                                          ),
+                                          builder: (context, snapshot) {
+                                            // Customize what your widget looks like when it's loading.
+                                            if (!snapshot.hasData) {
+                                              return Center(
+                                                child: SizedBox(
+                                                  width: 50.0,
+                                                  height: 50.0,
+                                                  child:
+                                                      CircularProgressIndicator(
+                                                    valueColor:
+                                                        AlwaysStoppedAnimation<
+                                                            Color>(
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .primary,
+                                                    ),
+                                                  ),
+                                                ),
+                                              );
+                                            }
+                                            List<UsersRecord>
+                                                containerUsersRecordList =
+                                                snapshot.data!;
+
+                                            return Container(
+                                              decoration: BoxDecoration(),
                                               child: Row(
                                                 mainAxisSize: MainAxisSize.max,
                                                 mainAxisAlignment:
@@ -240,7 +238,12 @@ class _InformationModalWidgetState extends State<InformationModalWidget> {
                                                                     0.0,
                                                                     0.0),
                                                         child: Text(
-                                                          '${containerUsersRecordList.length.toString()} subscribers',
+                                                          '${valueOrDefault<String>(
+                                                            containerUsersRecordList
+                                                                .length
+                                                                .toString(),
+                                                            '0',
+                                                          )} subscribers',
                                                           style: FlutterFlowTheme
                                                                   .of(context)
                                                               .bodyMedium
@@ -261,21 +264,12 @@ class _InformationModalWidgetState extends State<InformationModalWidget> {
                                                   ),
                                                 ],
                                               ),
-                                            ),
-                                          ),
-                                        );
-                                      },
+                                            );
+                                          },
+                                        ),
+                                      ],
                                     ),
-                                  ],
-                                ),
-                                if ((widget.user?.subscriptions != null &&
-                                        (widget.user?.subscriptions)!
-                                            .isNotEmpty) ==
-                                    true)
-                                  Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        0.0, 8.0, 0.0, 0.0),
-                                    child: Row(
+                                    Row(
                                       mainAxisSize: MainAxisSize.max,
                                       children: [
                                         Container(
@@ -298,7 +292,12 @@ class _InformationModalWidgetState extends State<InformationModalWidget> {
                                                 EdgeInsetsDirectional.fromSTEB(
                                                     15.0, 0.0, 0.0, 0.0),
                                             child: Text(
-                                              '${widget.user?.subscriptions?.length?.toString()} subscriptions',
+                                              '${valueOrDefault<String>(
+                                                widget!
+                                                    .user?.subscriptions?.length
+                                                    ?.toString(),
+                                                '0',
+                                              )} subscriptions',
                                               style: FlutterFlowTheme.of(
                                                       context)
                                                   .bodyMedium
@@ -313,17 +312,18 @@ class _InformationModalWidgetState extends State<InformationModalWidget> {
                                         ),
                                       ],
                                     ),
-                                  ),
-                                if ((widget.user?.socialmedia?.instagram !=
+                                  ].divide(SizedBox(height: 8.0)),
+                                ),
+                                if ((widget!.user?.socialmedia?.instagram !=
                                             null &&
-                                        widget.user?.socialmedia?.instagram !=
+                                        widget!.user?.socialmedia?.instagram !=
                                             '') ||
-                                    (widget.user?.socialmedia?.telegram !=
+                                    (widget!.user?.socialmedia?.telegram !=
                                             null &&
-                                        widget.user?.socialmedia?.telegram !=
+                                        widget!.user?.socialmedia?.telegram !=
                                             '') ||
-                                    (widget.user?.socialmedia?.email != null &&
-                                        widget.user?.socialmedia?.email != ''))
+                                    (widget!.user?.socialmedia?.email != null &&
+                                        widget!.user?.socialmedia?.email != ''))
                                   Padding(
                                     padding: EdgeInsetsDirectional.fromSTEB(
                                         0.0, 30.0, 0.0, 30.0),
@@ -335,16 +335,16 @@ class _InformationModalWidgetState extends State<InformationModalWidget> {
                                       ),
                                     ),
                                   ),
-                                if ((widget.user?.socialmedia?.instagram !=
+                                if ((widget!.user?.socialmedia?.instagram !=
                                             null &&
-                                        widget.user?.socialmedia?.instagram !=
+                                        widget!.user?.socialmedia?.instagram !=
                                             '') ||
-                                    (widget.user?.socialmedia?.telegram !=
+                                    (widget!.user?.socialmedia?.telegram !=
                                             null &&
-                                        widget.user?.socialmedia?.telegram !=
+                                        widget!.user?.socialmedia?.telegram !=
                                             '') ||
-                                    (widget.user?.socialmedia?.email != null &&
-                                        widget.user?.socialmedia?.email != ''))
+                                    (widget!.user?.socialmedia?.email != null &&
+                                        widget!.user?.socialmedia?.email != ''))
                                   Padding(
                                     padding: EdgeInsetsDirectional.fromSTEB(
                                         0.0, 0.0, 0.0, 8.0),
@@ -361,8 +361,8 @@ class _InformationModalWidgetState extends State<InformationModalWidget> {
                                           ),
                                     ),
                                   ),
-                                if (widget.user?.socialmedia?.email != null &&
-                                    widget.user?.socialmedia?.email != '')
+                                if (widget!.user?.socialmedia?.email != null &&
+                                    widget!.user?.socialmedia?.email != '')
                                   Padding(
                                     padding: EdgeInsetsDirectional.fromSTEB(
                                         0.0, 8.0, 0.0, 0.0),
@@ -373,7 +373,7 @@ class _InformationModalWidgetState extends State<InformationModalWidget> {
                                       highlightColor: Colors.transparent,
                                       onTap: () async {
                                         await Clipboard.setData(ClipboardData(
-                                            text: widget
+                                            text: widget!
                                                 .user!.socialmedia.email));
                                       },
                                       child: Row(
@@ -400,7 +400,7 @@ class _InformationModalWidgetState extends State<InformationModalWidget> {
                                                       15.0, 0.0, 0.0, 0.0),
                                               child: Text(
                                                 valueOrDefault<String>(
-                                                  widget
+                                                  widget!
                                                       .user?.socialmedia?.email,
                                                   'email',
                                                 ),
@@ -422,9 +422,9 @@ class _InformationModalWidgetState extends State<InformationModalWidget> {
                                       ),
                                     ),
                                   ),
-                                if (widget.user?.socialmedia?.instagram !=
+                                if (widget!.user?.socialmedia?.instagram !=
                                         null &&
-                                    widget.user?.socialmedia?.instagram != '')
+                                    widget!.user?.socialmedia?.instagram != '')
                                   Padding(
                                     padding: EdgeInsetsDirectional.fromSTEB(
                                         0.0, 8.0, 0.0, 0.0),
@@ -456,7 +456,7 @@ class _InformationModalWidgetState extends State<InformationModalWidget> {
                                                     15.0, 0.0, 0.0, 0.0),
                                             child: Text(
                                               valueOrDefault<String>(
-                                                widget.user?.socialmedia
+                                                widget!.user?.socialmedia
                                                     ?.instagram,
                                                 'email',
                                               ),
@@ -475,9 +475,9 @@ class _InformationModalWidgetState extends State<InformationModalWidget> {
                                       ],
                                     ),
                                   ),
-                                if (widget.user?.socialmedia?.telegram !=
+                                if (widget!.user?.socialmedia?.telegram !=
                                         null &&
-                                    widget.user?.socialmedia?.telegram != '')
+                                    widget!.user?.socialmedia?.telegram != '')
                                   Padding(
                                     padding: EdgeInsetsDirectional.fromSTEB(
                                         0.0, 8.0, 0.0, 0.0),
@@ -509,7 +509,7 @@ class _InformationModalWidgetState extends State<InformationModalWidget> {
                                                     15.0, 0.0, 0.0, 0.0),
                                             child: Text(
                                               valueOrDefault<String>(
-                                                widget.user?.socialmedia
+                                                widget!.user?.socialmedia
                                                     ?.telegram,
                                                 'email',
                                               ),
@@ -528,7 +528,7 @@ class _InformationModalWidgetState extends State<InformationModalWidget> {
                                       ],
                                     ),
                                   ),
-                                if (widget.user?.socialmedia != null)
+                                if (widget!.user?.socialmedia != null)
                                   Padding(
                                     padding: EdgeInsetsDirectional.fromSTEB(
                                         0.0, 30.0, 0.0, 30.0),
@@ -540,9 +540,9 @@ class _InformationModalWidgetState extends State<InformationModalWidget> {
                                       ),
                                     ),
                                   ),
-                                if (widget.user?.professionalInformation !=
+                                if (widget!.user?.professionalInformation !=
                                         null &&
-                                    widget.user?.professionalInformation != '')
+                                    widget!.user?.professionalInformation != '')
                                   Column(
                                     mainAxisSize: MainAxisSize.max,
                                     crossAxisAlignment:
@@ -565,7 +565,7 @@ class _InformationModalWidgetState extends State<InformationModalWidget> {
                                             0.0, 5.0, 0.0, 0.0),
                                         child: Text(
                                           valueOrDefault<String>(
-                                            widget
+                                            widget!
                                                 .user?.professionalInformation,
                                             'f',
                                           ),
@@ -598,8 +598,16 @@ class _InformationModalWidgetState extends State<InformationModalWidget> {
                                   ),
                                 Builder(
                                   builder: (context) {
-                                    final sections =
-                                        widget.user?.sections?.toList() ?? [];
+                                    final sections = widget!.user?.sections
+                                            ?.where((e) =>
+                                                (e.title != null &&
+                                                    e.title != '') &&
+                                                (e.text != null &&
+                                                    e.text != ''))
+                                            .toList()
+                                            ?.toList() ??
+                                        [];
+
                                     return ListView.builder(
                                       padding: EdgeInsets.zero,
                                       shrinkWrap: true,
@@ -666,6 +674,141 @@ class _InformationModalWidgetState extends State<InformationModalWidget> {
                                     );
                                   },
                                 ),
+                                if (widget!.user?.reference ==
+                                    currentUserReference)
+                                  Align(
+                                    alignment: AlignmentDirectional(0.0, -1.0),
+                                    child: Padding(
+                                      padding: EdgeInsetsDirectional.fromSTEB(
+                                          0.0, 20.0, 0.0, 40.0),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(10.0),
+                                          border: Border.all(
+                                            color: FlutterFlowTheme.of(context)
+                                                .textAndStroke,
+                                          ),
+                                        ),
+                                        child: Padding(
+                                          padding:
+                                              EdgeInsetsDirectional.fromSTEB(
+                                                  20.0, 20.0, 20.0, 40.0),
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
+                                            children: [
+                                              Container(
+                                                width: 140.0,
+                                                height: 140.0,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          10.0),
+                                                ),
+                                                child: Align(
+                                                  alignment:
+                                                      AlignmentDirectional(
+                                                          0.0, 0.0),
+                                                  child: Padding(
+                                                    padding:
+                                                        EdgeInsetsDirectional
+                                                            .fromSTEB(
+                                                                21.0,
+                                                                15.0,
+                                                                15.0,
+                                                                15.0),
+                                                    child: FaIcon(
+                                                      FontAwesomeIcons.userEdit,
+                                                      color:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .primary,
+                                                      size: 75.0,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding: EdgeInsetsDirectional
+                                                    .fromSTEB(
+                                                        60.0, 0.0, 60.0, 0.0),
+                                                child: Text(
+                                                  'Wanna edit profile?',
+                                                  textAlign: TextAlign.center,
+                                                  style: FlutterFlowTheme.of(
+                                                          context)
+                                                      .bodyMedium
+                                                      .override(
+                                                        fontFamily:
+                                                            'LTSuperior',
+                                                        fontSize: 18.0,
+                                                        letterSpacing: 0.0,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        useGoogleFonts: false,
+                                                      ),
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding: EdgeInsetsDirectional
+                                                    .fromSTEB(
+                                                        60.0, 5.0, 60.0, 0.0),
+                                                child: Text(
+                                                  'Tell about yourself to improve your experience in Omnis',
+                                                  textAlign: TextAlign.center,
+                                                  style: FlutterFlowTheme.of(
+                                                          context)
+                                                      .bodyMedium
+                                                      .override(
+                                                        fontFamily:
+                                                            'LTSuperior',
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .secondaryText,
+                                                        fontSize: 16.0,
+                                                        letterSpacing: 0.0,
+                                                        fontWeight:
+                                                            FontWeight.normal,
+                                                        useGoogleFonts: false,
+                                                      ),
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding: EdgeInsetsDirectional
+                                                    .fromSTEB(
+                                                        30.0, 20.0, 30.0, 0.0),
+                                                child: wrapWithModel(
+                                                  model: _model
+                                                      .buttonFixedSizeModel1,
+                                                  updateCallback: () =>
+                                                      safeSetState(() {}),
+                                                  child: ButtonFixedSizeWidget(
+                                                    width: 458.0,
+                                                    height: 50.0,
+                                                    buttonColor:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .primary,
+                                                    text: 'Edit profile',
+                                                    fontsize: 15,
+                                                    textcolor: Colors.white,
+                                                    showLoadingIndicator: false,
+                                                    action: () async {
+                                                      context.pushNamed(
+                                                          'information');
+                                                    },
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
                               ].addToStart(SizedBox(height: 85.0)),
                             ),
                           ),
@@ -752,8 +895,8 @@ class _InformationModalWidgetState extends State<InformationModalWidget> {
                                     padding: EdgeInsetsDirectional.fromSTEB(
                                         30.0, 20.0, 30.0, 0.0),
                                     child: wrapWithModel(
-                                      model: _model.buttonFixedSizeModel,
-                                      updateCallback: () => setState(() {}),
+                                      model: _model.buttonFixedSizeModel2,
+                                      updateCallback: () => safeSetState(() {}),
                                       child: ButtonFixedSizeWidget(
                                         width: 458.0,
                                         height: 50.0,
@@ -794,10 +937,10 @@ class _InformationModalWidgetState extends State<InformationModalWidget> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        '${widget.user?.displayName}',
+                        '${widget!.user?.displayName}',
                         style: FlutterFlowTheme.of(context).bodyMedium.override(
                               fontFamily: 'LTSuperior',
-                              fontSize: 16.0,
+                              fontSize: 18.0,
                               letterSpacing: 0.0,
                               fontWeight: FontWeight.w500,
                               useGoogleFonts: false,
@@ -807,11 +950,11 @@ class _InformationModalWidgetState extends State<InformationModalWidget> {
                         borderColor: FlutterFlowTheme.of(context).textAndStroke,
                         borderRadius: 10.0,
                         borderWidth: 1.0,
-                        buttonSize: 40.0,
+                        buttonSize: 36.0,
                         icon: Icon(
                           Icons.close_rounded,
-                          color: FlutterFlowTheme.of(context).primaryText,
-                          size: 24.0,
+                          color: FlutterFlowTheme.of(context).secondaryText,
+                          size: 20.0,
                         ),
                         onPressed: () async {
                           Navigator.pop(context);

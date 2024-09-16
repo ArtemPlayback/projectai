@@ -1,13 +1,15 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/backend/schema/structs/index.dart';
+import '/components/company_small_card_widget.dart';
 import '/components/event_card_small_widget.dart';
 import '/components/image_slider_widget.dart';
 import '/components/information_modal_widget.dart';
 import '/components/navigate_back_widget.dart';
 import '/components/navigationbar_widget.dart';
-import '/components/project_small_card_widget.dart';
+import '/components/subscribers_mini_widget.dart';
 import '/components/toggle_widget.dart';
+import '/flutter_flow/flutter_flow_expanded_image_view.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -26,6 +28,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import 'user_page_model.dart';
 export 'user_page_model.dart';
@@ -55,28 +58,28 @@ class _UserPageWidgetState extends State<UserPageWidget> {
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       _model.subscribedPeople =
-          widget.user!.subscribers.toList().cast<SubscriptionsStruct>();
+          widget!.user!.subscribers.toList().cast<SubscriptionsStruct>();
       _model.subscribed = (currentUserDocument?.subscriptions?.toList() ?? [])
-              .where((e) => e.user == widget.user?.reference)
+              .where((e) => e.user == widget!.user?.reference)
               .toList()
               .length >
           0;
-      setState(() {});
+      safeSetState(() {});
       await Future.wait([
         Future(() async {
-          if ((widget.user?.products != null &&
-                  (widget.user?.products)!.isNotEmpty) ==
+          if ((widget!.user?.products != null &&
+                  (widget!.user?.products)!.isNotEmpty) ==
               false) {
             _model.productsQuery = await queryProductsRecordOnce(
               queryBuilder: (productsRecord) => productsRecord.where(
                 'owner_person',
-                isEqualTo: widget.user?.reference,
+                isEqualTo: widget!.user?.reference,
               ),
             );
           }
         }),
         Future(() async {
-          if (widget.user!.events.isNotEmpty) {
+          if (widget!.user!.events.isNotEmpty) {
             _model.eventsQuery = await queryEventsRecordOnce(
               queryBuilder: (eventsRecord) => eventsRecord.where(
                 'user',
@@ -86,11 +89,11 @@ class _UserPageWidgetState extends State<UserPageWidget> {
           }
         }),
         Future(() async {
-          if (widget.user!.projects.isNotEmpty) {
+          if (widget!.user!.projects.isNotEmpty) {
             _model.projectsQuery = await queryProjectsRecordOnce(
               queryBuilder: (projectsRecord) => projectsRecord.where(
                 'user',
-                isEqualTo: currentUserReference,
+                isEqualTo: widget!.user?.reference,
               ),
             );
           }
@@ -98,7 +101,7 @@ class _UserPageWidgetState extends State<UserPageWidget> {
       ]);
     });
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -111,9 +114,7 @@ class _UserPageWidgetState extends State<UserPageWidget> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => _model.unfocusNode.canRequestFocus
-          ? FocusScope.of(context).requestFocus(_model.unfocusNode)
-          : FocusScope.of(context).unfocus(),
+      onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
@@ -129,8 +130,8 @@ class _UserPageWidgetState extends State<UserPageWidget> {
                     alignment: AlignmentDirectional(0.0, 0.0),
                     child: Builder(
                       builder: (context) {
-                        if (widget.user?.cover != null &&
-                            widget.user?.cover != '') {
+                        if (widget!.user?.cover != null &&
+                            widget!.user?.cover != '') {
                           return Container(
                             width: double.infinity,
                             height: MediaQuery.sizeOf(context).width - 45,
@@ -140,7 +141,7 @@ class _UserPageWidgetState extends State<UserPageWidget> {
                               image: DecorationImage(
                                 fit: BoxFit.fill,
                                 image: Image.network(
-                                  widget.user!.cover,
+                                  widget!.user!.cover,
                                 ).image,
                               ),
                               borderRadius: BorderRadius.only(
@@ -193,7 +194,10 @@ class _UserPageWidgetState extends State<UserPageWidget> {
                                               borderRadius:
                                                   BorderRadius.circular(360.0),
                                               child: Image.network(
-                                                widget.user!.photoUrl,
+                                                valueOrDefault<String>(
+                                                  widget!.user?.photoUrl,
+                                                  'https://t4.ftcdn.net/jpg/02/17/34/67/360_F_217346796_TSg5VcYjsFxZtIDK6Qdctg3yqAapG7Xa.jpg',
+                                                ),
                                                 width: 83.0,
                                                 height: 83.0,
                                                 fit: BoxFit.cover,
@@ -211,7 +215,7 @@ class _UserPageWidgetState extends State<UserPageWidget> {
                                               children: [
                                                 Text(
                                                   valueOrDefault<String>(
-                                                    widget.user?.displayName,
+                                                    widget!.user?.displayName,
                                                     'Name',
                                                   ),
                                                   style: FlutterFlowTheme.of(
@@ -251,7 +255,7 @@ class _UserPageWidgetState extends State<UserPageWidget> {
                                     ),
                                     Builder(
                                       builder: (context) {
-                                        if (widget.user?.reference !=
+                                        if (widget!.user?.reference !=
                                             currentUserReference) {
                                           return Padding(
                                             padding:
@@ -274,7 +278,7 @@ class _UserPageWidgetState extends State<UserPageWidget> {
                                                         model: _model
                                                             .buttonInfinityModel1,
                                                         updateCallback: () =>
-                                                            setState(() {}),
+                                                            safeSetState(() {}),
                                                         child:
                                                             ButtonInfinityWidget(
                                                           width: 428.0,
@@ -300,15 +304,15 @@ class _UserPageWidgetState extends State<UserPageWidget> {
                                                               queryParameters: {
                                                                 'user':
                                                                     serializeParam(
-                                                                  widget.user,
+                                                                  widget!.user,
                                                                   ParamType
                                                                       .Document,
                                                                 ),
                                                               }.withoutNulls,
                                                               extra: <String,
                                                                   dynamic>{
-                                                                'user':
-                                                                    widget.user,
+                                                                'user': widget!
+                                                                    .user,
                                                               },
                                                             );
                                                           },
@@ -317,7 +321,7 @@ class _UserPageWidgetState extends State<UserPageWidget> {
                                                     ),
                                                   ),
                                                 ),
-                                                if (widget.user?.reference !=
+                                                if (widget!.user?.reference !=
                                                     currentUserReference)
                                                   Builder(
                                                     builder: (context) {
@@ -357,10 +361,11 @@ class _UserPageWidgetState extends State<UserPageWidget> {
                                                                   () async {
                                                                 _model.subscribed =
                                                                     true;
-                                                                setState(() {});
+                                                                safeSetState(
+                                                                    () {});
                                                                 unawaited(
                                                                   () async {
-                                                                    await widget
+                                                                    await widget!
                                                                         .user!
                                                                         .reference
                                                                         .update({
@@ -396,7 +401,7 @@ class _UserPageWidgetState extends State<UserPageWidget> {
                                                                               updateSubscriptionsStruct(
                                                                                 SubscriptionsStruct(
                                                                                   type: 'User',
-                                                                                  user: widget.user?.reference,
+                                                                                  user: widget!.user?.reference,
                                                                                 ),
                                                                                 clearUnsetFields: false,
                                                                               ),
@@ -437,10 +442,11 @@ class _UserPageWidgetState extends State<UserPageWidget> {
                                                               onTap: () async {
                                                                 _model.subscribed =
                                                                     false;
-                                                                setState(() {});
+                                                                safeSetState(
+                                                                    () {});
                                                                 unawaited(
                                                                   () async {
-                                                                    await widget
+                                                                    await widget!
                                                                         .user!
                                                                         .reference
                                                                         .update({
@@ -476,7 +482,7 @@ class _UserPageWidgetState extends State<UserPageWidget> {
                                                                               updateSubscriptionsStruct(
                                                                                 SubscriptionsStruct(
                                                                                   type: 'User',
-                                                                                  user: widget.user?.reference,
+                                                                                  user: widget!.user?.reference,
                                                                                 ),
                                                                                 clearUnsetFields: false,
                                                                               ),
@@ -564,7 +570,7 @@ class _UserPageWidgetState extends State<UserPageWidget> {
                                                       ),
                                                       onPressed: () async {
                                                         if (currentUserReference ==
-                                                            widget.user
+                                                            widget!.user
                                                                 ?.reference) {
                                                           context.pushNamed(
                                                               'settings');
@@ -577,18 +583,11 @@ class _UserPageWidgetState extends State<UserPageWidget> {
                                                                     .transparent,
                                                             barrierColor: Color(
                                                                 0x66000000),
-                                                            enableDrag: false,
                                                             context: context,
                                                             builder: (context) {
                                                               return GestureDetector(
-                                                                onTap: () => _model
-                                                                        .unfocusNode
-                                                                        .canRequestFocus
-                                                                    ? FocusScope.of(
-                                                                            context)
-                                                                        .requestFocus(_model
-                                                                            .unfocusNode)
-                                                                    : FocusScope.of(
+                                                                onTap: () =>
+                                                                    FocusScope.of(
                                                                             context)
                                                                         .unfocus(),
                                                                 child: Padding(
@@ -597,7 +596,7 @@ class _UserPageWidgetState extends State<UserPageWidget> {
                                                                           context),
                                                                   child:
                                                                       UserOptionsWidget(
-                                                                    user: widget
+                                                                    user: widget!
                                                                         .user!,
                                                                   ),
                                                                 ),
@@ -636,7 +635,7 @@ class _UserPageWidgetState extends State<UserPageWidget> {
                                                         model: _model
                                                             .buttonInfinityModel2,
                                                         updateCallback: () =>
-                                                            setState(() {}),
+                                                            safeSetState(() {}),
                                                         child:
                                                             ButtonInfinityWidget(
                                                           width: 700.0,
@@ -670,14 +669,8 @@ class _UserPageWidgetState extends State<UserPageWidget> {
                                                               builder:
                                                                   (context) {
                                                                 return GestureDetector(
-                                                                  onTap: () => _model
-                                                                          .unfocusNode
-                                                                          .canRequestFocus
-                                                                      ? FocusScope.of(
-                                                                              context)
-                                                                          .requestFocus(_model
-                                                                              .unfocusNode)
-                                                                      : FocusScope.of(
+                                                                  onTap: () =>
+                                                                      FocusScope.of(
                                                                               context)
                                                                           .unfocus(),
                                                                   child:
@@ -786,32 +779,74 @@ class _UserPageWidgetState extends State<UserPageWidget> {
                                             hoverColor: Colors.transparent,
                                             highlightColor: Colors.transparent,
                                             onTap: () async {
-                                              GoRouter.of(context)
-                                                  .prepareAuthEvent();
-                                              await authManager.signOut();
-                                              GoRouter.of(context)
-                                                  .clearRedirectLocation();
-
-                                              context.goNamedAuth(
-                                                  'sign_in', context.mounted);
-                                            },
-                                            child: ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(360.0),
-                                              child: Image.network(
-                                                valueOrDefault<String>(
-                                                  widget.user?.photoUrl !=
-                                                              null &&
-                                                          widget.user
-                                                                  ?.photoUrl !=
-                                                              ''
-                                                      ? widget.user?.photoUrl
-                                                      : 'https://t4.ftcdn.net/jpg/02/17/34/67/360_F_217346796_TSg5VcYjsFxZtIDK6Qdctg3yqAapG7Xa.jpg',
-                                                  'https://t4.ftcdn.net/jpg/02/17/34/67/360_F_217346796_TSg5VcYjsFxZtIDK6Qdctg3yqAapG7Xa.jpg',
+                                              await Navigator.push(
+                                                context,
+                                                PageTransition(
+                                                  type: PageTransitionType.fade,
+                                                  child:
+                                                      FlutterFlowExpandedImageView(
+                                                    image: Image.network(
+                                                      valueOrDefault<String>(
+                                                        widget!.user?.photoUrl !=
+                                                                    null &&
+                                                                widget!.user
+                                                                        ?.photoUrl !=
+                                                                    ''
+                                                            ? widget!
+                                                                .user?.photoUrl
+                                                            : 'https://firebasestorage.googleapis.com/v0/b/avaai-c0e27.appspot.com/o/dimageenko_Flat_medium_gray_silhouette_of_a_person_from_the_sho_2f244edd-3317-46aa-80ca-f9b06476d361.png?alt=media&token=e63ae723-a3a6-4e0b-a7f1-51e6ffbf866f',
+                                                        'https://t4.ftcdn.net/jpg/02/17/34/67/360_F_217346796_TSg5VcYjsFxZtIDK6Qdctg3yqAapG7Xa.jpg',
+                                                      ),
+                                                      fit: BoxFit.contain,
+                                                    ),
+                                                    allowRotation: false,
+                                                    tag: valueOrDefault<String>(
+                                                      widget!.user?.photoUrl !=
+                                                                  null &&
+                                                              widget!.user
+                                                                      ?.photoUrl !=
+                                                                  ''
+                                                          ? widget!
+                                                              .user?.photoUrl
+                                                          : 'https://firebasestorage.googleapis.com/v0/b/avaai-c0e27.appspot.com/o/dimageenko_Flat_medium_gray_silhouette_of_a_person_from_the_sho_2f244edd-3317-46aa-80ca-f9b06476d361.png?alt=media&token=e63ae723-a3a6-4e0b-a7f1-51e6ffbf866f',
+                                                      'https://t4.ftcdn.net/jpg/02/17/34/67/360_F_217346796_TSg5VcYjsFxZtIDK6Qdctg3yqAapG7Xa.jpg',
+                                                    ),
+                                                    useHeroAnimation: true,
+                                                  ),
                                                 ),
-                                                width: 83.0,
-                                                height: 83.0,
-                                                fit: BoxFit.cover,
+                                              );
+                                            },
+                                            child: Hero(
+                                              tag: valueOrDefault<String>(
+                                                widget!.user?.photoUrl !=
+                                                            null &&
+                                                        widget!.user
+                                                                ?.photoUrl !=
+                                                            ''
+                                                    ? widget!.user?.photoUrl
+                                                    : 'https://firebasestorage.googleapis.com/v0/b/avaai-c0e27.appspot.com/o/dimageenko_Flat_medium_gray_silhouette_of_a_person_from_the_sho_2f244edd-3317-46aa-80ca-f9b06476d361.png?alt=media&token=e63ae723-a3a6-4e0b-a7f1-51e6ffbf866f',
+                                                'https://t4.ftcdn.net/jpg/02/17/34/67/360_F_217346796_TSg5VcYjsFxZtIDK6Qdctg3yqAapG7Xa.jpg',
+                                              ),
+                                              transitionOnUserGestures: true,
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                        360.0),
+                                                child: Image.network(
+                                                  valueOrDefault<String>(
+                                                    widget!.user?.photoUrl !=
+                                                                null &&
+                                                            widget!.user
+                                                                    ?.photoUrl !=
+                                                                ''
+                                                        ? widget!.user?.photoUrl
+                                                        : 'https://firebasestorage.googleapis.com/v0/b/avaai-c0e27.appspot.com/o/dimageenko_Flat_medium_gray_silhouette_of_a_person_from_the_sho_2f244edd-3317-46aa-80ca-f9b06476d361.png?alt=media&token=e63ae723-a3a6-4e0b-a7f1-51e6ffbf866f',
+                                                    'https://t4.ftcdn.net/jpg/02/17/34/67/360_F_217346796_TSg5VcYjsFxZtIDK6Qdctg3yqAapG7Xa.jpg',
+                                                  ),
+                                                  width: 83.0,
+                                                  height: 83.0,
+                                                  fit: BoxFit.cover,
+                                                ),
                                               ),
                                             ),
                                           ),
@@ -826,8 +861,8 @@ class _UserPageWidgetState extends State<UserPageWidget> {
                                               children: [
                                                 Text(
                                                   valueOrDefault<String>(
-                                                    widget.user?.displayName,
-                                                    'er',
+                                                    widget!.user?.displayName,
+                                                    'Name',
                                                   ),
                                                   style: FlutterFlowTheme.of(
                                                           context)
@@ -847,7 +882,11 @@ class _UserPageWidgetState extends State<UserPageWidget> {
                                                       ),
                                                 ),
                                                 Text(
-                                                  'Last seen recently',
+                                                  valueOrDefault<String>(
+                                                    widget!
+                                                        .user?.shortDescription,
+                                                    'Last seen recently',
+                                                  ),
                                                   maxLines: 2,
                                                   style: FlutterFlowTheme.of(
                                                           context)
@@ -871,7 +910,7 @@ class _UserPageWidgetState extends State<UserPageWidget> {
                                     ),
                                     Builder(
                                       builder: (context) {
-                                        if (widget.user?.reference !=
+                                        if (widget!.user?.reference !=
                                             currentUserReference) {
                                           return Padding(
                                             padding:
@@ -894,7 +933,7 @@ class _UserPageWidgetState extends State<UserPageWidget> {
                                                         model: _model
                                                             .buttonInfinityModel3,
                                                         updateCallback: () =>
-                                                            setState(() {}),
+                                                            safeSetState(() {}),
                                                         child:
                                                             ButtonInfinityWidget(
                                                           width: 428.0,
@@ -918,15 +957,15 @@ class _UserPageWidgetState extends State<UserPageWidget> {
                                                               queryParameters: {
                                                                 'user':
                                                                     serializeParam(
-                                                                  widget.user,
+                                                                  widget!.user,
                                                                   ParamType
                                                                       .Document,
                                                                 ),
                                                               }.withoutNulls,
                                                               extra: <String,
                                                                   dynamic>{
-                                                                'user':
-                                                                    widget.user,
+                                                                'user': widget!
+                                                                    .user,
                                                               },
                                                             );
                                                           },
@@ -935,7 +974,7 @@ class _UserPageWidgetState extends State<UserPageWidget> {
                                                     ),
                                                   ),
                                                 ),
-                                                if (widget.user?.reference !=
+                                                if (widget!.user?.reference !=
                                                     currentUserReference)
                                                   Builder(
                                                     builder: (context) {
@@ -975,10 +1014,11 @@ class _UserPageWidgetState extends State<UserPageWidget> {
                                                                   () async {
                                                                 _model.subscribed =
                                                                     true;
-                                                                setState(() {});
+                                                                safeSetState(
+                                                                    () {});
                                                                 unawaited(
                                                                   () async {
-                                                                    await widget
+                                                                    await widget!
                                                                         .user!
                                                                         .reference
                                                                         .update({
@@ -1014,7 +1054,7 @@ class _UserPageWidgetState extends State<UserPageWidget> {
                                                                               updateSubscriptionsStruct(
                                                                                 SubscriptionsStruct(
                                                                                   type: 'User',
-                                                                                  user: widget.user?.reference,
+                                                                                  user: widget!.user?.reference,
                                                                                 ),
                                                                                 clearUnsetFields: false,
                                                                               ),
@@ -1055,10 +1095,11 @@ class _UserPageWidgetState extends State<UserPageWidget> {
                                                               onTap: () async {
                                                                 _model.subscribed =
                                                                     false;
-                                                                setState(() {});
+                                                                safeSetState(
+                                                                    () {});
                                                                 unawaited(
                                                                   () async {
-                                                                    await widget
+                                                                    await widget!
                                                                         .user!
                                                                         .reference
                                                                         .update({
@@ -1094,7 +1135,7 @@ class _UserPageWidgetState extends State<UserPageWidget> {
                                                                               updateSubscriptionsStruct(
                                                                                 SubscriptionsStruct(
                                                                                   type: 'User',
-                                                                                  user: widget.user?.reference,
+                                                                                  user: widget!.user?.reference,
                                                                                 ),
                                                                                 clearUnsetFields: false,
                                                                               ),
@@ -1183,7 +1224,7 @@ class _UserPageWidgetState extends State<UserPageWidget> {
                                                       ),
                                                       onPressed: () async {
                                                         if (currentUserReference ==
-                                                            widget.user
+                                                            widget!.user
                                                                 ?.reference) {
                                                           context.pushNamed(
                                                               'settings');
@@ -1196,18 +1237,11 @@ class _UserPageWidgetState extends State<UserPageWidget> {
                                                                     .transparent,
                                                             barrierColor: Color(
                                                                 0x66000000),
-                                                            enableDrag: false,
                                                             context: context,
                                                             builder: (context) {
                                                               return GestureDetector(
-                                                                onTap: () => _model
-                                                                        .unfocusNode
-                                                                        .canRequestFocus
-                                                                    ? FocusScope.of(
-                                                                            context)
-                                                                        .requestFocus(_model
-                                                                            .unfocusNode)
-                                                                    : FocusScope.of(
+                                                                onTap: () =>
+                                                                    FocusScope.of(
                                                                             context)
                                                                         .unfocus(),
                                                                 child: Padding(
@@ -1216,7 +1250,7 @@ class _UserPageWidgetState extends State<UserPageWidget> {
                                                                           context),
                                                                   child:
                                                                       UserOptionsWidget(
-                                                                    user: widget
+                                                                    user: widget!
                                                                         .user!,
                                                                   ),
                                                                 ),
@@ -1255,7 +1289,7 @@ class _UserPageWidgetState extends State<UserPageWidget> {
                                                         model: _model
                                                             .buttonInfinityModel4,
                                                         updateCallback: () =>
-                                                            setState(() {}),
+                                                            safeSetState(() {}),
                                                         child:
                                                             ButtonInfinityWidget(
                                                           width: 700.0,
@@ -1287,14 +1321,8 @@ class _UserPageWidgetState extends State<UserPageWidget> {
                                                               builder:
                                                                   (context) {
                                                                 return GestureDetector(
-                                                                  onTap: () => _model
-                                                                          .unfocusNode
-                                                                          .canRequestFocus
-                                                                      ? FocusScope.of(
-                                                                              context)
-                                                                          .requestFocus(_model
-                                                                              .unfocusNode)
-                                                                      : FocusScope.of(
+                                                                  onTap: () =>
+                                                                      FocusScope.of(
                                                                               context)
                                                                           .unfocus(),
                                                                   child:
@@ -1353,7 +1381,7 @@ class _UserPageWidgetState extends State<UserPageWidget> {
                                                       ),
                                                       onPressed: () async {
                                                         if (currentUserReference ==
-                                                            widget.user
+                                                            widget!.user
                                                                 ?.reference) {
                                                           context.pushNamed(
                                                               'settings');
@@ -1370,14 +1398,8 @@ class _UserPageWidgetState extends State<UserPageWidget> {
                                                             context: context,
                                                             builder: (context) {
                                                               return GestureDetector(
-                                                                onTap: () => _model
-                                                                        .unfocusNode
-                                                                        .canRequestFocus
-                                                                    ? FocusScope.of(
-                                                                            context)
-                                                                        .requestFocus(_model
-                                                                            .unfocusNode)
-                                                                    : FocusScope.of(
+                                                                onTap: () =>
+                                                                    FocusScope.of(
                                                                             context)
                                                                         .unfocus(),
                                                                 child: Padding(
@@ -1386,7 +1408,7 @@ class _UserPageWidgetState extends State<UserPageWidget> {
                                                                           context),
                                                                   child:
                                                                       UserOptionsWidget(
-                                                                    user: widget
+                                                                    user: widget!
                                                                         .user!,
                                                                   ),
                                                                 ),
@@ -1415,490 +1437,108 @@ class _UserPageWidgetState extends State<UserPageWidget> {
                       },
                     ),
                   ),
-                  if (widget.user?.subscriptions != null &&
-                      (widget.user?.subscriptions)!.isNotEmpty)
+                  if ((widget!.user!.subscriptions.isNotEmpty) ||
+                      (widget!.user!.subscribers.isNotEmpty))
                     Padding(
                       padding:
                           EdgeInsetsDirectional.fromSTEB(0.0, 8.0, 0.0, 0.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        child: Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              20.0, 15.0, 20.0, 15.0),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Column(
-                                mainAxisSize: MainAxisSize.max,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    '${widget.user?.subscriptions?.length?.toString()} subscrptions',
-                                    style: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .override(
-                                          fontFamily: 'LTSuperior',
-                                          color: FlutterFlowTheme.of(context)
-                                              .primaryText,
-                                          fontSize: 16.0,
-                                          letterSpacing: 0.0,
-                                          fontWeight: FontWeight.w600,
-                                          useGoogleFonts: false,
-                                        ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        0.0, 3.0, 0.0, 0.0),
-                                    child: Text(
-                                      !_model.subscribed
-                                          ? 'You are subscribed'
-                                          : 'You are not subscribed',
+                      child: InkWell(
+                        splashColor: Colors.transparent,
+                        focusColor: Colors.transparent,
+                        hoverColor: Colors.transparent,
+                        highlightColor: Colors.transparent,
+                        onTap: () async {
+                          context.pushNamed(
+                            'subscribers',
+                            queryParameters: {
+                              'user': serializeParam(
+                                widget!.user,
+                                ParamType.Document,
+                              ),
+                            }.withoutNulls,
+                            extra: <String, dynamic>{
+                              'user': widget!.user,
+                            },
+                          );
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          child: Padding(
+                            padding: EdgeInsetsDirectional.fromSTEB(
+                                20.0, 15.0, 20.0, 15.0),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Column(
+                                  mainAxisSize: MainAxisSize.max,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      widget!.user!.subscribers.isNotEmpty
+                                          ? '${widget!.user?.subscribers?.length?.toString()} subscribers'
+                                          : '${widget!.user?.subscriptions?.length?.toString()} subscriptions',
                                       style: FlutterFlowTheme.of(context)
                                           .bodyMedium
                                           .override(
                                             fontFamily: 'LTSuperior',
                                             color: FlutterFlowTheme.of(context)
-                                                .secondaryText,
-                                            fontSize: 13.0,
+                                                .primaryText,
+                                            fontSize: 16.0,
                                             letterSpacing: 0.0,
-                                            fontWeight: FontWeight.normal,
+                                            fontWeight: FontWeight.w600,
                                             useGoogleFonts: false,
                                           ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                              Container(
-                                width: 64.0,
-                                child: Stack(
-                                  children: [
-                                    if (widget.user!.subscriptions.length >= 3)
-                                      Align(
-                                        alignment:
-                                            AlignmentDirectional(-1.0, 0.0),
-                                        child: Builder(
-                                          builder: (context) {
-                                            if ((widget.user?.subscriptions?[2])
-                                                    ?.type ==
-                                                'User') {
-                                              return FutureBuilder<UsersRecord>(
-                                                future:
-                                                    UsersRecord.getDocumentOnce(
-                                                        widget
-                                                            .user!
-                                                            .subscriptions[2]
-                                                            .user!),
-                                                builder: (context, snapshot) {
-                                                  // Customize what your widget looks like when it's loading.
-                                                  if (!snapshot.hasData) {
-                                                    return Center(
-                                                      child: SizedBox(
-                                                        width: 50.0,
-                                                        height: 50.0,
-                                                        child:
-                                                            CircularProgressIndicator(
-                                                          valueColor:
-                                                              AlwaysStoppedAnimation<
-                                                                  Color>(
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .primary,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    );
-                                                  }
-                                                  final containerUsersRecord =
-                                                      snapshot.data!;
-                                                  return Container(
-                                                    width: 32.0,
-                                                    height: 32.0,
-                                                    decoration: BoxDecoration(
-                                                      shape: BoxShape.circle,
-                                                      border: Border.all(
-                                                        color: FlutterFlowTheme
-                                                                .of(context)
-                                                            .secondaryBackground,
-                                                        width: 2.0,
-                                                      ),
-                                                    ),
-                                                    child: Container(
-                                                      width: 32.0,
-                                                      height: 32.0,
-                                                      clipBehavior:
-                                                          Clip.antiAlias,
-                                                      decoration: BoxDecoration(
-                                                        shape: BoxShape.circle,
-                                                      ),
-                                                      child: Image.network(
-                                                        valueOrDefault<String>(
-                                                          containerUsersRecord
-                                                              .photoUrl,
-                                                          'https://st3.depositphotos.com/6672868/13701/v/450/depositphotos_137014128-stock-illustration-user-profile-icon.jpg',
-                                                        ),
-                                                        fit: BoxFit.cover,
-                                                      ),
-                                                    ),
-                                                  );
-                                                },
-                                              );
-                                            } else {
-                                              return FutureBuilder<
-                                                  ProjectsRecord>(
-                                                future: ProjectsRecord
-                                                    .getDocumentOnce(widget
-                                                        .user!
-                                                        .subscriptions[2]
-                                                        .company!),
-                                                builder: (context, snapshot) {
-                                                  // Customize what your widget looks like when it's loading.
-                                                  if (!snapshot.hasData) {
-                                                    return Center(
-                                                      child: SizedBox(
-                                                        width: 50.0,
-                                                        height: 50.0,
-                                                        child:
-                                                            CircularProgressIndicator(
-                                                          valueColor:
-                                                              AlwaysStoppedAnimation<
-                                                                  Color>(
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .primary,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    );
-                                                  }
-                                                  final containerProjectsRecord =
-                                                      snapshot.data!;
-                                                  return Container(
-                                                    width: 32.0,
-                                                    height: 32.0,
-                                                    decoration: BoxDecoration(
-                                                      shape: BoxShape.circle,
-                                                      border: Border.all(
-                                                        color: FlutterFlowTheme
-                                                                .of(context)
-                                                            .secondaryBackground,
-                                                        width: 2.0,
-                                                      ),
-                                                    ),
-                                                    child: Container(
-                                                      width: 32.0,
-                                                      height: 32.0,
-                                                      clipBehavior:
-                                                          Clip.antiAlias,
-                                                      decoration: BoxDecoration(
-                                                        shape: BoxShape.circle,
-                                                      ),
-                                                      child: Image.network(
-                                                        valueOrDefault<String>(
-                                                          containerProjectsRecord
-                                                              .mainImage,
-                                                          'https://st3.depositphotos.com/6672868/13701/v/450/depositphotos_137014128-stock-illustration-user-profile-icon.jpg',
-                                                        ),
-                                                        fit: BoxFit.cover,
-                                                      ),
-                                                    ),
-                                                  );
-                                                },
-                                              );
-                                            }
-                                          },
-                                        ),
+                                    Padding(
+                                      padding: EdgeInsetsDirectional.fromSTEB(
+                                          0.0, 3.0, 0.0, 0.0),
+                                      child: Text(
+                                        _model.subscribed
+                                            ? 'You are subscribed'
+                                            : 'You are not subscribed',
+                                        style: FlutterFlowTheme.of(context)
+                                            .bodyMedium
+                                            .override(
+                                              fontFamily: 'LTSuperior',
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .secondaryText,
+                                              fontSize: 13.0,
+                                              letterSpacing: 0.0,
+                                              fontWeight: FontWeight.normal,
+                                              useGoogleFonts: false,
+                                            ),
                                       ),
-                                    if (widget.user!.subscriptions.length >= 2)
-                                      Align(
-                                        alignment:
-                                            AlignmentDirectional(0.0, 0.0),
-                                        child: Builder(
-                                          builder: (context) {
-                                            if ((widget.user?.subscriptions?[2])
-                                                    ?.type ==
-                                                'User') {
-                                              return FutureBuilder<UsersRecord>(
-                                                future:
-                                                    UsersRecord.getDocumentOnce(
-                                                        widget
-                                                            .user!
-                                                            .subscriptions[1]
-                                                            .user!),
-                                                builder: (context, snapshot) {
-                                                  // Customize what your widget looks like when it's loading.
-                                                  if (!snapshot.hasData) {
-                                                    return Center(
-                                                      child: SizedBox(
-                                                        width: 50.0,
-                                                        height: 50.0,
-                                                        child:
-                                                            CircularProgressIndicator(
-                                                          valueColor:
-                                                              AlwaysStoppedAnimation<
-                                                                  Color>(
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .primary,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    );
-                                                  }
-                                                  final containerUsersRecord =
-                                                      snapshot.data!;
-                                                  return Container(
-                                                    width: 32.0,
-                                                    height: 32.0,
-                                                    decoration: BoxDecoration(
-                                                      shape: BoxShape.circle,
-                                                      border: Border.all(
-                                                        color: FlutterFlowTheme
-                                                                .of(context)
-                                                            .secondaryBackground,
-                                                        width: 2.0,
-                                                      ),
-                                                    ),
-                                                    child: Container(
-                                                      width: 32.0,
-                                                      height: 32.0,
-                                                      clipBehavior:
-                                                          Clip.antiAlias,
-                                                      decoration: BoxDecoration(
-                                                        shape: BoxShape.circle,
-                                                      ),
-                                                      child: Image.network(
-                                                        valueOrDefault<String>(
-                                                          containerUsersRecord
-                                                              .photoUrl,
-                                                          'https://st3.depositphotos.com/6672868/13701/v/450/depositphotos_137014128-stock-illustration-user-profile-icon.jpg',
-                                                        ),
-                                                        fit: BoxFit.cover,
-                                                      ),
-                                                    ),
-                                                  );
-                                                },
-                                              );
-                                            } else {
-                                              return FutureBuilder<
-                                                  ProjectsRecord>(
-                                                future: ProjectsRecord
-                                                    .getDocumentOnce(widget
-                                                        .user!
-                                                        .subscriptions[1]
-                                                        .company!),
-                                                builder: (context, snapshot) {
-                                                  // Customize what your widget looks like when it's loading.
-                                                  if (!snapshot.hasData) {
-                                                    return Center(
-                                                      child: SizedBox(
-                                                        width: 50.0,
-                                                        height: 50.0,
-                                                        child:
-                                                            CircularProgressIndicator(
-                                                          valueColor:
-                                                              AlwaysStoppedAnimation<
-                                                                  Color>(
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .primary,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    );
-                                                  }
-                                                  final containerProjectsRecord =
-                                                      snapshot.data!;
-                                                  return Container(
-                                                    width: 32.0,
-                                                    height: 32.0,
-                                                    decoration: BoxDecoration(
-                                                      shape: BoxShape.circle,
-                                                      border: Border.all(
-                                                        color: FlutterFlowTheme
-                                                                .of(context)
-                                                            .secondaryBackground,
-                                                        width: 2.0,
-                                                      ),
-                                                    ),
-                                                    child: Container(
-                                                      width: 32.0,
-                                                      height: 32.0,
-                                                      clipBehavior:
-                                                          Clip.antiAlias,
-                                                      decoration: BoxDecoration(
-                                                        shape: BoxShape.circle,
-                                                      ),
-                                                      child: Image.network(
-                                                        valueOrDefault<String>(
-                                                          containerProjectsRecord
-                                                              .mainImage,
-                                                          'https://st3.depositphotos.com/6672868/13701/v/450/depositphotos_137014128-stock-illustration-user-profile-icon.jpg',
-                                                        ),
-                                                        fit: BoxFit.cover,
-                                                      ),
-                                                    ),
-                                                  );
-                                                },
-                                              );
-                                            }
-                                          },
-                                        ),
-                                      ),
-                                    if (widget.user!.subscriptions.length >= 1)
-                                      Align(
-                                        alignment:
-                                            AlignmentDirectional(1.0, 0.0),
-                                        child: Builder(
-                                          builder: (context) {
-                                            if ((widget.user?.subscriptions?[2])
-                                                    ?.type ==
-                                                'User') {
-                                              return FutureBuilder<UsersRecord>(
-                                                future:
-                                                    UsersRecord.getDocumentOnce(
-                                                        widget
-                                                            .user!
-                                                            .subscriptions[0]
-                                                            .user!),
-                                                builder: (context, snapshot) {
-                                                  // Customize what your widget looks like when it's loading.
-                                                  if (!snapshot.hasData) {
-                                                    return Center(
-                                                      child: SizedBox(
-                                                        width: 50.0,
-                                                        height: 50.0,
-                                                        child:
-                                                            CircularProgressIndicator(
-                                                          valueColor:
-                                                              AlwaysStoppedAnimation<
-                                                                  Color>(
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .primary,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    );
-                                                  }
-                                                  final containerUsersRecord =
-                                                      snapshot.data!;
-                                                  return Container(
-                                                    width: 32.0,
-                                                    height: 32.0,
-                                                    decoration: BoxDecoration(
-                                                      shape: BoxShape.circle,
-                                                      border: Border.all(
-                                                        color: FlutterFlowTheme
-                                                                .of(context)
-                                                            .secondaryBackground,
-                                                        width: 2.0,
-                                                      ),
-                                                    ),
-                                                    child: Container(
-                                                      width: 32.0,
-                                                      height: 32.0,
-                                                      clipBehavior:
-                                                          Clip.antiAlias,
-                                                      decoration: BoxDecoration(
-                                                        shape: BoxShape.circle,
-                                                      ),
-                                                      child: Image.network(
-                                                        valueOrDefault<String>(
-                                                          containerUsersRecord
-                                                              .photoUrl,
-                                                          'https://st3.depositphotos.com/6672868/13701/v/450/depositphotos_137014128-stock-illustration-user-profile-icon.jpg',
-                                                        ),
-                                                        fit: BoxFit.cover,
-                                                      ),
-                                                    ),
-                                                  );
-                                                },
-                                              );
-                                            } else {
-                                              return FutureBuilder<
-                                                  ProjectsRecord>(
-                                                future: ProjectsRecord
-                                                    .getDocumentOnce(widget
-                                                        .user!
-                                                        .subscriptions[0]
-                                                        .company!),
-                                                builder: (context, snapshot) {
-                                                  // Customize what your widget looks like when it's loading.
-                                                  if (!snapshot.hasData) {
-                                                    return Center(
-                                                      child: SizedBox(
-                                                        width: 50.0,
-                                                        height: 50.0,
-                                                        child:
-                                                            CircularProgressIndicator(
-                                                          valueColor:
-                                                              AlwaysStoppedAnimation<
-                                                                  Color>(
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .primary,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    );
-                                                  }
-                                                  final containerProjectsRecord =
-                                                      snapshot.data!;
-                                                  return Container(
-                                                    width: 32.0,
-                                                    height: 32.0,
-                                                    decoration: BoxDecoration(
-                                                      shape: BoxShape.circle,
-                                                      border: Border.all(
-                                                        color: FlutterFlowTheme
-                                                                .of(context)
-                                                            .secondaryBackground,
-                                                        width: 2.0,
-                                                      ),
-                                                    ),
-                                                    child: Container(
-                                                      width: 32.0,
-                                                      height: 32.0,
-                                                      clipBehavior:
-                                                          Clip.antiAlias,
-                                                      decoration: BoxDecoration(
-                                                        shape: BoxShape.circle,
-                                                      ),
-                                                      child: Image.network(
-                                                        valueOrDefault<String>(
-                                                          containerProjectsRecord
-                                                              .mainImage,
-                                                          'https://st3.depositphotos.com/6672868/13701/v/450/depositphotos_137014128-stock-illustration-user-profile-icon.jpg',
-                                                        ),
-                                                        fit: BoxFit.cover,
-                                                      ),
-                                                    ),
-                                                  );
-                                                },
-                                              );
-                                            }
-                                          },
-                                        ),
-                                      ),
+                                    ),
                                   ],
                                 ),
-                              ),
-                            ],
+                                wrapWithModel(
+                                  model: _model.subscribersMiniModel,
+                                  updateCallback: () => safeSetState(() {}),
+                                  child: SubscribersMiniWidget(
+                                    listUsers: widget!.user!.subscribers
+                                        .map((e) => e.user)
+                                        .withoutNulls
+                                        .toList(),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  if ((widget.user?.description != null &&
-                          widget.user?.description != '') ||
-                      ((widget.user?.sections != null &&
-                              (widget.user?.sections)!.isNotEmpty) ==
+                  if ((widget!.user?.description != null &&
+                          widget!.user?.description != '') ||
+                      ((widget!.user?.sections != null &&
+                              (widget!.user?.sections)!.isNotEmpty) ==
                           true) ||
-                      (widget.user?.professionalInformation != null &&
-                          widget.user?.professionalInformation != ''))
+                      (widget!.user?.professionalInformation != null &&
+                          widget!.user?.professionalInformation != ''))
                     Padding(
                       padding:
                           EdgeInsetsDirectional.fromSTEB(0.0, 8.0, 0.0, 0.0),
@@ -1928,14 +1568,14 @@ class _UserPageWidgetState extends State<UserPageWidget> {
                                           '')
                                     AuthUserStreamWidget(
                                       builder: (context) => Text(
-                                        'About ${widget.user?.displayName}',
+                                        'About ${widget!.user?.displayName}',
                                         style: FlutterFlowTheme.of(context)
                                             .bodyMedium
                                             .override(
                                               fontFamily: 'LTSuperior',
                                               fontSize: 18.0,
                                               letterSpacing: 0.0,
-                                              fontWeight: FontWeight.w800,
+                                              fontWeight: FontWeight.w600,
                                               useGoogleFonts: false,
                                               lineHeight: 1.2,
                                             ),
@@ -1957,10 +1597,13 @@ class _UserPageWidgetState extends State<UserPageWidget> {
                                             0.0, 8.0, 0.0, 0.0),
                                         child: AuthUserStreamWidget(
                                           builder: (context) => Text(
-                                            valueOrDefault<String>(
-                                              widget.user?.description,
+                                            (String text) {
+                                              return text.replaceFirst(
+                                                  RegExp(r'^[\n\r]+'), '');
+                                            }(valueOrDefault<String>(
+                                              widget!.user?.description,
                                               'Name',
-                                            ),
+                                            )),
                                             textAlign: TextAlign.start,
                                             maxLines: 5,
                                             style: FlutterFlowTheme.of(context)
@@ -1978,15 +1621,15 @@ class _UserPageWidgetState extends State<UserPageWidget> {
                                         ),
                                       ),
                                     ),
-                                  if ((widget.user?.description != null &&
-                                          widget.user?.description != '') ||
-                                      ((widget.user?.sections != null &&
-                                              (widget.user?.sections)!
+                                  if ((widget!.user?.description != null &&
+                                          widget!.user?.description != '') ||
+                                      ((widget!.user?.sections != null &&
+                                              (widget!.user?.sections)!
                                                   .isNotEmpty) ==
                                           true) ||
-                                      (widget.user?.professionalInformation !=
+                                      (widget!.user?.professionalInformation !=
                                               null &&
-                                          widget.user
+                                          widget!.user
                                                   ?.professionalInformation !=
                                               ''))
                                     Padding(
@@ -2000,7 +1643,7 @@ class _UserPageWidgetState extends State<UserPageWidget> {
                                               model:
                                                   _model.buttonFixedSizeModel,
                                               updateCallback: () =>
-                                                  setState(() {}),
+                                                  safeSetState(() {}),
                                               child: ButtonFixedSizeWidget(
                                                 width: 500.0,
                                                 height: 36.0,
@@ -2025,14 +1668,8 @@ class _UserPageWidgetState extends State<UserPageWidget> {
                                                     context: context,
                                                     builder: (context) {
                                                       return GestureDetector(
-                                                        onTap: () => _model
-                                                                .unfocusNode
-                                                                .canRequestFocus
-                                                            ? FocusScope.of(
-                                                                    context)
-                                                                .requestFocus(_model
-                                                                    .unfocusNode)
-                                                            : FocusScope.of(
+                                                        onTap: () =>
+                                                            FocusScope.of(
                                                                     context)
                                                                 .unfocus(),
                                                         child: Padding(
@@ -2048,7 +1685,7 @@ class _UserPageWidgetState extends State<UserPageWidget> {
                                                             child:
                                                                 InformationModalWidget(
                                                               user:
-                                                                  widget.user!,
+                                                                  widget!.user!,
                                                             ),
                                                           ),
                                                         ),
@@ -2079,10 +1716,10 @@ class _UserPageWidgetState extends State<UserPageWidget> {
                         borderRadius: BorderRadius.circular(10.0),
                       ),
                       child: Visibility(
-                        visible: (widget.user!.images.isNotEmpty) ||
-                            (widget.user!.products.isNotEmpty) ||
-                            (widget.user!.events.isNotEmpty) ||
-                            (widget.user!.products.isNotEmpty) ||
+                        visible: (widget!.user!.images.isNotEmpty) ||
+                            (widget!.user!.products.isNotEmpty) ||
+                            (widget!.user!.events.isNotEmpty) ||
+                            (widget!.user!.products.isNotEmpty) ||
                             true,
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(10.0),
@@ -2109,7 +1746,7 @@ class _UserPageWidgetState extends State<UserPageWidget> {
                                           highlightColor: Colors.transparent,
                                           onTap: () async {
                                             _model.chosen = 'Images';
-                                            setState(() {});
+                                            safeSetState(() {});
                                           },
                                           child: Container(
                                             height: 33.0,
@@ -2160,8 +1797,8 @@ class _UserPageWidgetState extends State<UserPageWidget> {
                                             ),
                                           ),
                                         ),
-                                        if (widget.user?.projects != null &&
-                                            (widget.user?.projects)!.isNotEmpty)
+                                        if (_model.projectsQuery != null &&
+                                            (_model.projectsQuery)!.isNotEmpty)
                                           InkWell(
                                             splashColor: Colors.transparent,
                                             focusColor: Colors.transparent,
@@ -2169,7 +1806,7 @@ class _UserPageWidgetState extends State<UserPageWidget> {
                                             highlightColor: Colors.transparent,
                                             onTap: () async {
                                               _model.chosen = 'Companies';
-                                              setState(() {});
+                                              safeSetState(() {});
                                             },
                                             child: Container(
                                               height: 33.0,
@@ -2228,8 +1865,8 @@ class _UserPageWidgetState extends State<UserPageWidget> {
                                               ),
                                             ),
                                           ),
-                                        if (widget.user?.products != null &&
-                                            (widget.user?.products)!.isNotEmpty)
+                                        if (_model.productsQuery != null &&
+                                            (_model.productsQuery)!.isNotEmpty)
                                           InkWell(
                                             splashColor: Colors.transparent,
                                             focusColor: Colors.transparent,
@@ -2237,7 +1874,7 @@ class _UserPageWidgetState extends State<UserPageWidget> {
                                             highlightColor: Colors.transparent,
                                             onTap: () async {
                                               _model.chosen = 'Products';
-                                              setState(() {});
+                                              safeSetState(() {});
                                             },
                                             child: Container(
                                               height: 33.0,
@@ -2296,8 +1933,8 @@ class _UserPageWidgetState extends State<UserPageWidget> {
                                               ),
                                             ),
                                           ),
-                                        if (widget.user?.events != null &&
-                                            (widget.user?.events)!.isNotEmpty)
+                                        if (_model.eventsQuery != null &&
+                                            (_model.eventsQuery)!.isNotEmpty)
                                           InkWell(
                                             splashColor: Colors.transparent,
                                             focusColor: Colors.transparent,
@@ -2305,7 +1942,7 @@ class _UserPageWidgetState extends State<UserPageWidget> {
                                             highlightColor: Colors.transparent,
                                             onTap: () async {
                                               _model.chosen = 'Events';
-                                              setState(() {});
+                                              safeSetState(() {});
                                             },
                                             child: Container(
                                               height: 33.0,
@@ -2375,11 +2012,10 @@ class _UserPageWidgetState extends State<UserPageWidget> {
                                     if (_model.chosen == 'Images') {
                                       return Builder(
                                         builder: (context) {
-                                          if ((currentUserDocument?.images
-                                                          ?.toList() ??
-                                                      [])
-                                                  .length !=
-                                              0) {
+                                          if ((widget!.user?.images != null &&
+                                                  (widget!.user?.images)!
+                                                      .isNotEmpty) ==
+                                              true) {
                                             return Column(
                                               mainAxisSize: MainAxisSize.max,
                                               children: [
@@ -2397,127 +2033,119 @@ class _UserPageWidgetState extends State<UserPageWidget> {
                                                             BorderRadius
                                                                 .circular(10.0),
                                                       ),
-                                                      child: Visibility(
-                                                        visible: (currentUserDocument
-                                                                        ?.images
-                                                                        ?.toList() ??
-                                                                    [])
-                                                                .length !=
-                                                            0,
-                                                        child: Builder(
-                                                          builder: (context) {
-                                                            final images = (functions
-                                                                        .reverseImagesList(widget
-                                                                            .user
-                                                                            ?.images
-                                                                            ?.toList())
-                                                                        ?.toList() ??
-                                                                    [])
-                                                                .take(6)
-                                                                .toList();
-                                                            return GridView
-                                                                .builder(
-                                                              padding:
-                                                                  EdgeInsets
-                                                                      .zero,
-                                                              gridDelegate:
-                                                                  SliverGridDelegateWithFixedCrossAxisCount(
-                                                                crossAxisCount:
-                                                                    3,
-                                                                crossAxisSpacing:
-                                                                    2.0,
-                                                                mainAxisSpacing:
-                                                                    2.0,
-                                                                childAspectRatio:
-                                                                    1.0,
-                                                              ),
-                                                              primary: false,
-                                                              shrinkWrap: true,
-                                                              scrollDirection:
-                                                                  Axis.vertical,
-                                                              itemCount:
-                                                                  images.length,
-                                                              itemBuilder: (context,
-                                                                  imagesIndex) {
-                                                                final imagesItem =
-                                                                    images[
-                                                                        imagesIndex];
-                                                                return Builder(
-                                                                  builder:
-                                                                      (context) =>
-                                                                          InkWell(
-                                                                    splashColor:
-                                                                        Colors
-                                                                            .transparent,
-                                                                    focusColor:
-                                                                        Colors
-                                                                            .transparent,
-                                                                    hoverColor:
-                                                                        Colors
-                                                                            .transparent,
-                                                                    highlightColor:
-                                                                        Colors
-                                                                            .transparent,
-                                                                    onTap:
-                                                                        () async {
-                                                                      await showDialog(
-                                                                        barrierColor:
-                                                                            Color(0x04000000),
-                                                                        context:
-                                                                            context,
-                                                                        builder:
-                                                                            (dialogContext) {
-                                                                          return Dialog(
-                                                                            elevation:
-                                                                                0,
-                                                                            insetPadding:
-                                                                                EdgeInsets.zero,
-                                                                            backgroundColor:
-                                                                                Colors.transparent,
-                                                                            alignment:
-                                                                                AlignmentDirectional(0.0, 0.0).resolve(Directionality.of(context)),
+                                                      child: Builder(
+                                                        builder: (context) {
+                                                          final images = (functions
+                                                                      .reverseImagesList(widget!
+                                                                          .user
+                                                                          ?.images
+                                                                          ?.toList())
+                                                                      ?.toList() ??
+                                                                  [])
+                                                              .take(6)
+                                                              .toList();
+
+                                                          return GridView
+                                                              .builder(
+                                                            padding:
+                                                                EdgeInsets.zero,
+                                                            gridDelegate:
+                                                                SliverGridDelegateWithFixedCrossAxisCount(
+                                                              crossAxisCount: 3,
+                                                              crossAxisSpacing:
+                                                                  2.0,
+                                                              mainAxisSpacing:
+                                                                  2.0,
+                                                              childAspectRatio:
+                                                                  1.0,
+                                                            ),
+                                                            primary: false,
+                                                            shrinkWrap: true,
+                                                            scrollDirection:
+                                                                Axis.vertical,
+                                                            itemCount:
+                                                                images.length,
+                                                            itemBuilder: (context,
+                                                                imagesIndex) {
+                                                              final imagesItem =
+                                                                  images[
+                                                                      imagesIndex];
+                                                              return Builder(
+                                                                builder:
+                                                                    (context) =>
+                                                                        InkWell(
+                                                                  splashColor:
+                                                                      Colors
+                                                                          .transparent,
+                                                                  focusColor: Colors
+                                                                      .transparent,
+                                                                  hoverColor: Colors
+                                                                      .transparent,
+                                                                  highlightColor:
+                                                                      Colors
+                                                                          .transparent,
+                                                                  onTap:
+                                                                      () async {
+                                                                    await showDialog(
+                                                                      barrierColor:
+                                                                          Color(
+                                                                              0x04000000),
+                                                                      context:
+                                                                          context,
+                                                                      builder:
+                                                                          (dialogContext) {
+                                                                        return Dialog(
+                                                                          elevation:
+                                                                              0,
+                                                                          insetPadding:
+                                                                              EdgeInsets.zero,
+                                                                          backgroundColor:
+                                                                              Colors.transparent,
+                                                                          alignment:
+                                                                              AlignmentDirectional(0.0, 0.0).resolve(Directionality.of(context)),
+                                                                          child:
+                                                                              GestureDetector(
+                                                                            onTap: () =>
+                                                                                FocusScope.of(dialogContext).unfocus(),
                                                                             child:
-                                                                                GestureDetector(
-                                                                              onTap: () => _model.unfocusNode.canRequestFocus ? FocusScope.of(context).requestFocus(_model.unfocusNode) : FocusScope.of(context).unfocus(),
-                                                                              child: Container(
-                                                                                height: MediaQuery.sizeOf(context).height * 1.0,
-                                                                                child: ImageSliderWidget(
-                                                                                  images: (currentUserDocument?.images?.toList() ?? []),
-                                                                                  initialindex: imagesIndex,
-                                                                                  user: widget.user,
-                                                                                  isThisYours: false,
-                                                                                ),
+                                                                                Container(
+                                                                              height: MediaQuery.sizeOf(context).height * 1.0,
+                                                                              child: ImageSliderWidget(
+                                                                                images: functions.reverseImagesList(widget!.user?.images?.toList())!,
+                                                                                initialindex: imagesIndex,
+                                                                                user: widget!.user,
+                                                                                isThisYours: false,
+                                                                                actionDelete: (images) async {},
                                                                               ),
                                                                             ),
-                                                                          );
-                                                                        },
-                                                                      ).then((value) =>
-                                                                          setState(
-                                                                              () {}));
-                                                                    },
-                                                                    child: Hero(
-                                                                      tag:
-                                                                          imagesItem,
-                                                                      transitionOnUserGestures:
-                                                                          true,
-                                                                      child:
-                                                                          ClipRRect(
-                                                                        borderRadius:
-                                                                            BorderRadius.circular(0.0),
-                                                                        child: Image
-                                                                            .network(
-                                                                          imagesItem,
-                                                                          fit: BoxFit
-                                                                              .cover,
-                                                                        ),
+                                                                          ),
+                                                                        );
+                                                                      },
+                                                                    );
+                                                                  },
+                                                                  child: Hero(
+                                                                    tag:
+                                                                        imagesItem,
+                                                                    transitionOnUserGestures:
+                                                                        true,
+                                                                    child:
+                                                                        ClipRRect(
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              0.0),
+                                                                      child: Image
+                                                                          .network(
+                                                                        imagesItem,
+                                                                        fit: BoxFit
+                                                                            .cover,
                                                                       ),
                                                                     ),
                                                                   ),
-                                                                );
-                                                              },
-                                                            );
-                                                          },
-                                                        ),
+                                                                ),
+                                                              );
+                                                            },
+                                                          );
+                                                        },
                                                       ),
                                                     ),
                                                   ),
@@ -2589,13 +2217,13 @@ class _UserPageWidgetState extends State<UserPageWidget> {
                                                             queryParameters: {
                                                               'user':
                                                                   serializeParam(
-                                                                widget.user,
+                                                                widget!.user,
                                                                 ParamType
                                                                     .Document,
                                                               ),
                                                               'images':
                                                                   serializeParam(
-                                                                widget.user
+                                                                widget!.user
                                                                     ?.images,
                                                                 ParamType
                                                                     .String,
@@ -2605,7 +2233,7 @@ class _UserPageWidgetState extends State<UserPageWidget> {
                                                             extra: <String,
                                                                 dynamic>{
                                                               'user':
-                                                                  widget.user,
+                                                                  widget!.user,
                                                             },
                                                           );
                                                         },
@@ -2724,7 +2352,7 @@ class _UserPageWidgetState extends State<UserPageWidget> {
                                                                   120.0,
                                                                   0.0),
                                                       child: Text(
-                                                        '${widget.user?.displayName} haven\'t added any images yet',
+                                                        '${widget!.user?.displayName} haven\'t added any images yet',
                                                         textAlign:
                                                             TextAlign.center,
                                                         style: FlutterFlowTheme
@@ -2768,6 +2396,7 @@ class _UserPageWidgetState extends State<UserPageWidget> {
                                                           .productsQuery
                                                           ?.toList() ??
                                                       [];
+
                                                   return SingleChildScrollView(
                                                     scrollDirection:
                                                         Axis.horizontal,
@@ -2960,84 +2589,87 @@ class _UserPageWidgetState extends State<UserPageWidget> {
                                                   ),
                                                 ),
                                               ),
-                                              Expanded(
-                                                child: Container(
-                                                  height: 45.0,
-                                                  decoration: BoxDecoration(
-                                                    color: FlutterFlowTheme.of(
-                                                            context)
-                                                        .secondaryBackground,
-                                                  ),
-                                                  child: Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            0.0, 0.0),
-                                                    child: Padding(
-                                                      padding:
-                                                          EdgeInsetsDirectional
-                                                              .fromSTEB(
-                                                                  0.0,
-                                                                  8.0,
-                                                                  0.0,
-                                                                  8.0),
-                                                      child: Row(
-                                                        mainAxisSize:
-                                                            MainAxisSize.min,
-                                                        children: [
-                                                          Padding(
-                                                            padding:
-                                                                EdgeInsetsDirectional
-                                                                    .fromSTEB(
-                                                                        0.0,
-                                                                        0.0,
-                                                                        5.0,
-                                                                        0.0),
-                                                            child: Text(
-                                                              'Show all',
-                                                              style: FlutterFlowTheme
-                                                                      .of(context)
-                                                                  .bodyMedium
-                                                                  .override(
-                                                                    fontFamily:
-                                                                        'LTSuperior',
-                                                                    color: FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .secondaryText,
-                                                                    fontSize:
-                                                                        14.0,
-                                                                    letterSpacing:
-                                                                        0.0,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w600,
-                                                                    useGoogleFonts:
-                                                                        false,
-                                                                  ),
+                                              if (widget!
+                                                      .user!.products.length >
+                                                  1)
+                                                Expanded(
+                                                  child: Container(
+                                                    height: 45.0,
+                                                    decoration: BoxDecoration(
+                                                      color: FlutterFlowTheme
+                                                              .of(context)
+                                                          .secondaryBackground,
+                                                    ),
+                                                    child: Align(
+                                                      alignment:
+                                                          AlignmentDirectional(
+                                                              0.0, 0.0),
+                                                      child: Padding(
+                                                        padding:
+                                                            EdgeInsetsDirectional
+                                                                .fromSTEB(
+                                                                    0.0,
+                                                                    8.0,
+                                                                    0.0,
+                                                                    8.0),
+                                                        child: Row(
+                                                          mainAxisSize:
+                                                              MainAxisSize.min,
+                                                          children: [
+                                                            Padding(
+                                                              padding:
+                                                                  EdgeInsetsDirectional
+                                                                      .fromSTEB(
+                                                                          0.0,
+                                                                          0.0,
+                                                                          5.0,
+                                                                          0.0),
+                                                              child: Text(
+                                                                'Show all',
+                                                                style: FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodyMedium
+                                                                    .override(
+                                                                      fontFamily:
+                                                                          'LTSuperior',
+                                                                      color: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .secondaryText,
+                                                                      fontSize:
+                                                                          14.0,
+                                                                      letterSpacing:
+                                                                          0.0,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w600,
+                                                                      useGoogleFonts:
+                                                                          false,
+                                                                    ),
+                                                              ),
                                                             ),
-                                                          ),
-                                                          Padding(
-                                                            padding:
-                                                                EdgeInsetsDirectional
-                                                                    .fromSTEB(
-                                                                        0.0,
-                                                                        2.0,
-                                                                        0.0,
-                                                                        0.0),
-                                                            child: Icon(
-                                                              Icons
-                                                                  .arrow_forward_ios,
-                                                              color: FlutterFlowTheme
-                                                                      .of(context)
-                                                                  .thirdText,
-                                                              size: 13.0,
+                                                            Padding(
+                                                              padding:
+                                                                  EdgeInsetsDirectional
+                                                                      .fromSTEB(
+                                                                          0.0,
+                                                                          2.0,
+                                                                          0.0,
+                                                                          0.0),
+                                                              child: Icon(
+                                                                Icons
+                                                                    .arrow_forward_ios,
+                                                                color: FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .thirdText,
+                                                                size: 13.0,
+                                                              ),
                                                             ),
-                                                          ),
-                                                        ],
+                                                          ],
+                                                        ),
                                                       ),
                                                     ),
                                                   ),
                                                 ),
-                                              ),
                                             ],
                                           ),
                                         ],
@@ -3065,6 +2697,7 @@ class _UserPageWidgetState extends State<UserPageWidget> {
                                                                   .eventsQuery!
                                                                   .toList())
                                                           .toList();
+
                                                       return Row(
                                                         mainAxisSize:
                                                             MainAxisSize.max,
@@ -3181,6 +2814,204 @@ class _UserPageWidgetState extends State<UserPageWidget> {
                                                       ),
                                                     ),
                                                   ),
+                                                  if (widget!
+                                                          .user!.events.length >
+                                                      1)
+                                                    Expanded(
+                                                      child: Container(
+                                                        height: 45.0,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .secondaryBackground,
+                                                        ),
+                                                        child: Align(
+                                                          alignment:
+                                                              AlignmentDirectional(
+                                                                  0.0, 0.0),
+                                                          child: Padding(
+                                                            padding:
+                                                                EdgeInsetsDirectional
+                                                                    .fromSTEB(
+                                                                        0.0,
+                                                                        8.0,
+                                                                        0.0,
+                                                                        8.0),
+                                                            child: Row(
+                                                              mainAxisSize:
+                                                                  MainAxisSize
+                                                                      .min,
+                                                              children: [
+                                                                Padding(
+                                                                  padding: EdgeInsetsDirectional
+                                                                      .fromSTEB(
+                                                                          0.0,
+                                                                          0.0,
+                                                                          5.0,
+                                                                          0.0),
+                                                                  child: Text(
+                                                                    'Show all',
+                                                                    style: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .bodyMedium
+                                                                        .override(
+                                                                          fontFamily:
+                                                                              'LTSuperior',
+                                                                          color:
+                                                                              FlutterFlowTheme.of(context).secondaryText,
+                                                                          fontSize:
+                                                                              14.0,
+                                                                          letterSpacing:
+                                                                              0.0,
+                                                                          fontWeight:
+                                                                              FontWeight.w600,
+                                                                          useGoogleFonts:
+                                                                              false,
+                                                                        ),
+                                                                  ),
+                                                                ),
+                                                                Padding(
+                                                                  padding: EdgeInsetsDirectional
+                                                                      .fromSTEB(
+                                                                          0.0,
+                                                                          2.0,
+                                                                          0.0,
+                                                                          0.0),
+                                                                  child: Icon(
+                                                                    Icons
+                                                                        .arrow_forward_ios,
+                                                                    color: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .thirdText,
+                                                                    size: 13.0,
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      );
+                                    } else {
+                                      return Align(
+                                        alignment:
+                                            AlignmentDirectional(-1.0, 0.0),
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.max,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Align(
+                                              alignment: AlignmentDirectional(
+                                                  -1.0, 0.0),
+                                              child: Padding(
+                                                padding: EdgeInsetsDirectional
+                                                    .fromSTEB(
+                                                        0.0, 20.0, 0.0, 0.0),
+                                                child: Builder(
+                                                  builder: (context) {
+                                                    final projects = _model
+                                                            .projectsQuery
+                                                            ?.toList() ??
+                                                        [];
+
+                                                    return SingleChildScrollView(
+                                                      scrollDirection:
+                                                          Axis.horizontal,
+                                                      child: Row(
+                                                        mainAxisSize:
+                                                            MainAxisSize.max,
+                                                        children: List.generate(
+                                                                projects.length,
+                                                                (projectsIndex) {
+                                                          final projectsItem =
+                                                              projects[
+                                                                  projectsIndex];
+                                                          return Align(
+                                                            alignment:
+                                                                AlignmentDirectional(
+                                                                    -1.0, 0.0),
+                                                            child:
+                                                                CompanySmallCardWidget(
+                                                              key: Key(
+                                                                  'Keyeqj_${projectsIndex}_of_${projects.length}'),
+                                                              parameter2:
+                                                                  projectsItem
+                                                                      .title,
+                                                              companyRef:
+                                                                  projectsItem,
+                                                            ),
+                                                          );
+                                                        })
+                                                            .divide(SizedBox(
+                                                                width: 14.0))
+                                                            .addToStart(
+                                                                SizedBox(
+                                                                    width:
+                                                                        20.0))
+                                                            .addToEnd(SizedBox(
+                                                                width: 20.0)),
+                                                      ),
+                                                    );
+                                                  },
+                                                ),
+                                              ),
+                                            ),
+                                            Opacity(
+                                              opacity: 0.6,
+                                              child: Align(
+                                                alignment: AlignmentDirectional(
+                                                    0.0, -1.0),
+                                                child: Padding(
+                                                  padding: EdgeInsetsDirectional
+                                                      .fromSTEB(
+                                                          0.0, 30.0, 0.0, 0.0),
+                                                  child: Container(
+                                                    width: double.infinity,
+                                                    height: 1.0,
+                                                    decoration: BoxDecoration(
+                                                      color:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .textAndStroke,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                Opacity(
+                                                  opacity: 0.6,
+                                                  child: Align(
+                                                    alignment:
+                                                        AlignmentDirectional(
+                                                            0.0, -1.0),
+                                                    child: Container(
+                                                      width: 1.0,
+                                                      height: 25.0,
+                                                      decoration: BoxDecoration(
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .textAndStroke,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                if (widget!
+                                                        .user!.projects.length >
+                                                    1)
                                                   Expanded(
                                                     child: Container(
                                                       height: 45.0,
@@ -3258,199 +3089,6 @@ class _UserPageWidgetState extends State<UserPageWidget> {
                                                       ),
                                                     ),
                                                   ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      );
-                                    } else {
-                                      return Align(
-                                        alignment:
-                                            AlignmentDirectional(-1.0, 0.0),
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.max,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Align(
-                                              alignment: AlignmentDirectional(
-                                                  -1.0, 0.0),
-                                              child: Padding(
-                                                padding: EdgeInsetsDirectional
-                                                    .fromSTEB(
-                                                        0.0, 20.0, 0.0, 0.0),
-                                                child: Builder(
-                                                  builder: (context) {
-                                                    final projects = _model
-                                                            .projectsQuery
-                                                            ?.toList() ??
-                                                        [];
-                                                    return SingleChildScrollView(
-                                                      scrollDirection:
-                                                          Axis.horizontal,
-                                                      child: Row(
-                                                        mainAxisSize:
-                                                            MainAxisSize.max,
-                                                        children: List.generate(
-                                                                projects.length,
-                                                                (projectsIndex) {
-                                                          final projectsItem =
-                                                              projects[
-                                                                  projectsIndex];
-                                                          return Align(
-                                                            alignment:
-                                                                AlignmentDirectional(
-                                                                    -1.0, 0.0),
-                                                            child:
-                                                                ProjectSmallCardWidget(
-                                                              key: Key(
-                                                                  'Keyeqj_${projectsIndex}_of_${projects.length}'),
-                                                              parameter2:
-                                                                  projectsItem
-                                                                      .title,
-                                                              companyRef:
-                                                                  projectsItem,
-                                                            ),
-                                                          );
-                                                        })
-                                                            .divide(SizedBox(
-                                                                width: 14.0))
-                                                            .addToStart(
-                                                                SizedBox(
-                                                                    width:
-                                                                        20.0))
-                                                            .addToEnd(SizedBox(
-                                                                width: 20.0)),
-                                                      ),
-                                                    );
-                                                  },
-                                                ),
-                                              ),
-                                            ),
-                                            Opacity(
-                                              opacity: 0.6,
-                                              child: Align(
-                                                alignment: AlignmentDirectional(
-                                                    0.0, -1.0),
-                                                child: Padding(
-                                                  padding: EdgeInsetsDirectional
-                                                      .fromSTEB(
-                                                          0.0, 30.0, 0.0, 0.0),
-                                                  child: Container(
-                                                    width: double.infinity,
-                                                    height: 1.0,
-                                                    decoration: BoxDecoration(
-                                                      color:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .textAndStroke,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            Row(
-                                              mainAxisSize: MainAxisSize.min,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              children: [
-                                                Opacity(
-                                                  opacity: 0.6,
-                                                  child: Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            0.0, -1.0),
-                                                    child: Container(
-                                                      width: 1.0,
-                                                      height: 25.0,
-                                                      decoration: BoxDecoration(
-                                                        color:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .textAndStroke,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                                Expanded(
-                                                  child: Container(
-                                                    height: 45.0,
-                                                    decoration: BoxDecoration(
-                                                      color: FlutterFlowTheme
-                                                              .of(context)
-                                                          .secondaryBackground,
-                                                    ),
-                                                    child: Align(
-                                                      alignment:
-                                                          AlignmentDirectional(
-                                                              0.0, 0.0),
-                                                      child: Padding(
-                                                        padding:
-                                                            EdgeInsetsDirectional
-                                                                .fromSTEB(
-                                                                    0.0,
-                                                                    8.0,
-                                                                    0.0,
-                                                                    8.0),
-                                                        child: Row(
-                                                          mainAxisSize:
-                                                              MainAxisSize.min,
-                                                          children: [
-                                                            Padding(
-                                                              padding:
-                                                                  EdgeInsetsDirectional
-                                                                      .fromSTEB(
-                                                                          0.0,
-                                                                          0.0,
-                                                                          5.0,
-                                                                          0.0),
-                                                              child: Text(
-                                                                'Show all',
-                                                                style: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .override(
-                                                                      fontFamily:
-                                                                          'LTSuperior',
-                                                                      color: FlutterFlowTheme.of(
-                                                                              context)
-                                                                          .secondaryText,
-                                                                      fontSize:
-                                                                          14.0,
-                                                                      letterSpacing:
-                                                                          0.0,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w600,
-                                                                      useGoogleFonts:
-                                                                          false,
-                                                                    ),
-                                                              ),
-                                                            ),
-                                                            Padding(
-                                                              padding:
-                                                                  EdgeInsetsDirectional
-                                                                      .fromSTEB(
-                                                                          0.0,
-                                                                          2.0,
-                                                                          0.0,
-                                                                          0.0),
-                                                              child: Icon(
-                                                                Icons
-                                                                    .arrow_forward_ios,
-                                                                color: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .thirdText,
-                                                                size: 13.0,
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
                                               ],
                                             ),
                                           ],
@@ -3468,10 +3106,12 @@ class _UserPageWidgetState extends State<UserPageWidget> {
                   ),
                   StreamBuilder<List<PostsRecord>>(
                     stream: queryPostsRecord(
-                      queryBuilder: (postsRecord) => postsRecord.where(
-                        'user',
-                        isEqualTo: widget.user?.reference,
-                      ),
+                      queryBuilder: (postsRecord) => postsRecord
+                          .where(
+                            'user',
+                            isEqualTo: widget!.user?.reference,
+                          )
+                          .orderBy('post_info.timestamp', descending: true),
                     ),
                     builder: (context, snapshot) {
                       // Customize what your widget looks like when it's loading.
@@ -3490,6 +3130,7 @@ class _UserPageWidgetState extends State<UserPageWidget> {
                       }
                       List<PostsRecord> containerPostsRecordList =
                           snapshot.data!;
+
                       return ClipRRect(
                         borderRadius: BorderRadius.circular(10.0),
                         child: Container(
@@ -3506,6 +3147,7 @@ class _UserPageWidgetState extends State<UserPageWidget> {
                                     builder: (context) {
                                       final posts =
                                           containerPostsRecordList.toList();
+
                                       return ListView.separated(
                                         padding: EdgeInsets.zero,
                                         primary: false,
@@ -3519,9 +3161,10 @@ class _UserPageWidgetState extends State<UserPageWidget> {
                                           return PostCardWidget(
                                             key: Key(
                                                 'Keyo8d_${postsIndex}_of_${posts.length}'),
-                                            isAuthUser: true,
+                                            isAuthUser:
+                                                widget!.user?.reference ==
+                                                    currentUserReference,
                                             post: postsItem,
-                                            user: widget.user,
                                           );
                                         },
                                       );
@@ -3601,7 +3244,7 @@ class _UserPageWidgetState extends State<UserPageWidget> {
               alignment: AlignmentDirectional(0.0, 1.0),
               child: wrapWithModel(
                 model: _model.navigationbarModel,
-                updateCallback: () => setState(() {}),
+                updateCallback: () => safeSetState(() {}),
                 child: NavigationbarWidget(
                   chosen: 'User Page',
                 ),
@@ -3613,28 +3256,28 @@ class _UserPageWidgetState extends State<UserPageWidget> {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(20.0, 60.0, 0.0, 0.0),
+                  padding: EdgeInsetsDirectional.fromSTEB(20.0, 50.0, 0.0, 0.0),
                   child: wrapWithModel(
                     model: _model.navigateBackModel,
-                    updateCallback: () => setState(() {}),
+                    updateCallback: () => safeSetState(() {}),
                     child: NavigateBackWidget(
-                      parameter1: 'smartsearch',
+                      isFrom: 'smartsearch',
                     ),
                   ),
                 ),
-                if (widget.user?.reference != currentUserReference)
+                if (widget!.user?.reference != currentUserReference)
                   Padding(
                     padding:
                         EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 20.0, 0.0),
                     child: AuthUserStreamWidget(
                       builder: (context) => wrapWithModel(
                         model: _model.toggleModel,
-                        updateCallback: () => setState(() {}),
+                        updateCallback: () => safeSetState(() {}),
                         updateOnChange: true,
                         child: ToggleWidget(
                           boolean: (currentUserDocument?.saved?.toList() ?? [])
-                                  .where(
-                                      (e) => e.people == widget.user?.reference)
+                                  .where((e) =>
+                                      e.people == widget!.user?.reference)
                                   .toList()
                                   .length >
                               0,

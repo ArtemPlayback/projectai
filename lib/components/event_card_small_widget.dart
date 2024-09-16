@@ -39,7 +39,7 @@ class _EventCardSmallWidgetState extends State<EventCardSmallWidget> {
     super.initState();
     _model = createModel(context, () => EventCardSmallModel());
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -60,37 +60,42 @@ class _EventCardSmallWidgetState extends State<EventCardSmallWidget> {
           child: Stack(
             alignment: AlignmentDirectional(1.0, -1.0),
             children: [
-              Builder(
-                builder: (context) {
-                  final images =
-                      widget.event?.eventInfo?.images?.toList() ?? [];
-                  return Container(
-                    width: 300.0,
-                    height: 215.0,
-                    child: PageView.builder(
-                      physics: const NeverScrollableScrollPhysics(),
-                      controller: _model.pageViewController ??= PageController(
-                          initialPage: max(0, min(0, images.length - 1))),
-                      scrollDirection: Axis.horizontal,
-                      itemCount: images.length,
-                      itemBuilder: (context, imagesIndex) {
-                        final imagesItem = images[imagesIndex];
-                        return ClipRRect(
-                          borderRadius: BorderRadius.circular(8.0),
-                          child: Image.network(
-                            valueOrDefault<String>(
-                              imagesItem,
-                              'https://as1.ftcdn.net/v2/jpg/05/85/45/22/1000_F_585452272_Ci6U9qLUPiqiLF15Zk5e4x8a0slzhHgV.jpg',
+              Align(
+                alignment: AlignmentDirectional(-1.0, 0.0),
+                child: Builder(
+                  builder: (context) {
+                    final images =
+                        widget!.event?.eventInfo?.images?.toList() ?? [];
+
+                    return Container(
+                      width: 300.0,
+                      height: 215.0,
+                      child: PageView.builder(
+                        physics: const NeverScrollableScrollPhysics(),
+                        controller: _model.pageViewController ??=
+                            PageController(
+                                initialPage: max(0, min(0, images.length - 1))),
+                        scrollDirection: Axis.horizontal,
+                        itemCount: images.length,
+                        itemBuilder: (context, imagesIndex) {
+                          final imagesItem = images[imagesIndex];
+                          return ClipRRect(
+                            borderRadius: BorderRadius.circular(8.0),
+                            child: Image.network(
+                              valueOrDefault<String>(
+                                imagesItem,
+                                'https://as1.ftcdn.net/v2/jpg/05/85/45/22/1000_F_585452272_Ci6U9qLUPiqiLF15Zk5e4x8a0slzhHgV.jpg',
+                              ),
+                              width: 300.0,
+                              height: 200.0,
+                              fit: BoxFit.cover,
                             ),
-                            width: 300.0,
-                            height: 200.0,
-                            fit: BoxFit.cover,
-                          ),
-                        );
-                      },
-                    ),
-                  );
-                },
+                          );
+                        },
+                      ),
+                    );
+                  },
+                ),
               ),
               Align(
                 alignment: AlignmentDirectional(1.0, -1.0),
@@ -99,12 +104,12 @@ class _EventCardSmallWidgetState extends State<EventCardSmallWidget> {
                   child: AuthUserStreamWidget(
                     builder: (context) => wrapWithModel(
                       model: _model.toggleModel,
-                      updateCallback: () => setState(() {}),
+                      updateCallback: () => safeSetState(() {}),
                       updateOnChange: true,
                       child: ToggleWidget(
                         boolean: (currentUserDocument?.saved?.toList() ?? [])
                                 .where(
-                                    (e) => e.events == widget.event?.reference)
+                                    (e) => e.events == widget!.event?.reference)
                                 .toList()
                                 .length >
                             0,
@@ -118,7 +123,7 @@ class _EventCardSmallWidgetState extends State<EventCardSmallWidget> {
                                       getSavedFirestoreData(
                                         updateSavedStruct(
                                           SavedStruct(
-                                            events: widget.event?.reference,
+                                            events: widget!.event?.reference,
                                           ),
                                           clearUnsetFields: false,
                                         ),
@@ -141,7 +146,7 @@ class _EventCardSmallWidgetState extends State<EventCardSmallWidget> {
                                       getSavedFirestoreData(
                                         updateSavedStruct(
                                           SavedStruct(
-                                            events: widget.event?.reference,
+                                            events: widget!.event?.reference,
                                           ),
                                           clearUnsetFields: false,
                                         ),
@@ -166,9 +171,10 @@ class _EventCardSmallWidgetState extends State<EventCardSmallWidget> {
           padding: EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 0.0),
           child: Text(
             valueOrDefault<String>(
-              widget.event?.eventInfo?.title,
+              widget!.event?.eventInfo?.title,
               'Title',
-            ),
+            ).maybeHandleOverflow(maxChars: 30),
+            maxLines: 1,
             style: FlutterFlowTheme.of(context).bodyMedium.override(
                   fontFamily: 'LTSuperior',
                   fontSize: 18.0,
@@ -195,7 +201,7 @@ class _EventCardSmallWidgetState extends State<EventCardSmallWidget> {
                 alignment: AlignmentDirectional(-1.0, 0.0),
                 child: Text(
                   valueOrDefault<String>(
-                    widget.event?.eventInfo?.locationTitle,
+                    widget!.event?.eventInfo?.locationTitle,
                     'Title',
                   ),
                   textAlign: TextAlign.start,
@@ -228,10 +234,11 @@ class _EventCardSmallWidgetState extends State<EventCardSmallWidget> {
                 alignment: AlignmentDirectional(-1.0, 0.0),
                 child: Text(
                   '${valueOrDefault<String>(
-                    dateTimeFormat('yMMMd', widget.event?.eventInfo?.startDate),
+                    dateTimeFormat(
+                        "yMMMd", widget!.event?.eventInfo?.startDate),
                     'Title',
                   )} ${valueOrDefault<String>(
-                    dateTimeFormat('Hm', widget.event?.eventInfo?.startTime),
+                    dateTimeFormat("Hm", widget!.event?.eventInfo?.startTime),
                     'Title',
                   )}',
                   textAlign: TextAlign.start,

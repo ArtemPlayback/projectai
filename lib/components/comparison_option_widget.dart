@@ -38,10 +38,10 @@ class _ComparisonOptionWidgetState extends State<ComparisonOptionWidget> {
     super.initState();
     _model = createModel(context, () => ComparisonOptionModel());
 
-    _model.textController ??= TextEditingController(text: widget.parameter1);
+    _model.textController ??= TextEditingController(text: widget!.parameter1);
     _model.textFieldFocusNode ??= FocusNode();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -78,7 +78,7 @@ class _ComparisonOptionWidgetState extends State<ComparisonOptionWidget> {
                       FFAppState().competitors.toList(),
                       FFAppState().comparisonOptions.toList(),
                       null,
-                      widget.index,
+                      widget!.index,
                       _model.textController.text,
                       true,
                     );
@@ -153,8 +153,8 @@ class _ComparisonOptionWidgetState extends State<ComparisonOptionWidget> {
                 ),
                 onPressed: () async {
                   FFAppState()
-                      .removeAtIndexFromComparisonOptions(widget.index!);
-                  FFAppState().removeAtIndexFromProjectOptions(widget.index!);
+                      .removeAtIndexFromComparisonOptions(widget!.index!);
+                  FFAppState().removeAtIndexFromProjectOptions(widget!.index!);
                   FFAppState().update(() {});
                 },
               ),

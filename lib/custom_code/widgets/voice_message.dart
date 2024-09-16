@@ -119,7 +119,7 @@ class _VoiceMessageState extends State<VoiceMessage> {
             children: [
               Padding(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                 child: Row(
                   children: [
                     LayoutBuilder(
@@ -170,6 +170,13 @@ class _VoiceMessageState extends State<VoiceMessage> {
                               });
                               controller.play();
                             },
+                            onHorizontalDragCancel: () {
+                              controller.seekToPercent(sliderValue!);
+                              setState(() {
+                                sliderValue = null;
+                              });
+                              controller.play();
+                            },
                             child: Container(
                               color: widget.voiceMessageContainerColor
                                   .withOpacity(0.0001),
@@ -181,9 +188,7 @@ class _VoiceMessageState extends State<VoiceMessage> {
                                     child: _Waveforms(
                                       data: controller.waveformsData,
                                       fakeData: controller.fakeWaveformsData,
-                                      showPercentages: sliderValue != null ||
-                                          !controller.isPlaying ||
-                                          controller.showPercentages,
+                                      showPercentages: true,
                                       percentage: sliderValue != null
                                           ? sliderValue!
                                           : controller.playedPercentage,
@@ -336,7 +341,8 @@ class _Waveforms extends StatelessWidget {
                       color: color.withOpacity(isFilled ? 1 : 0.5),
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    height: value * maxHeight / maxValue,
+                    height:
+                        (value * (maxHeight) / maxValue).clamp(3, maxHeight),
                   ),
                 ),
               );
@@ -525,7 +531,7 @@ class _VoiceMessageController extends ChangeNotifier {
   Future<String> _generateFilePath() async {
     final temp = await getTemporaryDirectory();
     final time = DateTime.now().millisecondsSinceEpoch;
-    return '${temp.path}/growUpVoiceMessage_$time.mp3';
+    return '${temp.path}/growUpVoiceMessage_$time.m4a';
   }
 
   @override

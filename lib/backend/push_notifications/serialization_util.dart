@@ -149,18 +149,25 @@ T? getParameter<T>(Map<String, dynamic> data, String paramName) {
         return placeFromString(param) as T;
       case FFUploadedFile:
         return uploadedFileFromString(param) as T;
-      case ProjectsSearchRow:
-        return ProjectsSearchRow(json.decode(param) as Map<String, dynamic>)
+      case SpatialRefSysRow:
+        return SpatialRefSysRow(json.decode(param) as Map<String, dynamic>)
             as T;
-      case SmartSearchRecommendationsRow:
-        return SmartSearchRecommendationsRow(
-            json.decode(param) as Map<String, dynamic>) as T;
+      case GeometryColumnsRow:
+        return GeometryColumnsRow(json.decode(param) as Map<String, dynamic>)
+            as T;
+      case ServicesRow:
+        return ServicesRow(json.decode(param) as Map<String, dynamic>) as T;
+      case GeographyColumnsRow:
+        return GeographyColumnsRow(json.decode(param) as Map<String, dynamic>)
+            as T;
+      case EventsRow:
+        return EventsRow(json.decode(param) as Map<String, dynamic>) as T;
       case DocumentsRow:
         return DocumentsRow(json.decode(param) as Map<String, dynamic>) as T;
-      case UserActivityRow:
-        return UserActivityRow(json.decode(param) as Map<String, dynamic>) as T;
-      case PeopleRow:
-        return PeopleRow(json.decode(param) as Map<String, dynamic>) as T;
+      case UsersRow:
+        return UsersRow(json.decode(param) as Map<String, dynamic>) as T;
+      case ReviewsRow:
+        return ReviewsRow(json.decode(param) as Map<String, dynamic>) as T;
     }
     if (param is String) {
       return FirebaseFirestore.instance.doc(param) as T;

@@ -150,7 +150,7 @@ async function sendPushNotifications(snapshot) {
       const data = token.data();
       const audienceMatches =
         targetAudience === "All" || data.device_type === targetAudience;
-      if (audienceMatches || typeof data.fcm_token !== undefined) {
+      if (audienceMatches && typeof data.fcm_token !== undefined) {
         tokens.add(data.fcm_token);
       }
     });
@@ -233,6 +233,16 @@ exports.onUserDeleted = functions.auth.user().onDelete(async (user) => {
   let firestore = admin.firestore();
   let userRef = firestore.doc("users/" + user.uid);
   await firestore.collection("users").doc(user.uid).delete();
+  await firestore
+    .collection("chats")
+    .where("users", "array-contains", userRef)
+    .get()
+    .then(async (querySnapshot) => {
+      for (var doc of querySnapshot.docs) {
+        console.log(`Deleting document ${doc.id} from collection chats`);
+        await doc.ref.delete();
+      }
+    });
 });
 const OneSignal = require("@onesignal/node-onesignal");
 

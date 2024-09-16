@@ -21,7 +21,6 @@ class PitchdeckModel extends FlutterFlowModel<PitchdeckWidget> {
 
   ///  State fields for stateful widgets in this page.
 
-  final unfocusNode = FocusNode();
   // State field(s) for PageView widget.
   PageController? pageViewController;
 
@@ -35,7 +34,5 @@ class PitchdeckModel extends FlutterFlowModel<PitchdeckWidget> {
   void initState(BuildContext context) {}
 
   @override
-  void dispose() {
-    unfocusNode.dispose();
-  }
+  void dispose() {}
 }

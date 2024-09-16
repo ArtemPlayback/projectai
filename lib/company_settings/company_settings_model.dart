@@ -18,6 +18,7 @@ import 'dart:ui';
 import 'company_settings_widget.dart' show CompanySettingsWidget;
 import 'dart:math' as math;
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -39,7 +40,6 @@ class CompanySettingsModel extends FlutterFlowModel<CompanySettingsWidget> {
 
   ///  State fields for stateful widgets in this page.
 
-  final unfocusNode = FocusNode();
   // Model for button_infinity component.
   late ButtonInfinityModel buttonInfinityModel;
   bool isDataUploading1 = false;
@@ -64,7 +64,6 @@ class CompanySettingsModel extends FlutterFlowModel<CompanySettingsWidget> {
 
   @override
   void dispose() {
-    unfocusNode.dispose();
     buttonInfinityModel.dispose();
   }
 }

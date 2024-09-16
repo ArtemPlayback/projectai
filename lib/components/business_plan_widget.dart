@@ -35,7 +35,7 @@ class _BusinessPlanWidgetState extends State<BusinessPlanWidget> {
     super.initState();
     _model = createModel(context, () => BusinessPlanModel());
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -157,7 +157,7 @@ class _BusinessPlanWidgetState extends State<BusinessPlanWidget> {
                                   20.0, 20.0, 20.0, 0.0),
                               child: Text(
                                 valueOrDefault<String>(
-                                  widget.businessPlan?.monetization,
+                                  widget!.businessPlan?.monetization,
                                   'Q',
                                 ),
                                 style: FlutterFlowTheme.of(context)
@@ -253,7 +253,7 @@ class _BusinessPlanWidgetState extends State<BusinessPlanWidget> {
                                   20.0, 20.0, 20.0, 0.0),
                               child: Text(
                                 valueOrDefault<String>(
-                                  widget.businessPlan?.financialPlan,
+                                  widget!.businessPlan?.financialPlan,
                                   'Q',
                                 ),
                                 style: FlutterFlowTheme.of(context)
@@ -349,7 +349,7 @@ class _BusinessPlanWidgetState extends State<BusinessPlanWidget> {
                                   20.0, 20.0, 20.0, 0.0),
                               child: Text(
                                 valueOrDefault<String>(
-                                  widget.businessPlan?.productionPlan,
+                                  widget!.businessPlan?.productionPlan,
                                   'Q',
                                 ),
                                 style: FlutterFlowTheme.of(context)
@@ -445,7 +445,7 @@ class _BusinessPlanWidgetState extends State<BusinessPlanWidget> {
                                   20.0, 20.0, 20.0, 0.0),
                               child: Text(
                                 valueOrDefault<String>(
-                                  widget.businessPlan?.marketingPlan,
+                                  widget!.businessPlan?.marketingPlan,
                                   'Q',
                                 ),
                                 style: FlutterFlowTheme.of(context)
@@ -541,7 +541,7 @@ class _BusinessPlanWidgetState extends State<BusinessPlanWidget> {
                                   20.0, 20.0, 20.0, 0.0),
                               child: Text(
                                 valueOrDefault<String>(
-                                  widget.businessPlan?.marketSize,
+                                  widget!.businessPlan?.marketSize,
                                   'Q',
                                 ),
                                 style: FlutterFlowTheme.of(context)

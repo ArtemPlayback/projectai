@@ -1,5 +1,6 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
+import '/backend/api_requests/api_streaming.dart';
 import '/backend/backend.dart';
 import '/backend/firebase_storage/storage.dart';
 import '/backend/schema/structs/index.dart';
@@ -13,9 +14,9 @@ import '/flutter_flow/upload_data.dart';
 import '/sign_in_foulder/new_project/button_fixed_size/button_fixed_size_widget.dart';
 import '/sign_in_foulder/new_project/button_infinity/button_infinity_widget.dart';
 import 'dart:async';
+import 'dart:convert';
 import 'dart:math';
 import 'dart:ui';
-import '/backend/schema/structs/index.dart';
 import '/custom_code/actions/index.dart' as actions;
 import '/flutter_flow/custom_functions.dart' as functions;
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -82,7 +83,7 @@ class _CreateProductCopyWidgetState extends State<CreateProductCopyWidget>
       this,
     );
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -97,9 +98,7 @@ class _CreateProductCopyWidgetState extends State<CreateProductCopyWidget>
     context.watch<FFAppState>();
 
     return GestureDetector(
-      onTap: () => _model.unfocusNode.canRequestFocus
-          ? FocusScope.of(context).requestFocus(_model.unfocusNode)
-          : FocusScope.of(context).unfocus(),
+      onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
@@ -112,7 +111,7 @@ class _CreateProductCopyWidgetState extends State<CreateProductCopyWidget>
               child: PageView(
                 controller: _model.pageViewController ??=
                     PageController(initialPage: 0),
-                onPageChanged: (_) => setState(() {}),
+                onPageChanged: (_) => safeSetState(() {}),
                 scrollDirection: Axis.horizontal,
                 children: [
                   SingleChildScrollView(
@@ -487,6 +486,7 @@ class _CreateProductCopyWidgetState extends State<CreateProductCopyWidget>
                                         builder: (context) {
                                           final imageslist =
                                               _model.images.toList();
+
                                           return ReorderableListView.builder(
                                             padding: EdgeInsets.zero,
                                             primary: false,
@@ -555,7 +555,8 @@ class _CreateProductCopyWidgetState extends State<CreateProductCopyWidget>
                                                                   () async {
                                                                 _model.removeAtIndexFromImages(
                                                                     imageslistIndex);
-                                                                setState(() {});
+                                                                safeSetState(
+                                                                    () {});
                                                               },
                                                             ),
                                                           ),
@@ -577,9 +578,9 @@ class _CreateProductCopyWidgetState extends State<CreateProductCopyWidget>
                                               _model.images = _model.reorder!
                                                   .toList()
                                                   .cast<String>();
-                                              setState(() {});
+                                              safeSetState(() {});
 
-                                              setState(() {});
+                                              safeSetState(() {});
                                             },
                                           );
                                         },
@@ -604,7 +605,7 @@ class _CreateProductCopyWidgetState extends State<CreateProductCopyWidget>
                                           selectedMedia.every((m) =>
                                               validateFileFormat(
                                                   m.storagePath, context))) {
-                                        setState(() =>
+                                        safeSetState(() =>
                                             _model.isDataUploading = true);
                                         var selectedUploadedFiles =
                                             <FFUploadedFile>[];
@@ -640,14 +641,14 @@ class _CreateProductCopyWidgetState extends State<CreateProductCopyWidget>
                                                 selectedMedia.length &&
                                             downloadUrls.length ==
                                                 selectedMedia.length) {
-                                          setState(() {
+                                          safeSetState(() {
                                             _model.uploadedLocalFiles =
                                                 selectedUploadedFiles;
                                             _model.uploadedFileUrls =
                                                 downloadUrls;
                                           });
                                         } else {
-                                          setState(() {});
+                                          safeSetState(() {});
                                           return;
                                         }
                                       }
@@ -658,7 +659,7 @@ class _CreateProductCopyWidgetState extends State<CreateProductCopyWidget>
                                               _model.images.toList())
                                           .toList()
                                           .cast<String>();
-                                      setState(() {});
+                                      safeSetState(() {});
                                     },
                                     child: Container(
                                       width: double.infinity,
@@ -750,9 +751,9 @@ class _CreateProductCopyWidgetState extends State<CreateProductCopyWidget>
                                       'Your task is to determine from the provided images what product it is and provide a brief description for it in the style of marketplaces. Expected output format is a JSON object with two key names: title and short description. Return nothing but JSON; you should only return JSON without any additional explanations.',
                                     );
                                     _model.response = _model.openai?.toString();
-                                    setState(() {});
+                                    safeSetState(() {});
 
-                                    setState(() {});
+                                    safeSetState(() {});
                                   },
                                   text: 'Button',
                                   options: FFButtonOptions(
@@ -1055,7 +1056,7 @@ class _CreateProductCopyWidgetState extends State<CreateProductCopyWidget>
                                       '_model.textController3',
                                       Duration(milliseconds: 10),
                                       () async {
-                                        setState(() {
+                                        safeSetState(() {
                                           _model.textController3?.text =
                                               functions.newCustomFunction(
                                                   _model.textController3.text);
@@ -1215,6 +1216,7 @@ class _CreateProductCopyWidgetState extends State<CreateProductCopyWidget>
                             child: Builder(
                               builder: (context) {
                                 final questions3 = _model.questions.toList();
+
                                 return Column(
                                   mainAxisSize: MainAxisSize.max,
                                   children: List.generate(questions3.length,
@@ -1233,7 +1235,7 @@ class _CreateProductCopyWidgetState extends State<CreateProductCopyWidget>
                                             .map((e) => e.toMap())
                                             .toList()
                                             .cast<dynamic>();
-                                        setState(() {});
+                                        safeSetState(() {});
                                       },
                                     );
                                   }).divide(SizedBox(height: 20.0)),
@@ -1468,7 +1470,7 @@ class _CreateProductCopyWidgetState extends State<CreateProductCopyWidget>
                                               model:
                                                   _model.buttonFixedSizeModel1,
                                               updateCallback: () =>
-                                                  setState(() {}),
+                                                  safeSetState(() {}),
                                               child: ButtonFixedSizeWidget(
                                                 width: 150.0,
                                                 height: 43.0,
@@ -1516,7 +1518,7 @@ class _CreateProductCopyWidgetState extends State<CreateProductCopyWidget>
                                                             ''),
                                                         r'''$.text''',
                                                       ).toString();
-                                                      setState(() {});
+                                                      safeSetState(() {});
                                                       _model.questions =
                                                           functions
                                                               .cleanJson(
@@ -1528,7 +1530,7 @@ class _CreateProductCopyWidgetState extends State<CreateProductCopyWidget>
                                                               ).toString())
                                                               .toList()
                                                               .cast<dynamic>();
-                                                      setState(() {});
+                                                      safeSetState(() {});
                                                       FFAppState().questions =
                                                           functions
                                                               .cleanJson(
@@ -1546,7 +1548,7 @@ class _CreateProductCopyWidgetState extends State<CreateProductCopyWidget>
                                                               .toList()
                                                               .cast<
                                                                   QuestionsStruct>();
-                                                      setState(() {});
+                                                      safeSetState(() {});
                                                       await _model
                                                           .pageViewController
                                                           ?.nextPage(
@@ -1652,7 +1654,7 @@ class _CreateProductCopyWidgetState extends State<CreateProductCopyWidget>
                                                     );
                                                   }
 
-                                                  setState(() {});
+                                                  safeSetState(() {});
                                                 },
                                               ),
                                             ),
@@ -1677,7 +1679,7 @@ class _CreateProductCopyWidgetState extends State<CreateProductCopyWidget>
                                 decoration: BoxDecoration(),
                                 child: wrapWithModel(
                                   model: _model.buttonInfinityModel,
-                                  updateCallback: () => setState(() {}),
+                                  updateCallback: () => safeSetState(() {}),
                                   child: ButtonInfinityWidget(
                                     width: 0.0,
                                     height: 49.0,
@@ -1749,7 +1751,7 @@ class _CreateProductCopyWidgetState extends State<CreateProductCopyWidget>
                                 24.0, 15.0, 0.0, 17.0),
                             child: wrapWithModel(
                               model: _model.buttonFixedSizeModel2,
-                              updateCallback: () => setState(() {}),
+                              updateCallback: () => safeSetState(() {}),
                               child: ButtonFixedSizeWidget(
                                 width: 130.0,
                                 height: 38.0,

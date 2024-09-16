@@ -48,13 +48,13 @@ class _ProductBlockWidgetState extends State<ProductBlockWidget> {
 
     // On component load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
-      if (widget.productinfo?.type == 'text') {
+      if (widget!.productinfo?.type == 'text') {
         _model.trueState = 'Title and text';
         _model.updatePage(() {});
-      } else if (widget.productinfo?.type == 'options') {
+      } else if (widget!.productinfo?.type == 'options') {
         _model.trueState = 'Options';
         _model.updatePage(() {});
-      } else if (widget.productinfo?.type == 'map') {
+      } else if (widget!.productinfo?.type == 'map') {
         _model.trueState = 'Map';
         _model.updatePage(() {});
       } else {
@@ -62,20 +62,20 @@ class _ProductBlockWidgetState extends State<ProductBlockWidget> {
         _model.updatePage(() {});
       }
 
-      setState(() {
+      safeSetState(() {
         _model.dropDownValueController?.value = _model.trueState;
       });
     });
 
     _model.textController1 ??=
-        TextEditingController(text: widget.productinfo?.title);
+        TextEditingController(text: widget!.productinfo?.title);
     _model.textFieldFocusNode1 ??= FocusNode();
 
     _model.textController2 ??=
-        TextEditingController(text: widget.productinfo?.text);
+        TextEditingController(text: widget!.productinfo?.text);
     _model.textFieldFocusNode2 ??= FocusNode();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -105,7 +105,7 @@ class _ProductBlockWidgetState extends State<ProductBlockWidget> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Block ${((widget.index!) + 1).toString()}',
+                    'Block ${((widget!.index!) + 1).toString()}',
                     style: FlutterFlowTheme.of(context).bodyMedium.override(
                           fontFamily: 'LTSuperior',
                           fontSize: 16.0,
@@ -124,8 +124,8 @@ class _ProductBlockWidgetState extends State<ProductBlockWidget> {
                       size: 19.0,
                     ),
                     onPressed: () async {
-                      FFAppState().removeAtIndexFromProductInfo(widget.index!);
-                      FFAppState().update(() {});
+                      FFAppState().removeAtIndexFromProductInfo(widget!.index!);
+                      _model.updatePage(() {});
                     },
                   ),
                 ],
@@ -140,28 +140,28 @@ class _ProductBlockWidgetState extends State<ProductBlockWidget> {
                 ),
                 options: ['Title and text', 'Map', 'Colors'],
                 onChanged: (val) async {
-                  setState(() => _model.dropDownValue = val);
+                  safeSetState(() => _model.dropDownValue = val);
                   if (_model.dropDownValue == 'Title and text') {
                     _model.trueState = 'text';
-                    setState(() {});
+                    safeSetState(() {});
                     FFAppState().updateProductInfoAtIndex(
-                      widget.index!,
+                      widget!.index!,
                       (e) => e..type = _model.trueState,
                     );
                     FFAppState().update(() {});
                   } else if (_model.dropDownValue == 'Map') {
                     _model.trueState = 'map';
-                    setState(() {});
+                    safeSetState(() {});
                     FFAppState().updateProductInfoAtIndex(
-                      widget.index!,
+                      widget!.index!,
                       (e) => e..type = _model.trueState,
                     );
                     FFAppState().update(() {});
                   } else {
                     _model.trueState = 'color';
-                    setState(() {});
+                    safeSetState(() {});
                     FFAppState().updateProductInfoAtIndex(
-                      widget.index!,
+                      widget!.index!,
                       (e) => e..type = _model.trueState,
                     );
                     FFAppState().update(() {});
@@ -220,7 +220,7 @@ class _ProductBlockWidgetState extends State<ProductBlockWidget> {
                                 Duration(milliseconds: 10),
                                 () async {
                                   FFAppState().updateSectionsAtIndex(
-                                    widget.index!,
+                                    widget!.index!,
                                     (e) =>
                                         e..title = _model.textController1.text,
                                   );
@@ -305,7 +305,7 @@ class _ProductBlockWidgetState extends State<ProductBlockWidget> {
                                   Duration(milliseconds: 10),
                                   () async {
                                     FFAppState().updateSectionsAtIndex(
-                                      widget.index!,
+                                      widget!.index!,
                                       (e) =>
                                           e..text = _model.textController2.text,
                                     );
@@ -480,7 +480,7 @@ class _ProductBlockWidgetState extends State<ProductBlockWidget> {
                                     webGoogleMapsApiKey:
                                         'AIzaSyBb9qGEcU87nPm0uhZNTdje-WL8lCPAS6g',
                                     onSelect: (place) async {
-                                      setState(() =>
+                                      safeSetState(() =>
                                           _model.placePickerValue = place);
                                       (await _model.googleMapsController.future)
                                           .animateCamera(CameraUpdate.newLatLng(
@@ -595,13 +595,13 @@ class _ProductBlockWidgetState extends State<ProductBlockWidget> {
                               }
 
                               FFAppState().updateProductInfoAtIndex(
-                                widget.index!,
+                                widget!.index!,
                                 (e) => e
                                   ..updateColors(
                                     (e) => e.add(_model.colorPicked!),
                                   ),
                               );
-                              setState(() {});
+                              safeSetState(() {});
                             },
                             child: Container(
                               width: 50.0,
@@ -620,13 +620,14 @@ class _ProductBlockWidgetState extends State<ProductBlockWidget> {
                               ),
                             ),
                           ),
-                          if ((widget.productinfo?.colors != null &&
-                                  (widget.productinfo?.colors)!.isNotEmpty) ==
+                          if ((widget!.productinfo?.colors != null &&
+                                  (widget!.productinfo?.colors)!.isNotEmpty) ==
                               true)
                             Builder(
                               builder: (context) {
                                 final colors =
-                                    widget.productinfo?.colors?.toList() ?? [];
+                                    widget!.productinfo?.colors?.toList() ?? [];
+
                                 return Row(
                                   mainAxisSize: MainAxisSize.max,
                                   children: List.generate(colors.length,
@@ -686,7 +687,7 @@ class _ProductBlockWidgetState extends State<ProductBlockWidget> {
                                                 onPressed: () async {
                                                   FFAppState()
                                                       .updateProductInfoAtIndex(
-                                                    widget.index!,
+                                                    widget!.index!,
                                                     (e) => e
                                                       ..updateColors(
                                                         (e) => e.remove(

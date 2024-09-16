@@ -34,7 +34,7 @@ class _IconTestWidgetState extends State<IconTestWidget> {
     super.initState();
     _model = createModel(context, () => IconTestModel());
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -46,6 +46,6 @@ class _IconTestWidgetState extends State<IconTestWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return widget.icon!;
+    return widget!.icon!;
   }
 }

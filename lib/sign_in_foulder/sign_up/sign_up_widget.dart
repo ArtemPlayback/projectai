@@ -48,7 +48,7 @@ class _SignUpWidgetState extends State<SignUpWidget>
     if (!isWeb) {
       _keyboardVisibilitySubscription =
           KeyboardVisibilityController().onChange.listen((bool visible) {
-        setState(() {
+        safeSetState(() {
           _isKeyboardVisible = visible;
         });
       });
@@ -103,7 +103,7 @@ class _SignUpWidgetState extends State<SignUpWidget>
       this,
     );
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -121,9 +121,7 @@ class _SignUpWidgetState extends State<SignUpWidget>
     context.watch<FFAppState>();
 
     return GestureDetector(
-      onTap: () => _model.unfocusNode.canRequestFocus
-          ? FocusScope.of(context).requestFocus(_model.unfocusNode)
-          : FocusScope.of(context).unfocus(),
+      onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
@@ -475,7 +473,7 @@ class _SignUpWidgetState extends State<SignUpWidget>
                                             EdgeInsetsDirectional.fromSTEB(
                                                 18.0, 15.0, 18.0, 15.0),
                                         suffixIcon: InkWell(
-                                          onTap: () => setState(
+                                          onTap: () => safeSetState(
                                             () => _model.passwordVisibility =
                                                 !_model.passwordVisibility,
                                           ),
@@ -606,8 +604,8 @@ class _SignUpWidgetState extends State<SignUpWidget>
                                         return;
                                       }
 
-                                      context.goNamedAuth(
-                                          'smart_search_all', context.mounted);
+                                      context.goNamedAuth('smart_search_all_2',
+                                          context.mounted);
                                     },
                                     child: ClipRRect(
                                       borderRadius: BorderRadius.circular(10.0),

@@ -44,14 +44,14 @@ class _TaskWidgetState extends State<TaskWidget> {
 
     // On component load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
-      _model.done = widget.done!;
-      setState(() {});
+      _model.done = widget!.done!;
+      safeSetState(() {});
     });
 
-    _model.textController ??= TextEditingController(text: widget.text);
+    _model.textController ??= TextEditingController(text: widget!.text);
     _model.textFieldFocusNode ??= FocusNode();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -78,7 +78,7 @@ class _TaskWidgetState extends State<TaskWidget> {
                 Duration(milliseconds: 200),
                 () async {
                   FFAppState().updateYearsPlanAtIndex(
-                    widget.parameter1!,
+                    widget!.parameter1!,
                     (e) => e..taskTitle = _model.textController.text,
                   );
                   FFAppState().update(() {});
@@ -158,7 +158,7 @@ class _TaskWidgetState extends State<TaskWidget> {
                 }
 
                 FFAppState().updateYearsPlanAtIndex(
-                  widget.parameter1!,
+                  widget!.parameter1!,
                   (e) => e..done = _model.done,
                 );
                 FFAppState().update(() {});

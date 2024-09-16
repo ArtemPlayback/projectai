@@ -1,4 +1,4 @@
-# ProjectAI
+# OmnisAI
 
 A new Flutter project.
 

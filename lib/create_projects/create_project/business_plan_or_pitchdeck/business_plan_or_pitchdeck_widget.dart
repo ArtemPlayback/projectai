@@ -37,7 +37,7 @@ class _BusinessPlanOrPitchdeckWidgetState
     super.initState();
     _model = createModel(context, () => BusinessPlanOrPitchdeckModel());
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -88,12 +88,12 @@ class _BusinessPlanOrPitchdeckWidgetState
                       'createBusinessPlan',
                       queryParameters: {
                         'project': serializeParam(
-                          widget.project,
+                          widget!.project,
                           ParamType.Document,
                         ),
                       }.withoutNulls,
                       extra: <String, dynamic>{
-                        'project': widget.project,
+                        'project': widget!.project,
                       },
                     );
                   },
@@ -130,7 +130,7 @@ class _BusinessPlanOrPitchdeckWidgetState
                       'createPitchDeck',
                       queryParameters: {
                         'project': serializeParam(
-                          widget.project,
+                          widget!.project,
                           ParamType.Document,
                         ),
                         'update': serializeParam(
@@ -139,7 +139,7 @@ class _BusinessPlanOrPitchdeckWidgetState
                         ),
                       }.withoutNulls,
                       extra: <String, dynamic>{
-                        'project': widget.project,
+                        'project': widget!.project,
                       },
                     );
                   },

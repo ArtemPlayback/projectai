@@ -1,13 +1,15 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/backend/schema/structs/index.dart';
+import '/components/company_small_card_widget.dart';
 import '/components/event_card_small_widget.dart';
 import '/components/image_slider_widget.dart';
 import '/components/information_modal_widget.dart';
 import '/components/navigate_back_widget.dart';
 import '/components/navigationbar_widget.dart';
-import '/components/project_small_card_widget.dart';
+import '/components/subscribers_mini_widget.dart';
 import '/components/toggle_widget.dart';
+import '/flutter_flow/flutter_flow_expanded_image_view.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -27,6 +29,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
 class UserPageModel extends FlutterFlowModel<UserPageWidget> {
@@ -51,7 +54,6 @@ class UserPageModel extends FlutterFlowModel<UserPageWidget> {
 
   ///  State fields for stateful widgets in this page.
 
-  final unfocusNode = FocusNode();
   // Stores action output result for [Firestore Query - Query a collection] action in user_page widget.
   List<ProductsRecord>? productsQuery;
   // Stores action output result for [Firestore Query - Query a collection] action in user_page widget.
@@ -66,6 +68,8 @@ class UserPageModel extends FlutterFlowModel<UserPageWidget> {
   late ButtonInfinityModel buttonInfinityModel3;
   // Model for button_infinity component.
   late ButtonInfinityModel buttonInfinityModel4;
+  // Model for subscribersMini component.
+  late SubscribersMiniModel subscribersMiniModel;
   // Model for button_fixed_size component.
   late ButtonFixedSizeModel buttonFixedSizeModel;
   // Model for navigationbar component.
@@ -81,6 +85,7 @@ class UserPageModel extends FlutterFlowModel<UserPageWidget> {
     buttonInfinityModel2 = createModel(context, () => ButtonInfinityModel());
     buttonInfinityModel3 = createModel(context, () => ButtonInfinityModel());
     buttonInfinityModel4 = createModel(context, () => ButtonInfinityModel());
+    subscribersMiniModel = createModel(context, () => SubscribersMiniModel());
     buttonFixedSizeModel = createModel(context, () => ButtonFixedSizeModel());
     navigationbarModel = createModel(context, () => NavigationbarModel());
     navigateBackModel = createModel(context, () => NavigateBackModel());
@@ -89,11 +94,11 @@ class UserPageModel extends FlutterFlowModel<UserPageWidget> {
 
   @override
   void dispose() {
-    unfocusNode.dispose();
     buttonInfinityModel1.dispose();
     buttonInfinityModel2.dispose();
     buttonInfinityModel3.dispose();
     buttonInfinityModel4.dispose();
+    subscribersMiniModel.dispose();
     buttonFixedSizeModel.dispose();
     navigationbarModel.dispose();
     navigateBackModel.dispose();

@@ -1,7 +1,6 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/backend/schema/structs/index.dart';
-import '/components/expandable_text_widget.dart';
 import '/components/image_slider_widget.dart';
 import '/components/map_widget.dart';
 import '/components/toggle_widget.dart';
@@ -28,7 +27,6 @@ class ProductPageModel extends FlutterFlowModel<ProductPageWidget> {
 
   ///  State fields for stateful widgets in this page.
 
-  final unfocusNode = FocusNode();
   // Stores action output result for [Backend Call - Read Document] action in product_page widget.
   UsersRecord? ownerUser;
   // Stores action output result for [Backend Call - Read Document] action in product_page widget.
@@ -41,8 +39,6 @@ class ProductPageModel extends FlutterFlowModel<ProductPageWidget> {
           pageViewController!.page != null
       ? pageViewController!.page!.round()
       : 0;
-  // Model for expandableText component.
-  late ExpandableTextModel expandableTextModel;
   // Model for button_fixed_size component.
   late ButtonFixedSizeModel buttonFixedSizeModel1;
   // Model for toggle component.
@@ -52,7 +48,6 @@ class ProductPageModel extends FlutterFlowModel<ProductPageWidget> {
 
   @override
   void initState(BuildContext context) {
-    expandableTextModel = createModel(context, () => ExpandableTextModel());
     buttonFixedSizeModel1 = createModel(context, () => ButtonFixedSizeModel());
     toggleModel = createModel(context, () => ToggleModel());
     buttonFixedSizeModel2 = createModel(context, () => ButtonFixedSizeModel());
@@ -60,8 +55,6 @@ class ProductPageModel extends FlutterFlowModel<ProductPageWidget> {
 
   @override
   void dispose() {
-    unfocusNode.dispose();
-    expandableTextModel.dispose();
     buttonFixedSizeModel1.dispose();
     toggleModel.dispose();
     buttonFixedSizeModel2.dispose();

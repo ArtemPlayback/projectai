@@ -36,7 +36,7 @@ class _BlockOrUnblockWidgetState extends State<BlockOrUnblockWidget> {
     super.initState();
     _model = createModel(context, () => BlockOrUnblockModel());
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -51,7 +51,7 @@ class _BlockOrUnblockWidgetState extends State<BlockOrUnblockWidget> {
     return Builder(
       builder: (context) {
         if (!(currentUserDocument?.blockedUsers?.toList() ?? [])
-            .contains(widget.user)) {
+            .contains(widget!.user)) {
           return Builder(
             builder: (context) => InkWell(
               splashColor: Colors.transparent,
@@ -72,12 +72,12 @@ class _BlockOrUnblockWidgetState extends State<BlockOrUnblockWidget> {
                         height: 220.0,
                         width: MediaQuery.sizeOf(context).width * 0.85,
                         child: BlockUserWidget(
-                          user: widget.user!,
+                          user: widget!.user!,
                         ),
                       ),
                     );
                   },
-                ).then((value) => setState(() {}));
+                );
               },
               child: Container(
                 width: 146.0,
@@ -129,7 +129,7 @@ class _BlockOrUnblockWidgetState extends State<BlockOrUnblockWidget> {
               await currentUserReference!.update({
                 ...mapToFirestore(
                   {
-                    'blockedUsers': FieldValue.arrayRemove([widget.user]),
+                    'blockedUsers': FieldValue.arrayRemove([widget!.user]),
                   },
                 ),
               });

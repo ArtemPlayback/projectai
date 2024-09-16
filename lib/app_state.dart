@@ -548,20 +548,76 @@ class FFAppState extends ChangeNotifier {
     _currentMessageID = value;
   }
 
-  final _projectsProfileManager = FutureRequestManager<List<ProjectsRecord>>();
-  Future<List<ProjectsRecord>> projectsProfile({
-    String? uniqueQueryKey,
-    bool? overrideCache,
-    required Future<List<ProjectsRecord>> Function() requestFn,
-  }) =>
-      _projectsProfileManager.performRequest(
-        uniqueQueryKey: uniqueQueryKey,
-        overrideCache: overrideCache,
-        requestFn: requestFn,
-      );
-  void clearProjectsProfileCache() => _projectsProfileManager.clear();
-  void clearProjectsProfileCacheKey(String? uniqueKey) =>
-      _projectsProfileManager.clearRequest(uniqueKey);
+  int _counter = 0;
+  int get counter => _counter;
+  set counter(int value) {
+    _counter = value;
+  }
+
+  List<MediaStruct> _mediaChat = [];
+  List<MediaStruct> get mediaChat => _mediaChat;
+  set mediaChat(List<MediaStruct> value) {
+    _mediaChat = value;
+  }
+
+  void addToMediaChat(MediaStruct value) {
+    mediaChat.add(value);
+  }
+
+  void removeFromMediaChat(MediaStruct value) {
+    mediaChat.remove(value);
+  }
+
+  void removeAtIndexFromMediaChat(int index) {
+    mediaChat.removeAt(index);
+  }
+
+  void updateMediaChatAtIndex(
+    int index,
+    MediaStruct Function(MediaStruct) updateFn,
+  ) {
+    mediaChat[index] = updateFn(_mediaChat[index]);
+  }
+
+  void insertAtIndexInMediaChat(int index, MediaStruct value) {
+    mediaChat.insert(index, value);
+  }
+
+  String _video = '';
+  String get video => _video;
+  set video(String value) {
+    _video = value;
+  }
+
+  SmartsearchSessionStruct _smartsearchtest =
+      SmartsearchSessionStruct.fromSerializableMap(jsonDecode(
+          '{\"title\":\"test\",\"smartsearch_items\":\"[\\\"{\\\\\\\"when\\\\\\\":\\\\\\\"1724019240000\\\\\\\",\\\\\\\"result\\\\\\\":\\\\\\\"Hello World\\\\\\\",\\\\\\\"query_str\\\\\\\":\\\\\\\"Hello World\\\\\\\",\\\\\\\"searchResults\\\\\\\":\\\\\\\"[\\\\\\\\\\\\\\\"{\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"type\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"people\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"explanation\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"Hello World\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"firebase_id\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"0HbGjJllL5XfiHlT1moaNmEAzWG2\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"percent\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"0\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"}\\\\\\\\\\\\\\\"]\\\\\\\",\\\\\\\"text\\\\\\\":\\\\\\\"Hello World\\\\\\\"}\\\"]\"}'));
+  SmartsearchSessionStruct get smartsearchtest => _smartsearchtest;
+  set smartsearchtest(SmartsearchSessionStruct value) {
+    _smartsearchtest = value;
+  }
+
+  void updateSmartsearchtestStruct(
+      Function(SmartsearchSessionStruct) updateFn) {
+    updateFn(_smartsearchtest);
+  }
+
+  String _whisperResult = '';
+  String get whisperResult => _whisperResult;
+  set whisperResult(String value) {
+    _whisperResult = value;
+  }
+
+  SmartsearchSessionStruct _currentSearchSession = SmartsearchSessionStruct();
+  SmartsearchSessionStruct get currentSearchSession => _currentSearchSession;
+  set currentSearchSession(SmartsearchSessionStruct value) {
+    _currentSearchSession = value;
+  }
+
+  void updateCurrentSearchSessionStruct(
+      Function(SmartsearchSessionStruct) updateFn) {
+    updateFn(_currentSearchSession);
+  }
 
   final _eventsProfileManager = FutureRequestManager<List<EventsRecord>>();
   Future<List<EventsRecord>> eventsProfile({
@@ -592,6 +648,51 @@ class FFAppState extends ChangeNotifier {
   void clearProductsProfileCache() => _productsProfileManager.clear();
   void clearProductsProfileCacheKey(String? uniqueKey) =>
       _productsProfileManager.clearRequest(uniqueKey);
+
+  final _userComponentManager = FutureRequestManager<List<UsersRecord>>();
+  Future<List<UsersRecord>> userComponent({
+    String? uniqueQueryKey,
+    bool? overrideCache,
+    required Future<List<UsersRecord>> Function() requestFn,
+  }) =>
+      _userComponentManager.performRequest(
+        uniqueQueryKey: uniqueQueryKey,
+        overrideCache: overrideCache,
+        requestFn: requestFn,
+      );
+  void clearUserComponentCache() => _userComponentManager.clear();
+  void clearUserComponentCacheKey(String? uniqueKey) =>
+      _userComponentManager.clearRequest(uniqueKey);
+
+  final _chatsManager = StreamRequestManager<List<ChatsRecord>>();
+  Stream<List<ChatsRecord>> chats({
+    String? uniqueQueryKey,
+    bool? overrideCache,
+    required Stream<List<ChatsRecord>> Function() requestFn,
+  }) =>
+      _chatsManager.performRequest(
+        uniqueQueryKey: uniqueQueryKey,
+        overrideCache: overrideCache,
+        requestFn: requestFn,
+      );
+  void clearChatsCache() => _chatsManager.clear();
+  void clearChatsCacheKey(String? uniqueKey) =>
+      _chatsManager.clearRequest(uniqueKey);
+
+  final _chatItemSingleManager = FutureRequestManager<UsersRecord>();
+  Future<UsersRecord> chatItemSingle({
+    String? uniqueQueryKey,
+    bool? overrideCache,
+    required Future<UsersRecord> Function() requestFn,
+  }) =>
+      _chatItemSingleManager.performRequest(
+        uniqueQueryKey: uniqueQueryKey,
+        overrideCache: overrideCache,
+        requestFn: requestFn,
+      );
+  void clearChatItemSingleCache() => _chatItemSingleManager.clear();
+  void clearChatItemSingleCacheKey(String? uniqueKey) =>
+      _chatItemSingleManager.clearRequest(uniqueKey);
 }
 
 void _safeInit(Function() initializeField) {

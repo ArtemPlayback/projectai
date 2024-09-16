@@ -1,7 +1,6 @@
 // Export pages
 export '/sign_in_foulder/sign_in/sign_in_widget.dart' show SignInWidget;
-export '/sign_in_foulder/new_project/profile/profile_widget.dart'
-    show ProfileWidget;
+export '/sign_in_foulder/profile/profile_widget.dart' show ProfileWidget;
 export '/pitchdeck/pitchdeck_widget.dart' show PitchdeckWidget;
 export '/create_projects/create_project/create_pitch_deck/create_pitch_deck_widget.dart'
     show CreatePitchDeckWidget;
@@ -12,13 +11,13 @@ export '/create_projects/create_project_images/create_project_images_widget.dart
     show CreateProjectImagesWidget;
 export '/add_post/add_post_widget.dart' show AddPostWidget;
 export '/image_gallery/image_gallery_widget.dart' show ImageGalleryWidget;
-export '/sign_in_foulder/new_project/chats/chats_widget.dart' show ChatsWidget;
+export '/sign_in_foulder/chats/chats_widget.dart' show ChatsWidget;
 export '/sign_in_foulder/new_project/chat_page/chat_page_widget.dart'
     show ChatPageWidget;
 export '/onboarding/onboarding_widget.dart' show OnboardingWidget;
 export '/terms_of_service/terms_of_service_widget.dart'
     show TermsOfServiceWidget;
-export '/sign_in_foulder/new_project/smart_search_all/smart_search_all_widget.dart'
+export '/sign_in_foulder/smart_search_all/smart_search_all_widget.dart'
     show SmartSearchAllWidget;
 export '/sign_in_foulder/new_project/create_event/create_event_widget.dart'
     show CreateEventWidget;
@@ -45,7 +44,7 @@ export '/sign_in_foulder/create_account/create_account_widget.dart'
 export '/sign_in_foulder/new_project/user_page/user_page_widget.dart'
     show UserPageWidget;
 export '/settings/settings_widget.dart' show SettingsWidget;
-export '/sign_in_foulder/new_project/company_page/company_page_widget.dart'
+export '/sign_in_foulder/company_page/company_page_widget.dart'
     show CompanyPageWidget;
 export '/information/information_widget.dart' show InformationWidget;
 export '/event_settings/event_settings_widget.dart' show EventSettingsWidget;
@@ -71,5 +70,16 @@ export '/sign_in_foulder/new_project/wishlist/wishlist_widget.dart'
 export '/test/test_widget.dart' show TestWidget;
 export '/sign_in_foulder/new_project/history/history_widget.dart'
     show HistoryWidget;
-export '/sign_in_foulder/new_project/history_item/history_item_widget.dart'
-    show HistoryItemWidget;
+export '/event_participants/event_participants_widget.dart'
+    show EventParticipantsWidget;
+export '/event_information/event_information_widget.dart'
+    show EventInformationWidget;
+export '/smart_search_all_3/smart_search_all3_widget.dart'
+    show SmartSearchAll3Widget;
+export '/subscribers/subscribers_widget.dart' show SubscribersWidget;
+export '/group_chat_settings/group_chat_settings_widget.dart'
+    show GroupChatSettingsWidget;
+export '/group_settings_edit/group_settings_edit_widget.dart'
+    show GroupSettingsEditWidget;
+export '/add_users_groupchat/add_users_groupchat_widget.dart'
+    show AddUsersGroupchatWidget;

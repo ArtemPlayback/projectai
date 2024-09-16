@@ -1,8 +1,10 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
+import '/backend/api_requests/api_streaming.dart';
 import '/backend/backend.dart';
 import '/backend/firebase_storage/storage.dart';
 import '/backend/schema/structs/index.dart';
+import '/backend/supabase/supabase.dart';
 import '/components/form_item_widget.dart';
 import '/flutter_flow/flutter_flow_animations.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
@@ -13,9 +15,9 @@ import '/flutter_flow/upload_data.dart';
 import '/sign_in_foulder/new_project/button_fixed_size/button_fixed_size_widget.dart';
 import '/sign_in_foulder/new_project/button_infinity/button_infinity_widget.dart';
 import 'dart:async';
+import 'dart:convert';
 import 'dart:math';
 import 'dart:ui';
-import '/backend/schema/structs/index.dart';
 import '/custom_code/actions/index.dart' as actions;
 import '/flutter_flow/custom_functions.dart' as functions;
 import '/flutter_flow/random_data_util.dart' as random_data;
@@ -66,7 +68,7 @@ class _CreateProductWidgetState extends State<CreateProductWidget>
         false,
         true,
       );
-      setState(() {});
+      safeSetState(() {});
     });
 
     _model.textController1 ??= TextEditingController();
@@ -77,7 +79,15 @@ class _CreateProductWidgetState extends State<CreateProductWidget>
 
     _model.textController3 ??= TextEditingController(text: '\$');
     _model.textFieldFocusNode3 ??= FocusNode();
-
+    _model.textFieldFocusNode3!.addListener(
+      () async {
+        await _model.priceColumn?.animateTo(
+          _model.priceColumn!.position.maxScrollExtent,
+          duration: Duration(milliseconds: 100),
+          curve: Curves.ease,
+        );
+      },
+    );
     animationsMap.addAll({
       'containerOnActionTriggerAnimation': AnimationInfo(
         trigger: AnimationTrigger.onActionTrigger,
@@ -100,7 +110,7 @@ class _CreateProductWidgetState extends State<CreateProductWidget>
       this,
     );
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -115,9 +125,7 @@ class _CreateProductWidgetState extends State<CreateProductWidget>
     context.watch<FFAppState>();
 
     return GestureDetector(
-      onTap: () => _model.unfocusNode.canRequestFocus
-          ? FocusScope.of(context).requestFocus(_model.unfocusNode)
-          : FocusScope.of(context).unfocus(),
+      onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
@@ -128,15 +136,17 @@ class _CreateProductWidgetState extends State<CreateProductWidget>
               width: double.infinity,
               height: double.infinity,
               child: PageView(
+                physics: const NeverScrollableScrollPhysics(),
                 controller: _model.pageViewController ??=
                     PageController(initialPage: 0),
-                onPageChanged: (_) => setState(() {}),
+                onPageChanged: (_) => safeSetState(() {}),
                 scrollDirection: Axis.horizontal,
                 children: [
                   Visibility(
                     visible: !kDebugMode,
                     child: SingleChildScrollView(
                       primary: false,
+                      controller: _model.columnController1,
                       child: Column(
                         mainAxisSize: MainAxisSize.max,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -206,7 +216,7 @@ class _CreateProductWidgetState extends State<CreateProductWidget>
                                                           fontWeight:
                                                               FontWeight.w600,
                                                           useGoogleFonts: false,
-                                                          lineHeight: 1.2,
+                                                          lineHeight: 1.25,
                                                         ),
                                               ),
                                               Padding(
@@ -416,6 +426,7 @@ class _CreateProductWidgetState extends State<CreateProductWidget>
                                                           fontWeight:
                                                               FontWeight.w600,
                                                           useGoogleFonts: false,
+                                                          lineHeight: 1.25,
                                                         ),
                                               ),
                                               Padding(
@@ -469,6 +480,7 @@ class _CreateProductWidgetState extends State<CreateProductWidget>
                   ),
                   SingleChildScrollView(
                     primary: false,
+                    controller: _model.columnController2,
                     child: Column(
                       mainAxisSize: MainAxisSize.max,
                       children: [
@@ -477,6 +489,7 @@ class _CreateProductWidgetState extends State<CreateProductWidget>
                               24.0, 0.0, 24.0, 0.0),
                           child: SingleChildScrollView(
                             primary: false,
+                            controller: _model.columnController3,
                             child: Column(
                               mainAxisSize: MainAxisSize.max,
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -519,6 +532,7 @@ class _CreateProductWidgetState extends State<CreateProductWidget>
                                         builder: (context) {
                                           final imageslist =
                                               _model.images.toList();
+
                                           return ReorderableListView.builder(
                                             padding: EdgeInsets.zero,
                                             primary: false,
@@ -587,7 +601,8 @@ class _CreateProductWidgetState extends State<CreateProductWidget>
                                                                   () async {
                                                                 _model.removeAtIndexFromImages(
                                                                     imageslistIndex);
-                                                                setState(() {});
+                                                                safeSetState(
+                                                                    () {});
                                                               },
                                                             ),
                                                           ),
@@ -598,6 +613,8 @@ class _CreateProductWidgetState extends State<CreateProductWidget>
                                                 ),
                                               );
                                             },
+                                            scrollController:
+                                                _model.listViewController,
                                             onReorder: (int reorderableOldIndex,
                                                 int reorderableNewIndex) async {
                                               _model.reorder =
@@ -609,9 +626,9 @@ class _CreateProductWidgetState extends State<CreateProductWidget>
                                               _model.images = _model.reorder!
                                                   .toList()
                                                   .cast<String>();
-                                              setState(() {});
+                                              safeSetState(() {});
 
-                                              setState(() {});
+                                              safeSetState(() {});
                                             },
                                           );
                                         },
@@ -636,7 +653,7 @@ class _CreateProductWidgetState extends State<CreateProductWidget>
                                           selectedMedia.every((m) =>
                                               validateFileFormat(
                                                   m.storagePath, context))) {
-                                        setState(() =>
+                                        safeSetState(() =>
                                             _model.isDataUploading = true);
                                         var selectedUploadedFiles =
                                             <FFUploadedFile>[];
@@ -672,14 +689,14 @@ class _CreateProductWidgetState extends State<CreateProductWidget>
                                                 selectedMedia.length &&
                                             downloadUrls.length ==
                                                 selectedMedia.length) {
-                                          setState(() {
+                                          safeSetState(() {
                                             _model.uploadedLocalFiles =
                                                 selectedUploadedFiles;
                                             _model.uploadedFileUrls =
                                                 downloadUrls;
                                           });
                                         } else {
-                                          setState(() {});
+                                          safeSetState(() {});
                                           return;
                                         }
                                       }
@@ -690,7 +707,7 @@ class _CreateProductWidgetState extends State<CreateProductWidget>
                                               _model.images.toList())
                                           .toList()
                                           .cast<String>();
-                                      setState(() {});
+                                      safeSetState(() {});
                                     },
                                     child: Container(
                                       width: double.infinity,
@@ -711,34 +728,52 @@ class _CreateProductWidgetState extends State<CreateProductWidget>
                                         child: Column(
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
-                                            Container(
-                                              width: 45.0,
-                                              height: 45.0,
-                                              decoration: BoxDecoration(
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .secondaryBackground,
-                                                shape: BoxShape.circle,
-                                                border: Border.all(
-                                                  color: FlutterFlowTheme.of(
-                                                          context)
-                                                      .primary,
-                                                  width: 2.0,
-                                                ),
-                                              ),
-                                              child: Icon(
-                                                Icons.add_rounded,
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .primary,
-                                                size: 28.0,
-                                              ),
+                                            Builder(
+                                              builder: (context) {
+                                                if (!_model.isDataUploading) {
+                                                  return Container(
+                                                    width: 45.0,
+                                                    height: 45.0,
+                                                    decoration: BoxDecoration(
+                                                      color: FlutterFlowTheme
+                                                              .of(context)
+                                                          .secondaryBackground,
+                                                      shape: BoxShape.circle,
+                                                      border: Border.all(
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .primary,
+                                                        width: 2.0,
+                                                      ),
+                                                    ),
+                                                    child: Icon(
+                                                      Icons.add_rounded,
+                                                      color:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .primary,
+                                                      size: 28.0,
+                                                    ),
+                                                  );
+                                                } else {
+                                                  return Lottie.network(
+                                                    'https://lottie.host/59e45826-b140-48cf-a63b-4d9aa6a9dad4/N7iAUsTSb4.json',
+                                                    width: 40.0,
+                                                    height: 40.0,
+                                                    fit: BoxFit.cover,
+                                                    animate: true,
+                                                  );
+                                                }
+                                              },
                                             ),
                                             Padding(
                                               padding: EdgeInsetsDirectional
                                                   .fromSTEB(0.0, 8.0, 0.0, 0.0),
                                               child: Text(
-                                                'Add new images',
+                                                _model.isDataUploading
+                                                    ? 'Images is loading'
+                                                    : 'Add new images',
                                                 style:
                                                     FlutterFlowTheme.of(context)
                                                         .bodyMedium
@@ -767,377 +802,386 @@ class _CreateProductWidgetState extends State<CreateProductWidget>
                       ].addToEnd(SizedBox(height: 150.0)),
                     ),
                   ),
-                  Padding(
-                    padding:
-                        EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
-                    child: SingleChildScrollView(
-                      primary: false,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.max,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Tell us about your product',
-                            style: FlutterFlowTheme.of(context)
-                                .bodyMedium
-                                .override(
-                                  fontFamily: 'LTSuperior',
-                                  fontSize: 24.0,
-                                  letterSpacing: 0.0,
-                                  fontWeight: FontWeight.w600,
-                                  useGoogleFonts: false,
-                                ),
-                          ),
-                          Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                0.0, 7.0, 0.0, 0.0),
-                            child: Text(
-                              'Remember: the more you tell us, the better for product\'s promotion',
+                  Form(
+                    key: _model.formKey,
+                    autovalidateMode: AutovalidateMode.disabled,
+                    child: Padding(
+                      padding:
+                          EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
+                      child: SingleChildScrollView(
+                        primary: false,
+                        controller: _model.priceColumn,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.max,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Tell us about your product',
                               style: FlutterFlowTheme.of(context)
                                   .bodyMedium
                                   .override(
                                     fontFamily: 'LTSuperior',
-                                    color: FlutterFlowTheme.of(context)
-                                        .secondaryText,
+                                    fontSize: 24.0,
                                     letterSpacing: 0.0,
+                                    fontWeight: FontWeight.w600,
                                     useGoogleFonts: false,
                                   ),
                             ),
-                          ),
-                          Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                0.0, 35.0, 0.0, 0.0),
-                            child: Container(
-                              height: 43.0,
-                              decoration: BoxDecoration(),
-                              child: Stack(
-                                alignment: AlignmentDirectional(1.0, 1.0),
-                                children: [
-                                  TextFormField(
-                                    controller: _model.textController1,
-                                    focusNode: _model.textFieldFocusNode1,
-                                    autofocus: false,
-                                    textCapitalization:
-                                        TextCapitalization.sentences,
-                                    textInputAction: TextInputAction.next,
-                                    obscureText: false,
-                                    decoration: InputDecoration(
-                                      hintText: 'Product title',
-                                      hintStyle: FlutterFlowTheme.of(context)
-                                          .labelMedium
-                                          .override(
-                                            fontFamily: 'LTSuperior',
-                                            color: FlutterFlowTheme.of(context)
-                                                .textAndStroke,
-                                            letterSpacing: 0.0,
-                                            useGoogleFonts: false,
-                                          ),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: FlutterFlowTheme.of(context)
-                                              .textAndStroke,
-                                          width: 1.0,
-                                        ),
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: FlutterFlowTheme.of(context)
-                                              .thirdText,
-                                          width: 1.0,
-                                        ),
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
-                                      ),
-                                      errorBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: FlutterFlowTheme.of(context)
-                                              .error,
-                                          width: 1.0,
-                                        ),
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
-                                      ),
-                                      focusedErrorBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: FlutterFlowTheme.of(context)
-                                              .error,
-                                          width: 1.0,
-                                        ),
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
-                                      ),
-                                      filled: true,
-                                      fillColor: FlutterFlowTheme.of(context)
-                                          .whiteBlur,
-                                      contentPadding:
-                                          EdgeInsetsDirectional.fromSTEB(
-                                              18.0, 0.0, 18.0, 0.0),
+                            Padding(
+                              padding: EdgeInsetsDirectional.fromSTEB(
+                                  0.0, 7.0, 0.0, 0.0),
+                              child: Text(
+                                'Remember: the more you tell us, the better for product\'s promotion',
+                                style: FlutterFlowTheme.of(context)
+                                    .bodyMedium
+                                    .override(
+                                      fontFamily: 'LTSuperior',
+                                      color: FlutterFlowTheme.of(context)
+                                          .secondaryText,
+                                      letterSpacing: 0.0,
+                                      useGoogleFonts: false,
                                     ),
-                                    style: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .override(
-                                          fontFamily: 'LTSuperior',
-                                          color: FlutterFlowTheme.of(context)
-                                              .primaryText,
-                                          letterSpacing: 0.0,
-                                          fontWeight: FontWeight.normal,
-                                          useGoogleFonts: false,
-                                        ),
-                                    maxLines: 2,
-                                    minLines: 1,
-                                    maxLength: 80,
-                                    buildCounter: (context,
-                                            {required currentLength,
-                                            required isFocused,
-                                            maxLength}) =>
-                                        null,
-                                    validator: _model.textController1Validator
-                                        .asValidator(context),
-                                  ),
-                                ],
                               ),
                             ),
-                          ),
-                          Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                0.0, 13.0, 0.0, 0.0),
-                            child: Container(
-                              decoration: BoxDecoration(),
-                              child: Stack(
-                                alignment: AlignmentDirectional(1.0, 1.0),
-                                children: [
-                                  TextFormField(
-                                    controller: _model.textController2,
-                                    focusNode: _model.textFieldFocusNode2,
-                                    autofocus: false,
-                                    textCapitalization:
-                                        TextCapitalization.sentences,
-                                    textInputAction: TextInputAction.next,
-                                    obscureText: false,
-                                    decoration: InputDecoration(
-                                      hintText: 'Product description',
-                                      hintStyle: FlutterFlowTheme.of(context)
-                                          .labelMedium
-                                          .override(
-                                            fontFamily: 'LTSuperior',
-                                            color: FlutterFlowTheme.of(context)
-                                                .textAndStroke,
-                                            letterSpacing: 0.0,
-                                            useGoogleFonts: false,
-                                          ),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: FlutterFlowTheme.of(context)
-                                              .textAndStroke,
-                                          width: 1.0,
-                                        ),
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: FlutterFlowTheme.of(context)
-                                              .thirdText,
-                                          width: 1.0,
-                                        ),
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
-                                      ),
-                                      errorBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: FlutterFlowTheme.of(context)
-                                              .error,
-                                          width: 1.0,
-                                        ),
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
-                                      ),
-                                      focusedErrorBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: FlutterFlowTheme.of(context)
-                                              .error,
-                                          width: 1.0,
-                                        ),
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
-                                      ),
-                                      filled: true,
-                                      fillColor: FlutterFlowTheme.of(context)
-                                          .whiteBlur,
-                                      contentPadding:
-                                          EdgeInsetsDirectional.fromSTEB(
-                                              18.0, 15.0, 18.0, 15.0),
-                                    ),
-                                    style: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .override(
-                                          fontFamily: 'LTSuperior',
-                                          color: FlutterFlowTheme.of(context)
-                                              .primaryText,
-                                          letterSpacing: 0.0,
-                                          fontWeight: FontWeight.normal,
-                                          useGoogleFonts: false,
-                                        ),
-                                    maxLines: 8,
-                                    maxLength: 3000,
-                                    buildCounter: (context,
-                                            {required currentLength,
-                                            required isFocused,
-                                            maxLength}) =>
-                                        null,
-                                    validator: _model.textController2Validator
-                                        .asValidator(context),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                0.0, 30.0, 0.0, 0.0),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                Row(
-                                  mainAxisSize: MainAxisSize.max,
+                            Padding(
+                              padding: EdgeInsetsDirectional.fromSTEB(
+                                  0.0, 35.0, 0.0, 0.0),
+                              child: Container(
+                                height: 43.0,
+                                decoration: BoxDecoration(),
+                                child: Stack(
+                                  alignment: AlignmentDirectional(1.0, 1.0),
                                   children: [
-                                    Icon(
-                                      FFIcons.khealthiconsMoneyBagOutline,
-                                      color:
-                                          FlutterFlowTheme.of(context).primary,
-                                      size: 24.0,
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          8.0, 0.0, 0.0, 0.0),
-                                      child: Text(
-                                        'Price',
-                                        style: FlutterFlowTheme.of(context)
-                                            .bodyMedium
+                                    TextFormField(
+                                      controller: _model.textController1,
+                                      focusNode: _model.textFieldFocusNode1,
+                                      autofocus: false,
+                                      textCapitalization:
+                                          TextCapitalization.sentences,
+                                      textInputAction: TextInputAction.next,
+                                      obscureText: false,
+                                      decoration: InputDecoration(
+                                        hintText: 'Product title',
+                                        hintStyle: FlutterFlowTheme.of(context)
+                                            .labelMedium
                                             .override(
                                               fontFamily: 'LTSuperior',
-                                              fontSize: 18.0,
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .textAndStroke,
                                               letterSpacing: 0.0,
-                                              fontWeight: FontWeight.w500,
                                               useGoogleFonts: false,
                                             ),
+                                        enabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: FlutterFlowTheme.of(context)
+                                                .textAndStroke,
+                                            width: 1.0,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(10.0),
+                                        ),
+                                        focusedBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: FlutterFlowTheme.of(context)
+                                                .thirdText,
+                                            width: 1.0,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(10.0),
+                                        ),
+                                        errorBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: FlutterFlowTheme.of(context)
+                                                .error,
+                                            width: 1.0,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(10.0),
+                                        ),
+                                        focusedErrorBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: FlutterFlowTheme.of(context)
+                                                .error,
+                                            width: 1.0,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(10.0),
+                                        ),
+                                        filled: true,
+                                        fillColor: FlutterFlowTheme.of(context)
+                                            .whiteBlur,
+                                        contentPadding:
+                                            EdgeInsetsDirectional.fromSTEB(
+                                                18.0, 0.0, 18.0, 0.0),
                                       ),
+                                      style: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .override(
+                                            fontFamily: 'LTSuperior',
+                                            color: FlutterFlowTheme.of(context)
+                                                .primaryText,
+                                            letterSpacing: 0.0,
+                                            fontWeight: FontWeight.normal,
+                                            useGoogleFonts: false,
+                                          ),
+                                      maxLines: 2,
+                                      minLines: 1,
+                                      maxLength: 80,
+                                      buildCounter: (context,
+                                              {required currentLength,
+                                              required isFocused,
+                                              maxLength}) =>
+                                          null,
+                                      validator: _model.textController1Validator
+                                          .asValidator(context),
                                     ),
                                   ],
                                 ),
-                                Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      0.0, 15.0, 0.0, 0.0),
-                                  child: TextFormField(
-                                    controller: _model.textController3,
-                                    focusNode: _model.textFieldFocusNode3,
-                                    onChanged: (_) => EasyDebounce.debounce(
-                                      '_model.textController3',
-                                      Duration(milliseconds: 1),
-                                      () async {
-                                        setState(() {
-                                          _model.textController3?.text =
-                                              functions.newCustomFunction(
-                                                  _model.textController3.text);
-                                          _model.textController3?.selection =
-                                              TextSelection.collapsed(
-                                                  offset: _model
-                                                      .textController3!
-                                                      .text
-                                                      .length);
-                                        });
-                                      },
-                                    ),
-                                    autofocus: false,
-                                    textCapitalization:
-                                        TextCapitalization.sentences,
-                                    textInputAction: TextInputAction.next,
-                                    obscureText: false,
-                                    decoration: InputDecoration(
-                                      hintText: 'Product price',
-                                      hintStyle: FlutterFlowTheme.of(context)
-                                          .labelMedium
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsetsDirectional.fromSTEB(
+                                  0.0, 13.0, 0.0, 0.0),
+                              child: Container(
+                                decoration: BoxDecoration(),
+                                child: Stack(
+                                  alignment: AlignmentDirectional(1.0, 1.0),
+                                  children: [
+                                    TextFormField(
+                                      controller: _model.textController2,
+                                      focusNode: _model.textFieldFocusNode2,
+                                      autofocus: false,
+                                      textCapitalization:
+                                          TextCapitalization.sentences,
+                                      textInputAction: TextInputAction.next,
+                                      obscureText: false,
+                                      decoration: InputDecoration(
+                                        hintText: 'Product description',
+                                        hintStyle: FlutterFlowTheme.of(context)
+                                            .labelMedium
+                                            .override(
+                                              fontFamily: 'LTSuperior',
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .textAndStroke,
+                                              letterSpacing: 0.0,
+                                              useGoogleFonts: false,
+                                            ),
+                                        enabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: FlutterFlowTheme.of(context)
+                                                .textAndStroke,
+                                            width: 1.0,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(10.0),
+                                        ),
+                                        focusedBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: FlutterFlowTheme.of(context)
+                                                .thirdText,
+                                            width: 1.0,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(10.0),
+                                        ),
+                                        errorBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: FlutterFlowTheme.of(context)
+                                                .error,
+                                            width: 1.0,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(10.0),
+                                        ),
+                                        focusedErrorBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: FlutterFlowTheme.of(context)
+                                                .error,
+                                            width: 1.0,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(10.0),
+                                        ),
+                                        filled: true,
+                                        fillColor: FlutterFlowTheme.of(context)
+                                            .whiteBlur,
+                                        contentPadding:
+                                            EdgeInsetsDirectional.fromSTEB(
+                                                18.0, 15.0, 18.0, 15.0),
+                                      ),
+                                      style: FlutterFlowTheme.of(context)
+                                          .bodyMedium
                                           .override(
                                             fontFamily: 'LTSuperior',
                                             color: FlutterFlowTheme.of(context)
-                                                .textAndStroke,
+                                                .primaryText,
                                             letterSpacing: 0.0,
+                                            fontWeight: FontWeight.normal,
                                             useGoogleFonts: false,
                                           ),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: FlutterFlowTheme.of(context)
-                                              .textAndStroke,
-                                          width: 1.0,
-                                        ),
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: FlutterFlowTheme.of(context)
-                                              .thirdText,
-                                          width: 1.0,
-                                        ),
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
-                                      ),
-                                      errorBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: FlutterFlowTheme.of(context)
-                                              .error,
-                                          width: 1.0,
-                                        ),
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
-                                      ),
-                                      focusedErrorBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: FlutterFlowTheme.of(context)
-                                              .error,
-                                          width: 1.0,
-                                        ),
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
-                                      ),
-                                      filled: true,
-                                      fillColor: FlutterFlowTheme.of(context)
-                                          .whiteBlur,
-                                      contentPadding:
-                                          EdgeInsetsDirectional.fromSTEB(
-                                              18.0, 0.0, 18.0, 0.0),
+                                      maxLines: 8,
+                                      maxLength: 3000,
+                                      buildCounter: (context,
+                                              {required currentLength,
+                                              required isFocused,
+                                              maxLength}) =>
+                                          null,
+                                      validator: _model.textController2Validator
+                                          .asValidator(context),
                                     ),
-                                    style: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .override(
-                                          fontFamily: 'LTSuperior',
-                                          color: FlutterFlowTheme.of(context)
-                                              .primaryText,
-                                          letterSpacing: 0.0,
-                                          fontWeight: FontWeight.normal,
-                                          useGoogleFonts: false,
-                                        ),
-                                    maxLines: 2,
-                                    minLines: 1,
-                                    maxLength: 80,
-                                    buildCounter: (context,
-                                            {required currentLength,
-                                            required isFocused,
-                                            maxLength}) =>
-                                        null,
-                                    keyboardType: TextInputType.number,
-                                    validator: _model.textController3Validator
-                                        .asValidator(context),
-                                  ),
+                                  ],
                                 ),
-                              ],
+                              ),
                             ),
-                          ),
-                        ]
-                            .addToStart(SizedBox(height: 146.0))
-                            .addToEnd(SizedBox(height: 180.0)),
+                            Padding(
+                              padding: EdgeInsetsDirectional.fromSTEB(
+                                  0.0, 30.0, 0.0, 0.0),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.max,
+                                children: [
+                                  Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: [
+                                      Icon(
+                                        FFIcons.khealthiconsMoneyBagOutline,
+                                        color: FlutterFlowTheme.of(context)
+                                            .primary,
+                                        size: 24.0,
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                            8.0, 0.0, 0.0, 0.0),
+                                        child: Text(
+                                          'Price',
+                                          style: FlutterFlowTheme.of(context)
+                                              .bodyMedium
+                                              .override(
+                                                fontFamily: 'LTSuperior',
+                                                fontSize: 18.0,
+                                                letterSpacing: 0.0,
+                                                fontWeight: FontWeight.w500,
+                                                useGoogleFonts: false,
+                                              ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        0.0, 15.0, 0.0, 0.0),
+                                    child: TextFormField(
+                                      controller: _model.textController3,
+                                      focusNode: _model.textFieldFocusNode3,
+                                      onChanged: (_) => EasyDebounce.debounce(
+                                        '_model.textController3',
+                                        Duration(milliseconds: 1),
+                                        () async {
+                                          safeSetState(() {
+                                            _model.textController3?.text =
+                                                functions.newCustomFunction(
+                                                    _model
+                                                        .textController3.text);
+                                            _model.textController3?.selection =
+                                                TextSelection.collapsed(
+                                                    offset: _model
+                                                        .textController3!
+                                                        .text
+                                                        .length);
+                                          });
+                                        },
+                                      ),
+                                      autofocus: false,
+                                      textCapitalization:
+                                          TextCapitalization.sentences,
+                                      textInputAction: TextInputAction.next,
+                                      obscureText: false,
+                                      decoration: InputDecoration(
+                                        hintText: 'Product price',
+                                        hintStyle: FlutterFlowTheme.of(context)
+                                            .labelMedium
+                                            .override(
+                                              fontFamily: 'LTSuperior',
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .textAndStroke,
+                                              letterSpacing: 0.0,
+                                              useGoogleFonts: false,
+                                            ),
+                                        enabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: FlutterFlowTheme.of(context)
+                                                .textAndStroke,
+                                            width: 1.0,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(10.0),
+                                        ),
+                                        focusedBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: FlutterFlowTheme.of(context)
+                                                .thirdText,
+                                            width: 1.0,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(10.0),
+                                        ),
+                                        errorBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: FlutterFlowTheme.of(context)
+                                                .error,
+                                            width: 1.0,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(10.0),
+                                        ),
+                                        focusedErrorBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: FlutterFlowTheme.of(context)
+                                                .error,
+                                            width: 1.0,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(10.0),
+                                        ),
+                                        filled: true,
+                                        fillColor: FlutterFlowTheme.of(context)
+                                            .whiteBlur,
+                                        contentPadding:
+                                            EdgeInsetsDirectional.fromSTEB(
+                                                18.0, 0.0, 18.0, 0.0),
+                                      ),
+                                      style: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .override(
+                                            fontFamily: 'LTSuperior',
+                                            color: FlutterFlowTheme.of(context)
+                                                .primaryText,
+                                            letterSpacing: 0.0,
+                                            fontWeight: FontWeight.normal,
+                                            useGoogleFonts: false,
+                                          ),
+                                      maxLines: 2,
+                                      minLines: 1,
+                                      maxLength: 80,
+                                      buildCounter: (context,
+                                              {required currentLength,
+                                              required isFocused,
+                                              maxLength}) =>
+                                          null,
+                                      keyboardType: TextInputType.number,
+                                      validator: _model.textController3Validator
+                                          .asValidator(context),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ]
+                              .addToStart(SizedBox(height: 146.0))
+                              .addToEnd(SizedBox(height: 180.0)),
+                        ),
                       ),
                     ),
                   ),
@@ -1183,6 +1227,7 @@ class _CreateProductWidgetState extends State<CreateProductWidget>
                         EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
                     child: SingleChildScrollView(
                       primary: false,
+                      controller: _model.columnController4,
                       child: Column(
                         mainAxisSize: MainAxisSize.max,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1228,6 +1273,7 @@ class _CreateProductWidgetState extends State<CreateProductWidget>
                             child: Builder(
                               builder: (context) {
                                 final questionsForm = _model.questions.toList();
+
                                 return Column(
                                   mainAxisSize: MainAxisSize.max,
                                   children: List.generate(questionsForm.length,
@@ -1246,7 +1292,7 @@ class _CreateProductWidgetState extends State<CreateProductWidget>
                                             .map((e) => e.toMap())
                                             .toList()
                                             .cast<dynamic>();
-                                        setState(() {});
+                                        safeSetState(() {});
                                       },
                                     );
                                   }).divide(SizedBox(height: 40.0)),
@@ -1522,7 +1568,7 @@ class _CreateProductWidgetState extends State<CreateProductWidget>
                                                 model: _model
                                                     .buttonFixedSizeModel1,
                                                 updateCallback: () =>
-                                                    setState(() {}),
+                                                    safeSetState(() {}),
                                                 child: ButtonFixedSizeWidget(
                                                   width: 150.0,
                                                   height: 43.0,
@@ -1536,11 +1582,19 @@ class _CreateProductWidgetState extends State<CreateProductWidget>
                                                       FlutterFlowTheme.of(
                                                               context)
                                                           .info,
-                                                  showLoadingIndicator: false,
+                                                  showLoadingIndicator: true,
                                                   action: () async {
                                                     if (_model
                                                             .pageViewCurrentIndex ==
                                                         2) {
+                                                      if (_model.formKey
+                                                                  .currentState ==
+                                                              null ||
+                                                          !_model.formKey
+                                                              .currentState!
+                                                              .validate()) {
+                                                        return;
+                                                      }
                                                       unawaited(
                                                         () async {
                                                           await _model
@@ -1572,7 +1626,7 @@ class _CreateProductWidgetState extends State<CreateProductWidget>
                                                               ''),
                                                           r'''$.text''',
                                                         ).toString();
-                                                        setState(() {});
+                                                        safeSetState(() {});
                                                         _model.questions =
                                                             functions
                                                                 .cleanJson(
@@ -1585,7 +1639,7 @@ class _CreateProductWidgetState extends State<CreateProductWidget>
                                                                 .toList()
                                                                 .cast<
                                                                     dynamic>();
-                                                        setState(() {});
+                                                        safeSetState(() {});
                                                         FFAppState().questions = _model
                                                             .questions
                                                             .map((e) =>
@@ -1596,7 +1650,7 @@ class _CreateProductWidgetState extends State<CreateProductWidget>
                                                             .toList()
                                                             .cast<
                                                                 QuestionsStruct>();
-                                                        setState(() {});
+                                                        safeSetState(() {});
                                                         await _model
                                                             .pageViewController
                                                             ?.nextPage(
@@ -1626,7 +1680,7 @@ class _CreateProductWidgetState extends State<CreateProductWidget>
                                                                         'color')
                                                                     .toList()
                                                                     .first);
-                                                        setState(() {});
+                                                        safeSetState(() {});
                                                       }
 
                                                       var productsRecordReference =
@@ -1703,7 +1757,7 @@ class _CreateProductWidgetState extends State<CreateProductWidget>
                                                         ),
                                                       }, productsRecordReference);
                                                       FFAppState()
-                                                          .clearProjectsProfileCache();
+                                                          .clearProductsProfileCache();
                                                       unawaited(
                                                         () async {
                                                           await currentUserReference!
@@ -1729,18 +1783,18 @@ class _CreateProductWidgetState extends State<CreateProductWidget>
                                                                   e.toMap())
                                                               .toList()
                                                               .cast<dynamic>();
-                                                      setState(() {});
+                                                      safeSetState(() {});
                                                       _model.questions = functions
                                                           .removeKeysFromJsonList(
                                                               _model.questions
                                                                   .toList())
                                                           .toList()
                                                           .cast<dynamic>();
-                                                      setState(() {});
+                                                      safeSetState(() {});
                                                       FFAppState().colors = [];
                                                       FFAppState().questions =
                                                           [];
-                                                      setState(() {});
+                                                      safeSetState(() {});
 
                                                       context.pushNamed(
                                                         'create_product_loading',
@@ -1774,7 +1828,7 @@ class _CreateProductWidgetState extends State<CreateProductWidget>
                                                       );
                                                     }
 
-                                                    setState(() {});
+                                                    safeSetState(() {});
                                                   },
                                                 ),
                                               ),
@@ -1800,7 +1854,7 @@ class _CreateProductWidgetState extends State<CreateProductWidget>
                                 decoration: BoxDecoration(),
                                 child: wrapWithModel(
                                   model: _model.buttonInfinityModel,
-                                  updateCallback: () => setState(() {}),
+                                  updateCallback: () => safeSetState(() {}),
                                   child: ButtonInfinityWidget(
                                     width: 529.0,
                                     height: 49.0,
@@ -1867,7 +1921,7 @@ class _CreateProductWidgetState extends State<CreateProductWidget>
                   ),
                   child: Container(
                     width: double.infinity,
-                    height: 102.0,
+                    height: 112.0,
                     decoration: BoxDecoration(
                       color: FlutterFlowTheme.of(context).mainThemeBlur,
                     ),
@@ -1880,22 +1934,131 @@ class _CreateProductWidgetState extends State<CreateProductWidget>
                           alignment: AlignmentDirectional(-1.0, 1.0),
                           child: Padding(
                             padding: EdgeInsetsDirectional.fromSTEB(
-                                24.0, 15.0, 0.0, 17.0),
-                            child: wrapWithModel(
-                              model: _model.buttonFixedSizeModel2,
-                              updateCallback: () => setState(() {}),
-                              child: ButtonFixedSizeWidget(
-                                width: 140.0,
-                                height: 40.0,
-                                buttonColor:
-                                    FlutterFlowTheme.of(context).primary,
-                                text: 'Save and close',
-                                fontsize: 14,
-                                textcolor: Colors.white,
-                                showLoadingIndicator: false,
-                                action: () async {
-                                  context.safePop();
-                                },
+                                24.0, 25.0, 0.0, 17.0),
+                            child: InkWell(
+                              splashColor: Colors.transparent,
+                              focusColor: Colors.transparent,
+                              hoverColor: Colors.transparent,
+                              highlightColor: Colors.transparent,
+                              onTap: () async {
+                                var productsRecordReference = ProductsRecord
+                                    .collection
+                                    .doc(_model.customID!);
+                                await productsRecordReference.set({
+                                  ...createProductsRecordData(
+                                    title: _model.textController1.text,
+                                    description: _model.textController2.text,
+                                    price: int.tryParse(_model
+                                        .textController3.text
+                                        .substring(1)),
+                                    ownerPerson: currentUserReference,
+                                    customId: _model.customID,
+                                  ),
+                                  ...mapToFirestore(
+                                    {
+                                      'images': _model.images.isNotEmpty
+                                          ? _model.images
+                                          : _model.fakeImages,
+                                      'Colors': FFAppState().colors,
+                                    },
+                                  ),
+                                });
+                                _model.createdProductSave =
+                                    ProductsRecord.getDocumentFromData({
+                                  ...createProductsRecordData(
+                                    title: _model.textController1.text,
+                                    description: _model.textController2.text,
+                                    price: int.tryParse(_model
+                                        .textController3.text
+                                        .substring(1)),
+                                    ownerPerson: currentUserReference,
+                                    customId: _model.customID,
+                                  ),
+                                  ...mapToFirestore(
+                                    {
+                                      'images': _model.images.isNotEmpty
+                                          ? _model.images
+                                          : _model.fakeImages,
+                                      'Colors': FFAppState().colors,
+                                    },
+                                  ),
+                                }, productsRecordReference);
+                                FFAppState().clearProductsProfileCache();
+                                unawaited(
+                                  () async {
+                                    await currentUserReference!.update({
+                                      ...mapToFirestore(
+                                        {
+                                          'products': FieldValue.arrayUnion([
+                                            _model.createdProductSave?.reference
+                                          ]),
+                                        },
+                                      ),
+                                    });
+                                  }(),
+                                );
+                                _model.upsert =
+                                    await UpsertVectorsNeightnCall.call(
+                                  upsertText: functions.stringToAPI(
+                                      'firebase_id:${_model.customID}, type: product, title: ${_model.textController1.text}, description: ${_model.textController2.text}, price (dollars): ${_model.textController3.text}'),
+                                  ownerType: widget!.company != null
+                                      ? 'company'
+                                      : 'person',
+                                  owner: valueOrDefault<String>(
+                                    widget!.company != null
+                                        ? widget!.company?.reference.id
+                                        : currentUserUid,
+                                    'tst',
+                                  ),
+                                  documentId: _model.customID,
+                                );
+
+                                await Future.delayed(
+                                    const Duration(milliseconds: 300));
+                                unawaited(
+                                  () async {
+                                    await DocumentsTable().update(
+                                      data: {
+                                        'firebase_id': _model.customID,
+                                      },
+                                      matchingRows: (rows) => rows.eq(
+                                        'content',
+                                        functions.stringToAPI(
+                                            'firebase_id:${_model.customID}, type: product, title: ${_model.textController1.text}, description: ${_model.textController2.text}, price (dollars): ${_model.textController3.text}'),
+                                      ),
+                                    );
+                                  }(),
+                                );
+                                FFAppState().colors = [];
+                                FFAppState().questions = [];
+                                safeSetState(() {});
+
+                                context.pushNamed(
+                                  'profile',
+                                  queryParameters: {
+                                    'chosen': serializeParam(
+                                      'Products',
+                                      ParamType.String,
+                                    ),
+                                  }.withoutNulls,
+                                );
+
+                                safeSetState(() {});
+                              },
+                              child: wrapWithModel(
+                                model: _model.buttonFixedSizeModel2,
+                                updateCallback: () => safeSetState(() {}),
+                                child: ButtonFixedSizeWidget(
+                                  width: 140.0,
+                                  height: 40.0,
+                                  buttonColor:
+                                      FlutterFlowTheme.of(context).primary,
+                                  text: 'Save and close',
+                                  fontsize: 14,
+                                  textcolor: Colors.white,
+                                  showLoadingIndicator: false,
+                                  action: () async {},
+                                ),
                               ),
                             ),
                           ),

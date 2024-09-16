@@ -39,7 +39,7 @@ class _PostOptionsWidgetState extends State<PostOptionsWidget> {
     super.initState();
     _model = createModel(context, () => PostOptionsModel());
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -82,11 +82,11 @@ class _PostOptionsWidgetState extends State<PostOptionsWidget> {
                           'addPost',
                           queryParameters: {
                             'project': serializeParam(
-                              widget.project,
+                              widget!.project,
                               ParamType.Document,
                             ),
                             'post': serializeParam(
-                              widget.post,
+                              widget!.post,
                               ParamType.Document,
                             ),
                             'isUpdate': serializeParam(
@@ -95,8 +95,8 @@ class _PostOptionsWidgetState extends State<PostOptionsWidget> {
                             ),
                           }.withoutNulls,
                           extra: <String, dynamic>{
-                            'project': widget.project,
-                            'post': widget.post,
+                            'project': widget!.project,
+                            'post': widget!.post,
                           },
                         );
                       },
@@ -144,7 +144,7 @@ class _PostOptionsWidgetState extends State<PostOptionsWidget> {
                     hoverColor: Colors.transparent,
                     highlightColor: Colors.transparent,
                     onTap: () async {
-                      await widget.post!.reference.delete();
+                      await widget!.post!.reference.delete();
                       Navigator.pop(context);
                     },
                     child: Container(

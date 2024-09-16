@@ -31,7 +31,6 @@ class ImageGalleryModel extends FlutterFlowModel<ImageGalleryWidget> {
 
   ///  State fields for stateful widgets in this page.
 
-  final unfocusNode = FocusNode();
   // Stores action output result for [Backend Call - Read Document] action in IconButton widget.
   ProjectsRecord? fgg;
   bool isDataUploading = false;
@@ -42,7 +41,5 @@ class ImageGalleryModel extends FlutterFlowModel<ImageGalleryWidget> {
   void initState(BuildContext context) {}
 
   @override
-  void dispose() {
-    unfocusNode.dispose();
-  }
+  void dispose() {}
 }
